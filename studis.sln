@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "studis", "studis\studis.csproj", "{421361AF-7108-4312-B430-744A40E989EA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "studis", "studis\studis.csproj", "{839322A2-4589-4AA5-9A86-EF7DE405AC83}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +11,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{421361AF-7108-4312-B430-744A40E989EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{421361AF-7108-4312-B430-744A40E989EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{421361AF-7108-4312-B430-744A40E989EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{421361AF-7108-4312-B430-744A40E989EA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{839322A2-4589-4AA5-9A86-EF7DE405AC83}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{839322A2-4589-4AA5-9A86-EF7DE405AC83}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{839322A2-4589-4AA5-9A86-EF7DE405AC83}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{839322A2-4589-4AA5-9A86-EF7DE405AC83}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -10,20 +10,13 @@ namespace studis.Controllers
     {
         public ActionResult Index()
         {
+            ViewBag.Message = "Welcome, to your new MVC application!";
+
             return View();
         }
 
         public ActionResult About()
         {
-            ViewBag.Message = "Your application description page.";
-
-            return View();
-        }
-
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
-
             return View();
         }
     }
