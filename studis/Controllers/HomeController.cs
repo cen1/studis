@@ -10,7 +10,7 @@ namespace studis.Controllers
     {
         public ActionResult Index()
         {
-            ViewBag.Message = "Welcome, to your new MVC application!";
+            ViewBag.Message = "Glavna stran Studis";
 
             return View();
         }

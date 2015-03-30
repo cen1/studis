@@ -1,12 +1,12 @@
 ﻿@model studis.Models.LoginModel
 
 @{
-    ViewBag.Title = "Login";
+    ViewBag.Title = "Prijava";
 }
 
-<h2>Login</h2>
+<h2>Prijava</h2>
 
-@Html.ValidationSummary(true, "Login was unsuccessful. Please correct the errors and try again.")
+@Html.ValidationSummary(true, "Prijava ni uspela. Popravite napake in poizkusite ponovno.")
 
 @using (Html.BeginForm()) {
     <div>
@@ -34,11 +34,8 @@
             </div>
 
             <p>
-                <input type="submit" value="Login" />				
+                <input type="submit" value="Prijava" />				
             </p>
-			<p>
-				@Html.ActionLink("Register", "CreateUser") if you don't have an account.
-			</p>
         </fieldset>
     </div>
 }

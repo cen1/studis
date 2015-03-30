@@ -8,26 +8,34 @@
 <body>
     <div class="page">
         <div id="header">          
-                <h1>My MVC Application</h1>                
-           <div id="logindisplay">
-                @Html.Partial("_LoginPartial")
-           </div>
-            <div id="menucontainer">
+                <table style="background-color: inherit" id="noborder">
+                    <tr>
+                        <td>
+                            <img src="~/Content/images/indeks.png" style="height: 150px; width: auto;" />
+                        </td>
+                        <td style="vertical-align: bottom">
+                            <h1>Studis</h1>
+                        </td>
+                    </tr>
+                </table>                
+            <div>
                 <ul id="menu">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("About", "About", "Home")</li>
+                    <li>@Html.ActionLink("Domov", "Index", "Home")</li>
+                    <li>
+                        @Html.Partial("_LoginPartial")
+                    </li>
                 </ul>
             </div>
         </div>
     
         <div id="main">                      
-            @if(Request.IsAuthenticated) 
-			{			
-                 <div id="logindisplay">Welcome <strong>@User.Identity.Name</strong>!</div> 
-			}
             @RenderBody()
             </div>
        <div id="footer">
+           @if (Request.IsAuthenticated)
+           {
+               <span>Dobrodošel/a <strong>@User.Identity.Name</strong>!</span>
+           }
       </div>    
     </div>      
 </body>

@@ -240,6 +240,11 @@ div#logindisplay {
     text-decoration: none;
 }
 
+#loginwelcome {
+    float: right;
+    margin-bottom: 5px;
+}
+
 
 .field-validation-error {
     color: #ff0000;
@@ -283,4 +288,11 @@ div#logindisplay {
 
 .tri-state {
     width: 6em;
+}
+
+#noborder td {
+    border: 0px;
+}
+#noborder {
+    border: 0px;
 }
