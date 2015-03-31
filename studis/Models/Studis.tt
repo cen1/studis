@@ -1,8 +1,8 @@
-<#@ template language="C#" debug="false" hostspecific="true"#>
+﻿<#@ template language="C#" debug="false" hostspecific="true"#>
 <#@ include file="EF6.Utility.CS.ttinclude"#><#@ 
  output extension=".cs"#><#
 
-const string inputFile = @"Model1.edmx";
+const string inputFile = @"Studis.edmx";
 var textTransform = DynamicTextTransformation.Create(this);
 var code = new CodeGenerationTools(this);
 var ef = new MetadataTools(this);

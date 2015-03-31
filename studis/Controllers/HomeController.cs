@@ -1,4 +1,5 @@
-﻿using System;
+﻿using studis.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -10,9 +11,10 @@ namespace studis.Controllers
     {
         public ActionResult Index()
         {
-            ViewBag.Message = "Glavna stran Studis";
+            ViewBag.Message = "asd";
 
             return View();
+   
         }
 
         public ActionResult About()

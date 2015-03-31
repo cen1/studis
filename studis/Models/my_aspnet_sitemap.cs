@@ -7,3 +7,18 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+namespace studis.Models
+{
+    using System;
+    using System.Collections.Generic;
+    
+    public partial class my_aspnet_sitemap
+    {
+        public int Id { get; set; }
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public string Url { get; set; }
+        public string Roles { get; set; }
+        public Nullable<int> ParentId { get; set; }
+    }
+}

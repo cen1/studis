@@ -1,0 +1,612 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="studisModel.Store" Provider="MySql.Data.MySqlClient" ProviderManifestToken="5.5" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="ip_zaklep">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="uint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ip" Type="varchar" MaxLength="46" Nullable="false" />
+          <Property Name="zaklep_do" Type="datetime" Precision="0" Nullable="false" />
+          <Property Name="upirabnik_id" Type="uint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="my_aspnet_applications">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="256" />
+          <Property Name="description" Type="varchar" MaxLength="256" />
+        </EntityType>
+        <EntityType Name="my_aspnet_membership">
+          <Key>
+            <PropertyRef Name="userId" />
+          </Key>
+          <Property Name="userId" Type="int" Nullable="false" />
+          <Property Name="Email" Type="varchar" MaxLength="128" />
+          <Property Name="Comment" Type="varchar" MaxLength="255" />
+          <Property Name="Password" Type="varchar" MaxLength="128" Nullable="false" />
+          <Property Name="PasswordKey" Type="char" MaxLength="32" />
+          <Property Name="PasswordFormat" Type="tinyint" />
+          <Property Name="PasswordQuestion" Type="varchar" MaxLength="255" />
+          <Property Name="PasswordAnswer" Type="varchar" MaxLength="255" />
+          <Property Name="IsApproved" Type="bool" />
+          <Property Name="LastActivityDate" Type="datetime" Precision="0" />
+          <Property Name="LastLoginDate" Type="datetime" Precision="0" />
+          <Property Name="LastPasswordChangedDate" Type="datetime" Precision="0" />
+          <Property Name="CreationDate" Type="datetime" Precision="0" />
+          <Property Name="IsLockedOut" Type="bool" />
+          <Property Name="LastLockedOutDate" Type="datetime" Precision="0" />
+          <Property Name="FailedPasswordAttemptCount" Type="uint" />
+          <Property Name="FailedPasswordAttemptWindowStart" Type="datetime" Precision="0" />
+          <Property Name="FailedPasswordAnswerAttemptCount" Type="uint" />
+          <Property Name="FailedPasswordAnswerAttemptWindowStart" Type="datetime" Precision="0" />
+        </EntityType>
+        <EntityType Name="my_aspnet_paths">
+          <Key>
+            <PropertyRef Name="pathId" />
+          </Key>
+          <Property Name="applicationId" Type="int" Nullable="false" />
+          <Property Name="pathId" Type="varchar" MaxLength="36" Nullable="false" />
+          <Property Name="path" Type="varchar" MaxLength="256" Nullable="false" />
+          <Property Name="loweredPath" Type="varchar" MaxLength="256" Nullable="false" />
+        </EntityType>
+        <EntityType Name="my_aspnet_personalizationallusers">
+          <Key>
+            <PropertyRef Name="pathId" />
+          </Key>
+          <Property Name="pathId" Type="varchar" MaxLength="36" Nullable="false" />
+          <Property Name="pageSettings" Type="blob" Nullable="false" />
+          <Property Name="lastUpdatedDate" Type="datetime" Precision="0" Nullable="false" />
+        </EntityType>
+        <EntityType Name="my_aspnet_personalizationperuser">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="applicationId" Type="int" Nullable="false" />
+          <Property Name="pathId" Type="varchar" MaxLength="36" />
+          <Property Name="userId" Type="int" />
+          <Property Name="pageSettings" Type="blob" Nullable="false" />
+          <Property Name="lastUpdatedDate" Type="datetime" Precision="0" Nullable="false" />
+        </EntityType>
+        <EntityType Name="my_aspnet_profiles">
+          <Key>
+            <PropertyRef Name="userId" />
+          </Key>
+          <Property Name="userId" Type="int" Nullable="false" />
+          <Property Name="valueindex" Type="longtext" />
+          <Property Name="stringdata" Type="longtext" />
+          <Property Name="binarydata" Type="longblob" />
+          <Property Name="lastUpdatedDate" Type="timestamp" Precision="0" Nullable="false" />
+        </EntityType>
+        <EntityType Name="my_aspnet_roles">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="applicationId" Type="int" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="255" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6013: The table/view 'def.studis.my_aspnet_schemaversion' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
+        <EntityType Name="my_aspnet_schemaversion">
+          <Property Name="version" Type="int" />
+        </EntityType>-->
+        <EntityType Name="my_aspnet_sessioncleanup">
+          <Key>
+            <PropertyRef Name="ApplicationId" />
+          </Key>
+          <Property Name="LastRun" Type="datetime" Precision="0" Nullable="false" />
+          <Property Name="IntervalMinutes" Type="int" Nullable="false" />
+          <Property Name="ApplicationId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="my_aspnet_sessions">
+          <Key>
+            <PropertyRef Name="SessionId" />
+            <PropertyRef Name="ApplicationId" />
+          </Key>
+          <Property Name="SessionId" Type="varchar" MaxLength="191" Nullable="false" />
+          <Property Name="ApplicationId" Type="int" Nullable="false" />
+          <Property Name="Created" Type="datetime" Precision="0" Nullable="false" />
+          <Property Name="Expires" Type="datetime" Precision="0" Nullable="false" />
+          <Property Name="LockDate" Type="datetime" Precision="0" Nullable="false" />
+          <Property Name="LockId" Type="int" Nullable="false" />
+          <Property Name="Timeout" Type="int" Nullable="false" />
+          <Property Name="Locked" Type="bool" Nullable="false" />
+          <Property Name="SessionItems" Type="longblob" />
+          <Property Name="Flags" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="my_aspnet_sitemap">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Title" Type="varchar" MaxLength="50" />
+          <Property Name="Description" Type="varchar" MaxLength="512" />
+          <Property Name="Url" Type="varchar" MaxLength="512" />
+          <Property Name="Roles" Type="varchar" MaxLength="1000" />
+          <Property Name="ParentId" Type="int" />
+        </EntityType>
+        <EntityType Name="my_aspnet_users">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="applicationId" Type="int" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="256" Nullable="false" />
+          <Property Name="isAnonymous" Type="bool" Nullable="false" />
+          <Property Name="lastActivityDate" Type="datetime" Precision="0" />
+        </EntityType>
+        <EntityType Name="my_aspnet_usersinroles">
+          <Key>
+            <PropertyRef Name="userId" />
+            <PropertyRef Name="roleId" />
+          </Key>
+          <Property Name="userId" Type="int" Nullable="false" />
+          <Property Name="roleId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="student">
+          <Key>
+            <PropertyRef Name="vpisna_stevilka" />
+          </Key>
+          <Property Name="vpisna_stevilka" Type="int" Nullable="false" />
+          <Property Name="ime" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="priimek" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="naslov" Type="varchar" MaxLength="100" />
+          <Property Name="datum_rojstva" Type="varchar" MaxLength="100" />
+          <Property Name="spol" Type="varchar" MaxLength="10" />
+        </EntityType>
+        <EntityType Name="uporabnik">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="uint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="email" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="geslo" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="napacne_prijave" Type="uint" />
+        </EntityType>
+        <Association Name="ip_zaklep_uporabnik_fk">
+          <End Role="uporabnik" Type="Self.uporabnik" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="ip_zaklep" Type="Self.ip_zaklep" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="uporabnik">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="ip_zaklep">
+              <PropertyRef Name="upirabnik_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="studisModelStoreContainer">
+          <EntitySet Name="ip_zaklep" EntityType="Self.ip_zaklep" Schema="studis" store:Type="Tables" />
+          <EntitySet Name="my_aspnet_applications" EntityType="Self.my_aspnet_applications" Schema="studis" store:Type="Tables" />
+          <EntitySet Name="my_aspnet_membership" EntityType="Self.my_aspnet_membership" Schema="studis" store:Type="Tables" />
+          <EntitySet Name="my_aspnet_paths" EntityType="Self.my_aspnet_paths" Schema="studis" store:Type="Tables" />
+          <EntitySet Name="my_aspnet_personalizationallusers" EntityType="Self.my_aspnet_personalizationallusers" Schema="studis" store:Type="Tables" />
+          <EntitySet Name="my_aspnet_personalizationperuser" EntityType="Self.my_aspnet_personalizationperuser" Schema="studis" store:Type="Tables" />
+          <EntitySet Name="my_aspnet_profiles" EntityType="Self.my_aspnet_profiles" Schema="studis" store:Type="Tables" />
+          <EntitySet Name="my_aspnet_roles" EntityType="Self.my_aspnet_roles" Schema="studis" store:Type="Tables" />
+          <EntitySet Name="my_aspnet_sessioncleanup" EntityType="Self.my_aspnet_sessioncleanup" Schema="studis" store:Type="Tables" />
+          <EntitySet Name="my_aspnet_sessions" EntityType="Self.my_aspnet_sessions" Schema="studis" store:Type="Tables" />
+          <EntitySet Name="my_aspnet_sitemap" EntityType="Self.my_aspnet_sitemap" Schema="studis" store:Type="Tables" />
+          <EntitySet Name="my_aspnet_users" EntityType="Self.my_aspnet_users" Schema="studis" store:Type="Tables" />
+          <EntitySet Name="my_aspnet_usersinroles" EntityType="Self.my_aspnet_usersinroles" Schema="studis" store:Type="Tables" />
+          <EntitySet Name="student" EntityType="Self.student" Schema="studis" store:Type="Tables" />
+          <EntitySet Name="uporabnik" EntityType="Self.uporabnik" Schema="studis" store:Type="Tables" />
+          <AssociationSet Name="ip_zaklep_uporabnik_fk" Association="Self.ip_zaklep_uporabnik_fk">
+            <End Role="uporabnik" EntitySet="uporabnik" />
+            <End Role="ip_zaklep" EntitySet="ip_zaklep" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="studisModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="ip_zaklep">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ip" Type="String" MaxLength="46" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="zaklep_do" Type="DateTime" Nullable="false" />
+          <Property Name="upirabnik_id" Type="Int64" Nullable="false" />
+          <NavigationProperty Name="uporabnik" Relationship="Self.ip_zaklep_uporabnik_fk" FromRole="ip_zaklep" ToRole="uporabnik" />
+        </EntityType>
+        <EntityType Name="my_aspnet_applications">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="256" FixedLength="false" Unicode="false" />
+          <Property Name="description" Type="String" MaxLength="256" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="my_aspnet_membership">
+          <Key>
+            <PropertyRef Name="userId" />
+          </Key>
+          <Property Name="userId" Type="Int32" Nullable="false" />
+          <Property Name="Email" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
+          <Property Name="Comment" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Password" Type="String" MaxLength="128" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="PasswordKey" Type="String" MaxLength="32" FixedLength="false" Unicode="false" />
+          <Property Name="PasswordFormat" Type="SByte" />
+          <Property Name="PasswordQuestion" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="PasswordAnswer" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="IsApproved" Type="Boolean" />
+          <Property Name="LastActivityDate" Type="DateTime" />
+          <Property Name="LastLoginDate" Type="DateTime" />
+          <Property Name="LastPasswordChangedDate" Type="DateTime" />
+          <Property Name="CreationDate" Type="DateTime" />
+          <Property Name="IsLockedOut" Type="Boolean" />
+          <Property Name="LastLockedOutDate" Type="DateTime" />
+          <Property Name="FailedPasswordAttemptCount" Type="Int64" />
+          <Property Name="FailedPasswordAttemptWindowStart" Type="DateTime" />
+          <Property Name="FailedPasswordAnswerAttemptCount" Type="Int64" />
+          <Property Name="FailedPasswordAnswerAttemptWindowStart" Type="DateTime" />
+        </EntityType>
+        <EntityType Name="my_aspnet_paths">
+          <Key>
+            <PropertyRef Name="pathId" />
+          </Key>
+          <Property Name="applicationId" Type="Int32" Nullable="false" />
+          <Property Name="pathId" Type="String" MaxLength="36" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="path" Type="String" MaxLength="256" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="loweredPath" Type="String" MaxLength="256" FixedLength="false" Unicode="false" Nullable="false" />
+        </EntityType>
+        <EntityType Name="my_aspnet_personalizationallusers">
+          <Key>
+            <PropertyRef Name="pathId" />
+          </Key>
+          <Property Name="pathId" Type="String" MaxLength="36" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="pageSettings" Type="Binary" MaxLength="Max" FixedLength="false" Nullable="false" />
+          <Property Name="lastUpdatedDate" Type="DateTime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="my_aspnet_personalizationperuser">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="applicationId" Type="Int32" Nullable="false" />
+          <Property Name="pathId" Type="String" MaxLength="36" FixedLength="false" Unicode="false" />
+          <Property Name="userId" Type="Int32" />
+          <Property Name="pageSettings" Type="Binary" MaxLength="Max" FixedLength="false" Nullable="false" />
+          <Property Name="lastUpdatedDate" Type="DateTime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="my_aspnet_profiles">
+          <Key>
+            <PropertyRef Name="userId" />
+          </Key>
+          <Property Name="userId" Type="Int32" Nullable="false" />
+          <Property Name="valueindex" Type="String" MaxLength="1073741823" FixedLength="false" Unicode="false" />
+          <Property Name="stringdata" Type="String" MaxLength="1073741823" FixedLength="false" Unicode="false" />
+          <Property Name="binarydata" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="lastUpdatedDate" Type="DateTime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="my_aspnet_roles">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="applicationId" Type="Int32" Nullable="false" />
+          <Property Name="name" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+        </EntityType>
+        <EntityType Name="my_aspnet_sessioncleanup">
+          <Key>
+            <PropertyRef Name="ApplicationId" />
+          </Key>
+          <Property Name="LastRun" Type="DateTime" Nullable="false" />
+          <Property Name="IntervalMinutes" Type="Int32" Nullable="false" />
+          <Property Name="ApplicationId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="my_aspnet_sessions">
+          <Key>
+            <PropertyRef Name="SessionId" />
+            <PropertyRef Name="ApplicationId" />
+          </Key>
+          <Property Name="SessionId" Type="String" MaxLength="191" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ApplicationId" Type="Int32" Nullable="false" />
+          <Property Name="Created" Type="DateTime" Nullable="false" />
+          <Property Name="Expires" Type="DateTime" Nullable="false" />
+          <Property Name="LockDate" Type="DateTime" Nullable="false" />
+          <Property Name="LockId" Type="Int32" Nullable="false" />
+          <Property Name="Timeout" Type="Int32" Nullable="false" />
+          <Property Name="Locked" Type="Boolean" Nullable="false" />
+          <Property Name="SessionItems" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="Flags" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="my_aspnet_sitemap">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Title" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Description" Type="String" MaxLength="512" FixedLength="false" Unicode="false" />
+          <Property Name="Url" Type="String" MaxLength="512" FixedLength="false" Unicode="false" />
+          <Property Name="Roles" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="ParentId" Type="Int32" />
+        </EntityType>
+        <EntityType Name="my_aspnet_users">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="applicationId" Type="Int32" Nullable="false" />
+          <Property Name="name" Type="String" MaxLength="256" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="isAnonymous" Type="Boolean" Nullable="false" />
+          <Property Name="lastActivityDate" Type="DateTime" />
+        </EntityType>
+        <EntityType Name="my_aspnet_usersinroles">
+          <Key>
+            <PropertyRef Name="userId" />
+            <PropertyRef Name="roleId" />
+          </Key>
+          <Property Name="userId" Type="Int32" Nullable="false" />
+          <Property Name="roleId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="student">
+          <Key>
+            <PropertyRef Name="vpisna_stevilka" />
+          </Key>
+          <Property Name="vpisna_stevilka" Type="Int32" Nullable="false" />
+          <Property Name="ime" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="priimek" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="naslov" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="datum_rojstva" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="spol" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="uporabnik">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="email" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="geslo" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="napacne_prijave" Type="Int64" />
+          <NavigationProperty Name="ip_zaklep" Relationship="Self.ip_zaklep_uporabnik_fk" FromRole="uporabnik" ToRole="ip_zaklep" />
+        </EntityType>
+        <Association Name="ip_zaklep_uporabnik_fk">
+          <End Role="uporabnik" Type="Self.uporabnik" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="ip_zaklep" Type="Self.ip_zaklep" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="uporabnik">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="ip_zaklep">
+              <PropertyRef Name="upirabnik_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="studisEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="ip_zaklep" EntityType="Self.ip_zaklep" />
+          <EntitySet Name="my_aspnet_applications" EntityType="Self.my_aspnet_applications" />
+          <EntitySet Name="my_aspnet_membership" EntityType="Self.my_aspnet_membership" />
+          <EntitySet Name="my_aspnet_paths" EntityType="Self.my_aspnet_paths" />
+          <EntitySet Name="my_aspnet_personalizationallusers" EntityType="Self.my_aspnet_personalizationallusers" />
+          <EntitySet Name="my_aspnet_personalizationperuser" EntityType="Self.my_aspnet_personalizationperuser" />
+          <EntitySet Name="my_aspnet_profiles" EntityType="Self.my_aspnet_profiles" />
+          <EntitySet Name="my_aspnet_roles" EntityType="Self.my_aspnet_roles" />
+          <EntitySet Name="my_aspnet_sessioncleanup" EntityType="Self.my_aspnet_sessioncleanup" />
+          <EntitySet Name="my_aspnet_sessions" EntityType="Self.my_aspnet_sessions" />
+          <EntitySet Name="my_aspnet_sitemap" EntityType="Self.my_aspnet_sitemap" />
+          <EntitySet Name="my_aspnet_users" EntityType="Self.my_aspnet_users" />
+          <EntitySet Name="my_aspnet_usersinroles" EntityType="Self.my_aspnet_usersinroles" />
+          <EntitySet Name="students" EntityType="Self.student" />
+          <EntitySet Name="uporabniks" EntityType="Self.uporabnik" />
+          <AssociationSet Name="ip_zaklep_uporabnik_fk" Association="Self.ip_zaklep_uporabnik_fk">
+            <End Role="uporabnik" EntitySet="uporabniks" />
+            <End Role="ip_zaklep" EntitySet="ip_zaklep" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="studisModelStoreContainer" CdmEntityContainer="studisEntities">
+          <EntitySetMapping Name="ip_zaklep">
+            <EntityTypeMapping TypeName="studisModel.ip_zaklep">
+              <MappingFragment StoreEntitySet="ip_zaklep">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="ip" ColumnName="ip" />
+                <ScalarProperty Name="zaklep_do" ColumnName="zaklep_do" />
+                <ScalarProperty Name="upirabnik_id" ColumnName="upirabnik_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="my_aspnet_applications">
+            <EntityTypeMapping TypeName="studisModel.my_aspnet_applications">
+              <MappingFragment StoreEntitySet="my_aspnet_applications">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="description" ColumnName="description" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="my_aspnet_membership">
+            <EntityTypeMapping TypeName="studisModel.my_aspnet_membership">
+              <MappingFragment StoreEntitySet="my_aspnet_membership">
+                <ScalarProperty Name="userId" ColumnName="userId" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Comment" ColumnName="Comment" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="PasswordKey" ColumnName="PasswordKey" />
+                <ScalarProperty Name="PasswordFormat" ColumnName="PasswordFormat" />
+                <ScalarProperty Name="PasswordQuestion" ColumnName="PasswordQuestion" />
+                <ScalarProperty Name="PasswordAnswer" ColumnName="PasswordAnswer" />
+                <ScalarProperty Name="IsApproved" ColumnName="IsApproved" />
+                <ScalarProperty Name="LastActivityDate" ColumnName="LastActivityDate" />
+                <ScalarProperty Name="LastLoginDate" ColumnName="LastLoginDate" />
+                <ScalarProperty Name="LastPasswordChangedDate" ColumnName="LastPasswordChangedDate" />
+                <ScalarProperty Name="CreationDate" ColumnName="CreationDate" />
+                <ScalarProperty Name="IsLockedOut" ColumnName="IsLockedOut" />
+                <ScalarProperty Name="LastLockedOutDate" ColumnName="LastLockedOutDate" />
+                <ScalarProperty Name="FailedPasswordAttemptCount" ColumnName="FailedPasswordAttemptCount" />
+                <ScalarProperty Name="FailedPasswordAttemptWindowStart" ColumnName="FailedPasswordAttemptWindowStart" />
+                <ScalarProperty Name="FailedPasswordAnswerAttemptCount" ColumnName="FailedPasswordAnswerAttemptCount" />
+                <ScalarProperty Name="FailedPasswordAnswerAttemptWindowStart" ColumnName="FailedPasswordAnswerAttemptWindowStart" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="my_aspnet_paths">
+            <EntityTypeMapping TypeName="studisModel.my_aspnet_paths">
+              <MappingFragment StoreEntitySet="my_aspnet_paths">
+                <ScalarProperty Name="applicationId" ColumnName="applicationId" />
+                <ScalarProperty Name="pathId" ColumnName="pathId" />
+                <ScalarProperty Name="path" ColumnName="path" />
+                <ScalarProperty Name="loweredPath" ColumnName="loweredPath" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="my_aspnet_personalizationallusers">
+            <EntityTypeMapping TypeName="studisModel.my_aspnet_personalizationallusers">
+              <MappingFragment StoreEntitySet="my_aspnet_personalizationallusers">
+                <ScalarProperty Name="pathId" ColumnName="pathId" />
+                <ScalarProperty Name="pageSettings" ColumnName="pageSettings" />
+                <ScalarProperty Name="lastUpdatedDate" ColumnName="lastUpdatedDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="my_aspnet_personalizationperuser">
+            <EntityTypeMapping TypeName="studisModel.my_aspnet_personalizationperuser">
+              <MappingFragment StoreEntitySet="my_aspnet_personalizationperuser">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="applicationId" ColumnName="applicationId" />
+                <ScalarProperty Name="pathId" ColumnName="pathId" />
+                <ScalarProperty Name="userId" ColumnName="userId" />
+                <ScalarProperty Name="pageSettings" ColumnName="pageSettings" />
+                <ScalarProperty Name="lastUpdatedDate" ColumnName="lastUpdatedDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="my_aspnet_profiles">
+            <EntityTypeMapping TypeName="studisModel.my_aspnet_profiles">
+              <MappingFragment StoreEntitySet="my_aspnet_profiles">
+                <ScalarProperty Name="userId" ColumnName="userId" />
+                <ScalarProperty Name="valueindex" ColumnName="valueindex" />
+                <ScalarProperty Name="stringdata" ColumnName="stringdata" />
+                <ScalarProperty Name="binarydata" ColumnName="binarydata" />
+                <ScalarProperty Name="lastUpdatedDate" ColumnName="lastUpdatedDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="my_aspnet_roles">
+            <EntityTypeMapping TypeName="studisModel.my_aspnet_roles">
+              <MappingFragment StoreEntitySet="my_aspnet_roles">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="applicationId" ColumnName="applicationId" />
+                <ScalarProperty Name="name" ColumnName="name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="my_aspnet_sessioncleanup">
+            <EntityTypeMapping TypeName="studisModel.my_aspnet_sessioncleanup">
+              <MappingFragment StoreEntitySet="my_aspnet_sessioncleanup">
+                <ScalarProperty Name="LastRun" ColumnName="LastRun" />
+                <ScalarProperty Name="IntervalMinutes" ColumnName="IntervalMinutes" />
+                <ScalarProperty Name="ApplicationId" ColumnName="ApplicationId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="my_aspnet_sessions">
+            <EntityTypeMapping TypeName="studisModel.my_aspnet_sessions">
+              <MappingFragment StoreEntitySet="my_aspnet_sessions">
+                <ScalarProperty Name="SessionId" ColumnName="SessionId" />
+                <ScalarProperty Name="ApplicationId" ColumnName="ApplicationId" />
+                <ScalarProperty Name="Created" ColumnName="Created" />
+                <ScalarProperty Name="Expires" ColumnName="Expires" />
+                <ScalarProperty Name="LockDate" ColumnName="LockDate" />
+                <ScalarProperty Name="LockId" ColumnName="LockId" />
+                <ScalarProperty Name="Timeout" ColumnName="Timeout" />
+                <ScalarProperty Name="Locked" ColumnName="Locked" />
+                <ScalarProperty Name="SessionItems" ColumnName="SessionItems" />
+                <ScalarProperty Name="Flags" ColumnName="Flags" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="my_aspnet_sitemap">
+            <EntityTypeMapping TypeName="studisModel.my_aspnet_sitemap">
+              <MappingFragment StoreEntitySet="my_aspnet_sitemap">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Url" ColumnName="Url" />
+                <ScalarProperty Name="Roles" ColumnName="Roles" />
+                <ScalarProperty Name="ParentId" ColumnName="ParentId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="my_aspnet_users">
+            <EntityTypeMapping TypeName="studisModel.my_aspnet_users">
+              <MappingFragment StoreEntitySet="my_aspnet_users">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="applicationId" ColumnName="applicationId" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="isAnonymous" ColumnName="isAnonymous" />
+                <ScalarProperty Name="lastActivityDate" ColumnName="lastActivityDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="my_aspnet_usersinroles">
+            <EntityTypeMapping TypeName="studisModel.my_aspnet_usersinroles">
+              <MappingFragment StoreEntitySet="my_aspnet_usersinroles">
+                <ScalarProperty Name="userId" ColumnName="userId" />
+                <ScalarProperty Name="roleId" ColumnName="roleId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="students">
+            <EntityTypeMapping TypeName="studisModel.student">
+              <MappingFragment StoreEntitySet="student">
+                <ScalarProperty Name="vpisna_stevilka" ColumnName="vpisna_stevilka" />
+                <ScalarProperty Name="ime" ColumnName="ime" />
+                <ScalarProperty Name="priimek" ColumnName="priimek" />
+                <ScalarProperty Name="naslov" ColumnName="naslov" />
+                <ScalarProperty Name="datum_rojstva" ColumnName="datum_rojstva" />
+                <ScalarProperty Name="spol" ColumnName="spol" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="uporabniks">
+            <EntityTypeMapping TypeName="studisModel.uporabnik">
+              <MappingFragment StoreEntitySet="uporabnik">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="geslo" ColumnName="geslo" />
+                <ScalarProperty Name="napacne_prijave" ColumnName="napacne_prijave" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

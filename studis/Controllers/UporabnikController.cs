@@ -24,14 +24,14 @@ namespace studis.Controllers
 {
 	public class UporabnikController:Controller
 	{
-	   private studis.Models.Model1Entities db = new studis.Models.Model1Entities();
+	   private studis.Models.studisEntities db = new studis.Models.studisEntities();
 	   
 	     //
         // GET: /uporabnik/
 
         public ActionResult Index()
         {
-            return View(db.uporabnik.ToList());
+            return View(db.uporabniks.ToList());
         }
 
         protected override void Dispose(bool disposing)
