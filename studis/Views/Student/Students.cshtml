@@ -6,9 +6,15 @@
 
 <h2>Seznam študentov</h2>
 
-<p>Išči:<br/>
-    <input id="searchBox" type="text" placeholder="Vpisna/začetnice imena"/></p>
-<p>
+
+@using (Html.BeginForm())
+{
+    <p>
+        @Html.TextBox("SearchString")
+        <input type="submit" value="Išči" />
+    </p>
+} 
+
     @Html.ActionLink("Create New", "Create")
 </p>
 <table class="table">

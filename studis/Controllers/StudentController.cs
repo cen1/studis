@@ -15,9 +15,16 @@ namespace studis.Controllers
         private studisEntities db = new studisEntities();
 
         // GET: /Student/
-        public ActionResult Students()
+        public ActionResult Students(string searchString)
         {
-            return View(db.students.ToList());
+            var students = from s in db.students select s;
+            if (!String.IsNullOrEmpty(searchString))
+            { 
+                students=students.Where(s => s.ime.Contains(searchString));
+            }
+
+            return View(students);
+            //return View(db.students.ToList());
         }
 
         // GET: /Student/Details/5
