@@ -26,10 +26,31 @@ namespace studis.Controllers
                 if (isNumerical)
                     students = students.Where(s => s.vpisna_stevilka == vpisna);
                 else
-                    students = students.Where(s => s.ime.Contains(searchString));
+                {
+                    string[] searchData = searchString.Split(null);
+
+                    if (searchData.Length > 1)
+                    {
+                        string firstChar = searchData[0];
+                        string secondChar = searchData[1];
+                        var tempStudents = students.Where(s => s.ime.Contains(firstChar) && s.priimek.Contains(secondChar));
+
+                        if (tempStudents.Any())
+                            students = tempStudents;
+                        else
+                            students = students.Where(s => s.ime.Contains(secondChar) && s.priimek.Contains(firstChar));
+                    }
+                    else
+                    {
+                        var tempStudents = students.Where(s => s.ime.Contains(searchString));
+                        if (tempStudents.Any())
+                            students = tempStudents;
+                        else
+                            students = students.Where(s => s.priimek.Contains(searchString));
+                    }
+                }
             }
             return View(students);
-            //return View(db.students.ToList());
         }
 
         // GET: /Student/Details/5
