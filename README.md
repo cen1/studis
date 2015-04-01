@@ -5,8 +5,15 @@ Studis za TPO
 https://dev.mysql.com/downloads/connector/net/  
 http://dev.mysql.com/downloads/windows/visualstudio/
 
-2. Baza  
-..tbd
+2. Baza
+my_aspnet_applications: seznam aplikacij, imamo samo eno  
+my_aspnet_membership: glavna tabela uporabnikov za login  
+my_aspnet_roles: vse role za našo aplikacijo  
+my_aspnet_users: èe prav razumem ta tabela obstaja zato, da lahko imaš veè uporabnikov z istim imenom èe imaš veè aplikacij, FK userID v membership
+my_aspnet_usersinroles: poveže uporabnika z rolo
+
+Torej, vse tabele ki se navezujejo na nekega uporabnika (npr študent) povezujemo z FK na tabelo my_aspnet_users
+
 
 3. Vstavljanje in iskanje po bazi z Entity Framework 6  
 http://www.entityframeworktutorial.net  
