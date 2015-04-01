@@ -14,8 +14,15 @@ namespace studis.Models
     
     public partial class my_aspnet_applications
     {
+        public my_aspnet_applications()
+        {
+            this.my_aspnet_users = new HashSet<my_aspnet_users>();
+        }
+    
         public int id { get; set; }
         public string name { get; set; }
         public string description { get; set; }
+    
+        public virtual ICollection<my_aspnet_users> my_aspnet_users { get; set; }
     }
 }

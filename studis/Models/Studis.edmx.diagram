@@ -4,23 +4,25 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="1d3f79dc583b4c97953e0f85d49e781a" Name="Diagram1">
-        <EntityTypeShape EntityType="studisModel.ip_zaklep" Width="1.5" PointX="3" PointY="0.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="studisModel.my_aspnet_applications" Width="1.5" PointX="0.75" PointY="3.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="studisModel.my_aspnet_membership" Width="1.5" PointX="2.75" PointY="3.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="studisModel.my_aspnet_paths" Width="1.5" PointX="4.75" PointY="3.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="studisModel.my_aspnet_personalizationallusers" Width="1.5" PointX="5.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="studisModel.my_aspnet_personalizationperuser" Width="1.5" PointX="6.75" PointY="3.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="studisModel.my_aspnet_profiles" Width="1.5" PointX="4.75" PointY="6.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="studisModel.my_aspnet_roles" Width="1.5" PointX="6.75" PointY="6.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="studisModel.my_aspnet_sessioncleanup" Width="1.5" PointX="7.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="studisModel.my_aspnet_sessions" Width="1.5" PointX="8.75" PointY="3.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="studisModel.my_aspnet_sitemap" Width="1.5" PointX="8.75" PointY="7.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="studisModel.my_aspnet_users" Width="1.5" PointX="9.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="studisModel.my_aspnet_usersinroles" Width="1.5" PointX="0.75" PointY="9.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="studisModel.student" Width="1.5" PointX="2.75" PointY="9.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="studisModel.uporabnik" Width="1.5" PointX="0.75" PointY="0.875" IsExpanded="true" />
-        <AssociationConnector Association="studisModel.ip_zaklep_uporabnik_fk" ManuallyRouted="false" />
+      <Diagram DiagramId="1d3f79dc583b4c97953e0f85d49e781a" Name="Diagram1" ZoomLevel="100">
+        <EntityTypeShape EntityType="studisModel.my_aspnet_applications" Width="1.5" PointX="0.625" PointY="0.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="studisModel.my_aspnet_membership" Width="1.5" PointX="8.25" PointY="0.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="studisModel.my_aspnet_paths" Width="1.5" PointX="0.5" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="studisModel.my_aspnet_personalizationallusers" Width="1.5" PointX="9.375" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="studisModel.my_aspnet_personalizationperuser" Width="1.5" PointX="4.125" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="studisModel.my_aspnet_profiles" Width="1.5" PointX="2.25" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="studisModel.my_aspnet_roles" Width="1.5" PointX="0.625" PointY="2.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="studisModel.my_aspnet_sessioncleanup" Width="1.5" PointX="11.25" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="studisModel.my_aspnet_sessions" Width="1.5" PointX="5.875" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="studisModel.my_aspnet_sitemap" Width="1.5" PointX="7.625" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="studisModel.my_aspnet_users" Width="1.5" PointX="6" PointY="0.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="studisModel.student" Width="1.5" PointX="2.375" PointY="3.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="studisModel.ip_lock" Width="1.5" PointX="4.125" PointY="3.625" />
+        <AssociationConnector Association="studisModel.ip_lock_to_user" />
+        <AssociationConnector Association="studisModel.users_to_application" />
+        <AssociationConnector Association="studisModel.membership_to_users" />
+        <AssociationConnector Association="studisModel.userID_student_users" />
+        <AssociationConnector Association="studisModel.my_aspnet_usersinroles1" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

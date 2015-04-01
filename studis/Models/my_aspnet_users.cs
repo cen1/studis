@@ -14,10 +14,23 @@ namespace studis.Models
     
     public partial class my_aspnet_users
     {
+        public my_aspnet_users()
+        {
+            this.ip_lock = new HashSet<ip_lock>();
+            this.students = new HashSet<student>();
+            this.my_aspnet_roles = new HashSet<my_aspnet_roles>();
+        }
+    
         public int id { get; set; }
         public int applicationId { get; set; }
         public string name { get; set; }
         public bool isAnonymous { get; set; }
         public Nullable<System.DateTime> lastActivityDate { get; set; }
+    
+        public virtual ICollection<ip_lock> ip_lock { get; set; }
+        public virtual my_aspnet_applications my_aspnet_applications { get; set; }
+        public virtual my_aspnet_membership my_aspnet_membership { get; set; }
+        public virtual ICollection<student> students { get; set; }
+        public virtual ICollection<my_aspnet_roles> my_aspnet_roles { get; set; }
     }
 }

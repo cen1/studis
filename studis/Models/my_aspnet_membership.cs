@@ -33,5 +33,7 @@ namespace studis.Models
         public Nullable<System.DateTime> FailedPasswordAttemptWindowStart { get; set; }
         public Nullable<long> FailedPasswordAnswerAttemptCount { get; set; }
         public Nullable<System.DateTime> FailedPasswordAnswerAttemptWindowStart { get; set; }
+    
+        public virtual my_aspnet_users my_aspnet_users { get; set; }
     }
 }

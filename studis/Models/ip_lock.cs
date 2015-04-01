@@ -12,17 +12,14 @@ namespace studis.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class my_aspnet_roles
+    public partial class ip_lock
     {
-        public my_aspnet_roles()
-        {
-            this.my_aspnet_users = new HashSet<my_aspnet_users>();
-        }
+        public long id { get; set; }
+        public string ip { get; set; }
+        public System.DateTime locked_at { get; set; }
+        public System.DateTime locked_until { get; set; }
+        public int userId { get; set; }
     
-        public int id { get; set; }
-        public int applicationId { get; set; }
-        public string name { get; set; }
-    
-        public virtual ICollection<my_aspnet_users> my_aspnet_users { get; set; }
+        public virtual my_aspnet_users my_aspnet_users { get; set; }
     }
 }

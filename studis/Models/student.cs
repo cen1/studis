@@ -20,5 +20,8 @@ namespace studis.Models
         public string naslov { get; set; }
         public string datum_rojstva { get; set; }
         public string spol { get; set; }
+        public Nullable<int> userID_student { get; set; }
+    
+        public virtual my_aspnet_users my_aspnet_users { get; set; }
     }
 }

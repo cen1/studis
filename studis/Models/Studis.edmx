@@ -4,15 +4,16 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="studisModel.Store" Provider="MySql.Data.MySqlClient" ProviderManifestToken="5.5" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
-        <EntityType Name="ip_zaklep">
+    <Schema Namespace="studisModel.Store" Provider="MySql.Data.MySqlClient" ProviderManifestToken="5.5" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="ip_lock">
           <Key>
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="uint" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="ip" Type="varchar" MaxLength="46" Nullable="false" />
-          <Property Name="zaklep_do" Type="datetime" Precision="0" Nullable="false" />
-          <Property Name="upirabnik_id" Type="uint" Nullable="false" />
+          <Property Name="ip" Type="varchar" MaxLength="15" Nullable="false" />
+          <Property Name="locked_at" Type="datetime" Precision="0" Nullable="false" />
+          <Property Name="locked_until" Type="datetime" Precision="0" Nullable="false" />
+          <Property Name="userId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="my_aspnet_applications">
           <Key>
@@ -160,32 +161,92 @@ warning 6013: The table/view 'def.studis.my_aspnet_schemaversion' does not have 
           <Property Name="naslov" Type="varchar" MaxLength="100" />
           <Property Name="datum_rojstva" Type="varchar" MaxLength="100" />
           <Property Name="spol" Type="varchar" MaxLength="10" />
+          <Property Name="userID_student" Type="int" />
         </EntityType>
-        <EntityType Name="uporabnik">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="uint" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="email" Type="varchar" MaxLength="255" Nullable="false" />
-          <Property Name="geslo" Type="varchar" MaxLength="255" Nullable="false" />
-          <Property Name="napacne_prijave" Type="uint" />
-        </EntityType>
-        <Association Name="ip_zaklep_uporabnik_fk">
-          <End Role="uporabnik" Type="Self.uporabnik" Multiplicity="1">
+        <Association Name="ip_lock_to_user">
+          <End Role="my_aspnet_users" Type="Self.my_aspnet_users" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
-          <End Role="ip_zaklep" Type="Self.ip_zaklep" Multiplicity="*" />
+          <End Role="ip_lock" Type="Self.ip_lock" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="uporabnik">
+            <Principal Role="my_aspnet_users">
               <PropertyRef Name="id" />
             </Principal>
-            <Dependent Role="ip_zaklep">
-              <PropertyRef Name="upirabnik_id" />
+            <Dependent Role="ip_lock">
+              <PropertyRef Name="userId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="membership_to_users">
+          <End Role="my_aspnet_users" Type="Self.my_aspnet_users" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="my_aspnet_membership" Type="Self.my_aspnet_membership" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="my_aspnet_users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="my_aspnet_membership">
+              <PropertyRef Name="userId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="userID_student_users">
+          <End Role="my_aspnet_users" Type="Self.my_aspnet_users" Multiplicity="0..1" />
+          <End Role="student" Type="Self.student" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="my_aspnet_users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="student">
+              <PropertyRef Name="userID_student" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="users_to_application">
+          <End Role="my_aspnet_applications" Type="Self.my_aspnet_applications" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="my_aspnet_users" Type="Self.my_aspnet_users" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="my_aspnet_applications">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="my_aspnet_users">
+              <PropertyRef Name="applicationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="usersinroles_to_roles">
+          <End Role="my_aspnet_roles" Type="Self.my_aspnet_roles" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="my_aspnet_usersinroles" Type="Self.my_aspnet_usersinroles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="my_aspnet_roles">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="my_aspnet_usersinroles">
+              <PropertyRef Name="roleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="usersinroles_to_users">
+          <End Role="my_aspnet_users" Type="Self.my_aspnet_users" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="my_aspnet_usersinroles" Type="Self.my_aspnet_usersinroles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="my_aspnet_users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="my_aspnet_usersinroles">
+              <PropertyRef Name="userId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="studisModelStoreContainer">
-          <EntitySet Name="ip_zaklep" EntityType="Self.ip_zaklep" Schema="studis" store:Type="Tables" />
+          <EntitySet Name="ip_lock" EntityType="Self.ip_lock" Schema="studis" store:Type="Tables" />
           <EntitySet Name="my_aspnet_applications" EntityType="Self.my_aspnet_applications" Schema="studis" store:Type="Tables" />
           <EntitySet Name="my_aspnet_membership" EntityType="Self.my_aspnet_membership" Schema="studis" store:Type="Tables" />
           <EntitySet Name="my_aspnet_paths" EntityType="Self.my_aspnet_paths" Schema="studis" store:Type="Tables" />
@@ -199,27 +260,35 @@ warning 6013: The table/view 'def.studis.my_aspnet_schemaversion' does not have 
           <EntitySet Name="my_aspnet_users" EntityType="Self.my_aspnet_users" Schema="studis" store:Type="Tables" />
           <EntitySet Name="my_aspnet_usersinroles" EntityType="Self.my_aspnet_usersinroles" Schema="studis" store:Type="Tables" />
           <EntitySet Name="student" EntityType="Self.student" Schema="studis" store:Type="Tables" />
-          <EntitySet Name="uporabnik" EntityType="Self.uporabnik" Schema="studis" store:Type="Tables" />
-          <AssociationSet Name="ip_zaklep_uporabnik_fk" Association="Self.ip_zaklep_uporabnik_fk">
-            <End Role="uporabnik" EntitySet="uporabnik" />
-            <End Role="ip_zaklep" EntitySet="ip_zaklep" />
+          <AssociationSet Name="ip_lock_to_user" Association="Self.ip_lock_to_user">
+            <End Role="my_aspnet_users" EntitySet="my_aspnet_users" />
+            <End Role="ip_lock" EntitySet="ip_lock" />
+          </AssociationSet>
+          <AssociationSet Name="membership_to_users" Association="Self.membership_to_users">
+            <End Role="my_aspnet_users" EntitySet="my_aspnet_users" />
+            <End Role="my_aspnet_membership" EntitySet="my_aspnet_membership" />
+          </AssociationSet>
+          <AssociationSet Name="userID_student_users" Association="Self.userID_student_users">
+            <End Role="my_aspnet_users" EntitySet="my_aspnet_users" />
+            <End Role="student" EntitySet="student" />
+          </AssociationSet>
+          <AssociationSet Name="users_to_application" Association="Self.users_to_application">
+            <End Role="my_aspnet_applications" EntitySet="my_aspnet_applications" />
+            <End Role="my_aspnet_users" EntitySet="my_aspnet_users" />
+          </AssociationSet>
+          <AssociationSet Name="usersinroles_to_roles" Association="Self.usersinroles_to_roles">
+            <End Role="my_aspnet_roles" EntitySet="my_aspnet_roles" />
+            <End Role="my_aspnet_usersinroles" EntitySet="my_aspnet_usersinroles" />
+          </AssociationSet>
+          <AssociationSet Name="usersinroles_to_users" Association="Self.usersinroles_to_users">
+            <End Role="my_aspnet_users" EntitySet="my_aspnet_users" />
+            <End Role="my_aspnet_usersinroles" EntitySet="my_aspnet_usersinroles" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="studisModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
-        <EntityType Name="ip_zaklep">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ip" Type="String" MaxLength="46" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="zaklep_do" Type="DateTime" Nullable="false" />
-          <Property Name="upirabnik_id" Type="Int64" Nullable="false" />
-          <NavigationProperty Name="uporabnik" Relationship="Self.ip_zaklep_uporabnik_fk" FromRole="ip_zaklep" ToRole="uporabnik" />
-        </EntityType>
         <EntityType Name="my_aspnet_applications">
           <Key>
             <PropertyRef Name="id" />
@@ -227,6 +296,7 @@ warning 6013: The table/view 'def.studis.my_aspnet_schemaversion' does not have 
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="name" Type="String" MaxLength="256" FixedLength="false" Unicode="false" />
           <Property Name="description" Type="String" MaxLength="256" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="my_aspnet_users" Relationship="studisModel.users_to_application" FromRole="my_aspnet_applications" ToRole="my_aspnet_users" />
         </EntityType>
         <EntityType Name="my_aspnet_membership">
           <Key>
@@ -251,6 +321,7 @@ warning 6013: The table/view 'def.studis.my_aspnet_schemaversion' does not have 
           <Property Name="FailedPasswordAttemptWindowStart" Type="DateTime" />
           <Property Name="FailedPasswordAnswerAttemptCount" Type="Int64" />
           <Property Name="FailedPasswordAnswerAttemptWindowStart" Type="DateTime" />
+          <NavigationProperty Name="my_aspnet_users" Relationship="studisModel.membership_to_users" FromRole="my_aspnet_membership" ToRole="my_aspnet_users" />
         </EntityType>
         <EntityType Name="my_aspnet_paths">
           <Key>
@@ -297,6 +368,7 @@ warning 6013: The table/view 'def.studis.my_aspnet_schemaversion' does not have 
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="applicationId" Type="Int32" Nullable="false" />
           <Property Name="name" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="my_aspnet_users" Relationship="studisModel.my_aspnet_usersinroles1" FromRole="my_aspnet_roles" ToRole="my_aspnet_users" />
         </EntityType>
         <EntityType Name="my_aspnet_sessioncleanup">
           <Key>
@@ -342,14 +414,11 @@ warning 6013: The table/view 'def.studis.my_aspnet_schemaversion' does not have 
           <Property Name="name" Type="String" MaxLength="256" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="isAnonymous" Type="Boolean" Nullable="false" />
           <Property Name="lastActivityDate" Type="DateTime" />
-        </EntityType>
-        <EntityType Name="my_aspnet_usersinroles">
-          <Key>
-            <PropertyRef Name="userId" />
-            <PropertyRef Name="roleId" />
-          </Key>
-          <Property Name="userId" Type="Int32" Nullable="false" />
-          <Property Name="roleId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="ip_lock" Relationship="studisModel.ip_lock_to_user" FromRole="my_aspnet_users" ToRole="ip_lock" />
+          <NavigationProperty Name="my_aspnet_applications" Relationship="studisModel.users_to_application" FromRole="my_aspnet_users" ToRole="my_aspnet_applications" />
+          <NavigationProperty Name="my_aspnet_membership" Relationship="studisModel.membership_to_users" FromRole="my_aspnet_users" ToRole="my_aspnet_membership" />
+          <NavigationProperty Name="students" Relationship="studisModel.userID_student_users" FromRole="my_aspnet_users" ToRole="student" />
+          <NavigationProperty Name="my_aspnet_roles" Relationship="studisModel.my_aspnet_usersinroles1" FromRole="my_aspnet_users" ToRole="my_aspnet_roles" />
         </EntityType>
         <EntityType Name="student">
           <Key>
@@ -361,33 +430,10 @@ warning 6013: The table/view 'def.studis.my_aspnet_schemaversion' does not have 
           <Property Name="naslov" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="datum_rojstva" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="spol" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="userID_student" Type="Int32" />
+          <NavigationProperty Name="my_aspnet_users" Relationship="studisModel.userID_student_users" FromRole="student" ToRole="my_aspnet_users" />
         </EntityType>
-        <EntityType Name="uporabnik">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="email" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="geslo" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="napacne_prijave" Type="Int64" />
-          <NavigationProperty Name="ip_zaklep" Relationship="Self.ip_zaklep_uporabnik_fk" FromRole="uporabnik" ToRole="ip_zaklep" />
-        </EntityType>
-        <Association Name="ip_zaklep_uporabnik_fk">
-          <End Role="uporabnik" Type="Self.uporabnik" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="ip_zaklep" Type="Self.ip_zaklep" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="uporabnik">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="ip_zaklep">
-              <PropertyRef Name="upirabnik_id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityContainer Name="studisEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="ip_zaklep" EntityType="Self.ip_zaklep" />
           <EntitySet Name="my_aspnet_applications" EntityType="Self.my_aspnet_applications" />
           <EntitySet Name="my_aspnet_membership" EntityType="Self.my_aspnet_membership" />
           <EntitySet Name="my_aspnet_paths" EntityType="Self.my_aspnet_paths" />
@@ -399,30 +445,104 @@ warning 6013: The table/view 'def.studis.my_aspnet_schemaversion' does not have 
           <EntitySet Name="my_aspnet_sessions" EntityType="Self.my_aspnet_sessions" />
           <EntitySet Name="my_aspnet_sitemap" EntityType="Self.my_aspnet_sitemap" />
           <EntitySet Name="my_aspnet_users" EntityType="Self.my_aspnet_users" />
-          <EntitySet Name="my_aspnet_usersinroles" EntityType="Self.my_aspnet_usersinroles" />
           <EntitySet Name="students" EntityType="Self.student" />
-          <EntitySet Name="uporabniks" EntityType="Self.uporabnik" />
-          <AssociationSet Name="ip_zaklep_uporabnik_fk" Association="Self.ip_zaklep_uporabnik_fk">
-            <End Role="uporabnik" EntitySet="uporabniks" />
-            <End Role="ip_zaklep" EntitySet="ip_zaklep" />
+          <EntitySet Name="ip_lock" EntityType="studisModel.ip_lock" />
+          <AssociationSet Name="ip_lock_to_user" Association="studisModel.ip_lock_to_user">
+            <End Role="my_aspnet_users" EntitySet="my_aspnet_users" />
+            <End Role="ip_lock" EntitySet="ip_lock" />
+          </AssociationSet>
+          <AssociationSet Name="users_to_application" Association="studisModel.users_to_application">
+            <End Role="my_aspnet_applications" EntitySet="my_aspnet_applications" />
+            <End Role="my_aspnet_users" EntitySet="my_aspnet_users" />
+          </AssociationSet>
+          <AssociationSet Name="membership_to_users" Association="studisModel.membership_to_users">
+            <End Role="my_aspnet_users" EntitySet="my_aspnet_users" />
+            <End Role="my_aspnet_membership" EntitySet="my_aspnet_membership" />
+          </AssociationSet>
+          <AssociationSet Name="userID_student_users" Association="studisModel.userID_student_users">
+            <End Role="my_aspnet_users" EntitySet="my_aspnet_users" />
+            <End Role="student" EntitySet="students" />
+          </AssociationSet>
+          <AssociationSet Name="my_aspnet_usersinroles1" Association="studisModel.my_aspnet_usersinroles1">
+            <End Role="my_aspnet_roles" EntitySet="my_aspnet_roles" />
+            <End Role="my_aspnet_users" EntitySet="my_aspnet_users" />
           </AssociationSet>
         </EntityContainer>
+        <EntityType Name="ip_lock">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ip" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="locked_at" Type="DateTime" Nullable="false" />
+          <Property Name="locked_until" Type="DateTime" Nullable="false" />
+          <Property Name="userId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="my_aspnet_users" Relationship="studisModel.ip_lock_to_user" FromRole="ip_lock" ToRole="my_aspnet_users" />
+        </EntityType>
+        <Association Name="ip_lock_to_user">
+          <End Type="studisModel.my_aspnet_users" Role="my_aspnet_users" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="studisModel.ip_lock" Role="ip_lock" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="my_aspnet_users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="ip_lock">
+              <PropertyRef Name="userId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="users_to_application">
+          <End Type="studisModel.my_aspnet_applications" Role="my_aspnet_applications" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="studisModel.my_aspnet_users" Role="my_aspnet_users" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="my_aspnet_applications">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="my_aspnet_users">
+              <PropertyRef Name="applicationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="membership_to_users">
+          <End Type="studisModel.my_aspnet_users" Role="my_aspnet_users" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="studisModel.my_aspnet_membership" Role="my_aspnet_membership" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="my_aspnet_users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="my_aspnet_membership">
+              <PropertyRef Name="userId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="userID_student_users">
+          <End Type="studisModel.my_aspnet_users" Role="my_aspnet_users" Multiplicity="0..1" />
+          <End Type="studisModel.student" Role="student" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="my_aspnet_users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="student">
+              <PropertyRef Name="userID_student" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="my_aspnet_usersinroles1">
+          <End Type="studisModel.my_aspnet_roles" Role="my_aspnet_roles" Multiplicity="*" />
+          <End Type="studisModel.my_aspnet_users" Role="my_aspnet_users" Multiplicity="*" />
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="studisModelStoreContainer" CdmEntityContainer="studisEntities">
-          <EntitySetMapping Name="ip_zaklep">
-            <EntityTypeMapping TypeName="studisModel.ip_zaklep">
-              <MappingFragment StoreEntitySet="ip_zaklep">
-                <ScalarProperty Name="id" ColumnName="id" />
-                <ScalarProperty Name="ip" ColumnName="ip" />
-                <ScalarProperty Name="zaklep_do" ColumnName="zaklep_do" />
-                <ScalarProperty Name="upirabnik_id" ColumnName="upirabnik_id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="my_aspnet_applications">
             <EntityTypeMapping TypeName="studisModel.my_aspnet_applications">
               <MappingFragment StoreEntitySet="my_aspnet_applications">
@@ -556,17 +676,10 @@ warning 6013: The table/view 'def.studis.my_aspnet_schemaversion' does not have 
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="my_aspnet_usersinroles">
-            <EntityTypeMapping TypeName="studisModel.my_aspnet_usersinroles">
-              <MappingFragment StoreEntitySet="my_aspnet_usersinroles">
-                <ScalarProperty Name="userId" ColumnName="userId" />
-                <ScalarProperty Name="roleId" ColumnName="roleId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="students">
             <EntityTypeMapping TypeName="studisModel.student">
               <MappingFragment StoreEntitySet="student">
+                <ScalarProperty Name="userID_student" ColumnName="userID_student" />
                 <ScalarProperty Name="vpisna_stevilka" ColumnName="vpisna_stevilka" />
                 <ScalarProperty Name="ime" ColumnName="ime" />
                 <ScalarProperty Name="priimek" ColumnName="priimek" />
@@ -576,16 +689,25 @@ warning 6013: The table/view 'def.studis.my_aspnet_schemaversion' does not have 
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="uporabniks">
-            <EntityTypeMapping TypeName="studisModel.uporabnik">
-              <MappingFragment StoreEntitySet="uporabnik">
+          <EntitySetMapping Name="ip_lock">
+            <EntityTypeMapping TypeName="studisModel.ip_lock">
+              <MappingFragment StoreEntitySet="ip_lock">
+                <ScalarProperty Name="userId" ColumnName="userId" />
+                <ScalarProperty Name="locked_until" ColumnName="locked_until" />
+                <ScalarProperty Name="locked_at" ColumnName="locked_at" />
+                <ScalarProperty Name="ip" ColumnName="ip" />
                 <ScalarProperty Name="id" ColumnName="id" />
-                <ScalarProperty Name="email" ColumnName="email" />
-                <ScalarProperty Name="geslo" ColumnName="geslo" />
-                <ScalarProperty Name="napacne_prijave" ColumnName="napacne_prijave" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <AssociationSetMapping Name="my_aspnet_usersinroles1" TypeName="studisModel.my_aspnet_usersinroles1" StoreEntitySet="my_aspnet_usersinroles">
+            <EndProperty Name="my_aspnet_users">
+              <ScalarProperty Name="id" ColumnName="userId" />
+            </EndProperty>
+            <EndProperty Name="my_aspnet_roles">
+              <ScalarProperty Name="id" ColumnName="roleId" />
+            </EndProperty>
+          </AssociationSetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
