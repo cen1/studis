@@ -33,12 +33,13 @@ namespace studis.Controllers
                     {
                         string firstChar = searchData[0];
                         string secondChar = searchData[1];
-                        var tempStudents = students.Where(s => s.ime.Contains(firstChar) && s.priimek.Contains(secondChar));
+
+                        var tempStudents = students.Where(s => s.ime.StartsWith(firstChar) && s.priimek.StartsWith(secondChar));
 
                         if (tempStudents.Any())
                             students = tempStudents;
                         else
-                            students = students.Where(s => s.ime.Contains(secondChar) && s.priimek.Contains(firstChar));
+                            students = students.Where(s => s.ime.StartsWith(secondChar) && s.priimek.StartsWith(firstChar));
                     }
                     else
                     {
