@@ -18,11 +18,16 @@ namespace studis.Controllers
         public ActionResult Students(string searchString)
         {
             var students = from s in db.students select s;
-            if (!String.IsNullOrEmpty(searchString))
-            { 
-                students=students.Where(s => s.ime.Contains(searchString));
-            }
 
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                int vpisna;
+                bool isNumerical = int.TryParse(searchString, out vpisna);
+                if (isNumerical)
+                    students = students.Where(s => s.vpisna_stevilka == vpisna);
+                else
+                    students = students.Where(s => s.ime.Contains(searchString));
+            }
             return View(students);
             //return View(db.students.ToList());
         }
