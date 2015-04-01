@@ -1,0 +1,65 @@
+﻿@model IEnumerable<studis.Models.student>
+
+@{
+    ViewBag.Title = "Študenti";
+}
+
+<h2>Seznam študentov</h2>
+
+
+@using (Html.BeginForm())
+{
+    <p>
+        @Html.TextBox("SearchString")
+        <input type="submit" value="Išči" />
+    </p>
+} 
+
+    @Html.ActionLink("Create New", "Create")
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.ime)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.priimek)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.naslov)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.datum_rojstva)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.spol)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.ime)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.priimek)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.naslov)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.datum_rojstva)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.spol)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.vpisna_stevilka }) |
+            @Html.ActionLink("Details", "Details", new { id=item.vpisna_stevilka }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.vpisna_stevilka })
+        </td>
+    </tr>
+}
+
+</table>

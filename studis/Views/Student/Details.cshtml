@@ -1,0 +1,58 @@
+﻿@model studis.Models.student
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>student</h4>
+	<hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.ime)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ime)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.priimek)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.priimek)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.naslov)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.naslov)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.datum_rojstva)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.datum_rojstva)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.spol)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.spol)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.vpisna_stevilka }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
