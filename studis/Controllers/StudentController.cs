@@ -15,7 +15,12 @@ namespace studis.Controllers
         private studisEntities db = new studisEntities();
 
         // GET: /Student/
-        public ActionResult Students(string searchString)
+        public ActionResult Students()
+        {
+            return View();
+        }
+
+        public ActionResult StudentSearchPartial(string searchString)
         {
             var students = from s in db.students select s;
 
@@ -51,7 +56,7 @@ namespace studis.Controllers
                     }
                 }
             }
-            return View(students);
+            return PartialView("_StudentSearchPartial",students);
         }
 
         // GET: /Student/Details/5
