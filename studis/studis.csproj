@@ -48,11 +48,13 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EntityFramework">
-      <HintPath>..\packages\EntityFramework.6.1.1\lib\net40\EntityFramework.dll</HintPath>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
-    <Reference Include="EntityFramework.SqlServer">
-      <HintPath>..\packages\EntityFramework.6.1.1\lib\net40\EntityFramework.SqlServer.dll</HintPath>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -157,11 +159,10 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\StudentController.cs" />
-    <Compile Include="Controllers\UporabnikController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\ip_zaklep.cs">
+    <Compile Include="Models\ip_lock.cs">
       <DependentUpon>Studis.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\my_aspnet_applications.cs">
@@ -197,9 +198,6 @@
     <Compile Include="Models\my_aspnet_users.cs">
       <DependentUpon>Studis.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\my_aspnet_usersinroles.cs">
-      <DependentUpon>Studis.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\student.cs">
       <DependentUpon>Studis.tt</DependentUpon>
     </Compile>
@@ -217,9 +215,6 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Studis.edmx</DependentUpon>
-    </Compile>
-    <Compile Include="Models\uporabnik.cs">
-      <DependentUpon>Studis.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\UserModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
