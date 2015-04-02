@@ -161,6 +161,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\ip_lock.cs" />
     <Compile Include="Models\ip_zaklep.cs">
       <DependentUpon>Studis.tt</DependentUpon>
     </Compile>
