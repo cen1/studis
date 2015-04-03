@@ -31,7 +31,7 @@ namespace studis.Controllers
 
         public ActionResult Index()
         {
-            return View(db.uporabniks.ToList());
+            return View(db.my_aspnet_users.ToList());
         }
 
         protected override void Dispose(bool disposing)

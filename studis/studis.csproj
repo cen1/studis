@@ -161,6 +161,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\ip_lock.cs" />
     <Compile Include="Models\ip_zaklep.cs">
       <DependentUpon>Studis.tt</DependentUpon>
     </Compile>
@@ -281,6 +282,7 @@
     <Content Include="Views\Student\Details.cshtml" />
     <Content Include="Views\Student\Edit.cshtml" />
     <Content Include="Views\Student\Students.cshtml" />
+    <Content Include="Views\Shared\_StudentSearchPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
