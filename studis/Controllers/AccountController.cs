@@ -24,7 +24,9 @@ namespace studis.Controllers
         {
             if (ModelState.IsValid)
             {
-                //Membership.CreateUser("skrbnik", "adminadmin", "imbacen@gmail.com");
+                //Membership.CreateUser("kf4147", "testtest", "kf4147@student.uni-lj.si");
+                //Membership.CreateUser("profesor1", "testtest", "nekimail@neki.com");
+                //Membership.CreateUser("referent", "testtest", "nekimail2@neki.com");
                 //poglej ce je IP zaklenjen
                 string ip = Request.UserHostAddress;
                 var ipl = IpLock.FindActiveByIp(ip);

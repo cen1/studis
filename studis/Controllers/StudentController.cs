@@ -10,6 +10,7 @@ using studis.Models;
 
 namespace studis.Controllers
 {
+    //[Authorize(Roles = "Študent")]
     public class StudentController : Controller
     {
         private studisEntities db = new studisEntities();
