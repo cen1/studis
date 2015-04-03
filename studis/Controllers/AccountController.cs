@@ -12,6 +12,8 @@ namespace studis.Controllers
     public class AccountController : Controller
     {
 
+        public studisEntities db = new studisEntities();
+
         public ActionResult Login()
         {
             return View();
@@ -22,25 +24,72 @@ namespace studis.Controllers
         {
             if (ModelState.IsValid)
             {
-
-                if (Membership.ValidateUser(model.UserName, model.Password))
+                //Membership.CreateUser("skrbnik", "adminadmin", "imbacen@gmail.com");
+                //poglej ce je IP zaklenjen
+                string ip = Request.UserHostAddress;
+                var ipl = IpLock.FindActiveByIp(ip);
+                if (ipl == null)
                 {
-                    FormsAuthentication.SetAuthCookie(model.UserName, model.RememberMe);
-                    if (Url.IsLocalUrl(returnUrl) && returnUrl.Length > 1 && returnUrl.StartsWith("/")
-                        && !returnUrl.StartsWith("//") && !returnUrl.StartsWith("/\\"))
+                    //ip zaklepa ni ali pa je potekel
+                    var user = studis.Models.User.FindByName(db, model.UserName);
+                    if (user != null)
                     {
-                        return Redirect(returnUrl);
+                        System.Diagnostics.Debug.WriteLine("notnull " + user.my_aspnet_membership.FailedPasswordAttemptCount);
+                        if (user.my_aspnet_membership.FailedPasswordAttemptCount >= 3)
+                        {
+                            System.Diagnostics.Debug.WriteLine("cntdecrease");
+                            user.my_aspnet_membership.FailedPasswordAttemptCount = 0;
+                        }
+
+                    }
+
+                    if (Membership.ValidateUser(model.UserName, model.Password))
+                    {
+                        //resetiraj failed ob uspesnem loginu
+                        user.my_aspnet_membership.FailedPasswordAttemptCount = 0;
+                        db.SaveChanges();
+
+                        FormsAuthentication.SetAuthCookie(model.UserName, model.RememberMe);
+                        if (Url.IsLocalUrl(returnUrl) && returnUrl.Length > 1 && returnUrl.StartsWith("/")
+                            && !returnUrl.StartsWith("//") && !returnUrl.StartsWith("/\\"))
+                        {
+                            return Redirect(returnUrl);
+                        }
+                        else
+                        {
+                            return RedirectToAction("Index", "Home");
+                        }
                     }
                     else
                     {
-                        return RedirectToAction("Index", "Home");
+                        if (user != null)
+                        {
+                            user.my_aspnet_membership.FailedPasswordAttemptCount++;
+                            if (user.my_aspnet_membership.FailedPasswordAttemptCount >= 3)
+                            {
+                                ip_lock ipln = new ip_lock();
+                                ipln.ip = Request.UserHostAddress;
+                                ipln.locked_at = DateTime.Now;
+                                ipln.locked_until = DateTime.Now.AddMinutes(3);
+                                ipln.userId = user.id;
+                                IpLock.Add(ipln);
+
+                                System.Diagnostics.Debug.WriteLine("iplock");
+                            }
+                            ModelState.AddModelError("", "Geslo ni pravilno. Poskus (" + user.my_aspnet_membership.FailedPasswordAttemptCount + "/3)");
+                        }
+                        else
+                        {
+                            ModelState.AddModelError("", "Uporabniško ime ni pravilno.");
+                        }
                     }
                 }
                 else
                 {
-                    ModelState.AddModelError("", "The user name or password is not correct.");
+                    ModelState.AddModelError("", "Vaš IP je zaklenjen. Poskusite po " + ipl.locked_until.ToString());
                 }
             }
+            db.SaveChanges();
 
             return View(model);
         }
@@ -50,33 +99,6 @@ namespace studis.Controllers
             FormsAuthentication.SignOut();
 
             return RedirectToAction("Index", "Home");
-        }
-
-        public ActionResult CreateUser()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public ActionResult CreateUser(CreateUserModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                MembershipCreateStatus createStatus;
-                Membership.CreateUser(model.UserName, model.Password, model.Email, model.PasswordQuestion, model.PasswordAnswer, true, null, out createStatus);
-
-                if (createStatus == MembershipCreateStatus.Success)
-                {
-                    FormsAuthentication.SetAuthCookie(model.UserName, false);
-                    return RedirectToAction("Index", "Home");
-                }
-                else
-                {
-                    ModelState.AddModelError("", ErrorCodeToString(createStatus));
-                }
-            }
-
-            return View(model);
         }
 
 
@@ -111,7 +133,7 @@ namespace studis.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError("", "The password is incorrect or new password is invalid.");
+                    ModelState.AddModelError("", "Trenutno ali novo geslo je nepravilno.");
                 }
             }
 
