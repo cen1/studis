@@ -30,12 +30,16 @@ namespace studis.Controllers
                 int vpisna;
                 bool isNumerical = int.TryParse(searchString, out vpisna);
                 if (isNumerical)
+                {
                     students = students.Where(s => s.vpisna_stevilka == vpisna);
+                    if (!students.Any())
+                        students = null;
+                }
                 else
                 {
                     string[] searchData = searchString.Split(null);
 
-                    if (searchData.Length > 1)
+                    if (searchData.Length > 1 && searchData[1] != "")
                     {
                         string firstChar = searchData[0];
                         string secondChar = searchData[1];
@@ -49,11 +53,12 @@ namespace studis.Controllers
                     }
                     else
                     {
-                        var tempStudents = students.Where(s => s.ime.Contains(searchString));
-                        if (tempStudents.Any())
-                            students = tempStudents;
-                        else
-                            students = students.Where(s => s.priimek.Contains(searchString));
+                        /* var tempStudents = students.Where(s => s.ime.Contains(searchString));
+                         if (tempStudents.Any())
+                             students = tempStudents;
+                         else
+                             students = students.Where(s => s.priimek.Contains(searchString));*/
+                        students = null;
                     }
                 }
             }
