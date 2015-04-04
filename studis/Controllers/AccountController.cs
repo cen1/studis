@@ -14,6 +14,7 @@ namespace studis.Controllers
 
         public studisEntities db = new studisEntities();
 
+
         public ActionResult Login()
         {
             return View();
@@ -110,6 +111,10 @@ namespace studis.Controllers
             return View();
         }
 
+        public ActionResult PasswordRecovery() {
+            return View();
+        }
+
 
         [Authorize]
         [HttpPost]
@@ -145,6 +150,34 @@ namespace studis.Controllers
         public ActionResult ChangePasswordSuccess()
         {
             return View();
+        }
+
+        //
+        // POST: /Account/ForgotPassword
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public ActionResult PasswordRecovery(PasswordRecoveryModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = studis.Models.User.FindByEmail(db, model.Email);
+                if (user == null )
+                {
+                    // Don't reveal that the user does not exist or is not confirmed
+                    return View("PasswordRecoverySuccess");
+                }
+
+                string code = studis.Models.User.GeneratePasswordResetToken(user.userId);
+                var callbackUrl = Url.Action("PasswordRecovery", "Account", code);
+
+                string to = user.Email;
+                studis.Models.User.SendEmail(to, "Ponastavite geslo z obiskom <a href=\"" + callbackUrl + "\">naslova</a>");
+                return RedirectToAction("PasswordRecoverySuccess", "Account");
+            }
+
+            // If we got this far, something failed, redisplay form
+            return View(model);
         }
 
         #region Status Codes
