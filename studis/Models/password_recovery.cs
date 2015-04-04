@@ -12,13 +12,12 @@ namespace studis.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class ip_lock
+    public partial class password_recovery
     {
-        public long id { get; set; }
-        public string ip { get; set; }
-        public System.DateTime locked_at { get; set; }
-        public System.DateTime locked_until { get; set; }
+        public int id { get; set; }
         public int userId { get; set; }
+        public System.DateTime valid_until { get; set; }
+        public string token { get; set; }
     
         public virtual my_aspnet_users my_aspnet_users { get; set; }
     }

@@ -19,6 +19,7 @@ namespace studis.Models
             this.ip_lock = new HashSet<ip_lock>();
             this.students = new HashSet<student>();
             this.my_aspnet_roles = new HashSet<my_aspnet_roles>();
+            this.password_recovery = new HashSet<password_recovery>();
         }
     
         public int id { get; set; }
@@ -32,5 +33,6 @@ namespace studis.Models
         public virtual my_aspnet_membership my_aspnet_membership { get; set; }
         public virtual ICollection<student> students { get; set; }
         public virtual ICollection<my_aspnet_roles> my_aspnet_roles { get; set; }
+        public virtual ICollection<password_recovery> password_recovery { get; set; }
     }
 }

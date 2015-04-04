@@ -73,4 +73,12 @@ namespace studis.Models
         public string PasswordAnswer { get; set; }
 
     }
+
+    public class PasswordRecoveryModel
+    {
+        [Required]
+        [DataType(DataType.EmailAddress)]
+        [Display(Name = "Email address")]
+        public string Email { get; set; }
+    }
 }

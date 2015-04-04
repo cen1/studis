@@ -199,6 +199,9 @@
     <Compile Include="Models\my_aspnet_users.cs">
       <DependentUpon>Studis.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\password_recovery.cs">
+      <DependentUpon>Studis.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\student.cs">
       <DependentUpon>Studis.tt</DependentUpon>
     </Compile>

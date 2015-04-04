@@ -23,6 +23,9 @@
         <AssociationConnector Association="studisModel.membership_to_users" />
         <AssociationConnector Association="studisModel.userID_student_users" />
         <AssociationConnector Association="studisModel.my_aspnet_usersinroles1" />
+        <EntityTypeShape EntityType="studisModel.password_recovery" Width="1.5" PointX="8.25" PointY="10.125" />
+        <AssociationConnector Association="studisModel.pr_to_user_fk" />
+        <AssociationConnector Association="studisModel.userID_student_users1" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

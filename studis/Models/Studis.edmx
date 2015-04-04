@@ -146,17 +146,26 @@
           <Property Name="userId" Type="int" Nullable="false" />
           <Property Name="roleId" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="password_recovery">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="userId" Type="int" Nullable="false" />
+          <Property Name="valid_until" Type="datetime" Precision="0" Nullable="false" />
+          <Property Name="token" Type="varchar" MaxLength="255" Nullable="false" />
+        </EntityType>
         <EntityType Name="student">
           <Key>
             <PropertyRef Name="vpisna_stevilka" />
           </Key>
-          <Property Name="vpisna_stevilka" Type="int" Nullable="false" />
+          <Property Name="vpisna_stevilka" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ime" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="priimek" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="naslov" Type="varchar" MaxLength="100" />
           <Property Name="datum_rojstva" Type="varchar" MaxLength="100" />
           <Property Name="spol" Type="varchar" MaxLength="10" />
-          <Property Name="userID_student" Type="int" />
+          <Property Name="userId" Type="int" Nullable="false" />
         </EntityType>
         <Association Name="ip_lock_to_user">
           <End Role="my_aspnet_users" Type="Self.my_aspnet_users" Multiplicity="1">
@@ -186,15 +195,31 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="pr_to_user_fk">
+          <End Role="my_aspnet_users" Type="Self.my_aspnet_users" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="password_recovery" Type="Self.password_recovery" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="my_aspnet_users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="password_recovery">
+              <PropertyRef Name="userId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="userID_student_users">
-          <End Role="my_aspnet_users" Type="Self.my_aspnet_users" Multiplicity="0..1" />
+          <End Role="my_aspnet_users" Type="Self.my_aspnet_users" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="student" Type="Self.student" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="my_aspnet_users">
               <PropertyRef Name="id" />
             </Principal>
             <Dependent Role="student">
-              <PropertyRef Name="userID_student" />
+              <PropertyRef Name="userId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -254,6 +279,7 @@
           <EntitySet Name="my_aspnet_sitemap" EntityType="Self.my_aspnet_sitemap" Schema="studis" store:Type="Tables" />
           <EntitySet Name="my_aspnet_users" EntityType="Self.my_aspnet_users" Schema="studis" store:Type="Tables" />
           <EntitySet Name="my_aspnet_usersinroles" EntityType="Self.my_aspnet_usersinroles" Schema="studis" store:Type="Tables" />
+          <EntitySet Name="password_recovery" EntityType="Self.password_recovery" Schema="studis" store:Type="Tables" />
           <EntitySet Name="student" EntityType="Self.student" Schema="studis" store:Type="Tables" />
           <AssociationSet Name="ip_lock_to_user" Association="Self.ip_lock_to_user">
             <End Role="my_aspnet_users" EntitySet="my_aspnet_users" />
@@ -262,6 +288,10 @@
           <AssociationSet Name="membership_to_users" Association="Self.membership_to_users">
             <End Role="my_aspnet_users" EntitySet="my_aspnet_users" />
             <End Role="my_aspnet_membership" EntitySet="my_aspnet_membership" />
+          </AssociationSet>
+          <AssociationSet Name="pr_to_user_fk" Association="Self.pr_to_user_fk">
+            <End Role="my_aspnet_users" EntitySet="my_aspnet_users" />
+            <End Role="password_recovery" EntitySet="password_recovery" />
           </AssociationSet>
           <AssociationSet Name="userID_student_users" Association="Self.userID_student_users">
             <End Role="my_aspnet_users" EntitySet="my_aspnet_users" />
@@ -414,6 +444,7 @@
           <NavigationProperty Name="my_aspnet_membership" Relationship="studisModel.membership_to_users" FromRole="my_aspnet_users" ToRole="my_aspnet_membership" />
           <NavigationProperty Name="students" Relationship="studisModel.userID_student_users" FromRole="my_aspnet_users" ToRole="student" />
           <NavigationProperty Name="my_aspnet_roles" Relationship="studisModel.my_aspnet_usersinroles1" FromRole="my_aspnet_users" ToRole="my_aspnet_roles" />
+          <NavigationProperty Name="password_recovery" Relationship="studisModel.pr_to_user_fk" FromRole="my_aspnet_users" ToRole="password_recovery" />
         </EntityType>
         <EntityType Name="student">
           <Key>
@@ -425,7 +456,7 @@
           <Property Name="naslov" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="datum_rojstva" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="spol" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="userID_student" Type="Int32" />
+          <Property Name="userId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="my_aspnet_users" Relationship="studisModel.userID_student_users" FromRole="student" ToRole="my_aspnet_users" />
         </EntityType>
         <EntityContainer Name="studisEntities" annotation:LazyLoadingEnabled="true">
@@ -461,6 +492,11 @@
           <AssociationSet Name="my_aspnet_usersinroles1" Association="studisModel.my_aspnet_usersinroles1">
             <End Role="my_aspnet_roles" EntitySet="my_aspnet_roles" />
             <End Role="my_aspnet_users" EntitySet="my_aspnet_users" />
+          </AssociationSet>
+          <EntitySet Name="password_recovery" EntityType="studisModel.password_recovery" />
+          <AssociationSet Name="pr_to_user_fk" Association="studisModel.pr_to_user_fk">
+            <End Role="my_aspnet_users" EntitySet="my_aspnet_users" />
+            <End Role="password_recovery" EntitySet="password_recovery" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="ip_lock">
@@ -517,20 +553,44 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="userID_student_users">
-          <End Type="studisModel.my_aspnet_users" Role="my_aspnet_users" Multiplicity="0..1" />
+          <End Type="studisModel.my_aspnet_users" Role="my_aspnet_users" Multiplicity="1" />
           <End Type="studisModel.student" Role="student" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="my_aspnet_users">
               <PropertyRef Name="id" />
             </Principal>
             <Dependent Role="student">
-              <PropertyRef Name="userID_student" />
+              <PropertyRef Name="userId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <Association Name="my_aspnet_usersinroles1">
           <End Type="studisModel.my_aspnet_roles" Role="my_aspnet_roles" Multiplicity="*" />
           <End Type="studisModel.my_aspnet_users" Role="my_aspnet_users" Multiplicity="*" />
+        </Association>
+        <EntityType Name="password_recovery">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="userId" Type="Int32" Nullable="false" />
+          <Property Name="valid_until" Type="DateTime" Nullable="false" />
+          <Property Name="token" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="my_aspnet_users" Relationship="studisModel.pr_to_user_fk" FromRole="password_recovery" ToRole="my_aspnet_users" />
+        </EntityType>
+        <Association Name="pr_to_user_fk">
+          <End Type="studisModel.my_aspnet_users" Role="my_aspnet_users" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="studisModel.password_recovery" Role="password_recovery" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="my_aspnet_users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="password_recovery">
+              <PropertyRef Name="userId" />
+            </Dependent>
+          </ReferentialConstraint>
         </Association>
       </Schema>
     </edmx:ConceptualModels>
@@ -674,7 +734,7 @@
           <EntitySetMapping Name="students">
             <EntityTypeMapping TypeName="studisModel.student">
               <MappingFragment StoreEntitySet="student">
-                <ScalarProperty Name="userID_student" ColumnName="userID_student" />
+                <ScalarProperty Name="userId" ColumnName="userId" />
                 <ScalarProperty Name="vpisna_stevilka" ColumnName="vpisna_stevilka" />
                 <ScalarProperty Name="ime" ColumnName="ime" />
                 <ScalarProperty Name="priimek" ColumnName="priimek" />
@@ -703,6 +763,16 @@
               <ScalarProperty Name="id" ColumnName="roleId" />
             </EndProperty>
           </AssociationSetMapping>
+          <EntitySetMapping Name="password_recovery">
+            <EntityTypeMapping TypeName="studisModel.password_recovery">
+              <MappingFragment StoreEntitySet="password_recovery">
+                <ScalarProperty Name="token" ColumnName="token" />
+                <ScalarProperty Name="valid_until" ColumnName="valid_until" />
+                <ScalarProperty Name="userId" ColumnName="userId" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
