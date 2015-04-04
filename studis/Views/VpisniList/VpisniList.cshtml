@@ -1,0 +1,122 @@
+﻿@{
+    ViewBag.Title = "Vpisni List";
+}
+
+@Model VpisniList
+
+<h2>Vpisni List</h2>
+<form action="" method="post">
+    <label for="studijskoLeto">Študijsko leto</label>
+        <input type="text" name="studijskoLeto">
+
+    <!--Vrsta vpisnega lista-->
+    <!--Fakulteta-->
+    <label for="vpisnaStevilka">Vpisna Številka</label>
+        <input type="text" name="vpisnaStevilka" readonly>
+    
+    <label for="ime">Ime</label>
+        <input type="text" name="ime">
+    <label for="priimek">Priimek</label>
+        <input type="text" name="priimek">
+    
+    <label for="datumRojstva">Datum rojstva</label>
+        <input type="date" name="datumRojstva">
+    <label for="krajRojstva">Kraj rojstva</label>
+        <input type="text" name="krajRojstva">
+    <label for="obcinaRojstva">Občina rojstva</label>
+        <input type="text" name="obcinaRojstva">
+    
+    
+    @Html.DropDownList()
+    <label for="drzavaRojstva">Država rojstva</label>
+        <select name="drzavaRojstva">
+        @foreach(var drzava in Model.) {
+            <option value="@">@</option>
+        }
+        </select>
+    
+    <label for="drzavljanstvo">Državljanstvo</label>
+        <input type="text" name="drzavljanstvo">
+    <label for="spol">Spol</label>
+        <select name="spol">
+            <option value="m">Moški</option>
+            <option value="z">Ženski</option>
+        </select>
+    <label for="emso">EMŠO</label>
+        <input type="number" maxlength="13" name="emso">
+    <label for="davcnaStevilka">Davčna številka</label>
+        <input type="number" maxlength="8" name="davcnaStevilka">
+    <label for="eposta">e-pošta</label>
+        <input type="email" name="eposta">
+    <label for="prenosniTelefon">Prenosni telefon</label>
+        <input type="tel" name="prenosniTelefon">
+
+    <h4>Stalno prebivališče</h4>
+    <label for="vrocanje">Vročanje</label>
+        <input type="checkbox" name="vrocanje">
+    <label for="naslov">Ulica in hišna številka</label>
+        <input type="text" name="naslov">
+    Poštna številka
+    Občina
+    Država
+
+    <h4>Začasno prebivališče</h4>
+    <label for="vrocanje2">Vročanje</label>
+        <input type="checkbox" name="vrocanjeZacasni">
+    <label for="naslovZacasni">Ulica in hišna številka</label>
+        <input type="text" name="naslovZacasni">
+    Poštna številka
+    Občina
+    Država
+
+    <h4>Podatki o vpisu</h4>
+    
+    <label for="studijskiProgram">Študijski program</label>
+        @Html.DropDownList("StudijskiProgram", ViewBag.StudijskiProgram as SelectList)
+        <select name="studijskiProgram">
+            
+        </select>
+    Smer/Usmeritev/Modul/Znastveno področje
+    Kraj izvajanaja
+    Izbirna skupina
+    Študijski program
+    Smer/Usmeritev/Modul/Znastveno področje
+    Kraj izvajanaja
+    Izbirna skupina
+
+    <label for="vrstaStudija">Vrsta študija</label>
+        <select name="vrstaStudija">
+
+        </select>
+    <label for="vrstaVpisa">Vrsta vpisa</label>
+        <select name="vrstaVpisa">
+
+        </select>
+    <label for="letnikStudija">Letnik študija</label>
+        <select name="letnikVpisa">
+
+        </select>
+    <label for="nacinStudija">Način študija</label>
+        <select name="nacinStudija">
+            <option value="1">1 - redni</option>
+            <option value="3">3 - izredni</option>
+        </select>
+    <label for="oblikaStudija">Oblika študija</label>
+        <select name="oblikaStudija">
+            <option value="1">1 - na lokaciji</option>
+            <option value="2">2 - na daljavo</option>
+            <option value="3">3 - e-studij</option>
+        </select>
+    <label for="letoPrvegaVpisa">Študijsko leto prevega vpisa v ta program</label>
+        <select name="letoPrvegaVpisa">
+
+        </select>
+    <label for="soglasje1">Soglasje 1</label>
+        <input type="checkbox" name="soglasje1" id="soglasje1">
+    <label for="soglasje2">Soglasje 2</label>
+        <input type="checkbox" name="soglasje2" id="soglasje2">
+    
+    <h4>Priloga 1: Predmetnik</h4>
+
+    <input type="submit" value="Shrani" >
+</form>
