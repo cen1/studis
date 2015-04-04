@@ -21,6 +21,7 @@ namespace studis.Controllers
         [HttpPost]
         public ActionResult Import(HttpPostedFileBase file)
         {
+            // no file?
             if (file != null)
             {
                 List<string> list = new List<string>();
@@ -38,6 +39,7 @@ namespace studis.Controllers
                 var path = Path.Combine(directory, filename);
                 file.SaveAs(path);
 
+                // blank file?
                 if (file.ContentLength > 0)
                 {
                     using (StreamReader sr = new StreamReader(path))
@@ -46,18 +48,25 @@ namespace studis.Controllers
                         {
                             switch (line)
                             {
+                                // parsaj ime
                                 case 1:
                                     name = sr.ReadLine();
                                     line++;
                                     break;
+
+                                // parsaj priimek
                                 case 2:
                                     lname = sr.ReadLine();
                                     line++;
                                     break;
+
+                                // parsaj program
                                 case 3:
                                     program = sr.ReadLine();
                                     line++;
                                     break;
+
+                                //parsar email
                                 case 4:
                                     mail = sr.ReadLine();
                                     line++;
@@ -72,12 +81,12 @@ namespace studis.Controllers
 
                                         string password = Guid.NewGuid().ToString().Substring(0, 8);
 
-                                        // membership
+                                        // dodaj v membership
                                         MembershipUser user = Membership.CreateUser(username, password, mail);
                                         MembershipUser myObject = Membership.GetUser(username);
                                         string userid = myObject.ProviderUserKey.ToString();
 
-                                        // student
+                                        // dodaj v student
                                         student stud = new student();
                                         stud.ime = name;
                                         stud.priimek = lname;
@@ -85,7 +94,7 @@ namespace studis.Controllers
 
                                         db.students.Add(stud);
                                         db.SaveChanges();
-                                            
+
                                         list.Add("Uporabniško ime: " + username);
                                         list.Add("Geslo: " + password);
                                         counter++;
