@@ -28,6 +28,12 @@ namespace studis.Controllers
                 //Membership.CreateUser("kf4147", "testtest", "kf4147@student.uni-lj.si");
                 //Membership.CreateUser("profesor1", "testtest", "nekimail@neki.com");
                 //Membership.CreateUser("referent", "testtest", "nekimail2@neki.com");
+                student s = new student();
+                s.ime = "asd";
+                s.priimek = "asd2";
+                s.userId = 4;
+                db.students.Add(s);
+                db.SaveChanges();
                 //poglej ce je IP zaklenjen
                 string ip = Request.UserHostAddress;
                 var ipl = IpLock.FindActiveByIp(ip);
