@@ -150,7 +150,7 @@
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="userId" Type="int" Nullable="false" />
           <Property Name="valid_until" Type="datetime" Precision="0" Nullable="false" />
           <Property Name="token" Type="varchar" MaxLength="255" Nullable="false" />

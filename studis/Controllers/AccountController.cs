@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using System.Web.Security;
 using studis.Models;
+using WebMatrix.WebData;
 
 namespace studis.Controllers
 {
@@ -149,11 +150,15 @@ namespace studis.Controllers
             return View();
         }
 
+        public ActionResult PasswordRecoverySuccess()
+        {
+            return View();
+        }
+
         //
         // POST: /Account/ForgotPassword
         [HttpPost]
         [AllowAnonymous]
-        [ValidateAntiForgeryToken]
         public ActionResult PasswordRecovery(PasswordRecoveryModel model)
         {
             if (ModelState.IsValid)
@@ -166,15 +171,76 @@ namespace studis.Controllers
                 }
 
                 string code = studis.Models.User.GeneratePasswordResetToken(user.userId);
-                var callbackUrl = Url.Action("PasswordRecovery", "Account", code);
-
+                string baseUrl = string.Format("{0}://{1}{2}", Request.Url.Scheme, Request.Url.Authority, Url.Content("~"));
                 string to = user.Email;
-                studis.Models.User.SendEmail(to, "Ponastavite geslo z obiskom <a href=\"" + callbackUrl + "\">naslova</a>");
+                string text = "Ponastavite geslo z obiskom <a href='" + baseUrl + "Account/ResetPassword/" + code + "'>tega naslova</a>";
+                System.Diagnostics.Debug.WriteLine(text);
+                
+                studis.Models.User.SendEmail(text, to);
+
+                password_recovery pr = new password_recovery();
+                pr.token=code;
+                pr.userId=user.userId;
+                pr.valid_until=DateTime.Now.AddHours(1);
+
+                db.password_recovery.Add(pr);
+                db.SaveChanges();
+
                 return RedirectToAction("PasswordRecoverySuccess", "Account");
             }
 
             // If we got this far, something failed, redisplay form
             return View(model);
+        }
+
+        public ActionResult ResetPassword(string id)
+        {
+            var L2EQuery = db.password_recovery.Where(t => t.token == id).Where(d => d.valid_until > DateTime.Now);
+            var pr = L2EQuery.FirstOrDefault<password_recovery>();
+            if (pr == null)
+            {
+                return RedirectToAction("PasswordRecoveryExpired", "Account");
+            }
+            else
+            {
+                ResetPasswordModel m = new ResetPasswordModel();
+                m.token = pr.id;
+                return View(m);
+            }
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public ActionResult ResetPassword(ResetPasswordModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                System.Diagnostics.Debug.WriteLine(model.token);
+                var pr = db.password_recovery.Find(model.token);
+                var user = pr.my_aspnet_users;
+
+                System.Diagnostics.Debug.WriteLine(user.id);
+                MembershipUser currentUser = Membership.GetUser(user.id);
+                string newpass = currentUser.ResetPassword();
+
+                db.password_recovery.Remove(pr);
+                db.SaveChanges();
+
+                TempData["pass"] = newpass;
+                System.Diagnostics.Debug.WriteLine(newpass);
+                return RedirectToAction("PasswordRecoveryComplete", "Account");
+            }
+            return View(model);
+        }
+
+        public ActionResult PasswordRecoveryExpired()
+        {
+            return View();
+        }
+
+        public ActionResult PasswordRecoveryComplete()
+        {
+            return View();
         }
 
         #region Status Codes

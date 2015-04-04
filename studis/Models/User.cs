@@ -30,19 +30,23 @@ namespace studis.Models
                 Random rnd = new Random();
                 string data = DateTime.Now.ToString() + id.ToString() + rnd.Next(1, Int32.MaxValue);
                 var hash = sha1.ComputeHash(System.Text.Encoding.ASCII.GetBytes(data));
-                return Convert.ToBase64String(hash);
+                string hex = BitConverter.ToString(hash);
+                hex = hex.Replace("-", "");
+                return hex;
             }
         }
 
         public static void SendEmail(string text, string to)
         {
             MailMessage msg = new MailMessage();
-            msg.From = new MailAddress("skrbnik.fri@gmail.com");
+            msg.From = new MailAddress("studis.fri@gmail.com");
             msg.To.Add(new MailAddress(to));
+            msg.IsBodyHtml = true;
             msg.Subject = "Pozabljeno geslo";
+            msg.Body = text;
 
             SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", Convert.ToInt32(587));
-            System.Net.NetworkCredential credentials = new System.Net.NetworkCredential("skrbnik.fri@gmail.com", "gviUaqLMEPFelTamEos6");
+            System.Net.NetworkCredential credentials = new System.Net.NetworkCredential("studis.fri@gmail.com", "gviUaqLMEPFelTamEos6");
             smtpClient.Credentials = credentials;
             smtpClient.EnableSsl = true;
             smtpClient.Send(msg);

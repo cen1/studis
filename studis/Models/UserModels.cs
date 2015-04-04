@@ -78,7 +78,15 @@ namespace studis.Models
     {
         [Required]
         [DataType(DataType.EmailAddress)]
-        [Display(Name = "Email address")]
+        [Display(Name = "Email naslov")]
         public string Email { get; set; }
+    }
+
+    public class ResetPasswordModel
+    {
+
+        [Required]
+        public int token { get; set; }
+
     }
 }

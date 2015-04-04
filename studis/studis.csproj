@@ -8,7 +8,7 @@
     </ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{839322A2-4589-4AA5-9A86-EF7DE405AC83}</ProjectGuid>
-    <ProjectTypeGuids>{E3E379DF-F4C6-4180-9B81-6769533ABE47};{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>studis</RootNamespace>
@@ -227,6 +227,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\images\indeks.png" />
     <Content Include="Global.asax" />
     <Content Include="packages.config" />
     <EntityDeploy Include="Models\Studis.edmx">
@@ -286,10 +287,18 @@
     <Content Include="Views\Shared\_StudentSearchPartial.cshtml" />
     <Content Include="Views\Import\Import.cshtml" />
     <Content Include="Views\Import\Print.cshtml" />
+    <Content Include="Views\Account\PasswordRecovery.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="Views\Account\PasswordRecoverySuccess.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="Views\Account\ResetPassword.cshtml" />
+    <Content Include="Views\Account\PasswordRecoveryExpired.cshtml" />
+    <Content Include="Views\Account\PasswordRecoveryComplete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Content\images\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\jquery-2.1.1.min.map" />

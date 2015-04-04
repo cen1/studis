@@ -21,6 +21,7 @@ namespace studis.Models
         public string datum_rojstva { get; set; }
         public string spol { get; set; }
         public int userId { get; set; }
+    
         public virtual my_aspnet_users my_aspnet_users { get; set; }
     }
 }
