@@ -1,0 +1,22 @@
+﻿@{
+    ViewBag.Title = "Uvoz";
+}
+
+<h2>Uvoz študentov</h2>
+
+@using (Html.BeginForm("Import", null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div>
+        <fieldset>
+            <div class="editor-label">
+                <input type="file" name="file" accept="text/plain" />
+            </div>
+
+            <p>
+                <input type="submit" value="Naloži" />
+            </p>
+        </fieldset>
+    </div>
+}
+
+

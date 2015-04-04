@@ -8,7 +8,7 @@
     </ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{839322A2-4589-4AA5-9A86-EF7DE405AC83}</ProjectGuid>
-    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <ProjectTypeGuids>{E3E379DF-F4C6-4180-9B81-6769533ABE47};{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>studis</RootNamespace>
@@ -158,10 +158,12 @@
   <ItemGroup>
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ImportController.cs" />
     <Compile Include="Controllers\StudentController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Import.cs" />
     <Compile Include="Models\IpLock.cs" />
     <Compile Include="Models\ip_lock.cs">
       <DependentUpon>Studis.tt</DependentUpon>
@@ -282,6 +284,8 @@
     <Content Include="Views\Student\Edit.cshtml" />
     <Content Include="Views\Student\Students.cshtml" />
     <Content Include="Views\Shared\_StudentSearchPartial.cshtml" />
+    <Content Include="Views\Import\Import.cshtml" />
+    <Content Include="Views\Import\Print.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
