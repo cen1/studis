@@ -2,6 +2,14 @@
     ViewBag.Title = "Izpis vpisnega lista";
 }
 
+<script type="text/javascript">
+    $(function () {
+        $("#redirect").click(function () {
+            window.location.href = "@Url.Action("Pdf","List")";
+        });
+    });
+</script>
+
 <h2>Izpis vpisnega lista</h2>
 
 @using (Html.BeginForm())
@@ -391,5 +399,5 @@
     
     <br />
     <br />
-    <input type="submit" value="Natisni PDF" />
+    <input type="button" id="redirect" value="Natisni PDF" />
 }

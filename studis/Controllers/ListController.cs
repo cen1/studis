@@ -4,6 +4,8 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.IO;
+using iTextSharp.text;
+using MvcRazorToPdf;
 
 namespace studis.Controllers
 {
@@ -13,6 +15,11 @@ namespace studis.Controllers
         public ActionResult List()
         {
             return View();
+        }
+
+        public ActionResult Pdf()
+        {
+            return new PdfActionResult(null);
         }
     }
 }
