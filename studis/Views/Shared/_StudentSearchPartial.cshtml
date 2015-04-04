@@ -1,15 +1,11 @@
 ﻿@model IEnumerable<studis.Models.student>
     
-@using (Html.BeginForm())
-{
-    <p>
-        @Html.TextBox("SearchString")
-        <input type="submit" value="Išči" />
-    </p>
-} 
+
+<div id="searchDiv">
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
+
 <table class="table">
     <tr>
         <th>
@@ -27,13 +23,9 @@
         <th>
             @Html.DisplayNameFor(model => model.spol)
         </th>
-        <th>
-            @Html.DisplayNameFor(model => model.my_aspnet_users.name)
-        </th>
-        <th></th>
     </tr>
-
-@foreach (var item in Model) {
+@if (Model != null) { 
+    foreach (var item in Model) {
     <tr>
         <td>
             @Html.DisplayFor(modelItem => item.ime)
@@ -51,14 +43,19 @@
             @Html.DisplayFor(modelItem => item.spol)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.my_aspnet_users.name)
-        </td>
-        <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.vpisna_stevilka }) |
             @Html.ActionLink("Details", "Details", new { id=item.vpisna_stevilka }) |
             @Html.ActionLink("Delete", "Delete", new { id=item.vpisna_stevilka })
         </td>
     </tr>
+    
+    }
 }
-
 </table>
+
+@if (Model == null)
+{
+    <h4>Ni zadetkov!</h4>
+    <p>Uporaba: iskanje s celo vpisno številko ali začetnicami imena IN priimka.</p>
+}
+</div>
