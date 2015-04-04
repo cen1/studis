@@ -1,0 +1,19 @@
+﻿@{
+    ViewBag.Title = "Izpis";
+}
+
+<h2>Izpis uvoženih študentov</h2>
+
+<table>
+    <thead>
+        <tr>Dodani študenti:</tr>
+    </thead>
+    <tbody>
+        @foreach (var item in ViewBag.List)
+        {
+            <tr>
+                <td>@item</td>
+            </tr>
+        }
+    </tbody>
+</table>
