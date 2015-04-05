@@ -35,11 +35,11 @@ namespace studis.Models
         public string drzavaZacasni { get; set; }
 
         //studij
-        public int studijskiProgram { get; set }
+        public int studijskiProgram { get; set; }
         public int smer { get; set; }
         public string krajIzvajanja { get; set; }
         public string izbirnaSkupina { get; set; }
-        public int studijskiProgram2 { get; set }
+        public int studijskiProgram2 { get; set; }
         public int smer2 { get; set; }
         public string krajIzvajanja2 { get; set; }
         public string izbirnaSkupina2 { get; set; }
