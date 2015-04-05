@@ -26,6 +26,12 @@
         <EntityTypeShape EntityType="studisModel.password_recovery" Width="1.5" PointX="8.25" PointY="10.125" />
         <AssociationConnector Association="studisModel.pr_to_user_fk" />
         <AssociationConnector Association="studisModel.userID_student_users1" />
+        <EntityTypeShape EntityType="studisModel.modul" Width="1.5" PointX="13.875" PointY="13.625" />
+        <EntityTypeShape EntityType="studisModel.predmet" Width="1.5" PointX="16.125" PointY="0.5" />
+        <EntityTypeShape EntityType="studisModel.profesor" Width="1.5" PointX="13.875" PointY="11" />
+        <AssociationConnector Association="studisModel.predmet_modul_fk" />
+        <AssociationConnector Association="studisModel.profesorinpredmet" />
+        <AssociationConnector Association="studisModel.studentinpredmet" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

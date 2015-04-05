@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="studisModel.Store" Provider="MySql.Data.MySqlClient" ProviderManifestToken="5.5" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="studisModel.Store" Provider="MySql.Data.MySqlClient" ProviderManifestToken="5.5" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="ip_lock">
           <Key>
             <PropertyRef Name="id" />
@@ -14,6 +14,13 @@
           <Property Name="locked_at" Type="datetime" Precision="0" Nullable="false" />
           <Property Name="locked_until" Type="datetime" Precision="0" Nullable="false" />
           <Property Name="userId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="modul">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="uint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ime" Type="varchar" MaxLength="45" Nullable="false" />
         </EntityType>
         <EntityType Name="my_aspnet_applications">
           <Key>
@@ -93,11 +100,6 @@
           <Property Name="applicationId" Type="int" Nullable="false" />
           <Property Name="name" Type="varchar" MaxLength="255" Nullable="false" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6013: The table/view 'def.studis.my_aspnet_schemaversion' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
-        <EntityType Name="my_aspnet_schemaversion">
-          <Property Name="version" Type="int" />
-        </EntityType>-->
         <EntityType Name="my_aspnet_sessioncleanup">
           <Key>
             <PropertyRef Name="ApplicationId" />
@@ -160,6 +162,36 @@ warning 6013: The table/view 'def.studis.my_aspnet_schemaversion' does not have 
           <Property Name="valid_until" Type="datetime" Precision="0" Nullable="false" />
           <Property Name="token" Type="varchar" MaxLength="255" Nullable="false" />
         </EntityType>
+        <EntityType Name="predmet">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="uint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ime" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="opis" Type="varchar" MaxLength="255" />
+          <Property Name="kreditne" Type="int" Nullable="false" />
+          <Property Name="semester" Type="int" Nullable="false" />
+          <Property Name="koda" Type="varchar" MaxLength="45" />
+          <Property Name="letnik" Type="int" Nullable="false" />
+          <Property Name="obvezen" Type="bool" Nullable="false" />
+          <Property Name="modulId" Type="uint" />
+        </EntityType>
+        <EntityType Name="profesor">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="uint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ime" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="priimek" Type="varchar" MaxLength="45" Nullable="false" />
+        </EntityType>
+        <EntityType Name="profesorinpredmet">
+          <Key>
+            <PropertyRef Name="profesorId" />
+            <PropertyRef Name="predmetId" />
+          </Key>
+          <Property Name="profesorId" Type="uint" Nullable="false" />
+          <Property Name="predmetId" Type="uint" Nullable="false" />
+        </EntityType>
         <EntityType Name="student">
           <Key>
             <PropertyRef Name="vpisna_stevilka" />
@@ -171,6 +203,14 @@ warning 6013: The table/view 'def.studis.my_aspnet_schemaversion' does not have 
           <Property Name="datum_rojstva" Type="varchar" MaxLength="100" />
           <Property Name="spol" Type="varchar" MaxLength="10" />
           <Property Name="userId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="studentinpredmet">
+          <Key>
+            <PropertyRef Name="studentId" />
+            <PropertyRef Name="predmetId" />
+          </Key>
+          <Property Name="studentId" Type="int" Nullable="false" />
+          <Property Name="predmetId" Type="uint" Nullable="false" />
         </EntityType>
         <Association Name="ip_lock_to_user">
           <End Role="my_aspnet_users" Type="Self.my_aspnet_users" Multiplicity="1">
@@ -211,6 +251,74 @@ warning 6013: The table/view 'def.studis.my_aspnet_schemaversion' does not have 
             </Principal>
             <Dependent Role="password_recovery">
               <PropertyRef Name="userId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="predmet_modul_fk">
+          <End Role="modul" Type="Self.modul" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="predmet" Type="Self.predmet" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="modul">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="predmet">
+              <PropertyRef Name="modulId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="predmet_profesor_fk">
+          <End Role="profesor" Type="Self.profesor" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="profesorinpredmet" Type="Self.profesorinpredmet" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="profesor">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="profesorinpredmet">
+              <PropertyRef Name="profesorId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="predmet_student_fk">
+          <End Role="student" Type="Self.student" Multiplicity="1" />
+          <End Role="studentinpredmet" Type="Self.studentinpredmet" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="student">
+              <PropertyRef Name="vpisna_stevilka" />
+            </Principal>
+            <Dependent Role="studentinpredmet">
+              <PropertyRef Name="studentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="profesor_predmet_fk">
+          <End Role="predmet" Type="Self.predmet" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="profesorinpredmet" Type="Self.profesorinpredmet" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="predmet">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="profesorinpredmet">
+              <PropertyRef Name="predmetId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="student_predmet_fk">
+          <End Role="predmet" Type="Self.predmet" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="studentinpredmet" Type="Self.studentinpredmet" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="predmet">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="studentinpredmet">
+              <PropertyRef Name="predmetId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -272,6 +380,7 @@ warning 6013: The table/view 'def.studis.my_aspnet_schemaversion' does not have 
         </Association>
         <EntityContainer Name="studisModelStoreContainer">
           <EntitySet Name="ip_lock" EntityType="Self.ip_lock" Schema="studis" store:Type="Tables" />
+          <EntitySet Name="modul" EntityType="Self.modul" Schema="studis" store:Type="Tables" />
           <EntitySet Name="my_aspnet_applications" EntityType="Self.my_aspnet_applications" Schema="studis" store:Type="Tables" />
           <EntitySet Name="my_aspnet_membership" EntityType="Self.my_aspnet_membership" Schema="studis" store:Type="Tables" />
           <EntitySet Name="my_aspnet_paths" EntityType="Self.my_aspnet_paths" Schema="studis" store:Type="Tables" />
@@ -285,7 +394,11 @@ warning 6013: The table/view 'def.studis.my_aspnet_schemaversion' does not have 
           <EntitySet Name="my_aspnet_users" EntityType="Self.my_aspnet_users" Schema="studis" store:Type="Tables" />
           <EntitySet Name="my_aspnet_usersinroles" EntityType="Self.my_aspnet_usersinroles" Schema="studis" store:Type="Tables" />
           <EntitySet Name="password_recovery" EntityType="Self.password_recovery" Schema="studis" store:Type="Tables" />
+          <EntitySet Name="predmet" EntityType="Self.predmet" Schema="studis" store:Type="Tables" />
+          <EntitySet Name="profesor" EntityType="Self.profesor" Schema="studis" store:Type="Tables" />
+          <EntitySet Name="profesorinpredmet" EntityType="Self.profesorinpredmet" Schema="studis" store:Type="Tables" />
           <EntitySet Name="student" EntityType="Self.student" Schema="studis" store:Type="Tables" />
+          <EntitySet Name="studentinpredmet" EntityType="Self.studentinpredmet" Schema="studis" store:Type="Tables" />
           <AssociationSet Name="ip_lock_to_user" Association="Self.ip_lock_to_user">
             <End Role="my_aspnet_users" EntitySet="my_aspnet_users" />
             <End Role="ip_lock" EntitySet="ip_lock" />
@@ -297,6 +410,26 @@ warning 6013: The table/view 'def.studis.my_aspnet_schemaversion' does not have 
           <AssociationSet Name="pr_to_user_fk" Association="Self.pr_to_user_fk">
             <End Role="my_aspnet_users" EntitySet="my_aspnet_users" />
             <End Role="password_recovery" EntitySet="password_recovery" />
+          </AssociationSet>
+          <AssociationSet Name="predmet_modul_fk" Association="Self.predmet_modul_fk">
+            <End Role="modul" EntitySet="modul" />
+            <End Role="predmet" EntitySet="predmet" />
+          </AssociationSet>
+          <AssociationSet Name="predmet_profesor_fk" Association="Self.predmet_profesor_fk">
+            <End Role="profesor" EntitySet="profesor" />
+            <End Role="profesorinpredmet" EntitySet="profesorinpredmet" />
+          </AssociationSet>
+          <AssociationSet Name="predmet_student_fk" Association="Self.predmet_student_fk">
+            <End Role="student" EntitySet="student" />
+            <End Role="studentinpredmet" EntitySet="studentinpredmet" />
+          </AssociationSet>
+          <AssociationSet Name="profesor_predmet_fk" Association="Self.profesor_predmet_fk">
+            <End Role="predmet" EntitySet="predmet" />
+            <End Role="profesorinpredmet" EntitySet="profesorinpredmet" />
+          </AssociationSet>
+          <AssociationSet Name="student_predmet_fk" Association="Self.student_predmet_fk">
+            <End Role="predmet" EntitySet="predmet" />
+            <End Role="studentinpredmet" EntitySet="studentinpredmet" />
           </AssociationSet>
           <AssociationSet Name="userID_student_users" Association="Self.userID_student_users">
             <End Role="my_aspnet_users" EntitySet="my_aspnet_users" />
@@ -463,6 +596,7 @@ warning 6013: The table/view 'def.studis.my_aspnet_schemaversion' does not have 
           <Property Name="spol" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="userId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="my_aspnet_users" Relationship="studisModel.userID_student_users" FromRole="student" ToRole="my_aspnet_users" />
+          <NavigationProperty Name="predmets" Relationship="studisModel.studentinpredmet" FromRole="student" ToRole="predmet" />
         </EntityType>
         <EntityContainer Name="studisEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="my_aspnet_applications" EntityType="Self.my_aspnet_applications" />
@@ -502,6 +636,21 @@ warning 6013: The table/view 'def.studis.my_aspnet_schemaversion' does not have 
           <AssociationSet Name="pr_to_user_fk" Association="studisModel.pr_to_user_fk">
             <End Role="my_aspnet_users" EntitySet="my_aspnet_users" />
             <End Role="password_recovery" EntitySet="password_recovery" />
+          </AssociationSet>
+          <EntitySet Name="moduls" EntityType="studisModel.modul" />
+          <EntitySet Name="predmets" EntityType="studisModel.predmet" />
+          <EntitySet Name="profesors" EntityType="studisModel.profesor" />
+          <AssociationSet Name="predmet_modul_fk" Association="studisModel.predmet_modul_fk">
+            <End Role="modul" EntitySet="moduls" />
+            <End Role="predmet" EntitySet="predmets" />
+          </AssociationSet>
+          <AssociationSet Name="profesorinpredmet" Association="studisModel.profesorinpredmet">
+            <End Role="profesor" EntitySet="profesors" />
+            <End Role="predmet" EntitySet="predmets" />
+          </AssociationSet>
+          <AssociationSet Name="studentinpredmet" Association="studisModel.studentinpredmet">
+            <End Role="student" EntitySet="students" />
+            <End Role="predmet" EntitySet="predmets" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="ip_lock">
@@ -596,6 +745,62 @@ warning 6013: The table/view 'def.studis.my_aspnet_schemaversion' does not have 
               <PropertyRef Name="userId" />
             </Dependent>
           </ReferentialConstraint>
+        </Association>
+        <EntityType Name="modul">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ime" Type="String" Nullable="false" MaxLength="45" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="predmets" Relationship="studisModel.predmet_modul_fk" FromRole="modul" ToRole="predmet" />
+        </EntityType>
+        <EntityType Name="predmet">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ime" Type="String" Nullable="false" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="opis" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="kreditne" Type="Int32" Nullable="false" />
+          <Property Name="semester" Type="Int32" Nullable="false" />
+          <Property Name="koda" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="letnik" Type="Int32" Nullable="false" />
+          <Property Name="obvezen" Type="Boolean" Nullable="false" />
+          <Property Name="modulId" Type="Int64" />
+          <NavigationProperty Name="modul" Relationship="studisModel.predmet_modul_fk" FromRole="predmet" ToRole="modul" />
+          <NavigationProperty Name="profesors" Relationship="studisModel.profesorinpredmet" FromRole="predmet" ToRole="profesor" />
+          <NavigationProperty Name="students" Relationship="studisModel.studentinpredmet" FromRole="predmet" ToRole="student" />
+        </EntityType>
+        <EntityType Name="profesor">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ime" Type="String" Nullable="false" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="priimek" Type="String" Nullable="false" MaxLength="45" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="predmets" Relationship="studisModel.profesorinpredmet" FromRole="profesor" ToRole="predmet" />
+        </EntityType>
+        <Association Name="predmet_modul_fk">
+          <End Type="studisModel.modul" Role="modul" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="studisModel.predmet" Role="predmet" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="modul">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="predmet">
+              <PropertyRef Name="modulId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="profesorinpredmet">
+          <End Type="studisModel.profesor" Role="profesor" Multiplicity="*" />
+          <End Type="studisModel.predmet" Role="predmet" Multiplicity="*" />
+        </Association>
+        <Association Name="studentinpredmet">
+          <End Type="studisModel.student" Role="student" Multiplicity="*" />
+          <End Type="studisModel.predmet" Role="predmet" Multiplicity="*" />
         </Association>
       </Schema>
     </edmx:ConceptualModels>
@@ -778,6 +983,54 @@ warning 6013: The table/view 'def.studis.my_aspnet_schemaversion' does not have 
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="moduls">
+            <EntityTypeMapping TypeName="studisModel.modul">
+              <MappingFragment StoreEntitySet="modul">
+                <ScalarProperty Name="ime" ColumnName="ime" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="predmets">
+            <EntityTypeMapping TypeName="studisModel.predmet">
+              <MappingFragment StoreEntitySet="predmet">
+                <ScalarProperty Name="modulId" ColumnName="modulId" />
+                <ScalarProperty Name="obvezen" ColumnName="obvezen" />
+                <ScalarProperty Name="letnik" ColumnName="letnik" />
+                <ScalarProperty Name="koda" ColumnName="koda" />
+                <ScalarProperty Name="semester" ColumnName="semester" />
+                <ScalarProperty Name="kreditne" ColumnName="kreditne" />
+                <ScalarProperty Name="opis" ColumnName="opis" />
+                <ScalarProperty Name="ime" ColumnName="ime" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="profesors">
+            <EntityTypeMapping TypeName="studisModel.profesor">
+              <MappingFragment StoreEntitySet="profesor">
+                <ScalarProperty Name="priimek" ColumnName="priimek" />
+                <ScalarProperty Name="ime" ColumnName="ime" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="profesorinpredmet" TypeName="studisModel.profesorinpredmet" StoreEntitySet="profesorinpredmet">
+            <EndProperty Name="predmet">
+              <ScalarProperty Name="id" ColumnName="predmetId" />
+            </EndProperty>
+            <EndProperty Name="profesor">
+              <ScalarProperty Name="id" ColumnName="profesorId" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="studentinpredmet" TypeName="studisModel.studentinpredmet" StoreEntitySet="studentinpredmet">
+            <EndProperty Name="predmet">
+              <ScalarProperty Name="id" ColumnName="predmetId" />
+            </EndProperty>
+            <EndProperty Name="student">
+              <ScalarProperty Name="vpisna_stevilka" ColumnName="studentId" />
+            </EndProperty>
+          </AssociationSetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

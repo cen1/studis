@@ -167,6 +167,9 @@
     <Compile Include="Models\ip_lock.cs">
       <DependentUpon>Studis.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\modul.cs">
+      <DependentUpon>Studis.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\my_aspnet_applications.cs">
       <DependentUpon>Studis.tt</DependentUpon>
     </Compile>
@@ -201,6 +204,12 @@
       <DependentUpon>Studis.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\password_recovery.cs">
+      <DependentUpon>Studis.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\predmet.cs">
+      <DependentUpon>Studis.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\profesor.cs">
       <DependentUpon>Studis.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\student.cs">

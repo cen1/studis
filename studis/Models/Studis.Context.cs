@@ -39,5 +39,8 @@ namespace studis.Models
         public virtual DbSet<student> students { get; set; }
         public virtual DbSet<ip_lock> ip_lock { get; set; }
         public virtual DbSet<password_recovery> password_recovery { get; set; }
+        public virtual DbSet<modul> moduls { get; set; }
+        public virtual DbSet<predmet> predmets { get; set; }
+        public virtual DbSet<profesor> profesors { get; set; }
     }
 }
