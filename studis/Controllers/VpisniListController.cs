@@ -13,11 +13,11 @@ namespace studis.Controllers
         public ActionResult VpisniList()
         {
             ViewBag.Title = "VpisniList";
-            ViewBag.StudijskiProgrami = new SelectList(Sifranti.STUDIJSKIPROGRAM);
-            ViewBag.Klasius = Sifranti.KLASIUS;
-            ViewBag.VrstaVpisa = Sifranti.VRSTAVPISA;
-            ViewBag.NacinStudija = Sifranti.NACINSTUDIJA;
-            ViewBag.OblikaStudija = Sifranti.OBLIKASTUDIJA;
+            ViewBag.StudijskiProgrami = new SelectList(Sifranti.STUDIJSKIPROGRAM, "id", "naziv");
+            ViewBag.Klasius = new SelectList(Sifranti.KLASIUS, "id", "naziv");
+            ViewBag.VrstaVpisa = new SelectList(Sifranti.VRSTAVPISA, "id", "naziv");
+            ViewBag.NacinStudija = new SelectList(Sifranti.NACINSTUDIJA, "id", "naziv");
+            ViewBag.OblikaStudija = new SelectList(Sifranti.OBLIKASTUDIJA, "id", "naziv");
 
             return View();
         }
@@ -26,6 +26,7 @@ namespace studis.Controllers
         public ActionResult Zajemi(VpisniList vpisniList)
         {
             //preveri
+
             //shrani
 
             return View(vpisniList);

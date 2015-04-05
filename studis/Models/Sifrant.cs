@@ -7,8 +7,8 @@ namespace studis.Models
 {
     public class Sifrant
     {
-        public readonly int id;
-        public readonly string naziv;
+        public int id { get; set; }
+        public string naziv { get; set; }
 
         public Sifrant(int id, string naziv)
         {

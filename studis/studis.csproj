@@ -176,6 +176,7 @@
     <Compile Include="Controllers\ImportController.cs" />
     <Compile Include="Controllers\ListController.cs" />
     <Compile Include="Controllers\StudentController.cs" />
+    <Compile Include="Controllers\VpisniListController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -228,6 +229,8 @@
     <Compile Include="Models\profesor.cs">
       <DependentUpon>Studis.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Sifrant.cs" />
+    <Compile Include="Models\Sifranti.cs" />
     <Compile Include="Models\student.cs">
       <DependentUpon>Studis.tt</DependentUpon>
     </Compile>
@@ -248,9 +251,12 @@
     </Compile>
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\UserModels.cs" />
+    <Compile Include="Models\VpisniList.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="bin\studis.dll" />
+    <Content Include="bin\studis.pdb" />
     <Content Include="Content\images\indeks.png" />
     <Content Include="Global.asax" />
     <Content Include="packages.config" />
@@ -326,6 +332,7 @@
     <Content Include="Views\List\List.cshtml" />
     <Content Include="Views\Shared\_PdfLayout.cshtml" />
     <Content Include="Views\List\Pdf.cshtml" />
+    <Content Include="Views\VpisniList\VpisniList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
