@@ -2,121 +2,216 @@
     ViewBag.Title = "Vpisni List";
 }
 
-@Model VpisniList
+@model studis.Models.VpisniList
 
 <h2>Vpisni List</h2>
-<form action="" method="post">
-    <label for="studijskoLeto">Študijsko leto</label>
-        <input type="text" name="studijskoLeto">
+<form action="VpisniList/Zajemi" method="post">
+    <fieldset>
+        <div class="editor-label">
+            <label for="studijskoLeto">Študijsko leto</label>
+        </div>
+        <div class="editor-field">
+            <input type="text" name="studijskoLeto">
+        </div>
+        <!--Vrsta vpisnega lista-->
+        <!--Fakulteta-->
+        <div class="editor-label">
+            <label for="vpisnaStevilka">Vpisna Številka</label>
+        </div>
+        <div class="editor-field">
+            <input type="text" name="vpisnaStevilka" readonly>
+        </div>
+        <div class="editor-label">
+            <label for="ime">Ime</label>
+        </div>
+        <div class="editor-field">
+            <input type="text" name="ime">
+        </div>
+        <div class="editor-label">
+            <label for="priimek">Priimek</label>
+        </div>
+        <div class="editor-field">
+            <input type="text" name="priimek">
+        </div>
+        <div class="editor-label">
+            <label for="datumRojstva">Datum rojstva</label>
+        </div>
+        <div class="editor-field">
+            <input type="date" name="datumRojstva">
+        </div>
+        <div class="editor-label">
+            <label for="krajRojstva">Kraj rojstva</label>
+        </div>
+        <div class="editor-field">
+            <input type="text" name="krajRojstva">
+        </div>
+        <div class="editor-label">
+            <label for="obcinaRojstva">Občina rojstva</label>
+        </div>
+        <div class="editor-field">
+            <input type="text" name="obcinaRojstva">
+        </div>
 
-    <!--Vrsta vpisnega lista-->
-    <!--Fakulteta-->
-    <label for="vpisnaStevilka">Vpisna Številka</label>
-        <input type="text" name="vpisnaStevilka" readonly>
-    
-    <label for="ime">Ime</label>
-        <input type="text" name="ime">
-    <label for="priimek">Priimek</label>
-        <input type="text" name="priimek">
-    
-    <label for="datumRojstva">Datum rojstva</label>
-        <input type="date" name="datumRojstva">
-    <label for="krajRojstva">Kraj rojstva</label>
-        <input type="text" name="krajRojstva">
-    <label for="obcinaRojstva">Občina rojstva</label>
-        <input type="text" name="obcinaRojstva">
-    
-    
-    @Html.DropDownList()
-    <label for="drzavaRojstva">Država rojstva</label>
-        <select name="drzavaRojstva">
-        @foreach(var drzava in Model.) {
-            <option value="@">@</option>
-        }
-        </select>
-    
-    <label for="drzavljanstvo">Državljanstvo</label>
-        <input type="text" name="drzavljanstvo">
-    <label for="spol">Spol</label>
-        <select name="spol">
-            <option value="m">Moški</option>
-            <option value="z">Ženski</option>
-        </select>
-    <label for="emso">EMŠO</label>
-        <input type="number" maxlength="13" name="emso">
-    <label for="davcnaStevilka">Davčna številka</label>
-        <input type="number" maxlength="8" name="davcnaStevilka">
-    <label for="eposta">e-pošta</label>
-        <input type="email" name="eposta">
-    <label for="prenosniTelefon">Prenosni telefon</label>
-        <input type="tel" name="prenosniTelefon">
+        <div class="editor-label">
+            <label for="drzavaRojstva">Država rojstva</label>
+        </div>
+        <div class="editor-field">
+            <select name="drzavaRojstva">
+                <!--
+                foreach(var drzava in Model.) {
+                    <option value=""></option>
+                }
+                        -->
+            </select>
+        </div>
+        <div class="editor-label">
+            <label for="drzavljanstvo">Državljanstvo</label>
+        </div>
+        <div class="editor-field">
+            <input type="text" name="drzavljanstvo">
+        </div>
+        <div class="editor-label">
+            <label for="spol">Spol</label>
+        </div>
+        <div class="editor-field">
+            <select name="spol">
+                <option value="m">Moški</option>
+                <option value="z">Ženski</option>
+            </select>
+        </div>
+        <div class="editor-label">
+            <label for="emso">EMŠO</label>
+        </div>
+        <div class="editor-field">
+            <input type="number" maxlength="13" name="emso">
+        </div>
+        <div class="editor-label">
+            <label for="davcnaStevilka">Davčna številka</label>
+        </div>
+        <div class="editor-field">
+            <input type="number" maxlength="8" name="davcnaStevilka">
+        </div>
+        <div class="editor-label">
+            <label for="eposta">e-pošta</label>
+        </div>
+        <div class="editor-field">
+            <input type="email" name="eposta">
+        </div>
+        <div class="editor-label">
+            <label for="prenosniTelefon">Prenosni telefon</label>
+        </div>
+        <div class="editor-field">
+            <input type="tel" name="prenosniTelefon">
+        </div>
 
-    <h4>Stalno prebivališče</h4>
-    <label for="vrocanje">Vročanje</label>
-        <input type="checkbox" name="vrocanje">
-    <label for="naslov">Ulica in hišna številka</label>
-        <input type="text" name="naslov">
-    Poštna številka
-    Občina
-    Država
+        <h4>Stalno prebivališče</h4>
+        <div class="editor-label">
+            <label for="vrocanje">Vročanje</label>
+        </div>
+        <div class="editor-field">
+            <input type="checkbox" name="vrocanje">
+        </div>
+        <div class="editor-label">
+            <label for="naslov">Ulica in hišna številka</label>
+        </div>
+        <div class="editor-field">
+            <input type="text" name="naslov">
+            Poštna številka
+            Občina
+            Država
+        </div>
 
-    <h4>Začasno prebivališče</h4>
-    <label for="vrocanje2">Vročanje</label>
-        <input type="checkbox" name="vrocanjeZacasni">
-    <label for="naslovZacasni">Ulica in hišna številka</label>
-        <input type="text" name="naslovZacasni">
-    Poštna številka
-    Občina
-    Država
+        <h4>Začasno prebivališče</h4>
+        <div class="editor-label">
+            <label for="vrocanje2">Vročanje</label>
+        </div>
+        <div class="editor-field">
+            <input type="checkbox" name="vrocanjeZacasni">
+        </div>
+        <div class="editor-label">
+            <label for="naslovZacasni">Ulica in hišna številka</label>
+        </div>
+        <div class="editor-field">
+            <input type="text" name="naslovZacasni">
+        </div>
+        Poštna številka
+        Občina
+        Država
 
-    <h4>Podatki o vpisu</h4>
-    
-    <label for="studijskiProgram">Študijski program</label>
-        @Html.DropDownList("StudijskiProgram", ViewBag.StudijskiProgram as SelectList)
-        <select name="studijskiProgram">
-            
-        </select>
-    Smer/Usmeritev/Modul/Znastveno področje
-    Kraj izvajanaja
-    Izbirna skupina
-    Študijski program
-    Smer/Usmeritev/Modul/Znastveno področje
-    Kraj izvajanaja
-    Izbirna skupina
+        <h4>Podatki o vpisu</h4>
+        <div class="editor-label">
+            <label for="studijskiProgram">Študijski program</label>
+        </div>
+        <div class="editor-field">
+            @Html.DropDownListFor(m => m.studijskiProgram, (SelectList)ViewBag.StudijskiProgrami)
+        </div>
+        Smer/Usmeritev/Modul/Znastveno področje
+        Kraj izvajanaja
+        Izbirna skupina
+        Študijski program
+        Smer/Usmeritev/Modul/Znastveno področje
+        Kraj izvajanaja
+        Izbirna skupina
+        <div class="editor-label">
+            <label for="vrstaStudija">Vrsta študija</label>
+        </div>
+        <div class="editor-field">
+            <select name="vrstaStudija"></select>
+        </div>
+        <div class="editor-label">
+            <label for="vrstaVpisa">Vrsta vpisa</label>
+        </div>
+        <div class="editor-field">
+            @Html.DropDownListFor(m => m.studijskiProgram, (SelectList)ViewBag.VrstaVpisa)
+        </div>
+        <div class="editor-label">
+            <label for="letnikStudija">Letnik študija</label>
+        </div>
+        <div class="editor-field">
+            <select name="letnikStudija">
+                <option value="1">1.</option>
+                <option value="2">2.</option>
+                <option value="3">3.</option>
+                <option value="4">4.</option>
+                <option value="5">5.</option>
+                <option value="6">6.</option>
+                <option value="0">dodatno leto</option>
+            </select>
+        </div>
+        <div class="editor-label">
+            <label for="nacinStudija">Način študija</label>
+        </div>
+        <div class="editor-field">
+            @Html.DropDownListFor(m => m.nacinStudija, (SelectList)ViewBag.NacinStudija)
+        </div>
+        <div class="editor-label">
+            <label for="oblikaStudija">Oblika študija</label>
+        </div>
+        <div class="editor-field">
+            @Html.DropDownListFor(m => m.oblikaStudija, (SelectList)ViewBag.OblikaStudija)
+        </div>
+        <div class="editor-label">
+            <label for="letoPrvegaVpisa">Študijsko leto prevega vpisa v ta program</label>
+        </div>
+        <div class="editor-field">
+            <select name="letoPrvegaVpisa"></select>
+        </div>
+        <div class="editor-label">
+            <label for="soglasje1">Soglasje 1</label>
+        </div>
+        <div class="editor-field">
+            <input type="checkbox" name="soglasje1" id="soglasje1">
+        </div>
+        <div class="editor-label">
+            <label for="soglasje2">Soglasje 2</label>
+        </div>
+        <div class="editor-field">
+            <input type="checkbox" name="soglasje2" id="soglasje2">
+        </div>
 
-    <label for="vrstaStudija">Vrsta študija</label>
-        <select name="vrstaStudija">
-
-        </select>
-    <label for="vrstaVpisa">Vrsta vpisa</label>
-        <select name="vrstaVpisa">
-
-        </select>
-    <label for="letnikStudija">Letnik študija</label>
-        <select name="letnikVpisa">
-
-        </select>
-    <label for="nacinStudija">Način študija</label>
-        <select name="nacinStudija">
-            <option value="1">1 - redni</option>
-            <option value="3">3 - izredni</option>
-        </select>
-    <label for="oblikaStudija">Oblika študija</label>
-        <select name="oblikaStudija">
-            <option value="1">1 - na lokaciji</option>
-            <option value="2">2 - na daljavo</option>
-            <option value="3">3 - e-studij</option>
-        </select>
-    <label for="letoPrvegaVpisa">Študijsko leto prevega vpisa v ta program</label>
-        <select name="letoPrvegaVpisa">
-
-        </select>
-    <label for="soglasje1">Soglasje 1</label>
-        <input type="checkbox" name="soglasje1" id="soglasje1">
-    <label for="soglasje2">Soglasje 2</label>
-        <input type="checkbox" name="soglasje2" id="soglasje2">
-    
-    <h4>Priloga 1: Predmetnik</h4>
-
-    <input type="submit" value="Shrani" >
+        <h4>Priloga 1: Predmetnik</h4>
+        <p>
+            <input type="submit" value="Shrani">
+        </p>
+    </fieldset>
 </form>
