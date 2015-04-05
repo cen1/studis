@@ -1,0 +1,403 @@
+﻿@{
+    ViewBag.Title = "Izpis vpisnega lista";
+}
+
+<script type="text/javascript">
+    $(function () {
+        $("#redirect").click(function () {
+            window.location.href = "@Url.Action("Pdf","List")";
+        });
+    });
+</script>
+
+<h2>Izpis vpisnega lista</h2>
+
+@using (Html.BeginForm())
+{
+    <table>
+        <tbody>
+            <tr>
+                <th colspan="2">Vpisni list 2014/2015</th>
+            </tr>
+            <tr>
+                <td>Vpisna številka</td>
+                <td>data</td>
+            </tr>
+            <tr>
+                <td>Priimek</td>
+                <td>data</td>
+            </tr>
+            <tr>
+                <td>Dekliški priimek</td>
+                <td>data</td>
+            </tr>
+            <tr>
+                <td>Ime</td>
+                <td>data</td>
+            </tr>
+            <tr>
+                <td>Matična številka</td>
+                <td>data</td>
+            </tr>
+            <tr>
+                <td>Davčna številka</td>
+                <td>data</td>
+            </tr>
+            <tr>
+                <td>Študent s posebnimi potrebami</td>
+                <td>DA / NE</td>
+            </tr>
+            <tr>
+                <th colspan="2">Naslov stalnega bivališča</th>
+            </tr>
+            <tr>
+                <td>Ulica in hišna številka</td>
+                <td>data</td>
+            </tr>
+            <tr>
+                <td>Pošta in poštna številka</td>
+                <td>data</td>
+            </tr>
+            <tr>
+                <td>Naslov za vročanja (označite)</td>
+                <td>DA / NE</td>
+            </tr>
+            <tr>
+                <td>Občina</td>
+                <td>data</td>
+            </tr>
+            <tr>
+                <td>Država</td>
+                <td>data</td>
+            </tr>
+            <tr>
+                <td>
+                    Telefonka št.<br />
+                    Prenosni telefon<br />
+                    Elektronska pošta<br />
+                    (Če tako želite, rubrike ni potrebno izpolniti.)
+                </td>
+                <td>data</td>
+            </tr>
+            <tr>
+                <th colspan="2">Naslov začasnega bivališča</th>
+            </tr>
+            <tr>
+                <td>Ulica in hišna številka</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Pošta in poštna številka</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Naslov za vročanja (označite)</td>
+                <td>DA / NE</td>
+            </tr>
+            <tr>
+                <td>Občina</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th colspan="2">Podatki o vpisu</th>
+            </tr>
+            <tr>
+                <td>Visokošolski zavod/članica</td>
+                <td>data</td>
+            </tr>
+            <tr>
+                <td>Študijski program</td>
+                <td>data</td>
+            </tr>
+            <tr>
+                <td>Smer in izbirna skupina</td>
+                <td>data</td>
+            </tr>
+            <tr>
+                <td>Skupina</td>
+                <td>data</td>
+            </tr>
+            <tr>
+                <td>Študijsko leto</td>
+                <td>2014/2015</td>
+            </tr>
+            <tr>
+                <td>Vrsta študija</td>
+                <td>
+                    J-visokošolski strokovni  K-univerzitezni<br />
+                    L-magistrski  N-enoviti magistrski<br />
+                    M-doktorski
+                </td>
+            </tr>
+            <tr>
+                <td>Letnik študija</td>
+                <td>data</td>
+            </tr>
+            <tr>
+                <td>Način študija</td>
+                <td>1-redni  3-izredni</td>
+            </tr>
+            <tr>
+                <td>Študij na daljavo</td>
+                <td>1-DA  2-NE</td>
+            </tr>
+            <tr>
+                <td>Vrsta vpisa</td>
+                <td>
+                    V1-prvi vpis v letnik  V2-ponavljanje letnika<br />
+                    V3-nadaljevanje letnika  A1-absolvent<br />
+                    A2-podaljšanje absolventa
+                </td>
+            </tr>
+            <tr>
+                <td>Kraj izvajanja študija</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Na katerem visokošolskem zavodu/članici še študirate?</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th colspan="2">Podatki o bivanju in prehrani med študijem</th>
+            </tr>
+            <tr>
+                <td>Bivanje v času študija</td>
+                <td>
+                    1-pri starših  2-v lastnem gospodinjstvu<br />
+                    3-v študentskem domu  4-pri sorodnikih ali znancih<br />
+                    5-v podnajemniškem stanovanju  6-še ne vem
+                </td>
+            </tr>
+            <tr>
+                <td>Prehrana v času študija</td>
+                <td>
+                    1-pri starših  2-v lastnem gospodinjstvu<br />
+                    3-v študentskem domu  4-pri sorodnikih ali znancih<br />
+                    5-v podnajemniškem stanovanju  6-še ne vem
+                </td>
+            </tr>
+
+            <tr>
+                <th colspan="2">Končana višja izobrazba</th>
+            </tr>
+            <tr>
+                <td>Visokošolski zavod ali višja strokovna šola</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Program in smer</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Kraj izvajanja študija</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Leto izdaje diplomske listine</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Država visokošolskega ali višješolskega zavoda</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th colspan="2">Končana visokošolska izobrazba</th>
+            </tr>
+            <tr>
+                <td>Visokošolski zavod/članica</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Program in smer</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Vrsta študija</td>
+                <td>
+                    J-visokošolski strokovni  K-univerzitezni<br />
+                    L-magistrski  N-enoviti magistrski<br />
+                    M-doktorski
+                </td>
+            </tr>
+            <tr>
+                <td>Kraj izvajanja študija</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Leto izdaje diplomske listine</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Povprečna ocena</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Država visokošolskega zavoda/članice</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th colspan="2">Šolnina</th>
+            </tr>
+            <tr>
+                <td>Plačilo šolnine</td>
+                <td>
+                    1-DA  2-po računu<br />
+                    3-šolnine ni  4-oproščen
+                </td>
+            </tr>
+            <tr>
+                <td>Plačnik</td>
+                <td>
+                    1-šolnino v celoti plača podjetje ali druga organizacija<br />
+                    2-šolnino v celoti plačam sam<br />
+                    3-šolnino deloma plača podjetje ali druga organizacija, deloma pa sam
+                </td>
+            </tr>
+            <tr>
+                <td>Šolnina, ki jo plača študent ali zanj podjetje</td>
+                <td></td>
+            </tr>
+            <tr>
+                <th colspan="2">Podatki o prvem vpisu</th>
+            </tr>
+            <tr>
+                <td>Študijsko leto prvega vpisa v ta študijski program</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Letnik prvega vpisa</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Študijsko leto prvega vpisa v katerikoli visokošolski študijski program</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th colspan="2">Osebni podatki</th>
+            </tr>
+            <tr>
+                <td>Spol</td>
+                <td>1-moški  2-ženski</td>
+            </tr>
+            <tr>
+                <td>Datum rojstva</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Kraj rojstva</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Občina rojstva</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Država rojstva</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Državljanstvo</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Narodnost</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th colspan="2">Podatki o srednješolski izobrazbi, na podlagi katere se kandidat vpisuje</th>
+            </tr>
+            <tr>
+                <td>Država srednje šole</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Občina srednje šole</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Program in smer oz. naziv poklicne ali strokovne izobrazbe</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Leto izdaje zaključnega spričevala srednje šole</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Ime srednje šole</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Način končanja srednje šole</td>
+                <td>
+                    1-splošna matura  3-poklicna matura<br />
+                    2-zaključni izpit  4-srednješolka diploma
+                </td>
+            </tr>
+            <tr>
+                <td>Ali ste pred vpisom v začetni letnik opravljali dodatne izpite</td>
+                <td>
+                    0-nisem  1-drugi izpiti  2-dodatni maturitetni predmet
+                </td>
+            </tr>
+            <tr>
+                <td>Znanje tujih jezikov</td>
+                <td></td>
+            </tr>
+        </tbody>
+
+        <tfoot>
+            <tr>
+                <td colspan="2">
+                    Podpisani v skladu z določili Zakona o varstvu osebnih podatkov (Uradni list RS
+                    št. 94/07 – uradno prečiščeno besedilo) dovoljujem, <br /> da lahko visokošolski zavod, na
+                    katerega se vpisujem, uporablja: <br />
+                    - moje osebne podatke za namen storitev knjižničnega sistema in <br />
+                    - moje kontaktne podatke za namen kariernega oziroma študijskega svetovanja.
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    S podpisom jamčim za resničnost podatkov.<br />
+                    V ________________________________ dne _______________________
+                </td>
+                <td>
+                    Podpis študentke - študenta<br />
+                    _______________________________________
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+    <br />
+
+    <br />
+    <table>
+        <thead>
+            <tr>
+                <th>Šifra učitelja</th>
+                <th>Učitelj</th>
+                <th>Šifra učne enote</th>
+                <th>Učna enota</th>
+                <th>Število KT</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>data</td>
+                <td>data</td>
+                <td>data</td>
+                <td>data</td>
+                <td>data</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <br />
+    <br />
+    <input type="button" id="redirect" value="Natisni PDF" />
+}
