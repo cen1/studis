@@ -45,6 +45,7 @@ namespace studis.Controllers
                     v.drzavljanstvo = model.drzavljanstvo;
                     v.email = model.email;
                     v.emso = model.emso;
+                    v.ime = model.ime;
                     v.izbirnaSkupina = model.izbirnaSkupina;
                     v.izbirnaSkupina2 = model.izbirnaSkupina2;
                     v.krajIzvajanja = model.krajIzvajanja;
@@ -89,8 +90,24 @@ namespace studis.Controllers
                     v.studijskoLeto = "2014/2015";
 
                     db.vpisnilists.Add(v);
-                    db.SaveChanges();
-
+                    try
+                    {
+                        db.SaveChanges();
+                    }
+                    catch (System.Data.Entity.Validation.DbEntityValidationException e)
+                    {
+                        foreach (var eve in e.EntityValidationErrors)
+                        {
+                            System.Diagnostics.Debug.WriteLine("Entity of type \"{0}\" in state \"{1}\" has the following validation errors:",
+                                eve.Entry.Entity.GetType().Name, eve.Entry.State);
+                            foreach (var ve in eve.ValidationErrors)
+                            {
+                                System.Diagnostics.Debug.WriteLine("- Property: \"{0}\", Error: \"{1}\"",
+                                    ve.PropertyName, ve.ErrorMessage);
+                            }
+                        }
+                        throw;
+                    }
                     return RedirectToAction("VpisniListSuccess", "VpisniList");
             }
             else
@@ -123,6 +140,9 @@ namespace studis.Controllers
             //tule returnaj PDF
         }
 
-
+        public ActionResult VpisniListSuccess()
+        {
+            return View();
+        }
     }
 }
