@@ -74,5 +74,10 @@ namespace studis.Models
             new Sifrant(1000469, "Upravna infromatika UN 1. st"),    
         };
 
+        public static readonly Sifrant[] SPOL = {
+            new Sifrant(0, "Moški"),
+            new Sifrant(1, "Ženski"),
+        };
+
     }
 }
