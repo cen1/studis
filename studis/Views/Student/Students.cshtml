@@ -4,13 +4,7 @@
 
 <h2>Seznam študentov</h2>
 
-@using (Html.BeginForm())
-{
-    <p>
-        @Html.TextBox("SearchString")
-        <input type="submit" value="Išči" />
-    </p>
-} 
+
 <div>
     @Html.Action("StudentSearchPartial")
 </div>
