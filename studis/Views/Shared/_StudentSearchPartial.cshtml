@@ -1,39 +1,43 @@
 ﻿@model IEnumerable<studis.Models.student>
     
 
+@using (Html.BeginForm())
+{
+    <p>
+        @Html.TextBox("SearchString")
+        <input type="submit" value="Išči" />
+    </p>
+} 
 <div id="searchDiv">
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-
-<table id="seznamStudentov" class="table">
-    <tr>
-        <th>@Html.DisplayNameFor(model => model.ime)</th>
-        <th>@Html.DisplayNameFor(model => model.priimek)</th>
-        <th>@Html.DisplayNameFor(model => model.naslov)</th>
-        <th>@Html.DisplayNameFor(model => model.datum_rojstva)</th>
-        <th>@Html.DisplayNameFor(model => model.spol)</th>
-    </tr>
+    <table id="seznamStudentov" class="table">
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.ime)</th>
+            <th>@Html.DisplayNameFor(model => model.priimek)</th>
+            <th>@Html.DisplayNameFor(model => model.naslov)</th>
+            <th>@Html.DisplayNameFor(model => model.datum_rojstva)</th>
+            <th>@Html.DisplayNameFor(model => model.spol)</th>
+        </tr>
 @if (Model != null) { 
     foreach (var item in Model) {
-    <tr>
-        <td>@Html.DisplayFor(modelItem => item.ime)</td>
-        <td>@Html.DisplayFor(modelItem => item.priimek)</td>
-        <td>@Html.DisplayFor(modelItem => item.naslov)</td>
-        <td>@Html.DisplayFor(modelItem => item.datum_rojstva)</td>
-        <td>@Html.DisplayFor(modelItem => item.spol)</td>
-        <td>@Html.ActionLink("Edit", "Edit", new { id=item.vpisna_stevilka })</td>
-        <td>@Html.ActionLink("Details", "Details", new { id = item.vpisna_stevilka })</td>
-        <td>@Html.ActionLink("Delete", "Delete", new { id = item.vpisna_stevilka })</td>
-    </tr>
+        <tr>
+            <td>@Html.DisplayFor(modelItem => item.ime)</td>
+            <td>@Html.DisplayFor(modelItem => item.priimek)</td>
+            <td>@Html.DisplayFor(modelItem => item.naslov)</td>
+            <td>@Html.DisplayFor(modelItem => item.datum_rojstva)</td>
+            <td>@Html.DisplayFor(modelItem => item.spol)</td>
+            <td>@Html.ActionLink("Edit", "Edit", new { id=item.vpisna_stevilka })</td>
+            <td>@Html.ActionLink("Details", "Details", new { id = item.vpisna_stevilka })</td>
+            <td>@Html.ActionLink("Delete", "Delete", new { id = item.vpisna_stevilka })</td>
+        </tr>
     }
 }
-</table>
+    </table>
 
 @if (Model == null)
 {
     <h4>Ni zadetkov!</h4>
     <p>Uporaba: iskanje s celo vpisno številko ali začetnicami imena IN priimka.</p>
 }
+    <p>@Html.ActionLink("Create New", "Create")</p><br />
     <input value="Download as CSV" type="button" onclick="$('#seznamStudentov').table2CSV()">
 </div>

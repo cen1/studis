@@ -9,10 +9,8 @@
             type: "POST",
             data: { 'searchString': data },
             success: function (resp) {
-                //alert(resp);
-                $('#searchDiv').empty();
-                $('#searchDiv').append(resp);
-                //('#searchDiv').html(resp);
+                $('#searchDiv').html(resp);
+                $("#searchDiv  p:nth-child(1)").remove();
             },
             error: function (resp) {
                 alert("err with ajax post");
