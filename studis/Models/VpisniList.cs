@@ -55,6 +55,7 @@ namespace studis.Models
         public Nullable<bool> soglasje1 { get; set; }
         public Nullable<bool> soglasje2 { get; set; }
         public bool potrjen { get; set; }
+        public string ime { get; set; }
     
         public virtual student student { get; set; }
     }

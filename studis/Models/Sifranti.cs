@@ -95,6 +95,7 @@ namespace studis.Models
         };
 
         public static readonly Sifrant[] STUDIJSKOLETO = {
+            new Sifrant(0, "/"),
             new Sifrant(1991, "1991/1992"),
             new Sifrant(1992, "1992/1993"),
             new Sifrant(1993, "1993/1994"),
