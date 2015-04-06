@@ -25,9 +25,6 @@
             <td>@Html.DisplayFor(modelItem => item.naslov)</td>
             <td>@Html.DisplayFor(modelItem => item.datum_rojstva)</td>
             <td>@Html.DisplayFor(modelItem => item.spol)</td>
-            <td>@Html.ActionLink("Edit", "Edit", new { id=item.vpisna_stevilka })</td>
-            <td>@Html.ActionLink("Details", "Details", new { id = item.vpisna_stevilka })</td>
-            <td>@Html.ActionLink("Delete", "Delete", new { id = item.vpisna_stevilka })</td>
         </tr>
     }
 }
@@ -36,8 +33,7 @@
 @if (Model == null)
 {
     <h4>Ni zadetkov!</h4>
-    <p>Uporaba: iskanje s celo vpisno številko ali začetnicami imena IN priimka.</p>
+    <p>Uporaba: iskanje s celo vpisno številko ali začetnicami imena in priimka.</p>
 }
-    <p>@Html.ActionLink("Create New", "Create")</p><br />
-    <input value="Download as CSV" type="button" onclick="$('#seznamStudentov').table2CSV()">
+    
 </div>
