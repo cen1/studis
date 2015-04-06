@@ -41,12 +41,12 @@ namespace studis.Controllers
                     email = list.email,
                     prenosniTelefon = list.prenosniTelefon,
                     naslov = list.naslov,
-                    vrocanje = list.vrocanje,
+                    //vrocanje = list.vrocanje,
                     postnaStevilka = list.postnaStevilka,
                     obcina = list.obcina,
                     drzava = list.drzava,
                     naslovZacasni = list.naslovZacasni,
-                    vrocanjeZacasni = list.vrocanjeZacasni,
+                    //vrocanjeZacasni = list.vrocanjeZacasni,
                     postnaStevilkaZacasni = list.postnaStevilkaZacasni,
                     obcinaZacasni = list.obcinaZacasni,
                     drzavaZacasni = list.drzavaZacasni,
@@ -63,8 +63,8 @@ namespace studis.Controllers
                     nacinStudija = list.nacinStudija,
                     oblikaStudija = list.oblikaStudija,
                     studijskoLetoPrvegaVpisa = list.studijskoLetoPrvegaVpisa,
-                    soglasje1 = list.soglasje1,
-                    soglasje2 = list.soglasje2
+                    //soglasje1 = list.soglasje1,
+                    //soglasje2 = list.soglasje2
                 };
             
                 return View(model);
