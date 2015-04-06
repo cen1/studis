@@ -42,5 +42,7 @@ namespace studis.Models
         public virtual DbSet<modul> moduls { get; set; }
         public virtual DbSet<predmet> predmets { get; set; }
         public virtual DbSet<profesor> profesors { get; set; }
+        public virtual DbSet<ocena> ocenas { get; set; }
+        public virtual DbSet<vpisnilist> vpisnilists { get; set; }
     }
 }

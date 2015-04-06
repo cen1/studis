@@ -31,10 +31,63 @@ namespace studis.Controllers
         }
         
         [HttpPost]
-        public ActionResult VpisniList(VpisniList v)
+        public ActionResult VpisniList(studis.Models.VpisniListModel model)
         {
             if (ModelState.IsValid)
             {
+                vpisnilist v = new vpisnilist();
+                v.datumRojstva = model.datumRojstva;
+                v.davcnaStevilka = model.davcnaStevilka;
+                v.drzava = model.davcnaStevilka;
+                v.drzavaRojstva = model.drzavaRojstva;
+                v.drzavaZacasni = model.drzavaZacasni;
+                v.drzavljanstvo = model.drzavljanstvo;
+                v.email = model.email;
+                v.emso = model.emso;
+                v.izbirnaSkupina = model.izbirnaSkupina;
+                v.izbirnaSkupina2 = model.izbirnaSkupina2;
+                v.krajIzvajanja = model.krajIzvajanja;
+                v.krajIzvajanja2 = model.krajIzvajanja2;
+                v.krajRojstva = model.krajRojstva;
+                v.letnikStudija = model.letnikStudija;
+                v.nacinStudija = model.nacinStudija;
+                v.naslov = model.naslov;
+                v.naslovZacasni = model.naslovZacasni;
+                v.obcina = model.obcina;
+                v.obcinaRojstva = model.obcinaRojstva;
+                v.obcinaZacasni = model.obcinaZacasni;
+                v.oblikaStudija = model.oblikaStudija;
+                v.postnaStevilka = model.postnaStevilka;
+                v.postnaStevilkaZacasni = model.postnaStevilkaZacasni;
+                v.prenosniTelefon = model.prenosniTelefon;
+                v.priimek = model.priimek;
+                v.smer = 0;
+                v.smer2 = 0;
+                v.soglasje1 = model.soglasje1;
+                v.soglasje2 = model.soglasje2;
+                v.spol = model.spol;
+                v.studijskiProgram = model.studijskiProgram;
+                v.studijskiProgram2 = model.studijskiProgram2;
+                v.studijskoLeto = model.studijskoLeto;
+                v.studijskoLetoPrvegaVpisa = model.studijskoLetoPrvegaVpisa;
+                v.vrocanje = model.vrocanje;
+                v.vrstaStudija = model.vrstaStudija;
+                v.vrstaVpisa = model.vrstaVpisa;
+
+                if (model.vrocanje) v.vrocanjeZacasni = false;
+                else v.vrocanjeZacasni = model.vrocanjeZacasni;
+                if (!model.vrocanje && !model.vrocanjeZacasni)
+                {
+                    ModelState.AddModelError("", "Izberite naslov za vročanje.");
+                    return View(model);
+                }
+
+                v.vpisnaStevilka = null;
+                v.potrjen = false;
+                v.student = null;
+
+                db.vpisnilists.Add(v);
+                db.SaveChanges();
 
             }
             else

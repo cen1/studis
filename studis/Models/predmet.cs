@@ -18,6 +18,7 @@ namespace studis.Models
         {
             this.profesors = new HashSet<profesor>();
             this.students = new HashSet<student>();
+            this.ocenas = new HashSet<ocena>();
         }
     
         public long id { get; set; }
@@ -33,5 +34,6 @@ namespace studis.Models
         public virtual modul modul { get; set; }
         public virtual ICollection<profesor> profesors { get; set; }
         public virtual ICollection<student> students { get; set; }
+        public virtual ICollection<ocena> ocenas { get; set; }
     }
 }

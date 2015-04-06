@@ -220,6 +220,9 @@
     <Compile Include="Models\my_aspnet_users.cs">
       <DependentUpon>Studis.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\ocena.cs">
+      <DependentUpon>Studis.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\password_recovery.cs">
       <DependentUpon>Studis.tt</DependentUpon>
     </Compile>
@@ -251,7 +254,10 @@
     </Compile>
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\UserModels.cs" />
-    <Compile Include="Models\VpisniList.cs" />
+    <Compile Include="Models\vpisnilist.cs">
+      <DependentUpon>Studis.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\VpisniListModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
