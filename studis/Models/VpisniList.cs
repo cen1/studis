@@ -173,11 +173,11 @@ namespace studis.Models
         public string studijskoLetoPrvegaVpisa { get; set; }
 
         [Required]
-        [Display(Name = "Soglasje")]
+        [Display(Name = "Soglasje 1")]
         public bool soglasje1 { get; set; }
 
         [Required]
-        [Display(Name = "Soglasje")]
+        [Display(Name = "Soglasje 2")]
         public bool soglasje2 { get; set; }
     }
 }

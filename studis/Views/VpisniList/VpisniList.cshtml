@@ -301,7 +301,7 @@
             @Html.LabelFor(m => m.studijskoLetoPrvegaVpisa)
         </div>
         <div class="editor-field">
-            @Html.TextBoxFor(m => m.studijskoLetoPrvegaVpisa)
+            @Html.DropDownListFor(m => m.studijskoLetoPrvegaVpisa, (SelectList)ViewBag.StudijskoLetoPrvegaVpisa)
             @Html.ValidationMessageFor(m => m.studijskoLetoPrvegaVpisa)
         </div>
 
