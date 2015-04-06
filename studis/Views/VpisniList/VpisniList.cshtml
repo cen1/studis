@@ -5,146 +5,244 @@
 @model studis.Models.VpisniList
 
 <h2>Vpisni List</h2>
-<form action="VpisniList/Zajemi" method="post">
+@using (Html.BeginForm()) {
+    <div>
     <fieldset>
+        <!-- studijsko leto -->
         <div class="editor-label">
-            <label for="studijskoLeto">Študijsko leto</label>
+            @Html.LabelFor(m => m.studijskoLeto)
         </div>
         <div class="editor-field">
-            <input type="text" name="studijskoLeto">
+            @Html.TextBoxFor(m => m.studijskoLeto)
+            @Html.ValidationMessageFor(m => m.studijskoLeto)
         </div>
+        
         <!--Vrsta vpisnega lista-->
         <!--Fakulteta-->
+
+        <!-- vpisna stevilka -->
         <div class="editor-label">
-            <label for="vpisnaStevilka">Vpisna Številka</label>
+            @Html.LabelFor(m => m.vpisnaStevilka)
         </div>
         <div class="editor-field">
-            <input type="text" name="vpisnaStevilka" readonly>
-        </div>
-        <div class="editor-label">
-            <label for="ime">Ime</label>
-        </div>
-        <div class="editor-field">
-            <input type="text" name="ime">
-        </div>
-        <div class="editor-label">
-            <label for="priimek">Priimek</label>
-        </div>
-        <div class="editor-field">
-            <input type="text" name="priimek">
-        </div>
-        <div class="editor-label">
-            <label for="datumRojstva">Datum rojstva</label>
-        </div>
-        <div class="editor-field">
-            <input type="date" name="datumRojstva">
-        </div>
-        <div class="editor-label">
-            <label for="krajRojstva">Kraj rojstva</label>
-        </div>
-        <div class="editor-field">
-            <input type="text" name="krajRojstva">
-        </div>
-        <div class="editor-label">
-            <label for="obcinaRojstva">Občina rojstva</label>
-        </div>
-        <div class="editor-field">
-            <input type="text" name="obcinaRojstva">
+            @Html.TextBoxFor(m => m.vpisnaStevilka)
+            @Html.ValidationMessageFor(m => m.vpisnaStevilka)
         </div>
 
+        <!-- ime -->
         <div class="editor-label">
-            <label for="drzavaRojstva">Država rojstva</label>
+            @Html.LabelFor(m => m.ime)
         </div>
         <div class="editor-field">
-            <select name="drzavaRojstva">
-                <!--
-                foreach(var drzava in Model.) {
-                    <option value=""></option>
-                }
-                        -->
-            </select>
+            @Html.TextBoxFor(m => m.ime)
+            @Html.ValidationMessageFor(m => m.ime)
         </div>
+
+        <!-- priimek -->
         <div class="editor-label">
-            <label for="drzavljanstvo">Državljanstvo</label>
+            @Html.LabelFor(m => m.priimek)
         </div>
         <div class="editor-field">
-            <input type="text" name="drzavljanstvo">
+            @Html.TextBoxFor(m => m.priimek)
+            @Html.ValidationMessageFor(m => m.priimek)
         </div>
+
+        <!-- datum rojstva -->
         <div class="editor-label">
-            <label for="spol">Spol</label>
+            @Html.LabelFor(m => m.datumRojstva)
         </div>
         <div class="editor-field">
-            <select name="spol">
-                <option value="m">Moški</option>
-                <option value="z">Ženski</option>
-            </select>
+            @Html.TextBoxFor(m => m.datumRojstva)
+            @Html.ValidationMessageFor(m => m.datumRojstva)
         </div>
+
+        <!-- kraj rojstva -->
         <div class="editor-label">
-            <label for="emso">EMŠO</label>
+            @Html.LabelFor(m => m.krajRojstva)
         </div>
         <div class="editor-field">
-            <input type="number" maxlength="13" name="emso">
+            @Html.TextBoxFor(m => m.krajRojstva)
+            @Html.ValidationMessageFor(m => m.krajRojstva)
         </div>
+
+        <!-- občina rojstva -->
         <div class="editor-label">
-            <label for="davcnaStevilka">Davčna številka</label>
+            @Html.LabelFor(m => m.obcinaRojstva)
         </div>
         <div class="editor-field">
-            <input type="number" maxlength="8" name="davcnaStevilka">
+            @Html.DropDownListFor(m => m.obcinaRojstva, (SelectList)ViewBag.Obcina)
+            @Html.ValidationMessageFor(m => m.obcinaRojstva)
         </div>
+
+        <!-- država rojstva -->
         <div class="editor-label">
-            <label for="eposta">e-pošta</label>
+            @Html.LabelFor(m => m.drzavaRojstva)
         </div>
         <div class="editor-field">
-            <input type="email" name="eposta">
+            @Html.DropDownListFor(m => m.drzavaRojstva, (SelectList)ViewBag.Drzava)
+            @Html.ValidationMessageFor(m => m.drzavaRojstva)
         </div>
+
+        <!-- državljanstvo -->
         <div class="editor-label">
-            <label for="prenosniTelefon">Prenosni telefon</label>
+            @Html.LabelFor(m => m.drzavljanstvo)
         </div>
         <div class="editor-field">
-            <input type="tel" name="prenosniTelefon">
+            @Html.DropDownListFor(m => m.drzavljanstvo, (SelectList)ViewBag.Drzava)
+            @Html.ValidationMessageFor(m => m.drzavljanstvo)
+        </div>
+
+        <!-- spol -->
+        <div class="editor-label">
+            @Html.LabelFor(m => m.spol)
+        </div>
+        <div class="editor-field">
+            @Html.DropDownListFor(m => m.spol, (SelectList)ViewBag.Spol)            
+            @Html.ValidationMessageFor(m => m.spol)
+        </div>
+
+        <!-- emso -->
+        <div class="editor-label">
+            @Html.LabelFor(m => m.emso)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(m => m.emso)
+            @Html.ValidationMessageFor(m => m.emso)
+        </div>
+
+        <!-- davcna -->
+        <div class="editor-label">
+            @Html.LabelFor(m => m.davcnaStevilka)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(m => m.davcnaStevilka)
+            @Html.ValidationMessageFor(m => m.davcnaStevilka)
+        </div>
+
+        <!-- email -->
+        <div class="editor-label">
+            @Html.LabelFor(m => m.email)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(m => m.email)
+            @Html.ValidationMessageFor(m => m.email)
+        </div>
+
+        <!-- mobilni telefon -->
+        <div class="editor-label">
+            @Html.LabelFor(m => m.prenosniTelefon)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(m => m.prenosniTelefon)
+            @Html.ValidationMessageFor(m => m.prenosniTelefon)
         </div>
 
         <h4>Stalno prebivališče</h4>
+        <!-- stalno preb, vrocanje -->
         <div class="editor-label">
-            <label for="vrocanje">Vročanje</label>
+            @Html.LabelFor(m => m.vrocanje)
         </div>
         <div class="editor-field">
-            <input type="checkbox" name="vrocanje">
+            @Html.CheckBoxFor(m => m.vrocanje)
+            @Html.ValidationMessageFor(m => m.vrocanje)
         </div>
+
+        <!-- naslov -->
         <div class="editor-label">
-            <label for="naslov">Ulica in hišna številka</label>
+            @Html.LabelFor(m => m.naslov)
         </div>
         <div class="editor-field">
-            <input type="text" name="naslov">
-            Poštna številka
-            Občina
-            Država
+            @Html.TextBoxFor(m => m.naslov)
+            @Html.ValidationMessageFor(m => m.naslov)
         </div>
+      
+        
+        <!-- pošta -->
+        <div class="editor-label">
+            @Html.LabelFor(m => m.postnaStevilka)
+        </div>
+        <div class="editor-field">
+            @Html.DropDownListFor(m => m.postnaStevilka, (SelectList)ViewBag.PostnaStevilka)
+            @Html.ValidationMessageFor(m => m.postnaStevilka)
+        </div>
+
+        <!-- občina -->
+        <div class="editor-label">
+            @Html.LabelFor(m => m.obcina)
+        </div>
+        <div class="editor-field">
+            @Html.DropDownListFor(m => m.obcina, (SelectList)ViewBag.Obcina)
+            @Html.ValidationMessageFor(m => m.obcina)
+        </div>
+
+        <!-- država -->
+        <div class="editor-label">
+            @Html.LabelFor(m => m.drzava)
+        </div>
+        <div class="editor-field">
+            @Html.DropDownListFor(m => m.drzava, (SelectList)ViewBag.Drzava)
+            @Html.ValidationMessageFor(m => m.drzava)
+        </div>
+
 
         <h4>Začasno prebivališče</h4>
+        <!-- zac preb, vrocanje -->
         <div class="editor-label">
-            <label for="vrocanje2">Vročanje</label>
+            @Html.LabelFor(m => m.vrocanjeZacasni)
         </div>
         <div class="editor-field">
-            <input type="checkbox" name="vrocanjeZacasni">
+            @Html.CheckBoxFor(m => m.vrocanjeZacasni)
+            @Html.ValidationMessageFor(m => m.vrocanjeZacasni)
         </div>
+
+        <!-- naslov -->
         <div class="editor-label">
-            <label for="naslovZacasni">Ulica in hišna številka</label>
+            @Html.LabelFor(m => m.naslovZacasni)
         </div>
         <div class="editor-field">
-            <input type="text" name="naslovZacasni">
+            @Html.TextBoxFor(m => m.naslovZacasni)
+            @Html.ValidationMessageFor(m => m.naslovZacasni)
         </div>
-        Poštna številka
-        Občina
-        Država
+
+        <!-- pošta -->
+        <div class="editor-label">
+            @Html.LabelFor(m => m.postnaStevilkaZacasni)
+        </div>
+        <div class="editor-field">
+            @Html.DropDownListFor(m => m.postnaStevilkaZacasni, (SelectList)ViewBag.PostnaStevilka)
+            @Html.ValidationMessageFor(m => m.postnaStevilkaZacasni)
+        </div>
+
+        <!-- občina -->
+        <div class="editor-label">
+            @Html.LabelFor(m => m.obcinaZacasni)
+        </div>
+        <div class="editor-field">
+            @Html.DropDownListFor(m => m.obcinaZacasni, (SelectList)ViewBag.Obcina)
+            @Html.ValidationMessageFor(m => m.obcinaZacasni)
+        </div>
+
+        <!-- država -->
+        <div class="editor-label">
+            @Html.LabelFor(m => m.drzavaZacasni)
+        </div>
+        <div class="editor-field">
+            @Html.DropDownListFor(m => m.drzavaZacasni, (SelectList)ViewBag.Drzava)
+            @Html.ValidationMessageFor(m => m.drzavaZacasni)
+        </div>
+
+
 
         <h4>Podatki o vpisu</h4>
+        <!-- studijski program -->
         <div class="editor-label">
-            <label for="studijskiProgram">Študijski program</label>
+            @Html.LabelFor(m => m.studijskiProgram)
         </div>
         <div class="editor-field">
             @Html.DropDownListFor(m => m.studijskiProgram, (SelectList)ViewBag.StudijskiProgrami)
+            @Html.ValidationMessageFor(m => m.studijskiProgram)
         </div>
+
         Smer/Usmeritev/Modul/Znastveno področje
         Kraj izvajanaja
         Izbirna skupina
@@ -152,66 +250,86 @@
         Smer/Usmeritev/Modul/Znastveno področje
         Kraj izvajanaja
         Izbirna skupina
+
+        <!--  vrsta studija -->
         <div class="editor-label">
-            <label for="vrstaStudija">Vrsta študija</label>
+            @Html.LabelFor(m => m.vrstaStudija)
         </div>
         <div class="editor-field">
-            <select name="vrstaStudija"></select>
+            @Html.DropDownListFor(m => m.vrstaStudija, (SelectList)ViewBag.Klasius)
+            @Html.ValidationMessageFor(m => m.vrstaStudija)
         </div>
+        
+        <!-- vrsta vpisa -->
         <div class="editor-label">
-            <label for="vrstaVpisa">Vrsta vpisa</label>
+            @Html.LabelFor(m => m.vrstaVpisa)
         </div>
         <div class="editor-field">
-            @Html.DropDownListFor(m => m.studijskiProgram, (SelectList)ViewBag.VrstaVpisa)
+            @Html.DropDownListFor(m => m.vrstaVpisa, (SelectList)ViewBag.VrstaVpisa)
+            @Html.ValidationMessageFor(m => m.vrstaVpisa)
         </div>
+
+        <!-- letnik študija -->
         <div class="editor-label">
-            <label for="letnikStudija">Letnik študija</label>
+            @Html.LabelFor(m => m.letnikStudija)
         </div>
         <div class="editor-field">
-            <select name="letnikStudija">
-                <option value="1">1.</option>
-                <option value="2">2.</option>
-                <option value="3">3.</option>
-                <option value="4">4.</option>
-                <option value="5">5.</option>
-                <option value="6">6.</option>
-                <option value="0">dodatno leto</option>
-            </select>
+            @Html.DropDownListFor(m => m.letnikStudija, (SelectList)ViewBag.Letnik)
+            @Html.ValidationMessageFor(m => m.letnikStudija)
         </div>
+
+        <!-- nacin studija -->
         <div class="editor-label">
-            <label for="nacinStudija">Način študija</label>
+            @Html.LabelFor(m => m.nacinStudija)
         </div>
         <div class="editor-field">
             @Html.DropDownListFor(m => m.nacinStudija, (SelectList)ViewBag.NacinStudija)
+            @Html.ValidationMessageFor(m => m.nacinStudija)
         </div>
+
+        <!-- oblika studija -->
         <div class="editor-label">
-            <label for="oblikaStudija">Oblika študija</label>
+            @Html.LabelFor(m => m.oblikaStudija)
         </div>
         <div class="editor-field">
             @Html.DropDownListFor(m => m.oblikaStudija, (SelectList)ViewBag.OblikaStudija)
+            @Html.ValidationMessageFor(m => m.oblikaStudija)
         </div>
+
+        <!-- leto prvega vpisa -->
         <div class="editor-label">
-            <label for="letoPrvegaVpisa">Študijsko leto prevega vpisa v ta program</label>
+            @Html.LabelFor(m => m.studijskoLetoPrvegaVpisa)
         </div>
         <div class="editor-field">
-            <select name="letoPrvegaVpisa"></select>
+            @Html.TextBoxFor(m => m.studijskoLetoPrvegaVpisa)
+            @Html.ValidationMessageFor(m => m.studijskoLetoPrvegaVpisa)
         </div>
+
+        <!-- soglasje 1 -->
         <div class="editor-label">
-            <label for="soglasje1">Soglasje 1</label>
+            @Html.LabelFor(m => m.soglasje1)
         </div>
         <div class="editor-field">
-            <input type="checkbox" name="soglasje1" id="soglasje1">
+            @Html.CheckBoxFor(m => m.soglasje1)
+            @Html.ValidationMessageFor(m => m.soglasje1)
         </div>
+
+        <!-- soglasje 2 -->
         <div class="editor-label">
-            <label for="soglasje2">Soglasje 2</label>
+            @Html.LabelFor(m => m.soglasje2)
         </div>
         <div class="editor-field">
-            <input type="checkbox" name="soglasje2" id="soglasje2">
+            @Html.CheckBoxFor(m => m.soglasje2)
+            @Html.ValidationMessageFor(m => m.soglasje2)
         </div>
 
         <h4>Priloga 1: Predmetnik</h4>
+
+
+
         <p>
             <input type="submit" value="Shrani">
         </p>
     </fieldset>
-</form>
+    </div>
+}

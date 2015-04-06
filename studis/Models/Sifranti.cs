@@ -79,6 +79,16 @@ namespace studis.Models
             new Sifrant(1, "Ženski"),
         };
 
+        public static readonly Sifrant[] LETNIK = {
+            new Sifrant(1, "Prvi"),
+            new Sifrant(2, "Drugi"),
+            new Sifrant(3, "Tretji"),
+            new Sifrant(4, "Četrti"),
+            new Sifrant(5, "Peti"),
+            new Sifrant(6, "Šesti"),
+            new Sifrant(0, "Dodatno leto"),
+        };
+
         public static readonly Sifrant[] DRZAVE = {
             new Sifrant(004, "Afganistan"),
             new Sifrant(008, "Albanija"),
@@ -327,7 +337,7 @@ namespace studis.Models
             new Sifrant(999, "NERAZVRŠČENO"),
         };
 
-        public readonly Sifrant[] OBCINE = {
+        public static readonly Sifrant[] OBCINE = {
             new Sifrant(213	, "Ankaran"),
             new Sifrant(1	, "Ajdovščina "),
             new Sifrant(195	, "Apače "),
@@ -542,7 +552,7 @@ namespace studis.Models
             new Sifrant(193	, "Žužemberk "),
         };
 
-        public readonly Sifrant[] POSTNESTEVILKE = {
+        public static readonly Sifrant[] POSTNESTEVILKE = {
             new Sifrant(8341, "Adlešiči"),
             new Sifrant(5270, "Ajdovščina"),
             new Sifrant(6280, "Ankaran/Ancarano"),

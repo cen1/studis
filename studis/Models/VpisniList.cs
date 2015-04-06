@@ -9,6 +9,10 @@ namespace studis.Models
 {
     public class VpisniList
     {
+        [Required]
+        [Display(Name = "Študijsko leto")]
+        public int studijskoLeto { get; set; }
+
         [Display(Name = "Vpisna številka")]
         public int vpisnaStevilka { get; set; }
 
@@ -174,6 +178,5 @@ namespace studis.Models
         [Required]
         [Display(Name = "Soglasje")]
         public bool soglasje2 { get; set; }
-
     }
 }
