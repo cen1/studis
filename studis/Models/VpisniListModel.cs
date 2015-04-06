@@ -160,11 +160,11 @@ namespace studis.Models
         public int? studijskoLetoPrvegaVpisa { get; set; }
 
         [Required]
-        [Display(Name = "Soglasje 1")]
+        [Display(Name = "Soglasje za koriščenje storitev knjižničnega sitema.")]
         public bool soglasje1 { get; set; }
 
         [Required]
-        [Display(Name = "Soglasje 2")]
+        [Display(Name = "Soglasje za obveščanje o aktualnih študijskih zadevah ter za karierno svetovanje in za druge aktivnosti, povezane z zagotavljanjem kakovosti.")]
         public bool soglasje2 { get; set; }
     }
 }
