@@ -1,0 +1,29 @@
+﻿@{
+    ViewBag.Title = "Izbor študenta";
+}
+
+<script type="text/javascript">
+    $(function () {
+        $("#redirect").click(function () {
+            window.location.href = "@Url.Action("Pdf","List")";
+        });
+    });
+</script>
+
+<h2>Izberite študenta za izpis vpisnega lista</h2>
+
+@using (Html.BeginForm())
+{
+    <div>
+        <fieldset>
+            <div class="editor-label">
+                <!-- Insert search for student, return userId -->
+                @Html.Action("StudentSearchPartial", "Student")
+            </div>
+
+            <p>
+                <input type="button" id="redirect" value="Vpisni list za študenta" />
+            </p>
+        </fieldset>
+    </div>
+}
