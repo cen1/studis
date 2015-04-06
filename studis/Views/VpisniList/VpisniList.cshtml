@@ -2,9 +2,13 @@
     ViewBag.Title = "Vpisni List";
 }
 
-@model studis.Models.VpisniList
+@model studis.Models.VpisniListModel
 
 <h2>Vpisni List</h2>
+
+@Html.ValidationSummary(true, "Oddaja ni uspela. Popravite napake in poizkusite ponovno.")
+
+
 @using (Html.BeginForm()) {
     <div>
     <fieldset>
@@ -274,7 +278,7 @@
         </div>
 
 
-        smer2?
+        <!-- smer2?-->
 
         <!--Kraj izvajanja 2-->
         <div class="editor-label">

@@ -32,6 +32,11 @@
         <AssociationConnector Association="studisModel.predmet_modul_fk" />
         <AssociationConnector Association="studisModel.profesorinpredmet" />
         <AssociationConnector Association="studisModel.studentinpredmet" />
+        <EntityTypeShape EntityType="studisModel.ocena" Width="1.5" PointX="18.375" PointY="2.5" />
+        <EntityTypeShape EntityType="studisModel.vpisnilist" Width="1.5" PointX="4.625" PointY="10.5" />
+        <AssociationConnector Association="studisModel.ocena_predmet" />
+        <AssociationConnector Association="studisModel.ocena_student" />
+        <AssociationConnector Association="studisModel.vpisnilist_student_fk" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

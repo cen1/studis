@@ -17,6 +17,8 @@ namespace studis.Models
         public student()
         {
             this.predmets = new HashSet<predmet>();
+            this.ocenas = new HashSet<ocena>();
+            this.vpisnilists = new HashSet<vpisnilist>();
         }
     
         public int vpisna_stevilka { get; set; }
@@ -29,5 +31,7 @@ namespace studis.Models
     
         public virtual my_aspnet_users my_aspnet_users { get; set; }
         public virtual ICollection<predmet> predmets { get; set; }
+        public virtual ICollection<ocena> ocenas { get; set; }
+        public virtual ICollection<vpisnilist> vpisnilists { get; set; }
     }
 }

@@ -153,6 +153,15 @@
           <Property Name="userId" Type="int" Nullable="false" />
           <Property Name="roleId" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="ocena">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="predmetId" Type="uint" Nullable="false" />
+          <Property Name="studentId" Type="int" Nullable="false" />
+          <Property Name="ocena" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="password_recovery">
           <Key>
             <PropertyRef Name="id" />
@@ -212,6 +221,52 @@
           <Property Name="studentId" Type="int" Nullable="false" />
           <Property Name="predmetId" Type="uint" Nullable="false" />
         </EntityType>
+        <EntityType Name="vpisnilist">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="studijskoLeto" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="vpisnaStevilka" Type="int" />
+          <Property Name="priimek" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="datumRojstva" Type="datetime" Precision="0" Nullable="false" />
+          <Property Name="krajRojstva" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="obcinaRojstva" Type="int" Nullable="false" />
+          <Property Name="drzavaRojstva" Type="int" Nullable="false" />
+          <Property Name="drzavljanstvo" Type="int" Nullable="false" />
+          <Property Name="spol" Type="int" Nullable="false" />
+          <Property Name="emso" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="davcnaStevilka" Type="int" Nullable="false" />
+          <Property Name="email" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="prenosniTelefon" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="naslov" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="vrocanje" Type="bool" />
+          <Property Name="postnaStevilka" Type="int" Nullable="false" />
+          <Property Name="obcina" Type="int" Nullable="false" />
+          <Property Name="drzava" Type="int" Nullable="false" />
+          <Property Name="naslovZacasni" Type="varchar" MaxLength="45" />
+          <Property Name="vrocanjeZacasni" Type="bool" />
+          <Property Name="postnaStevilkaZacasni" Type="int" />
+          <Property Name="obcinaZacasni" Type="int" />
+          <Property Name="drzavaZacasni" Type="int" />
+          <Property Name="studijskiProgram" Type="int" Nullable="false" />
+          <Property Name="smer" Type="int" Nullable="false" />
+          <Property Name="krajIzvajanja" Type="int" Nullable="false" />
+          <Property Name="izbirnaSkupina" Type="int" Nullable="false" />
+          <Property Name="studijskiProgram2" Type="int" />
+          <Property Name="smer2" Type="int" />
+          <Property Name="krajIzvajanja2" Type="int" />
+          <Property Name="izbirnaSkupina2" Type="int" />
+          <Property Name="vrstaStudija" Type="int" Nullable="false" />
+          <Property Name="vrstaVpisa" Type="int" Nullable="false" />
+          <Property Name="letnikStudija" Type="int" Nullable="false" />
+          <Property Name="nacinStudija" Type="int" Nullable="false" />
+          <Property Name="oblikaStudija" Type="int" Nullable="false" />
+          <Property Name="studijskoLetoPrvegaVpisa" Type="int" />
+          <Property Name="soglasje1" Type="bool" />
+          <Property Name="soglasje2" Type="bool" />
+          <Property Name="potrjen" Type="bool" Nullable="false" />
+        </EntityType>
         <Association Name="ip_lock_to_user">
           <End Role="my_aspnet_users" Type="Self.my_aspnet_users" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -237,6 +292,32 @@
             </Principal>
             <Dependent Role="my_aspnet_membership">
               <PropertyRef Name="userId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ocena_predmet">
+          <End Role="predmet" Type="Self.predmet" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="ocena" Type="Self.ocena" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="predmet">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="ocena">
+              <PropertyRef Name="predmetId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ocena_student">
+          <End Role="student" Type="Self.student" Multiplicity="1" />
+          <End Role="ocena" Type="Self.ocena" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="student">
+              <PropertyRef Name="vpisna_stevilka" />
+            </Principal>
+            <Dependent Role="ocena">
+              <PropertyRef Name="studentId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -378,6 +459,20 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="vpisnilist_student_fk">
+          <End Role="student" Type="Self.student" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="vpisnilist" Type="Self.vpisnilist" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="student">
+              <PropertyRef Name="vpisna_stevilka" />
+            </Principal>
+            <Dependent Role="vpisnilist">
+              <PropertyRef Name="vpisnaStevilka" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="studisModelStoreContainer">
           <EntitySet Name="ip_lock" EntityType="Self.ip_lock" Schema="studis" store:Type="Tables" />
           <EntitySet Name="modul" EntityType="Self.modul" Schema="studis" store:Type="Tables" />
@@ -393,12 +488,14 @@
           <EntitySet Name="my_aspnet_sitemap" EntityType="Self.my_aspnet_sitemap" Schema="studis" store:Type="Tables" />
           <EntitySet Name="my_aspnet_users" EntityType="Self.my_aspnet_users" Schema="studis" store:Type="Tables" />
           <EntitySet Name="my_aspnet_usersinroles" EntityType="Self.my_aspnet_usersinroles" Schema="studis" store:Type="Tables" />
+          <EntitySet Name="ocena" EntityType="Self.ocena" Schema="studis" store:Type="Tables" />
           <EntitySet Name="password_recovery" EntityType="Self.password_recovery" Schema="studis" store:Type="Tables" />
           <EntitySet Name="predmet" EntityType="Self.predmet" Schema="studis" store:Type="Tables" />
           <EntitySet Name="profesor" EntityType="Self.profesor" Schema="studis" store:Type="Tables" />
           <EntitySet Name="profesorinpredmet" EntityType="Self.profesorinpredmet" Schema="studis" store:Type="Tables" />
           <EntitySet Name="student" EntityType="Self.student" Schema="studis" store:Type="Tables" />
           <EntitySet Name="studentinpredmet" EntityType="Self.studentinpredmet" Schema="studis" store:Type="Tables" />
+          <EntitySet Name="vpisnilist" EntityType="Self.vpisnilist" Schema="studis" store:Type="Tables" />
           <AssociationSet Name="ip_lock_to_user" Association="Self.ip_lock_to_user">
             <End Role="my_aspnet_users" EntitySet="my_aspnet_users" />
             <End Role="ip_lock" EntitySet="ip_lock" />
@@ -406,6 +503,14 @@
           <AssociationSet Name="membership_to_users" Association="Self.membership_to_users">
             <End Role="my_aspnet_users" EntitySet="my_aspnet_users" />
             <End Role="my_aspnet_membership" EntitySet="my_aspnet_membership" />
+          </AssociationSet>
+          <AssociationSet Name="ocena_predmet" Association="Self.ocena_predmet">
+            <End Role="predmet" EntitySet="predmet" />
+            <End Role="ocena" EntitySet="ocena" />
+          </AssociationSet>
+          <AssociationSet Name="ocena_student" Association="Self.ocena_student">
+            <End Role="student" EntitySet="student" />
+            <End Role="ocena" EntitySet="ocena" />
           </AssociationSet>
           <AssociationSet Name="pr_to_user_fk" Association="Self.pr_to_user_fk">
             <End Role="my_aspnet_users" EntitySet="my_aspnet_users" />
@@ -446,6 +551,10 @@
           <AssociationSet Name="usersinroles_to_users" Association="Self.usersinroles_to_users">
             <End Role="my_aspnet_users" EntitySet="my_aspnet_users" />
             <End Role="my_aspnet_usersinroles" EntitySet="my_aspnet_usersinroles" />
+          </AssociationSet>
+          <AssociationSet Name="vpisnilist_student_fk" Association="Self.vpisnilist_student_fk">
+            <End Role="student" EntitySet="student" />
+            <End Role="vpisnilist" EntitySet="vpisnilist" />
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -597,6 +706,8 @@
           <Property Name="userId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="my_aspnet_users" Relationship="studisModel.userID_student_users" FromRole="student" ToRole="my_aspnet_users" />
           <NavigationProperty Name="predmets" Relationship="studisModel.studentinpredmet" FromRole="student" ToRole="predmet" />
+          <NavigationProperty Name="ocenas" Relationship="studisModel.ocena_student" FromRole="student" ToRole="ocena" />
+          <NavigationProperty Name="vpisnilists" Relationship="studisModel.vpisnilist_student_fk" FromRole="student" ToRole="vpisnilist" />
         </EntityType>
         <EntityContainer Name="studisEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="my_aspnet_applications" EntityType="Self.my_aspnet_applications" />
@@ -651,6 +762,20 @@
           <AssociationSet Name="studentinpredmet" Association="studisModel.studentinpredmet">
             <End Role="student" EntitySet="students" />
             <End Role="predmet" EntitySet="predmets" />
+          </AssociationSet>
+          <EntitySet Name="ocenas" EntityType="studisModel.ocena" />
+          <EntitySet Name="vpisnilists" EntityType="studisModel.vpisnilist" />
+          <AssociationSet Name="ocena_predmet" Association="studisModel.ocena_predmet">
+            <End Role="predmet" EntitySet="predmets" />
+            <End Role="ocena" EntitySet="ocenas" />
+          </AssociationSet>
+          <AssociationSet Name="ocena_student" Association="studisModel.ocena_student">
+            <End Role="student" EntitySet="students" />
+            <End Role="ocena" EntitySet="ocenas" />
+          </AssociationSet>
+          <AssociationSet Name="vpisnilist_student_fk" Association="studisModel.vpisnilist_student_fk">
+            <End Role="student" EntitySet="students" />
+            <End Role="vpisnilist" EntitySet="vpisnilists" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="ip_lock">
@@ -770,6 +895,7 @@
           <NavigationProperty Name="modul" Relationship="studisModel.predmet_modul_fk" FromRole="predmet" ToRole="modul" />
           <NavigationProperty Name="profesors" Relationship="studisModel.profesorinpredmet" FromRole="predmet" ToRole="profesor" />
           <NavigationProperty Name="students" Relationship="studisModel.studentinpredmet" FromRole="predmet" ToRole="student" />
+          <NavigationProperty Name="ocenas" Relationship="studisModel.ocena_predmet" FromRole="predmet" ToRole="ocena" />
         </EntityType>
         <EntityType Name="profesor">
           <Key>
@@ -801,6 +927,104 @@
         <Association Name="studentinpredmet">
           <End Type="studisModel.student" Role="student" Multiplicity="*" />
           <End Type="studisModel.predmet" Role="predmet" Multiplicity="*" />
+        </Association>
+        <EntityType Name="ocena">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="predmetId" Type="Int64" Nullable="false" />
+          <Property Name="studentId" Type="Int32" Nullable="false" />
+          <Property Name="ocena1" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="predmet" Relationship="studisModel.ocena_predmet" FromRole="ocena" ToRole="predmet" />
+          <NavigationProperty Name="student" Relationship="studisModel.ocena_student" FromRole="ocena" ToRole="student" />
+        </EntityType>
+        <EntityType Name="vpisnilist">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="studijskoLeto" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="vpisnaStevilka" Type="Int32" />
+          <Property Name="priimek" Type="String" Nullable="false" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="datumRojstva" Type="DateTime" Nullable="false" />
+          <Property Name="krajRojstva" Type="String" Nullable="false" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="obcinaRojstva" Type="Int32" Nullable="false" />
+          <Property Name="drzavaRojstva" Type="Int32" Nullable="false" />
+          <Property Name="drzavljanstvo" Type="Int32" Nullable="false" />
+          <Property Name="spol" Type="Int32" Nullable="false" />
+          <Property Name="emso" Type="String" Nullable="false" />
+          <Property Name="davcnaStevilka" Type="Int32" Nullable="false" />
+          <Property Name="email" Type="String" Nullable="false" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="prenosniTelefon" Type="String" Nullable="false" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="naslov" Type="String" Nullable="false" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="vrocanje" Type="Boolean" />
+          <Property Name="postnaStevilka" Type="Int32" Nullable="false" />
+          <Property Name="obcina" Type="Int32" Nullable="false" />
+          <Property Name="drzava" Type="Int32" Nullable="false" />
+          <Property Name="naslovZacasni" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="vrocanjeZacasni" Type="Boolean" />
+          <Property Name="postnaStevilkaZacasni" Type="Int32" />
+          <Property Name="obcinaZacasni" Type="Int32" />
+          <Property Name="drzavaZacasni" Type="Int32" />
+          <Property Name="studijskiProgram" Type="Int32" Nullable="false" />
+          <Property Name="smer" Type="Int32" Nullable="false" />
+          <Property Name="krajIzvajanja" Type="Int32" Nullable="false" />
+          <Property Name="izbirnaSkupina" Type="Int32" Nullable="false" />
+          <Property Name="studijskiProgram2" Type="Int32" />
+          <Property Name="smer2" Type="Int32" />
+          <Property Name="krajIzvajanja2" Type="Int32" />
+          <Property Name="izbirnaSkupina2" Type="Int32" />
+          <Property Name="vrstaStudija" Type="Int32" Nullable="false" />
+          <Property Name="vrstaVpisa" Type="Int32" Nullable="false" />
+          <Property Name="letnikStudija" Type="Int32" Nullable="false" />
+          <Property Name="nacinStudija" Type="Int32" Nullable="false" />
+          <Property Name="oblikaStudija" Type="Int32" Nullable="false" />
+          <Property Name="studijskoLetoPrvegaVpisa" Type="Int32" />
+          <Property Name="soglasje1" Type="Boolean" />
+          <Property Name="soglasje2" Type="Boolean" />
+          <Property Name="potrjen" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="student" Relationship="studisModel.vpisnilist_student_fk" FromRole="vpisnilist" ToRole="student" />
+        </EntityType>
+        <Association Name="ocena_predmet">
+          <End Type="studisModel.predmet" Role="predmet" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="studisModel.ocena" Role="ocena" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="predmet">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="ocena">
+              <PropertyRef Name="predmetId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ocena_student">
+          <End Type="studisModel.student" Role="student" Multiplicity="1" />
+          <End Type="studisModel.ocena" Role="ocena" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="student">
+              <PropertyRef Name="vpisna_stevilka" />
+            </Principal>
+            <Dependent Role="ocena">
+              <PropertyRef Name="studentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="vpisnilist_student_fk">
+          <End Type="studisModel.student" Role="student" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="studisModel.vpisnilist" Role="vpisnilist" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="student">
+              <PropertyRef Name="vpisna_stevilka" />
+            </Principal>
+            <Dependent Role="vpisnilist">
+              <PropertyRef Name="vpisnaStevilka" />
+            </Dependent>
+          </ReferentialConstraint>
         </Association>
       </Schema>
     </edmx:ConceptualModels>
@@ -1031,6 +1255,63 @@
               <ScalarProperty Name="vpisna_stevilka" ColumnName="studentId" />
             </EndProperty>
           </AssociationSetMapping>
+          <EntitySetMapping Name="ocenas">
+            <EntityTypeMapping TypeName="studisModel.ocena">
+              <MappingFragment StoreEntitySet="ocena">
+                <ScalarProperty Name="ocena1" ColumnName="ocena" />
+                <ScalarProperty Name="studentId" ColumnName="studentId" />
+                <ScalarProperty Name="predmetId" ColumnName="predmetId" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vpisnilists">
+            <EntityTypeMapping TypeName="studisModel.vpisnilist">
+              <MappingFragment StoreEntitySet="vpisnilist">
+                <ScalarProperty Name="potrjen" ColumnName="potrjen" />
+                <ScalarProperty Name="soglasje2" ColumnName="soglasje2" />
+                <ScalarProperty Name="soglasje1" ColumnName="soglasje1" />
+                <ScalarProperty Name="studijskoLetoPrvegaVpisa" ColumnName="studijskoLetoPrvegaVpisa" />
+                <ScalarProperty Name="oblikaStudija" ColumnName="oblikaStudija" />
+                <ScalarProperty Name="nacinStudija" ColumnName="nacinStudija" />
+                <ScalarProperty Name="letnikStudija" ColumnName="letnikStudija" />
+                <ScalarProperty Name="vrstaVpisa" ColumnName="vrstaVpisa" />
+                <ScalarProperty Name="vrstaStudija" ColumnName="vrstaStudija" />
+                <ScalarProperty Name="izbirnaSkupina2" ColumnName="izbirnaSkupina2" />
+                <ScalarProperty Name="krajIzvajanja2" ColumnName="krajIzvajanja2" />
+                <ScalarProperty Name="smer2" ColumnName="smer2" />
+                <ScalarProperty Name="studijskiProgram2" ColumnName="studijskiProgram2" />
+                <ScalarProperty Name="izbirnaSkupina" ColumnName="izbirnaSkupina" />
+                <ScalarProperty Name="krajIzvajanja" ColumnName="krajIzvajanja" />
+                <ScalarProperty Name="smer" ColumnName="smer" />
+                <ScalarProperty Name="studijskiProgram" ColumnName="studijskiProgram" />
+                <ScalarProperty Name="drzavaZacasni" ColumnName="drzavaZacasni" />
+                <ScalarProperty Name="obcinaZacasni" ColumnName="obcinaZacasni" />
+                <ScalarProperty Name="postnaStevilkaZacasni" ColumnName="postnaStevilkaZacasni" />
+                <ScalarProperty Name="vrocanjeZacasni" ColumnName="vrocanjeZacasni" />
+                <ScalarProperty Name="naslovZacasni" ColumnName="naslovZacasni" />
+                <ScalarProperty Name="drzava" ColumnName="drzava" />
+                <ScalarProperty Name="obcina" ColumnName="obcina" />
+                <ScalarProperty Name="postnaStevilka" ColumnName="postnaStevilka" />
+                <ScalarProperty Name="vrocanje" ColumnName="vrocanje" />
+                <ScalarProperty Name="naslov" ColumnName="naslov" />
+                <ScalarProperty Name="prenosniTelefon" ColumnName="prenosniTelefon" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="davcnaStevilka" ColumnName="davcnaStevilka" />
+                <ScalarProperty Name="emso" ColumnName="emso" />
+                <ScalarProperty Name="spol" ColumnName="spol" />
+                <ScalarProperty Name="drzavljanstvo" ColumnName="drzavljanstvo" />
+                <ScalarProperty Name="drzavaRojstva" ColumnName="drzavaRojstva" />
+                <ScalarProperty Name="obcinaRojstva" ColumnName="obcinaRojstva" />
+                <ScalarProperty Name="krajRojstva" ColumnName="krajRojstva" />
+                <ScalarProperty Name="datumRojstva" ColumnName="datumRojstva" />
+                <ScalarProperty Name="priimek" ColumnName="priimek" />
+                <ScalarProperty Name="vpisnaStevilka" ColumnName="vpisnaStevilka" />
+                <ScalarProperty Name="studijskoLeto" ColumnName="studijskoLeto" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

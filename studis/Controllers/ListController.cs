@@ -18,46 +18,61 @@ namespace studis.Controllers
         //[Authorize(Roles = "Študent")]
         //[Authorize(Roles = "Referent")]
         //[Authorize(Roles = "Skrbnik")]
-        public ActionResult List()
+        public ActionResult Pdf(int id)
         {
-            /*if (Roles.GetRolesForUser().Contains("Skrbnik") || Roles.GetRolesForUser().Contains("Referent"))
-            {
-                return RedirectToAction("PdfSkrbnik");
-            }
-            else if (Roles.GetRolesForUser().Contains("Študent"))
-            {
-                return RedirectToAction("Pdf");
-            }
+            var list = db.vpisnilists.SingleOrDefault(v => v.id == id);
 
-            return RedirectToAction("Index", "Home");*/
-            return RedirectToAction("PdfSkrbnik");
-        }
-
-        //[Authorize(Roles = "Študent")]
-        //[Authorize(Roles = "Referent")]
-        //[Authorize(Roles = "Skrbnik")]
-        public ActionResult Pdf()
-        {
-/*
             // preveri če vpisni list obstaja
-            if (vpisnilist) {
-                // da
-                var model = new studis.Models.nekinovga
+            if (list.vrstaVpisa != null) {
+                var model = new studis.Models.VpisniListModel
                 {
-                    student = db.students.SingleOrDefault(m => m.userId == 10),
-                    vpisnilist = db.vpisnilist.SingleOrDefault(m => m.userId == ?)
+                    studijskoLeto = list.studijskoLeto,
+                    vpisnaStevilka = list.vpisnaStevilka,
+                    ime = list.ime,
+                    priimek = list.priimek,
+                    datumRojstva = list.datumRojstva,
+                    krajRojstva = list.krajRojstva,
+                    obcinaRojstva = list.obcinaRojstva,
+                    drzavaRojstva = list.drzavaRojstva,
+                    drzavljanstvo = list.drzavljanstvo,
+                    spol = list.spol,
+                    emso = list.emso,
+                    davcnaStevilka = list.davcnaStevilka,
+                    email = list.email,
+                    prenosniTelefon = list.prenosniTelefon,
+                    naslov = list.naslov,
+                    vrocanje = list.vrocanje,
+                    postnaStevilka = list.postnaStevilka,
+                    obcina = list.obcina,
+                    drzava = list.drzava,
+                    naslovZacasni = list.naslovZacasni,
+                    vrocanjeZacasni = list.vrocanjeZacasni,
+                    postnaStevilkaZacasni = list.postnaStevilkaZacasni,
+                    obcinaZacasni = list.obcinaZacasni,
+                    drzavaZacasni = list.drzavaZacasni,
+                    studijskiProgram = list.studijskiProgram,
+                    smer = list.smer,
+                    krajIzvajanja = list.krajIzvajanja,
+                    izbirnaSkupina = list.izbirnaSkupina,
+                    smer2 = list.smer2,
+                    krajIzvajanja2 = list.krajIzvajanja2,
+                    izbirnaSkupina2 = list.izbirnaSkupina2,
+                    vrstaStudija = list.vrstaStudija,
+                    vrstaVpisa = list.vrstaVpisa,
+                    letnikStudija = list.letnikStudija,
+                    nacinStudija = list.nacinStudija,
+                    oblikaStudija = list.oblikaStudija,
+                    studijskoLetoPrvegaVpisa = list.studijskoLetoPrvegaVpisa,
+                    soglasje1 = list.soglasje1,
+                    soglasje2 = list.soglasje2
                 };
             
                 return View(model);
             }
-  
-            // ne
             else
             {
                 return RedirectToAction("ListEmpty");
             }
-*/
-            return new PdfActionResult(db.students.SingleOrDefault(m => m.userId == 10));
         }
 
         //[Authorize(Roles = "Referent")]
