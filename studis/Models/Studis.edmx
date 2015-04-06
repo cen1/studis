@@ -228,6 +228,7 @@
           <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="studijskoLeto" Type="varchar" MaxLength="10" Nullable="false" />
           <Property Name="vpisnaStevilka" Type="int" />
+          <Property Name="ime" Type="varchar" MaxLength="45" Nullable="false" />
           <Property Name="priimek" Type="varchar" MaxLength="45" Nullable="false" />
           <Property Name="datumRojstva" Type="datetime" Precision="0" Nullable="false" />
           <Property Name="krajRojstva" Type="varchar" MaxLength="45" Nullable="false" />
@@ -945,7 +946,7 @@
           </Key>
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="studijskoLeto" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="vpisnaStevilka" Type="Int32" />
+          <Property Name="vpisnaStevilka" Type="Int32" Nullable="true" />
           <Property Name="priimek" Type="String" Nullable="false" MaxLength="45" FixedLength="false" Unicode="false" />
           <Property Name="datumRojstva" Type="DateTime" Nullable="false" />
           <Property Name="krajRojstva" Type="String" Nullable="false" MaxLength="45" FixedLength="false" Unicode="false" />
@@ -985,6 +986,7 @@
           <Property Name="soglasje2" Type="Boolean" />
           <Property Name="potrjen" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="student" Relationship="studisModel.vpisnilist_student_fk" FromRole="vpisnilist" ToRole="student" />
+          <Property Name="ime" Type="String" Nullable="false" MaxLength="45" FixedLength="false" Unicode="false" />
         </EntityType>
         <Association Name="ocena_predmet">
           <End Type="studisModel.predmet" Role="predmet" Multiplicity="1">
@@ -1268,6 +1270,7 @@
           <EntitySetMapping Name="vpisnilists">
             <EntityTypeMapping TypeName="studisModel.vpisnilist">
               <MappingFragment StoreEntitySet="vpisnilist">
+                <ScalarProperty Name="ime" ColumnName="ime" />
                 <ScalarProperty Name="potrjen" ColumnName="potrjen" />
                 <ScalarProperty Name="soglasje2" ColumnName="soglasje2" />
                 <ScalarProperty Name="soglasje1" ColumnName="soglasje1" />

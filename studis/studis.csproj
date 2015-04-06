@@ -378,6 +378,7 @@
     <Content Include="Views\VpisniList\VpisniList.cshtml" />
     <Content Include="Views\List\ListEmpty.cshtml" />
     <Content Include="Views\List\PdfSkrbnik.cshtml" />
+    <Content Include="Views\VpisniList\VpisniListSuccess.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

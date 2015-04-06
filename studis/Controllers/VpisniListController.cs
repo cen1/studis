@@ -33,10 +33,9 @@ namespace studis.Controllers
         [HttpPost]
         public ActionResult VpisniList(studis.Models.VpisniListModel model)
         {
+            model.studijskoLeto = "2014/2015";
             if (ModelState.IsValid)
             {
-                try
-                {
                     vpisnilist v = new vpisnilist();
                     v.datumRojstva = model.datumRojstva;
                     v.davcnaStevilka = model.davcnaStevilka;
@@ -87,19 +86,38 @@ namespace studis.Controllers
                     v.vpisnaStevilka = null;
                     v.potrjen = false;
                     v.student = null;
+                    v.studijskoLeto = "2014/2015";
 
                     db.vpisnilists.Add(v);
                     db.SaveChanges();
-                }
-                catch (InvalidCastException e) 
-                {
-                    System.Diagnostics.Debug.WriteLine(e.Message);
-                }
+
+                    return RedirectToAction("VpisniListSuccess", "VpisniList");
             }
             else
             {
                 ModelState.AddModelError("", "Prišlo je do napake.");
+                var errors = ModelState.Select(x => x.Value.Errors)
+                           .Where(y => y.Count > 0)
+                           .ToList();
+                foreach (var e in errors)
+                    foreach (var ee in e)
+                        System.Diagnostics.Debug.WriteLine(ee.ErrorMessage);
             }
+
+            //repopulate model lists
+            ViewBag.Title = "VpisniList";
+            ViewBag.StudijskiProgrami = new SelectList(Sifranti.STUDIJSKIPROGRAM, "id", "naziv");
+            ViewBag.Klasius = new SelectList(Sifranti.KLASIUS, "id", "naziv");
+            ViewBag.VrstaVpisa = new SelectList(Sifranti.VRSTAVPISA, "id", "naziv");
+            ViewBag.NacinStudija = new SelectList(Sifranti.NACINSTUDIJA, "id", "naziv");
+            ViewBag.OblikaStudija = new SelectList(Sifranti.OBLIKASTUDIJA, "id", "naziv");
+            ViewBag.Spol = new SelectList(Sifranti.SPOL, "id", "naziv");
+            ViewBag.Obcina = new SelectList(Sifranti.OBCINE, "id", "naziv");
+            ViewBag.Drzava = new SelectList(Sifranti.DRZAVE, "id", "naziv");
+            ViewBag.PostnaStevilka = new SelectList(Sifranti.POSTNESTEVILKE, "id", "naziv");
+            ViewBag.Letnik = new SelectList(Sifranti.LETNIK, "id", "naziv");
+            ViewBag.StudijskoLetoPrvegaVpisa = new SelectList(Sifranti.STUDIJSKOLETO, "id", "naziv");
+            ViewBag.IzbirnaSkupina = new SelectList(Sifranti.IZBIRNASKUPINA, "id", "naziv");
 
             return View(model);
             //tule returnaj PDF
