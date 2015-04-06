@@ -23,7 +23,8 @@ namespace studis.Controllers
             ViewBag.Drzava = new SelectList(Sifranti.DRZAVE, "id", "naziv");
             ViewBag.PostnaStevilka = new SelectList(Sifranti.POSTNESTEVILKE, "id", "naziv");
             ViewBag.Letnik = new SelectList(Sifranti.LETNIK, "id", "naziv");
-            ViewBag.StudijskoLetoPrvegaVpisa= new SelectList(Sifranti.STUDIJSKOLETO, "id", "naziv");
+            ViewBag.StudijskoLetoPrvegaVpisa = new SelectList(Sifranti.STUDIJSKOLETO, "id", "naziv");
+            ViewBag.IzbirnaSkupina = new SelectList(Sifranti.IZBIRNASKUPINA, "id", "naziv");
             return View();
         }
         

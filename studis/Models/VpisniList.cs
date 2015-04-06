@@ -121,7 +121,7 @@ namespace studis.Models
         public int studijskiProgram { get; set; }
 
         [Required]
-        [Display(Name = "Smer")]
+        [Display(Name = "Smer/Usmeritev/Modul/Znastveno področje")]
         public int smer { get; set; }
 
         [Required]
@@ -137,15 +137,15 @@ namespace studis.Models
         [Display(Name = "Drugi študijski program")]
         public int studijskiProgram2 { get; set; }
 
-        [Display(Name = "Druga smer")]
+        [Display(Name = "Smer/Usmeritev/Modul/Znastveno področje")]
         public int smer2 { get; set; }
 
         [StringLength(100, ErrorMessage = "{0} mora bitio dolg vsaj {2} znakov.", MinimumLength = 1)]
-        [Display(Name = "Drug kraj izvajanja")]
+        [Display(Name = "Kraj izvajanja")]
         public string krajIzvajanja2 { get; set; }
 
         [StringLength(100, ErrorMessage = "{0} mora bitio dolg vsaj {2} znakov.", MinimumLength = 1)]
-        [Display(Name = "Druga izbirna skupina")]
+        [Display(Name = "Izbirna skupina")]
         public string izbirnaSkupina2 { get; set; }
 
         [Required]

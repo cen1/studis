@@ -233,7 +233,7 @@
         </div>
 
 
-
+        <hr>
         <h4>Podatki o vpisu</h4>
         <!-- studijski program -->
         <div class="editor-label">
@@ -244,13 +244,55 @@
             @Html.ValidationMessageFor(m => m.studijskiProgram)
         </div>
 
-        Smer/Usmeritev/Modul/Znastveno področje
-        Kraj izvajanaja
-        Izbirna skupina
-        Študijski program
-        Smer/Usmeritev/Modul/Znastveno področje
-        Kraj izvajanaja
-        Izbirna skupina
+        smer?
+
+        <!--Kraj izvajanja-->
+        <div class="editor-label">
+            @Html.LabelFor(m => m.krajIzvajanja)
+        </div>
+        <div class="editor-field">
+            @Html.DropDownListFor(m => m.krajIzvajanja, (SelectList)ViewBag.Obcina)
+            @Html.ValidationMessageFor(m => m.krajIzvajanja)
+        </div>
+
+        <!--Izbirna skupina-->
+        <div class="editor-label">
+            @Html.LabelFor(m => m.izbirnaSkupina)
+        </div>
+        <div class="editor-field">
+            @Html.DropDownListFor(m => m.izbirnaSkupina, (SelectList)ViewBag.IZBIRNASKUPINA)
+            @Html.ValidationMessageFor(m => m.izbirnaSkupina)
+        </div>
+
+        <!--Studijski program 2-->
+        <div class="editor-label">
+            @Html.LabelFor(m => m.studijskiProgram2)
+        </div>
+        <div class="editor-field">
+            @Html.DropDownListFor(m => m.studijskiProgram2, (SelectList)ViewBag.StudijskiProgrami)
+            @Html.ValidationMessageFor(m => m.studijskiProgram2)
+        </div>
+
+
+        smer2?
+
+        <!--Kraj izvajanja 2-->
+        <div class="editor-label">
+            @Html.LabelFor(m => m.krajIzvajanja2)
+        </div>
+        <div class="editor-field">
+            @Html.DropDownListFor(m => m.krajIzvajanja2, (SelectList)ViewBag.Obcina)
+            @Html.ValidationMessageFor(m => m.krajIzvajanja2)
+        </div>
+        
+        <!--Izbirna Skupina 2-->
+        <div class="editor-label">
+            @Html.LabelFor(m => m.izbirnaSkupina2)
+        </div>
+        <div class="editor-field">
+            @Html.DropDownListFor(m => m.izbirnaSkupina2, (SelectList)ViewBag.IZBIRNASKUPINA)
+            @Html.ValidationMessageFor(m => m.izbirnaSkupina2)
+        </div>
 
         <!--  vrsta studija -->
         <div class="editor-label">
@@ -324,9 +366,10 @@
             @Html.ValidationMessageFor(m => m.soglasje2)
         </div>
 
+        <!--
+        <hr>
         <h4>Priloga 1: Predmetnik</h4>
-
-
+        -->
 
         <p>
             <input type="submit" value="Shrani">
