@@ -89,6 +89,11 @@ namespace studis.Models
             new Sifrant(0, "Dodatno leto"),
         };
 
+        public static readonly Sifrant[] IZBIRNASKUPINA = {
+            new Sifrant(0, "Dopoldanska"),
+            new Sifrant(1, "Popoldanska"),
+        };
+
         public static readonly Sifrant[] STUDIJSKOLETO = {
             new Sifrant(1991, "1991/1992"),
             new Sifrant(1992, "1992/1993"),
@@ -579,6 +584,7 @@ namespace studis.Models
             new Sifrant(147	, "Žiri "),
             new Sifrant(192	, "Žirovnica "),
             new Sifrant(193	, "Žužemberk "),
+            new Sifrant(-1, "TUJINA"),
         };
 
         public static readonly Sifrant[] POSTNESTEVILKE = {
