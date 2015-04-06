@@ -51,13 +51,13 @@ namespace studis.Models
         };
 
         public static readonly Sifrant[] STUDIJSKIPROGRAM = {
-            new Sifrant(     -1, "Humanistika in družb. - DR III"),
+            new Sifrant(1000666, "Humanistika in družb. - DR III"),
             new Sifrant(1000479, "INF. SISTEMI IN ODLOČANJE - DR"),
             new Sifrant(1000480, "INFORMAC. SISTEMI IN ODLOČANJE"),
             new Sifrant(1000472, "Kognitivna znanaost MAG II. st."),
             new Sifrant(1001001, "Multimedija UN 1.st."),
             new Sifrant(1000977, "PEDAGOŠKO RAČ. IN INF. MAG-II. st."),
-            new Sifrant(     -1, "Predmetnik za tuje študente na izmenjavi"),
+            new Sifrant(1000667, "Predmetnik za tuje študente na izmenjavi"),
             new Sifrant(1000475, "RAČUNAL. IN INFORMATIKA UN"),
             new Sifrant(1000425, "RAČUNAL. IN MATEMATIKA UN"),
             new Sifrant(1000477, "RAČUNAL. IN INFORMATIKA VS"),
@@ -68,8 +68,8 @@ namespace studis.Models
             new Sifrant(1000474, "RAČUNALNIŠ. IN INF. DR-III. ST."),
             new Sifrant(1000478, "RAČUNALNIŠTVO IN INF. - DR"),
             new Sifrant(1000481, "RAČUNALNIŠTVO IN INF. - MAG"),
-            new Sifrant(     -1, "RAČUNALNIŠTVO IN INF. - VIS"),
-            new Sifrant(     -1, "RAČUNALNIŠTVO IN INF. - VŠ"),
+            new Sifrant(1000668, "RAČUNALNIŠTVO IN INF. - VIS"),
+            new Sifrant(1000669, "RAČUNALNIŠTVO IN INF. - VŠ"),
             new Sifrant(1000934, "Računalništvo in matematika MAG II. st."),
             new Sifrant(1000469, "Upravna infromatika UN 1. st"),    
         };

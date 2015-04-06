@@ -10,8 +10,9 @@ namespace studis.Models
     public class VpisniList
     {
         [Required]
+        [StringLength(100, ErrorMessage = "{0} mora bitio dolg vsaj {2} znakov.", MinimumLength = 1)]
         [Display(Name = "Študijsko leto")]
-        public int studijskoLeto { get; set; }
+        public string studijskoLeto { get; set; }
 
         [Display(Name = "Vpisna številka")]
         public int vpisnaStevilka { get; set; }
@@ -39,21 +40,21 @@ namespace studis.Models
         [Required]
         [StringLength(100, ErrorMessage = "{0} mora bitio dolg vsaj {2} znakov.", MinimumLength = 1)]
         [Display(Name = "Občina rojstva")]
-        public string obcinaRojstva { get; set; }
+        public int obcinaRojstva { get; set; }
 
         [Required]
         [StringLength(100, ErrorMessage = "{0} mora bitio dolg vsaj {2} znakov.", MinimumLength = 1)]
         [Display(Name = "Država rojstva")]
-        public string drzavaRojstva { get; set; }
+        public int drzavaRojstva { get; set; }
 
         [Required]
         [StringLength(100, ErrorMessage = "{0} mora bitio dolg vsaj {2} znakov.", MinimumLength = 1)]
         [Display(Name = "Državljanstvo")]
-        public string drzavljanstvo { get; set; }
+        public int drzavljanstvo { get; set; }
 
         [Required]
         [Display(Name = "Spol")]
-        public char spol { get; set; }
+        public int spol { get; set; }
 
         [Required]
         [Display(Name = "Emšo")]
@@ -88,12 +89,12 @@ namespace studis.Models
         [Required]
         [StringLength(100, ErrorMessage = "{0} mora bitio dolg vsaj {2} znakov.", MinimumLength = 1)]
         [Display(Name = "Občina")]
-        public string obcina { get; set; }
+        public int obcina { get; set; }
 
         [Required]
         [StringLength(100, ErrorMessage = "{0} mora bitio dolg vsaj {2} znakov.", MinimumLength = 1)]
         [Display(Name = "Država")]
-        public string drzava { get; set; }
+        public int drzava { get; set; }
 
         //zacasni naslov
         [StringLength(100, ErrorMessage = "{0} mora bitio dolg vsaj {2} znakov.", MinimumLength = 1)]
@@ -126,12 +127,12 @@ namespace studis.Models
         [Required]
         [StringLength(100, ErrorMessage = "{0} mora bitio dolg vsaj {2} znakov.", MinimumLength = 1)]
         [Display(Name = "Kraj izvajanja")]
-        public string krajIzvajanja { get; set; }
+        public int krajIzvajanja { get; set; }
 
         [Required]
         [StringLength(100, ErrorMessage = "{0} mora bitio dolg vsaj {2} znakov.", MinimumLength = 1)]
         [Display(Name = "Izbirna skupina")]
-        public string izbirnaSkupina { get; set; }
+        public int izbirnaSkupina { get; set; }
 
         [Display(Name = "Drugi študijski program")]
         public int studijskiProgram2 { get; set; }
