@@ -89,6 +89,35 @@ namespace studis.Models
             new Sifrant(0, "Dodatno leto"),
         };
 
+        public static readonly Sifrant[] STUDIJSKOLETO = {
+            new Sifrant(1991, "1991/1992"),
+            new Sifrant(1992, "1992/1993"),
+            new Sifrant(1993, "1993/1994"),
+            new Sifrant(1994, "1994/1995"),
+            new Sifrant(1995, "1995/1996"),
+            new Sifrant(1996, "1996/1997"),
+            new Sifrant(1997, "1997/1998"),
+            new Sifrant(1998, "1998/1999"),
+            new Sifrant(1999, "1999/2000"),
+            new Sifrant(2000, "2000/2001"),
+            new Sifrant(2001, "2001/2002"),
+            new Sifrant(2002, "2002/2003"),
+            new Sifrant(2003, "2003/2004"),
+            new Sifrant(2004, "2004/2005"),
+            new Sifrant(2005, "2005/2006"),
+            new Sifrant(2006, "2006/2007"),
+            new Sifrant(2007, "2007/2008"),
+            new Sifrant(2008, "2008/2009"),
+            new Sifrant(2009, "2009/2010"),
+            new Sifrant(2010, "2010/2011"),
+            new Sifrant(2011, "2011/2012"),
+            new Sifrant(2012, "2012/2013"),
+            new Sifrant(2013, "2013/2014"),
+            new Sifrant(2014, "2014/2015"),
+            new Sifrant(2015, "2015/2016"),
+            new Sifrant(2016, "2016/2017"),
+        };
+
         public static readonly Sifrant[] DRZAVE = {
             new Sifrant(004, "Afganistan"),
             new Sifrant(008, "Albanija"),
