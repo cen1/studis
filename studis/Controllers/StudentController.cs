@@ -53,12 +53,8 @@ namespace studis.Controllers
                     }
                     else
                     {
-                        /* var tempStudents = students.Where(s => s.ime.Contains(searchString));
-                         if (tempStudents.Any())
-                             students = tempStudents;
-                         else
-                             students = students.Where(s => s.priimek.Contains(searchString));*/
-                        students = null;
+                        string firstChar = searchData[0];
+                        students = students.Where(s => s.ime.StartsWith(firstChar) || s.priimek.StartsWith(firstChar));
                     }
                 }
             }
