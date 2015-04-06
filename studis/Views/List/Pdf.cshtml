@@ -3,15 +3,15 @@
     Layout = "~/Views/Shared/_PdfLayout.cshtml";
 }
 
-@model studis.Models.student
+@model studis.Models.VpisniListModel
 <table>
     <tbody>
         <tr>
-            <th colspan="2">Vpisni list 2014/2015</th>
+            <th colspan="2">Vpisni list @Html.DisplayFor(m => m.studijskoLeto)</th>
         </tr>
         <tr>
             <td>Vpisna številka</td>
-            <td>@Html.DisplayFor(m => m.vpisna_stevilka)</td>
+            <td>@Html.DisplayFor(m => m.vpisnaStevilka)</td>
         </tr>
         <tr>
             <td>Priimek</td>
@@ -26,12 +26,12 @@
             <td>@Html.DisplayFor(m => m.ime)</td>
         </tr>
         <tr>
-            <td>Matična številka</td>
-            <td>data</td>
+            <td>EMŠO</td>
+            <td>@Html.DisplayFor(m => m.emso)</td>
         </tr>
         <tr>
             <td>Davčna številka</td>
-            <td>data</td>
+            <td>@Html.DisplayFor(m => m.davcnaStevilka)</td>
         </tr>
         <tr>
             <td>Študent s posebnimi potrebami</td>
@@ -42,23 +42,23 @@
         </tr>
         <tr>
             <td>Ulica in hišna številka</td>
-            <td>data</td>
+            <td>@Html.DisplayFor(m => m.naslov)</td>
         </tr>
         <tr>
             <td>Pošta in poštna številka</td>
-            <td>data</td>
+            <td>@Html.DisplayFor(m => m.postnaStevilka)</td>
         </tr>
         <tr>
             <td>Naslov za vročanje (označite)</td>
-            <td>DA / NE</td>
+            <td>@Html.DisplayFor(m => m.vrocanje)</td>
         </tr>
         <tr>
             <td>Občina</td>
-            <td>data</td>
+            <td>@Html.DisplayFor(m => m.obcina)</td>
         </tr>
         <tr>
             <td>Država</td>
-            <td>data</td>
+            <td>@Html.DisplayFor(m => m.drzava)</td>
         </tr>
         <tr>
             <td>
@@ -67,26 +67,26 @@
                 Elektronska pošta<br />
                 (Če tako želite, rubrike ni potrebno izpolniti.)
             </td>
-            <td>data</td>
+            <td>@Html.DisplayFor(m => m.prenosniTelefon)<br />@Html.DisplayFor(m => m.email)</td>
         </tr>
         <tr>
             <th colspan="2">Naslov začasnega bivališča</th>
         </tr>
         <tr>
             <td>Ulica in hišna številka</td>
-            <td></td>
+            <td>@Html.DisplayFor(m => m.naslovZacasni)</td>
         </tr>
         <tr>
             <td>Pošta in poštna številka</td>
-            <td></td>
+            <td>@Html.DisplayFor(m => m.postnaStevilkaZacasni)</td>
         </tr>
         <tr>
             <td>Naslov za vročanje (označite)</td>
-            <td>DA / NE</td>
+            <td>@Html.DisplayFor(m => m.vrocanjeZacasni)</td>
         </tr>
         <tr>
             <td>Občina</td>
-            <td></td>
+            <td>@Html.DisplayFor(m => m.obcinaZacasni)</td>
         </tr>
 
         <tr>
@@ -98,35 +98,31 @@
         </tr>
         <tr>
             <td>Študijski program</td>
-            <td>data</td>
+            <td>@Html.DisplayFor(m => m.studijskiProgram)</td>
         </tr>
         <tr>
             <td>Smer in izbirna skupina</td>
-            <td>data</td>
+            <td>@Html.DisplayFor(m => m.smer)</td>
         </tr>
         <tr>
             <td>Skupina</td>
-            <td>data</td>
+            <td>@Html.DisplayFor(m => m.izbirnaSkupina)</td>
         </tr>
         <tr>
             <td>Študijsko leto</td>
-            <td>2014/2015</td>
+            <td>@Html.DisplayFor(m => m.studijskoLeto)</td>
         </tr>
         <tr>
             <td>Vrsta študija</td>
-            <td>
-                J-visokošolski strokovni  K-univerzitezni<br />
-                L-magistrski  N-enoviti magistrski<br />
-                M-doktorski
-            </td>
+            <td>@Html.DisplayFor(m => m.vrstaStudija)</td>
         </tr>
         <tr>
             <td>Letnik študija</td>
-            <td>data</td>
+            <td>@Html.DisplayFor(m => m.letnikStudija)</td>
         </tr>
         <tr>
             <td>Način študija</td>
-            <td>1-redni  3-izredni</td>
+            <td>@Html.DisplayFor(m => m.nacinStudija)</td>
         </tr>
         <tr>
             <td>Študij na daljavo</td>
@@ -134,15 +130,11 @@
         </tr>
         <tr>
             <td>Vrsta vpisa</td>
-            <td>
-                V1-prvi vpis v letnik  V2-ponavljanje letnika<br />
-                V3-nadaljevanje letnika  A1-absolvent<br />
-                A2-podaljšanje absolventa
-            </td>
+            <td>@Html.DisplayFor(m => m.vrstaVpisa)</td>
         </tr>
         <tr>
             <td>Kraj izvajanja študija</td>
-            <td></td>
+            <td>@Html.DisplayFor(m => m.krajIzvajanja)</td>
         </tr>
         <tr>
             <td>Na katerem visokošolskem zavodu/članici še študirate?</td>
@@ -276,23 +268,23 @@
         </tr>
         <tr>
             <td>Datum rojstva</td>
-            <td>@Html.DisplayFor(m => m.datum_rojstva)</td>
+            <td>@Html.DisplayFor(m => m.datumRojstva)</td>
         </tr>
         <tr>
             <td>Kraj rojstva</td>
-            <td></td>
+            <td>@Html.DisplayFor(m => m.krajRojstva)</td>
         </tr>
         <tr>
             <td>Občina rojstva</td>
-            <td></td>
+            <td>@Html.DisplayFor(m => m.obcinaRojstva)</td>
         </tr>
         <tr>
             <td>Država rojstva</td>
-            <td></td>
+            <td>@Html.DisplayFor(m => m.drzavaRojstva)</td>
         </tr>
         <tr>
             <td>Državljanstvo</td>
-            <td></td>
+            <td>@Html.DisplayFor(m => m.drzavljanstvo)</td>
         </tr>
         <tr>
             <td>Narodnost</td>
