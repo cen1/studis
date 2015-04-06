@@ -9,6 +9,8 @@ namespace studis.Controllers
 {
     public class VpisniListController : Controller
     {
+        public studisEntities db = new studisEntities();
+
         // GET: VpisniList
         public ActionResult VpisniList()
         {
@@ -29,13 +31,19 @@ namespace studis.Controllers
         }
         
         [HttpPost]
-        public ActionResult Zajemi(VpisniList vpisniList)
+        public ActionResult VpisniList(VpisniList v)
         {
-            //preveri
+            if (ModelState.IsValid)
+            {
 
-            //shrani
+            }
+            else
+            {
+                ModelState.AddModelError("", "Prišlo je do napake.");
+            }
 
-            return View(vpisniList);
+            return View(model);
+            //tule returnaj PDF
         }
 
 
