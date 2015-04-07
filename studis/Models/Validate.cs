@@ -8,16 +8,21 @@ namespace studis.Models
 {
     public static class Validate
     {
+
         public static bool veljavnoIme(string ime)
         {
-            if (ime.Length < 1)
-                return false;
-            if (!Char.IsUpper(ime[0]))
-                return false;
-            foreach (char c in ime)
+            string[] besede = ime.Split();
+            foreach (string s in besede)
             {
-                if (!Char.IsLetter(c))
+                if (s.Length < 1)
                     return false;
+                if (!Char.IsUpper(s[0]))
+                    return false;
+                foreach (char c in s)
+                {
+                    if (!Char.IsLetter(c))
+                        return false;
+                }
             }
             return true;
         }
