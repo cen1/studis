@@ -20,7 +20,7 @@ namespace studis.Controllers
             var list = db.vpisnilists.SingleOrDefault(v => v.id == id);
 
             // preveri če vpisni list obstaja
-            if (list.vrstaVpisa != null) {
+            try {
                 var model = new studis.Models.VpisniListModel
                 {
                     studijskoLeto = list.studijskoLeto,
@@ -85,7 +85,7 @@ namespace studis.Controllers
             
                 return new PdfActionResult(model);
             }
-            else
+            catch
             {
                 return RedirectToAction("ListEmpty");
             }
