@@ -108,7 +108,7 @@ namespace studis.Controllers
                         }
                         throw;
                     }
-                    return RedirectToAction("VpisniListSuccess", "VpisniList");
+                    return RedirectToAction("VpisniListPredmetnik", "VpisniList", new { id = v.id });
             }
             else
             {
@@ -137,11 +137,38 @@ namespace studis.Controllers
             ViewBag.IzbirnaSkupina = new SelectList(Sifranti.IZBIRNASKUPINA, "id", "naziv");
 
             return View(model);
-            //tule returnaj PDF
         }
 
         public ActionResult VpisniListSuccess()
         {
+            return View();
+        }
+
+        public ActionResult VpisniListPredmetnik(int id)
+        {
+            var vl = db.vpisnilists.Find(id);
+
+            System.Diagnostics.Debug.WriteLine(id);
+            System.Diagnostics.Debug.WriteLine(vl.id);
+            System.Diagnostics.Debug.WriteLine(vl.letnikStudija);
+
+            if (vl.letnikStudija==1)
+                return RedirectToAction("PrviPredmetnik", "VpisniList", new { id = vl.id });
+            else if (vl.letnikStudija==2)
+                return RedirectToAction("DrugiPredmetnik", "VpisniList", new { id = vl.id });
+            else if (vl.letnikStudija==3)
+                return RedirectToAction("TretjiPredmetnik", "VpisniList", new { id = vl.id });
+            else
+                return RedirectToAction("NeznanPredmetnik", "VpisniList");
+
+            //ViewBag.strokovnoizbirni = db.predmets.Where(l => l.letnik == id).Where(m => m.strokovnoizbirni == 1);
+            //ViewBag.prostoizbirni = db.predmets.Where(l => l.letnik == id).Where(m => m.obvezen == 1);
+        }
+
+        public ActionResult PrviPredmetnik(int id)
+        {
+            var vl = db.vpisnilists.Find(id);
+            ViewBag.obvezni = db.predmets.Where(l => l.letnik == vl.letnikStudija).Where(m => m.obvezen == true);
             return View();
         }
     }

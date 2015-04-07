@@ -1,0 +1,11 @@
+﻿@{
+    ViewBag.Title = "Predmetnik 1 letnik";
+}
+
+<h2>Predmetnik za 1 letnik</h2>
+Na voljo so samo obvezni predmeti<br />
+
+@foreach (var item in ViewBag.obvezni)
+{
+    <p>@item.ime</p>
+}

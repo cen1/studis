@@ -9,6 +9,7 @@ namespace studis.Models
 {
     public class VpisniListModel
     {
+
         [Display(Name = "Vpisna številka")]
         public int? vpisnaStevilka { get; set; }
 

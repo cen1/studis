@@ -372,13 +372,14 @@
     <Content Include="Views\Account\ResetPassword.cshtml" />
     <Content Include="Views\Account\PasswordRecoveryExpired.cshtml" />
     <Content Include="Views\Account\PasswordRecoveryComplete.cshtml" />
-    <Content Include="Views\List\List.cshtml" />
     <Content Include="Views\Shared\_PdfLayout.cshtml" />
     <Content Include="Views\List\Pdf.cshtml" />
     <Content Include="Views\VpisniList\VpisniList.cshtml" />
     <Content Include="Views\List\ListEmpty.cshtml" />
     <Content Include="Views\List\PdfSkrbnik.cshtml" />
     <Content Include="Views\VpisniList\VpisniListSuccess.cshtml" />
+    <Content Include="Views\VpisniList\PrviPredmetnik.cshtml" />
+    <Content Include="Views\VpisniList\VpisniListPredmetnik.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
