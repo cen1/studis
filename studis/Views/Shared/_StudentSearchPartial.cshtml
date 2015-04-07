@@ -1,5 +1,5 @@
 ﻿@model IEnumerable<studis.Models.student>
-    
+
 
 @using (Html.BeginForm())
 {
@@ -8,7 +8,7 @@
         <input type="submit" value="Išči" />
     </p>
 } 
-<div id="searchDiv">
+<div id="searchDiv" style="font-family: 'Arial'">
     <table id="seznamStudentov" class="table">
         <tr>
             <th>@Html.DisplayNameFor(model => model.ime)</th>
