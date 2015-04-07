@@ -382,6 +382,7 @@
     <Content Include="Views\VpisniList\VpisniListSuccess.cshtml" />
     <Content Include="Views\VpisniList\PrviPredmetnik.cshtml" />
     <Content Include="Views\VpisniList\VpisniListPredmetnik.cshtml" />
+    <Content Include="Views\Shared\_StudentSearchPDFPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
