@@ -73,7 +73,7 @@
     }
     function download(text) {
         var pom = document.createElement('a');
-        pom.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+        pom.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(text));
         pom.setAttribute('download', "CSVdata.csv");
 
         pom.style.display = 'none';

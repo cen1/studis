@@ -9,6 +9,7 @@ using System.Web.Security;
 
 namespace studis.Controllers
 {
+    [Authorize(Roles = "Referent")]
     public class ImportController : Controller
     {
         public studisEntities db = new studisEntities();
@@ -42,7 +43,7 @@ namespace studis.Controllers
                 // blank file?
                 if (file.ContentLength > 0)
                 {
-                    using (StreamReader sr = new StreamReader(path))
+                    using (StreamReader sr = new StreamReader(path, System.Text.Encoding.UTF8))
                     {
                         while (sr.Peek() != -1)
                         {
@@ -84,6 +85,7 @@ namespace studis.Controllers
                                         // dodaj v membership
                                         MembershipUser user = Membership.CreateUser(username, password, mail);
                                         MembershipUser myObject = Membership.GetUser(username);
+                                        Roles.AddUserToRole(username, "Študent");
                                         string userid = myObject.ProviderUserKey.ToString();
 
                                         // dodaj v student

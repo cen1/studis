@@ -21,6 +21,7 @@ namespace studis.Controllers
             return View();
         }
 
+        [Authorize(Roles = "Referent, Profesor")]
         public ActionResult StudentSearchPartial(string searchString)
         {
             var students = from s in db.students select s;
@@ -61,6 +62,7 @@ namespace studis.Controllers
             return PartialView("_StudentSearchPartial",students);
         }
 
+        [Authorize(Roles = "Referent")]
         public ActionResult StudentSearchPDFPartial(string searchString1)
         {
             var students = from s in db.students select s;

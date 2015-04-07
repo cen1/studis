@@ -15,9 +15,6 @@ namespace studis.Controllers
     {
         public studisEntities db = new studisEntities();
 
-        //[Authorize(Roles = "Študent")]
-        //[Authorize(Roles = "Referent")]
-        //[Authorize(Roles = "Skrbnik")]
         public ActionResult Pdf(int id)
         {
             var list = db.vpisnilists.SingleOrDefault(v => v.id == id);
@@ -94,16 +91,12 @@ namespace studis.Controllers
             }
         }
 
-        //[Authorize(Roles = "Referent")]
-        //[Authorize(Roles = "Skrbnik")]
+        [Authorize(Roles = "Referent")]
         public ActionResult PdfSkrbnik()
         {
-            return RedirectToAction("StudentSearchPDFPartial", "Student");
+            return View();
         }
 
-        //[Authorize(Roles = "Študent")]
-        //[Authorize(Roles = "Referent")]
-        //[Authorize(Roles = "Skrbnik")]
         public ActionResult ListEmpty()
         {
             return View();
