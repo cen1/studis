@@ -14,29 +14,30 @@ namespace studis.Models
         [Display(Name = "Vpisna številka")]
         public int? vpisnaStevilka { get; set; }
 
-        [StringLength(100, ErrorMessage = "{0} mora bitio dolg vsaj {2} znakov.", MinimumLength = 1)]
+        [StringLength(45, ErrorMessage = "{0} mora biti dolgo vsaj {2} znakov.", MinimumLength = 1)]
         [Display(Name = "Študijsko leto")]
         public string studijskoLeto { get; set; }
 
         [Required]
         [Remote("PreveriIme", "VpisniList", HttpMethod = "POST", ErrorMessage = "Neveljavna oblika imena.")]
-        [StringLength(100, ErrorMessage = "{0} mora bitio dolg vsaj {2} znakov.", MinimumLength = 1)]
+        [StringLength(45, ErrorMessage = "{0} mora biti dolg vsaj {2} znakov.", MinimumLength = 1)]
         [Display(Name = "Ime")]
         public string ime { get; set; }
 
         [Required]
         [Remote("PreveriPriimek", "VpisniList", HttpMethod = "POST", ErrorMessage = "Neveljavna oblika priimka.")]
-        [StringLength(100, ErrorMessage = "{0} mora bitio dolg vsaj {2} znakov.", MinimumLength = 1)]
+        [StringLength(45, ErrorMessage = "{0} mora bitio dolg vsaj {2} znakov.", MinimumLength = 1)]
         [Display(Name = "Priimek")]
         public string priimek { get; set; }
 
         [Required]
-        [DataType(DataType.DateTime)]
-        [Display(Name = "Datum rojstva")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
+        [Display(Name = "Datum rojstva (DD/MM/LLLL)")]
         public DateTime datumRojstva { get; set; }
 
         [Required]
-        [StringLength(100, ErrorMessage = "{0} mora bitio dolg vsaj {2} znakov.", MinimumLength = 1)]
+        [StringLength(45, ErrorMessage = "{0} mora biti dolg vsaj {2} znakov.", MinimumLength = 1)]
         [Display(Name = "Kraj rojstva")]
         public string krajRojstva { get; set; }
 
@@ -62,6 +63,7 @@ namespace studis.Models
         public string emso { get; set; }
 
         [Required]
+        [StringLength(8, ErrorMessage = "{0} mora biti dolga vsaj {2} znakov.", MinimumLength = 8)]
         [Display(Name = "Davčna številka")]
         public int davcnaStevilka { get; set; }
 
@@ -76,7 +78,7 @@ namespace studis.Models
 
         //prebivalisce
         [Required]
-        [StringLength(100, ErrorMessage = "{0} mora bitio dolg vsaj {2} znakov.", MinimumLength = 1)]
+        [StringLength(45, ErrorMessage = "{0} mora biti dolg vsaj {2} znakov.", MinimumLength = 1)]
         [Display(Name = "Naslov")]
         public string naslov { get; set; }
 
@@ -96,7 +98,7 @@ namespace studis.Models
         public int drzava { get; set; }
 
         //zacasni naslov
-        [StringLength(100, ErrorMessage = "{0} mora bitio dolg vsaj {2} znakov.", MinimumLength = 1)]
+        [StringLength(45, ErrorMessage = "{0} mora bitio dolg vsaj {2} znakov.", MinimumLength = 1)]
         [Display(Name = "Naslov")]
         public string naslovZacasni { get; set; }
 

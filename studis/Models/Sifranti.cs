@@ -125,6 +125,7 @@ namespace studis.Models
         };
 
         public static readonly Sifrant[] DRZAVE = {
+            new Sifrant(705, "Slovenija"),
             new Sifrant(004, "Afganistan"),
             new Sifrant(008, "Albanija"),
             new Sifrant(010, "Antarktika"),
@@ -325,7 +326,7 @@ namespace studis.Models
             new Sifrant(702, "Singapur"),
             new Sifrant(703, "Slovaška"),
             new Sifrant(704, "Vietnam"),
-            new Sifrant(705, "Slovenija"),
+     
             new Sifrant(706, "Somalija"),
             new Sifrant(710, "Južna Afrika"),
             new Sifrant(716, "Zimbabve"),
