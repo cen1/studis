@@ -170,7 +170,7 @@ namespace studis.Controllers
             var vl = db.vpisnilists.Find(id);
             ViewBag.obvezni = db.predmets.Where(l => l.letnik == vl.letnikStudija).Where(m => m.obvezen == true);
             return View();
-
+        }
         public JsonResult PreveriEmso(string emso)
         {
             var result = Validate.isEmso(emso);
