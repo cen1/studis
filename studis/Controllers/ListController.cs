@@ -98,7 +98,7 @@ namespace studis.Controllers
         //[Authorize(Roles = "Skrbnik")]
         public ActionResult PdfSkrbnik()
         {
-            return RedirectToAction("StudentSearchPDFPartial", "Student");
+            return View();
         }
 
         //[Authorize(Roles = "Študent")]
