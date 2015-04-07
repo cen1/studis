@@ -6,5 +6,9 @@
 <p>
     Pozdravljeni v Studisu
 </p>
+@if (Request.IsAuthenticated)
+{
+    <a href="~/Account/ChangePassword">Spremeni geslo</a>
+}
 
 

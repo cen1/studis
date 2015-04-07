@@ -12,18 +12,18 @@ namespace studis.Models
     {
         [Required]
         [DataType(DataType.Password)]
-        [Display(Name = "Current password")]
+        [Display(Name = "Trenutno geslo")]
         public string OldPassword { get; set; }
 
         [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 7)]
+        [StringLength(100, ErrorMessage = "{0} mora biti vsaj {2} znakov.", MinimumLength = 7)]
         [DataType(DataType.Password)]
-        [Display(Name = "New password")]
+        [Display(Name = "Novo geslo")]
         public string NewPassword { get; set; }
 
         [DataType(DataType.Password)]
-        [Display(Name = "Confirm new password")]
-        [System.ComponentModel.DataAnnotations.CompareAttribute("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
+        [Display(Name = "Potrdi novo geslo")]
+        [System.ComponentModel.DataAnnotations.CompareAttribute("NewPassword", ErrorMessage = "Gesli se ne ujemata.")]
         public string ConfirmPassword { get; set; }
     }
 

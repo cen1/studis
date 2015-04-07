@@ -68,25 +68,25 @@ namespace studis.Controllers
                 };
 
                 // refactoring needed
-               /* ViewBag.PostnaStevilka = Sifranti.POSTNESTEVILKE[list.postnaStevilka];
-                ViewBag.Obcina = Sifranti.OBCINE[list.obcina];
-                ViewBag.Drzava = Sifranti.DRZAVE[list.drzava];
-                ViewBag.PostnaStevilkaZacasni = Sifranti.POSTNESTEVILKE[Convert.ToInt32(list.postnaStevilkaZacasni)];
-                ViewBag.ObcinaZacasni = Sifranti.OBCINE[Convert.ToInt32(list.obcinaZacasni)];
-                ViewBag.DrzavaZacasni = Sifranti.DRZAVE[Convert.ToInt32(list.drzavaZacasni)];
-                ViewBag.StudijskiProgram = Sifranti.STUDIJSKIPROGRAM[list.studijskiProgram];
-                ViewBag.VrstaStudija = Sifranti.KLASIUS[list.vrstaVpisa];
-                ViewBag.NacinStudija = Sifranti.NACINSTUDIJA[list.nacinStudija];
-                ViewBag.OblikaStudija = Sifranti.OBLIKASTUDIJA[list.oblikaStudija];
-                ViewBag.KrajIzvajanja = Sifranti.OBCINE[list.krajIzvajanja];
-                ViewBag.VrstaVpisa = Sifranti.VRSTAVPISA[list.vrstaVpisa];
-                ViewBag.Spol = Sifranti.SPOL[list.spol];
-                ViewBag.ObcinaRojstva = Sifranti.OBCINE[list.obcinaRojstva];
-                ViewBag.DrzavaRojstva = Sifranti.DRZAVE[list.drzavaRojstva];
-                ViewBag.Drzavljanstvo = Sifranti.DRZAVE[list.drzavljanstvo];
+                ViewBag.PostnaStevilka = Sifranti.POSTNESTEVILKE.SingleOrDefault(item => item.id == list.postnaStevilka);
+                ViewBag.Obcina = Sifranti.OBCINE.SingleOrDefault(item => item.id == list.obcina);
+                ViewBag.Drzava = Sifranti.DRZAVE.SingleOrDefault(item => item.id == list.drzava);
+                ViewBag.PostnaStevilkaZacasni = Sifranti.POSTNESTEVILKE.SingleOrDefault(item => item.id == Convert.ToInt32(list.postnaStevilkaZacasni));
+                ViewBag.ObcinaZacasni = Sifranti.OBCINE.SingleOrDefault(item => item.id == Convert.ToInt32(list.obcinaZacasni));
+                ViewBag.DrzavaZacasni = Sifranti.DRZAVE.SingleOrDefault(item => item.id == Convert.ToInt32(list.drzavaZacasni));
+                ViewBag.StudijskiProgram = Sifranti.STUDIJSKIPROGRAM.SingleOrDefault(item => item.id == list.studijskiProgram);
+                ViewBag.VrstaStudija = Sifranti.KLASIUS.SingleOrDefault(item => item.id == list.vrstaVpisa);
+                ViewBag.NacinStudija = Sifranti.NACINSTUDIJA.SingleOrDefault(item => item.id == list.nacinStudija);
+                ViewBag.OblikaStudija = Sifranti.OBLIKASTUDIJA.SingleOrDefault(item => item.id == list.oblikaStudija);
+                ViewBag.KrajIzvajanja = Sifranti.OBCINE.SingleOrDefault(item => item.id == list.krajIzvajanja);
+                ViewBag.VrstaVpisa = Sifranti.VRSTAVPISA.SingleOrDefault(item => item.id == list.vrstaVpisa);
+                ViewBag.Spol = Sifranti.SPOL.SingleOrDefault(item => item.id == list.spol);
+                ViewBag.ObcinaRojstva = Sifranti.OBCINE.SingleOrDefault(item => item.id == list.obcinaRojstva);
+                ViewBag.DrzavaRojstva = Sifranti.DRZAVE.SingleOrDefault(item => item.id == list.drzavaRojstva);
+                ViewBag.Drzavljanstvo = Sifranti.DRZAVE.SingleOrDefault(item => item.id == list.drzavljanstvo);
 
-            */
-                return View(model);
+            
+                return new PdfActionResult(model);
             }
             else
             {

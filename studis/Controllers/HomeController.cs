@@ -11,8 +11,9 @@ namespace studis.Controllers
     {
         public ActionResult Index()
         {
-            ViewBag.Message = "asd";
-
+            //ViewBag.Message = "Pozdravljeni v v sistemu studis"; 16201
+            Sifrant a = Sifranti.KLASIUS.SingleOrDefault(item => item.id == 16201);
+            ViewBag.Message = a.naziv;
             return View();
    
         }
