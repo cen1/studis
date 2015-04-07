@@ -68,7 +68,7 @@ namespace studis.Controllers
                 };
 
                 // refactoring needed
-                ViewBag.PostnaStevilka = Sifranti.POSTNESTEVILKE[list.postnaStevilka];
+               /* ViewBag.PostnaStevilka = Sifranti.POSTNESTEVILKE[list.postnaStevilka];
                 ViewBag.Obcina = Sifranti.OBCINE[list.obcina];
                 ViewBag.Drzava = Sifranti.DRZAVE[list.drzava];
                 ViewBag.PostnaStevilkaZacasni = Sifranti.POSTNESTEVILKE[Convert.ToInt32(list.postnaStevilkaZacasni)];
@@ -85,7 +85,7 @@ namespace studis.Controllers
                 ViewBag.DrzavaRojstva = Sifranti.DRZAVE[list.drzavaRojstva];
                 ViewBag.Drzavljanstvo = Sifranti.DRZAVE[list.drzavljanstvo];
 
-            
+            */
                 return View(model);
             }
             else

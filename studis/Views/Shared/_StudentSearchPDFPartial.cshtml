@@ -1,0 +1,44 @@
+﻿@model IEnumerable<studis.models.student>
+
+
+    @using (Html.BeginForm())
+    {
+        <p>
+            @Html.TextBox("SearchString1")
+            <input type="submit" value="Išči" />
+        </p>
+    }
+    <div id="searchDiv">
+        <table id="seznamStudentov" class="table">
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.ime)</th>
+                <th>@Html.DisplayNameFor(model => model.priimek)</th>
+                <th>@Html.DisplayNameFor(model => model.naslov)</th>
+                <th>@Html.DisplayNameFor(model => model.datum_rojstva)</th>
+                <th>@Html.DisplayNameFor(model => model.spol)</th>
+                <th>@Html.DisplayNameFor(model => model.userId)</th>
+            </tr>
+            @if (Model != null)
+            {
+                foreach (var item in Model)
+                {
+                    var imeID = item.ime;
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.ime)</td>
+                        <td>@Html.DisplayFor(modelItem => item.priimek)</td>
+                        <td>@Html.DisplayFor(modelItem => item.naslov)</td>
+                        <td>@Html.DisplayFor(modelItem => item.datum_rojstva)</td>
+                        <td>@Html.DisplayFor(modelItem => item.spol)</td>
+                        <td>@Html.ActionLink("Select", "Pdf", "List", new { id = item.userId }, null)</td>
+                    </tr>
+                }
+            }
+        </table>
+
+        @if (Model == null)
+        {
+            <h4>Ni zadetkov!</h4>
+            <p>Uporaba: iskanje s celo vpisno številko ali začetnicami imena in priimka.</p>
+        }
+
+    </div>
