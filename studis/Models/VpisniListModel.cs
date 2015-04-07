@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.ComponentModel.DataAnnotations;
+using System.Web.Mvc;
 
 
 namespace studis.Models
@@ -17,11 +18,13 @@ namespace studis.Models
         public string studijskoLeto { get; set; }
 
         [Required]
+        [Remote("PreveriIme", "VpisniList", HttpMethod = "POST", ErrorMessage = "Neveljavna oblika imena.")]
         [StringLength(100, ErrorMessage = "{0} mora bitio dolg vsaj {2} znakov.", MinimumLength = 1)]
         [Display(Name = "Ime")]
         public string ime { get; set; }
 
         [Required]
+        [Remote("PreveriPriimek", "VpisniList", HttpMethod = "POST", ErrorMessage = "Neveljavna oblika priimka.")]
         [StringLength(100, ErrorMessage = "{0} mora bitio dolg vsaj {2} znakov.", MinimumLength = 1)]
         [Display(Name = "Priimek")]
         public string priimek { get; set; }
@@ -53,7 +56,8 @@ namespace studis.Models
         public int spol { get; set; }
 
         [Required]
-        [Display(Name = "Emšo")]
+        [Remote("PreveriEmso", "VpisniList", HttpMethod = "POST", ErrorMessage = "Neveljaven EMŠO.")]
+        [Display(Name = "EMŠO")]
         public string emso { get; set; }
 
         [Required]

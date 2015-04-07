@@ -254,6 +254,7 @@
     </Compile>
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\UserModels.cs" />
+    <Compile Include="Models\Validate.cs" />
     <Compile Include="Models\vpisnilist.cs">
       <DependentUpon>Studis.tt</DependentUpon>
     </Compile>
@@ -319,6 +320,7 @@
       <LastGenOutput>Studis.cs</LastGenOutput>
     </Content>
     <Content Include="bin\studis.dll.config" />
+    <None Include="Properties\PublishProfiles\studis.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\html2csv.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
