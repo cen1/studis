@@ -189,5 +189,6 @@ namespace studis.Controllers
             var result = Validate.veljavnoIme(priimek);
             return Json(result);
         }
+
     }
 }
