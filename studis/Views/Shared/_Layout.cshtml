@@ -25,9 +25,16 @@
             <div>
                 <ul id="menu">
                     <li>@Html.ActionLink("Domov", "Index", "Home")</li>
-                    <li>@Html.ActionLink("Študenti", "Students", "Student")</li>
-                    <li>@Html.ActionLink("Uvoz", "Import", "Import")</li>
-                    <li>@Html.ActionLink("Vpisni list", "PdfSkrbnik", "List")</li>
+                    <li>@Html.ActionLink("Vpis", "VpisniList", "VpisniList")</li>
+                    @if(User.IsInRole("Referent")) {
+                        <li>@Html.ActionLink("Študenti", "Students", "Student")</li>
+                    }
+                    @if(User.IsInRole("Skrbnik") || User.IsInRole("Referent")) {
+                        <li>@Html.ActionLink("Uvoz", "Import", "Import")</li>
+                    }
+                    @if(User.IsInRole("Referent")) {
+                        <li>@Html.ActionLink("Izpis vpisnega lista", "PdfSkrbnik", "List")</li>
+                    }
                     <li>
                         @Html.Partial("_LoginPartial")
                     </li>
