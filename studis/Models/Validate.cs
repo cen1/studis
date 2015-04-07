@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Web;
 
@@ -7,6 +8,20 @@ namespace studis.Models
 {
     public static class Validate
     {
+        public static bool veljavnoIme(string ime)
+        {
+            if (ime.Length < 1)
+                return false;
+            if (!Char.IsUpper(ime[0]))
+                return false;
+            foreach (char c in ime)
+            {
+                if (!Char.IsLetter(c))
+                    return false;
+            }
+            return true;
+        }
+
         //moski= 0, zenksi 1
         public static bool isEmso(string emso, DateTime datumRojstva, int spol)
         {
@@ -42,6 +57,11 @@ namespace studis.Models
 
         public static bool isEmso(string emso)
         {
+            Debug.Print("isemso");
+            if (emso.Length != 13)
+            {
+                return false;
+            }
             foreach (char c in emso)
             {
                 if (!Char.IsDigit(c))
@@ -61,11 +81,11 @@ namespace studis.Models
             int p9 = Convert.ToInt32(emso[9]) * 4;
             int p10 = Convert.ToInt32(emso[10]) * 3;
             int p11 = Convert.ToInt32(emso[11]) * 2;
-
+            Debug.Print("emso12 " +Convert.ToInt32(emso[12]));
             int sum = p0 + p1 + p2 + p3 + p4 + p5 + p6 + p7 + p8 + p9 + p10 + p11;
             int ostanek = sum % 11;
-
-            if (11 - ostanek == emso[12])
+            Debug.Print("IZPISSS:  " + Convert.ToInt32(emso[12]) + " | " + ostanek);
+            if ( (11 - ostanek) == Convert.ToInt32(emso[12]))
             {
                 return true;
             }
