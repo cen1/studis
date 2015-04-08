@@ -11,11 +11,9 @@
 <div id="searchDiv" style="font-family: 'Arial'">
     <table id="seznamStudentov" class="table">
         <tr>
+            <th>@Html.DisplayNameFor(model => model.vpisna_stevilka)</th>
             <th>@Html.DisplayNameFor(model => model.ime)</th>
             <th>@Html.DisplayNameFor(model => model.priimek)</th>
-            <th>@Html.DisplayNameFor(model => model.naslov)</th>
-            <th>@Html.DisplayNameFor(model => model.datum_rojstva)</th>
-            <th>@Html.DisplayNameFor(model => model.spol)</th>
         </tr>
 @if (Model != null)
 {
@@ -23,11 +21,9 @@
     {
         var imeID = item.ime;
         <tr>
+            <td>@Html.DisplayFor(modelItem => item.vpisna_stevilka)</td>
             <td>@Html.DisplayFor(modelItem => item.ime)</td>
             <td>@Html.DisplayFor(modelItem => item.priimek)</td>
-            <td>@Html.DisplayFor(modelItem => item.naslov)</td>
-            <td>@Html.DisplayFor(modelItem => item.datum_rojstva)</td>
-            <td>@Html.DisplayFor(modelItem => item.spol)</td>
     </tr>
     }
 }
