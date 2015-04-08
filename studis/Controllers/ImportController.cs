@@ -25,13 +25,14 @@ namespace studis.Controllers
             // no file?
             if (file != null)
             {
-                List<string> list = new List<string>();
-                string name = "";
-                string lname = "";
-                string program = "";
-                string mail = "";
-                string username = "";
-                int line = 1;
+                List<string> name = new List<string>();
+                List<string> lname = new List<string>();
+                List<string> program = new List<string>();
+                List<string> email = new List<string>();
+                List<string> username = new List<string>();
+                List<string> password = new List<string>();
+                List<string> added = new List<string>();
+                int i = 0;
                 int counter = 0;
                 int counterAll = 0;
 
@@ -47,72 +48,98 @@ namespace studis.Controllers
                     {
                         while (sr.Peek() != -1)
                         {
-                            switch (line)
+                            var line = sr.ReadLine();
+                            try
                             {
-                                // parsaj ime
-                                case 1:
-                                    name = sr.ReadLine();
-                                    line++;
-                                    break;
+                                while (true) 
+                                {
+                                    var ime = line.Substring(i, 30).Trim();
+                                    i = i + 30;
+                                    var priimek = line.Substring(i, 30).Trim();
+                                    i = i + 30;
+                                    var prog = line.Substring(i, 7).Trim();
+                                    i = i + 7;
+                                    var mail = line.Substring(i, 60).Trim();
+                                    i = i + 60;
 
-                                // parsaj priimek
-                                case 2:
-                                    lname = sr.ReadLine();
-                                    line++;
-                                    break;
-
-                                // parsaj program
-                                case 3:
-                                    program = sr.ReadLine();
-                                    line++;
-                                    break;
-
-                                //parsar email
-                                case 4:
-                                    mail = sr.ReadLine();
-                                    line++;
-                                    counterAll++;
-
-                                    if ((name.Length > 0) && (name.Length <= 30) && (lname.Length > 0) && (lname.Length <= 30) &&
-                                        (program.Length > 0) && (program.Length <= 7) && (mail.Length > 0) && (mail.Length <= 60))
+                                    string[] tmp = mail.Split('@');
+                                    string uname = tmp[0];
+                                    string pass = Guid.NewGuid().ToString().Substring(0, 8);
+                                    /*
+                                    try
                                     {
-
-                                        string[] tmp = mail.Split('@');
-                                        username = tmp[0];
-
-                                        string password = Guid.NewGuid().ToString().Substring(0, 8);
-
-                                        // dodaj v membership
-                                        MembershipUser user = Membership.CreateUser(username, password, mail);
-                                        MembershipUser myObject = Membership.GetUser(username);
-                                        Roles.AddUserToRole(username, "Študent");
+                                        // dodaj login podatke in vlogo
+                                        MembershipUser user = Membership.CreateUser(uname, pass, mail);
+                                        MembershipUser myObject = Membership.GetUser(uname);
+                                        Roles.AddUserToRole(uname, "Študent");
                                         string userid = myObject.ProviderUserKey.ToString();
 
-                                        // dodaj v student
-                                        student stud = new student();
-                                        stud.ime = name;
-                                        stud.priimek = lname;
-                                        stud.userId = Convert.ToInt32(userid);
+                                        // dodaj v kandidat
+                                        kandidat k = new kandidat();
+                                        k.ime = ime;
+                                        k.priimek = priimek;
+                                        k.program = Convert.ToInt32(prog);
+                                        k.email = mail;
+                                        k.sprejet = false;
 
-                                        db.students.Add(stud);
+                                        db.kandidats.Add(k);
                                         db.SaveChanges();
 
-                                        list.Add("Uporabniško ime: " + username);
-                                        list.Add("Geslo: " + password);
-                                        counter++;
-                                    }
+                                        name.Add(ime);
+                                        lname.Add(priimek);
+                                        program.Add(prog);
+                                        email.Add(mail);
+                                        username.Add(uname);
+                                        password.Add(pass);
+                                        added.Add("DA");
 
-                                    break;
-                                case 5:
-                                    sr.ReadLine();
-                                    line = 1;
-                                    break;
+                                        counter++;
+
+                                    }
+                                    catch
+                                    {
+                                        name.Add(ime);
+                                        lname.Add(priimek);
+                                        program.Add(prog);
+                                        email.Add(mail);
+                                        username.Add("/");
+                                        password.Add("/";
+                                        added.Add("NE");
+                                    }
+                                    */
+
+                                    counterAll++;
+
+                                    // temp
+                                    name.Add(ime);
+                                    lname.Add(priimek);
+                                    program.Add(prog);
+                                    email.Add(mail);
+                                    username.Add(uname);
+                                    password.Add(pass);
+                                    added.Add("DA");
+
+                                    counter++;
+                                    // end temp
+                                }
                             }
+                            catch
+                            {
+                            } 
                         }
-                        list.Add("Dodanih " + counter + " od " + counterAll);
                     }
                 }
-                TempData["list"] = list;
+
+                TempData["Name"] = name;
+                TempData["Lname"] = lname;
+                TempData["Program"] = program;
+                TempData["Email"] = email;
+                TempData["Username"] = username;
+                TempData["Password"] = password;
+                TempData["Added"] = added;
+                TempData["Counter"] = counter;
+                TempData["CounterAll"] = counterAll;
+
                 return RedirectToAction("Print");
             }
             else
@@ -121,7 +148,15 @@ namespace studis.Controllers
 
         public ActionResult Print()
         {
-            ViewBag.List = TempData["list"] as List<string>;
+            ViewBag.Name = TempData["Name"];
+            ViewBag.Lname = TempData["Lname"];
+            ViewBag.Program = TempData["Program"];
+            ViewBag.Email = TempData["Email"];
+            ViewBag.Username = TempData["Username"];
+            ViewBag.Password = TempData["Password"];
+            ViewBag.Added = TempData["Added"];
+            ViewBag.Counter = TempData["Counter"];
+            ViewBag.CounterAll = TempData["CounterAll"];
             return View();
         }
     }

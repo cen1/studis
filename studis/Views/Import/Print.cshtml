@@ -6,14 +6,33 @@
 
 <table>
     <thead>
-        <tr>Dodani študenti:</tr>
+        <tr>
+            <td>Ime</td>
+            <td>Priimek</td>
+            <td>Program</td>
+            <td>Email</td>
+            <td>Uporabniško ime</td>
+            <td>Geslo</td>
+            <td>Dodan</td>
+        </tr>
     </thead>
     <tbody>
-        @foreach (var item in ViewBag.List)
+        @for (int i = 0; i < @ViewBag.CounterAll; i++)
         {
             <tr>
-                <td>@item</td>
+                <td>@ViewBag.Name[i]</td>
+                <td>@ViewBag.Lname[i]</td>
+                <td>@ViewBag.Program[i]</td>
+                <td>@ViewBag.Email[i]</td>
+                <td>@ViewBag.Username[i]</td>
+                <td>@ViewBag.Password[i]</td>
+                <td>@ViewBag.Added[i]</td>
             </tr>
         }
     </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="7">Dodanih @ViewBag.Counter od @ViewBag.CounterAll</td>
+        </tr>
+    </tfoot>
 </table>
