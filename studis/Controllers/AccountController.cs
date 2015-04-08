@@ -24,8 +24,10 @@ namespace studis.Controllers
         [HttpPost]
         public ActionResult Login(LoginModel model, string returnUrl)
         {
+            System.Diagnostics.Debug.WriteLine("login post");
             if (ModelState.IsValid)
-            {                
+            {
+                System.Diagnostics.Debug.WriteLine("model ok");
                 //poglej ce je IP zaklenjen
                 string ip = Request.UserHostAddress;
                 var ipl = IpLock.FindActiveByIp(ip);
@@ -43,9 +45,10 @@ namespace studis.Controllers
                         }
 
                     }
-
+                    System.Diagnostics.Debug.WriteLine("pred membership");
                     if (Membership.ValidateUser(model.UserName, model.Password))
                     {
+                        System.Diagnostics.Debug.WriteLine("po");
                         //resetiraj failed ob uspesnem loginu
                         user.my_aspnet_membership.FailedPasswordAttemptCount = 0;
                         db.SaveChanges();
