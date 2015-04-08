@@ -163,6 +163,7 @@ namespace studis.Controllers
 
             //ViewBag.strokovnoizbirni = db.predmets.Where(l => l.letnik == id).Where(m => m.strokovnoizbirni == 1);
             //ViewBag.prostoizbirni = db.predmets.Where(l => l.letnik == id).Where(m => m.obvezen == 1);
+            //
         }
 
         public ActionResult PrviPredmetnik(int id)
