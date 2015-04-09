@@ -184,6 +184,7 @@
     <Compile Include="Models\ip_lock.cs">
       <DependentUpon>Studis.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\KandidatModel.cs" />
     <Compile Include="Models\modul.cs">
       <DependentUpon>Studis.tt</DependentUpon>
     </Compile>

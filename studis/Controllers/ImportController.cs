@@ -78,8 +78,7 @@ namespace studis.Controllers
                                             ime = ime,
                                             priimek = priimek,
                                             studijskiProgram = Convert.ToInt32(prog),
-                                            email = mail,
-                                            vnesen = false
+                                            email = mail
                                         };
 
                                         var context = new ValidationContext(model, null, null);
