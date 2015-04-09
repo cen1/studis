@@ -18,7 +18,6 @@ namespace studis.Controllers
         public ActionResult Pdf(int id)
         {
             var list = db.vpisnilists.SingleOrDefault(v => v.id == id);
-
             // preveri če vpisni list obstaja
             try {
                 var model = new studis.Models.VpisniListModel
