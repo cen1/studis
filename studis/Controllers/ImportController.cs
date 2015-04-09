@@ -49,9 +49,10 @@ namespace studis.Controllers
                         while (sr.Peek() != -1)
                         {
                             var line = sr.ReadLine();
-                            try
-                            {
-                                while (true) 
+                            var length = line.Length;
+                            var st = length / 127;
+                            if ((length%127) == 0) {
+                                while (st != 0) 
                                 {
                                     var ime = line.Substring(i, 30).Trim();
                                     i = i + 30;
@@ -61,6 +62,8 @@ namespace studis.Controllers
                                     i = i + 7;
                                     var mail = line.Substring(i, 60).Trim();
                                     i = i + 60;
+
+                                    st--;
 
                                     string[] tmp = mail.Split('@');
                                     string uname = tmp[0];
@@ -123,9 +126,10 @@ namespace studis.Controllers
                                     // end temp
                                 }
                             }
-                            catch
+                            else
                             {
-                            } 
+                                return RedirectToAction("ImportError");
+                            }
                         }
                     }
                 }
@@ -157,6 +161,11 @@ namespace studis.Controllers
             ViewBag.Added = TempData["Added"];
             ViewBag.Counter = TempData["Counter"];
             ViewBag.CounterAll = TempData["CounterAll"];
+            return View();
+        }
+
+        public ActionResult ImportError()
+        {
             return View();
         }
     }
