@@ -12,27 +12,15 @@ namespace studis.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class student
+    public partial class kandidat
     {
-        public student()
-        {
-            this.predmets = new HashSet<predmet>();
-            this.ocenas = new HashSet<ocena>();
-            this.vpisnilists = new HashSet<vpisnilist>();
-        }
-    
-        public int vpisna_stevilka { get; set; }
+        public int id { get; set; }
         public string ime { get; set; }
         public string priimek { get; set; }
-        public string naslov { get; set; }
-        public string datum_rojstva { get; set; }
-        public string spol { get; set; }
+        public int studijskiProgram { get; set; }
+        public string email { get; set; }
         public int userId { get; set; }
     
         public virtual my_aspnet_users my_aspnet_users { get; set; }
-        public virtual ICollection<predmet> predmets { get; set; }
-        public virtual ICollection<ocena> ocenas { get; set; }
-        public virtual ICollection<vpisnilist> vpisnilists { get; set; }
-        public virtual zeton zeton { get; set; }
     }
 }

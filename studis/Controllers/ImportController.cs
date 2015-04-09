@@ -78,8 +78,7 @@ namespace studis.Controllers
                                             ime = ime,
                                             priimek = priimek,
                                             studijskiProgram = Convert.ToInt32(prog),
-                                            email = mail,
-                                            vnesen = false
+                                            email = mail
                                         };
 
                                         var context = new ValidationContext(model, null, null);
@@ -88,15 +87,21 @@ namespace studis.Controllers
                                         // preveri če parametri ustrezajo modelu in če je šifrant pravilen
                                         if ((Validator.TryValidateObject(model, context, results, true)) && (Sifranti.STUDIJSKIPROGRAM.Single(item => item.id == Convert.ToInt32(prog)) != null))
                                         {
-                                            /*
+                                            
                                             // dodaj login podatke in vlogo
                                             MembershipUser user = Membership.CreateUser(uname, pass, mail);
                                             MembershipUser myObject = Membership.GetUser(uname);
                                             Roles.AddUserToRole(uname, "Študent");
-                                            string userid = myObject.ProviderUserKey.ToString();
+                                            string id = myObject.ProviderUserKey.ToString();
 
                                             // dodaj v kandidat
-                                            kandidat k = new kandidat(model);
+                                            kandidat k = new kandidat();
+
+                                            k.ime = ime;
+                                            k.priimek = priimek;
+                                            k.studijskiProgram = Convert.ToInt32(prog);
+                                            k.email = mail;
+                                            k.userId = Convert.ToInt32(id);
 
                                             db.kandidats.Add(k);
                                             db.SaveChanges();
@@ -111,21 +116,7 @@ namespace studis.Controllers
                                             added.Add("DA");
                                             
                                             // povečaj število uspešno dodanih
-                                            counter++;
-                                            */
-                                            
-                                            // temp
-                                            name.Add(ime);
-                                            lname.Add(priimek);
-                                            program.Add(prog);
-                                            email.Add(mail);
-                                            username.Add(uname);
-                                            password.Add(pass);
-                                            added.Add("DA");
-
-                                            counter++;
-                                            // end temp
-                                            
+                                            counter++;                                            
                                         }
                                         else
                                         {

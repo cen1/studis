@@ -6,17 +6,18 @@ using System.Net.Mail;
 
 namespace studis.Models
 {
-    public class User
+    public class UserHelper
     {
+        public static studisEntities db = new studisEntities();
 
-        public static my_aspnet_users FindByName(studisEntities db, String name)
+        public static my_aspnet_users FindByName(String name)
         {
             var L2EQuery = db.my_aspnet_users.Where(a => a.applicationId == 1).Where(b => b.name == name);
             var user = L2EQuery.FirstOrDefault<my_aspnet_users>();
             return user;
         }
 
-        public static my_aspnet_membership FindByEmail(studisEntities db, String email)
+        public static my_aspnet_membership FindByEmail(String email)
         {
             var L2EQuery = db.my_aspnet_membership.Where(b => b.Email == email);
             var m = L2EQuery.FirstOrDefault<my_aspnet_membership>();

@@ -4,9 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 
 namespace studis.Controllers
 {
+    [Authorize(Roles = "Študent")]
     public class VpisniListController : Controller
     {
         public studisEntities db = new studisEntities();
@@ -145,6 +147,7 @@ namespace studis.Controllers
 
         public ActionResult VpisniListSuccess()
         {
+            ViewBag.id = TempData["id"];
             return View();
         }
 
@@ -173,10 +176,50 @@ namespace studis.Controllers
         public ActionResult PrviPredmetnik(int id)
         {
             var vl = db.vpisnilists.Find(id);
-            ViewBag.obvezni = db.predmets.Where(l => l.letnik == vl.letnikStudija).Where(m => m.obvezen == true);
-            ViewBag.id = id;
-            return View();
+            PrviPredmetnikModel m = new PrviPredmetnikModel();
+            m.vlid = id;
+            ViewBag.predmeti = db.predmets.Where(l => l.letnik == vl.letnikStudija).Where(n => n.obvezen == true);
+            return View(m);
         }
+
+        [HttpPost]
+        public ActionResult PrviPredmetnik(studis.Models.PrviPredmetnikModel model)
+        {
+            var vl = db.vpisnilists.Find(model.vlid);
+            
+            //preveri ce student ze obstaja
+            if (vl.student != null) {
+                TempData["id"] = model.vlid;
+                return RedirectToAction("VpisniListSuccess");
+            }
+
+            //kreiraj studenta
+            student s = new student();
+            s.ime = vl.ime;
+            s.priimek = vl.priimek;
+            s.datum_rojstva = vl.datumRojstva.ToShortDateString();
+            s.naslov = vl.naslov;
+            s.spol = Sifranti.SPOL.SingleOrDefault(item => item.id == vl.spol).naziv;
+            s.userId = studis.Models.UserHelper.FindByName(User.Identity.Name).id;
+
+            var predmeti = db.predmets.Where(l => l.letnik == vl.letnikStudija).Where(n => n.obvezen == true);
+
+            //shrani predmetnik
+            foreach (var p in predmeti)
+            {
+                s.predmets.Add(p);
+            }
+
+            //fk v vl
+            vl.student = s;
+
+            db.students.Add(s);
+            db.SaveChanges();
+
+            TempData["id"] = model.vlid;
+            return RedirectToAction("VpisniListSuccess");
+        }
+
         public JsonResult PreveriEmso(string emso)
         {
             var result = Validate.isEmso(emso);

@@ -28,9 +28,5 @@ namespace studis.Models
         [StringLength(60, ErrorMessage = "{0} ne sme biti daljši od {2} znakov.")]
         [Display(Name = "Email naslov")]
         public string email { get; set; }
-
-        [Required]
-        [Display(Name = "Vnešen vpisni list")]
-        public Boolean vnesen { get; set; }
     }
 }

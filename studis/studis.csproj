@@ -184,6 +184,9 @@
     <Compile Include="Models\ip_lock.cs">
       <DependentUpon>Studis.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\kandidat.cs">
+      <DependentUpon>Studis.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\KandidatModel.cs" />
     <Compile Include="Models\modul.cs">
       <DependentUpon>Studis.tt</DependentUpon>
@@ -233,6 +236,7 @@
     <Compile Include="Models\profesor.cs">
       <DependentUpon>Studis.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\PrviPredmetnikModel.cs" />
     <Compile Include="Models\Sifrant.cs" />
     <Compile Include="Models\Sifranti.cs" />
     <Compile Include="Models\student.cs">
@@ -253,13 +257,16 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Studis.edmx</DependentUpon>
     </Compile>
-    <Compile Include="Models\User.cs" />
+    <Compile Include="Models\UserHelper.cs" />
     <Compile Include="Models\UserModels.cs" />
     <Compile Include="Models\Validate.cs" />
     <Compile Include="Models\vpisnilist.cs">
       <DependentUpon>Studis.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\VpisniListModel.cs" />
+    <Compile Include="Models\zeton.cs">
+      <DependentUpon>Studis.tt</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
