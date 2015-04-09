@@ -49,6 +49,7 @@ namespace studis.Controllers
                     smer = list.smer,
                     krajIzvajanja = list.krajIzvajanja,
                     izbirnaSkupina = list.izbirnaSkupina,
+                    studijskiProgram2 = list.studijskiProgram2,
                     smer2 = list.smer2,
                     krajIzvajanja2 = list.krajIzvajanja2,
                     izbirnaSkupina2 = list.izbirnaSkupina2,
@@ -70,17 +71,18 @@ namespace studis.Controllers
                 ViewBag.ObcinaZacasni = Sifranti.OBCINE.SingleOrDefault(item => item.id == Convert.ToInt32(list.obcinaZacasni));
                 ViewBag.DrzavaZacasni = Sifranti.DRZAVE.SingleOrDefault(item => item.id == Convert.ToInt32(list.drzavaZacasni));
                 ViewBag.StudijskiProgram = Sifranti.STUDIJSKIPROGRAM.SingleOrDefault(item => item.id == list.studijskiProgram);
+                ViewBag.StudijskiProgram2 = Sifranti.STUDIJSKIPROGRAM.SingleOrDefault(item => item.id == list.studijskiProgram2);
                 ViewBag.VrstaStudija = Sifranti.KLASIUS.SingleOrDefault(item => item.id == list.vrstaVpisa);
                 ViewBag.NacinStudija = Sifranti.NACINSTUDIJA.SingleOrDefault(item => item.id == list.nacinStudija);
                 ViewBag.OblikaStudija = Sifranti.OBLIKASTUDIJA.SingleOrDefault(item => item.id == list.oblikaStudija);
                 ViewBag.KrajIzvajanja = Sifranti.OBCINE.SingleOrDefault(item => item.id == list.krajIzvajanja);
+                ViewBag.KrajIzvajanja2 = Sifranti.OBCINE.SingleOrDefault(item => item.id == list.krajIzvajanja2);
                 ViewBag.VrstaVpisa = Sifranti.VRSTAVPISA.SingleOrDefault(item => item.id == list.vrstaVpisa);
                 ViewBag.Spol = Sifranti.SPOL.SingleOrDefault(item => item.id == list.spol);
                 ViewBag.ObcinaRojstva = Sifranti.OBCINE.SingleOrDefault(item => item.id == list.obcinaRojstva);
                 ViewBag.DrzavaRojstva = Sifranti.DRZAVE.SingleOrDefault(item => item.id == list.drzavaRojstva);
                 ViewBag.Drzavljanstvo = Sifranti.DRZAVE.SingleOrDefault(item => item.id == list.drzavljanstvo);
-
-                ViewBag.vpisna = list.vpisnaStevilka;
+                ViewBag.Vpisna = list.vpisnaStevilka;
             
                 return new PdfActionResult(model);
             }
