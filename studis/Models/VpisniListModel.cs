@@ -28,8 +28,9 @@ namespace studis.Models
 
         [Required]
         [DataType(DataType.Date)]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
-        [Display(Name = "Datum rojstva (DD/MM/LLLL)")]
+        [Remote("PreveriDatum", "VpisniList", HttpMethod = "POST", ErrorMessage = "Neveljaven datum.")]
+        //[DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
+        [Display(Name = "Datum rojstva")]
         public DateTime datumRojstva { get; set; }
 
         [Required]
@@ -59,6 +60,7 @@ namespace studis.Models
         public string emso { get; set; }
 
         [Required]
+        //[StringLength(8, ErrorMessage = "{0} mora biti dolga {2} znakov.", MinimumLength = 8)]
         [Range(10000000, 99999999, ErrorMessage = "Davčna štvilka mora biti dolga točno 8 znakov")]
         [Display(Name = "Davčna številka")]
         public int davcnaStevilka { get; set; }
