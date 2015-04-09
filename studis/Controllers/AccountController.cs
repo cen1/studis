@@ -34,7 +34,7 @@ namespace studis.Controllers
                 if (ipl == null)
                 {
                     //ip zaklepa ni ali pa je potekel
-                    var user = studis.Models.User.FindByName(db, model.UserName);
+                    var user = studis.Models.UserHelper.FindByName(model.UserName);
                     if (user != null)
                     {
                         System.Diagnostics.Debug.WriteLine("notnull " + user.my_aspnet_membership.FailedPasswordAttemptCount);
@@ -166,20 +166,20 @@ namespace studis.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = studis.Models.User.FindByEmail(db, model.Email);
+                var user = studis.Models.UserHelper.FindByEmail(model.Email);
                 if (user == null )
                 {
                     // Don't reveal that the user does not exist or is not confirmed
                     return View("PasswordRecoverySuccess");
                 }
 
-                string code = studis.Models.User.GeneratePasswordResetToken(user.userId);
+                string code = studis.Models.UserHelper.GeneratePasswordResetToken(user.userId);
                 string baseUrl = string.Format("{0}://{1}{2}", Request.Url.Scheme, Request.Url.Authority, Url.Content("~"));
                 string to = user.Email;
                 string text = "Ponastavite geslo z obiskom <a href='" + baseUrl + "Account/ResetPassword/" + code + "'>tega naslova</a>";
                 System.Diagnostics.Debug.WriteLine(text);
                 
-                studis.Models.User.SendEmail(text, to);
+                studis.Models.UserHelper.SendEmail(text, to);
 
                 password_recovery pr = new password_recovery();
                 pr.token=code;

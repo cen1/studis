@@ -143,6 +143,7 @@ namespace studis.Controllers
 
         public ActionResult VpisniListSuccess()
         {
+            ViewBag.id = TempData["id"];
             return View();
         }
 
@@ -173,7 +174,7 @@ namespace studis.Controllers
             var vl = db.vpisnilists.Find(id);
             PrviPredmetnikModel m = new PrviPredmetnikModel();
             m.vlid = id;
-            m.predmeti = db.predmets.Where(l => l.letnik == vl.letnikStudija).Where(n => n.obvezen == true);
+            ViewBag.predmeti = db.predmets.Where(l => l.letnik == vl.letnikStudija).Where(n => n.obvezen == true);
             return View(m);
         }
 
@@ -182,6 +183,12 @@ namespace studis.Controllers
         {
             var vl = db.vpisnilists.Find(model.vlid);
             
+            //preveri ce student ze obstaja
+            if (vl.student != null) {
+                TempData["id"] = model.vlid;
+                return RedirectToAction("VpisniListSuccess");
+            }
+
             //kreiraj studenta
             student s = new student();
             s.ime = vl.ime;
@@ -189,7 +196,7 @@ namespace studis.Controllers
             s.datum_rojstva = vl.datumRojstva.ToShortDateString();
             s.naslov = vl.naslov;
             s.spol = Sifranti.SPOL.SingleOrDefault(item => item.id == vl.spol).naziv;
-            s.userId = studis.Models.User.FindByName(db, User.Identity.Name).id;
+            s.userId = studis.Models.UserHelper.FindByName(User.Identity.Name).id;
 
             var predmeti = db.predmets.Where(l => l.letnik == vl.letnikStudija).Where(n => n.obvezen == true);
 
@@ -199,10 +206,14 @@ namespace studis.Controllers
                 s.predmets.Add(p);
             }
 
+            //fk v vl
+            vl.student = s;
+
             db.students.Add(s);
             db.SaveChanges();
 
-            return View();
+            TempData["id"] = model.vlid;
+            return RedirectToAction("VpisniListSuccess");
         }
 
         public JsonResult PreveriEmso(string emso)
