@@ -28,6 +28,36 @@ namespace studis.Models
         public string datum_rojstva { get; set; }
         public string spol { get; set; }
         public int userId { get; set; }
+        public string studijskoLeto { get; set; }
+        public string kraj_rojstva { get; set; }
+        public Nullable<int> obcinaRojstva { get; set; }
+        public Nullable<int> drzavaRojstva { get; set; }
+        public Nullable<int> drzavljanstvo { get; set; }
+        public string emso { get; set; }
+        public Nullable<int> davcnaStevilka { get; set; }
+        public string email { get; set; }
+        public string prenosniTelefon { get; set; }
+        public Nullable<bool> vrocanje { get; set; }
+        public Nullable<int> postnaStevilka { get; set; }
+        public Nullable<int> obcina { get; set; }
+        public Nullable<int> drzava { get; set; }
+        public string naslovZacasni { get; set; }
+        public Nullable<bool> vrocanjeZacasni { get; set; }
+        public Nullable<int> postnaStevilkaZacasni { get; set; }
+        public Nullable<int> obcinaZacasni { get; set; }
+        public Nullable<int> drzavaZacasni { get; set; }
+        public Nullable<int> studijskiProgram { get; set; }
+        public Nullable<int> smer { get; set; }
+        public Nullable<int> krajIzvajanja { get; set; }
+        public Nullable<int> izbirnaSkupina { get; set; }
+        public Nullable<int> vrstaStudija { get; set; }
+        public Nullable<int> vrstaVpisa { get; set; }
+        public Nullable<int> letnikStudija { get; set; }
+        public Nullable<int> nacinStudija { get; set; }
+        public Nullable<int> oblikaStudija { get; set; }
+        public Nullable<int> studijskoLetoPrvegaVpisa { get; set; }
+        public Nullable<bool> soglasje1 { get; set; }
+        public Nullable<bool> soglasje2 { get; set; }
     
         public virtual my_aspnet_users my_aspnet_users { get; set; }
         public virtual ICollection<predmet> predmets { get; set; }

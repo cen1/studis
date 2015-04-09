@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="studisModel.Store" Provider="MySql.Data.MySqlClient" ProviderManifestToken="5.5" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="studisModel.Store" Provider="MySql.Data.MySqlClient" ProviderManifestToken="5.5" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="ip_lock">
           <Key>
             <PropertyRef Name="id" />
@@ -184,6 +184,8 @@
           <Property Name="letnik" Type="int" Nullable="false" />
           <Property Name="obvezen" Type="bool" Nullable="false" />
           <Property Name="modulId" Type="uint" />
+          <Property Name="prostoizbirni" Type="bool" />
+          <Property Name="strokovnoizbirni" Type="bool" />
         </EntityType>
         <EntityType Name="profesor">
           <Key>
@@ -206,12 +208,42 @@
             <PropertyRef Name="vpisna_stevilka" />
           </Key>
           <Property Name="vpisna_stevilka" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="ime" Type="varchar" MaxLength="100" Nullable="false" />
-          <Property Name="priimek" Type="varchar" MaxLength="100" Nullable="false" />
-          <Property Name="naslov" Type="varchar" MaxLength="100" />
-          <Property Name="datum_rojstva" Type="varchar" MaxLength="100" />
-          <Property Name="spol" Type="varchar" MaxLength="10" />
           <Property Name="userId" Type="int" Nullable="false" />
+          <Property Name="studijskoLeto" Type="varchar" MaxLength="11" Nullable="false" />
+          <Property Name="ime" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="priimek" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="datum_rojstva" Type="varchar" MaxLength="50" />
+          <Property Name="kraj_rojstva" Type="varchar" MaxLength="45" />
+          <Property Name="obcinaRojstva" Type="int" />
+          <Property Name="drzavaRojstva" Type="int" />
+          <Property Name="drzavljanstvo" Type="int" />
+          <Property Name="spol" Type="varchar" MaxLength="50" />
+          <Property Name="emso" Type="varchar" MaxLength="45" />
+          <Property Name="davcnaStevilka" Type="int" />
+          <Property Name="email" Type="varchar" MaxLength="45" />
+          <Property Name="prenosniTelefon" Type="varchar" MaxLength="45" />
+          <Property Name="naslov" Type="varchar" MaxLength="45" />
+          <Property Name="vrocanje" Type="bool" />
+          <Property Name="postnaStevilka" Type="int" />
+          <Property Name="obcina" Type="int" />
+          <Property Name="drzava" Type="int" />
+          <Property Name="naslovZacasni" Type="varchar" MaxLength="45" />
+          <Property Name="vrocanjeZacasni" Type="bool" />
+          <Property Name="postnaStevilkaZacasni" Type="int" />
+          <Property Name="obcinaZacasni" Type="int" />
+          <Property Name="drzavaZacasni" Type="int" />
+          <Property Name="studijskiProgram" Type="int" />
+          <Property Name="smer" Type="int" />
+          <Property Name="krajIzvajanja" Type="int" />
+          <Property Name="izbirnaSkupina" Type="int" />
+          <Property Name="vrstaStudija" Type="int" />
+          <Property Name="vrstaVpisa" Type="int" />
+          <Property Name="letnikStudija" Type="int" />
+          <Property Name="nacinStudija" Type="int" />
+          <Property Name="oblikaStudija" Type="int" />
+          <Property Name="studijskoLetoPrvegaVpisa" Type="int" />
+          <Property Name="soglasje1" Type="bool" />
+          <Property Name="soglasje2" Type="bool" />
         </EntityType>
         <EntityType Name="studentinpredmet">
           <Key>
@@ -404,20 +436,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="userID_student_users">
-          <End Role="my_aspnet_users" Type="Self.my_aspnet_users" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="student" Type="Self.student" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="my_aspnet_users">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="student">
-              <PropertyRef Name="userId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="users_to_application">
           <End Role="my_aspnet_applications" Type="Self.my_aspnet_applications" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -536,10 +554,6 @@
           <AssociationSet Name="student_predmet_fk" Association="Self.student_predmet_fk">
             <End Role="predmet" EntitySet="predmet" />
             <End Role="studentinpredmet" EntitySet="studentinpredmet" />
-          </AssociationSet>
-          <AssociationSet Name="userID_student_users" Association="Self.userID_student_users">
-            <End Role="my_aspnet_users" EntitySet="my_aspnet_users" />
-            <End Role="student" EntitySet="student" />
           </AssociationSet>
           <AssociationSet Name="users_to_application" Association="Self.users_to_application">
             <End Role="my_aspnet_applications" EntitySet="my_aspnet_applications" />
@@ -709,6 +723,36 @@
           <NavigationProperty Name="predmets" Relationship="studisModel.studentinpredmet" FromRole="student" ToRole="predmet" />
           <NavigationProperty Name="ocenas" Relationship="studisModel.ocena_student" FromRole="student" ToRole="ocena" />
           <NavigationProperty Name="vpisnilists" Relationship="studisModel.vpisnilist_student_fk" FromRole="student" ToRole="vpisnilist" />
+          <Property Name="studijskoLeto" Type="String" Nullable="false" MaxLength="11" FixedLength="false" Unicode="false" />
+          <Property Name="kraj_rojstva" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="obcinaRojstva" Type="Int32" />
+          <Property Name="drzavaRojstva" Type="Int32" />
+          <Property Name="drzavljanstvo" Type="Int32" />
+          <Property Name="emso" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="davcnaStevilka" Type="Int32" />
+          <Property Name="email" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="prenosniTelefon" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="vrocanje" Type="Boolean" />
+          <Property Name="postnaStevilka" Type="Int32" />
+          <Property Name="obcina" Type="Int32" />
+          <Property Name="drzava" Type="Int32" />
+          <Property Name="naslovZacasni" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="vrocanjeZacasni" Type="Boolean" />
+          <Property Name="postnaStevilkaZacasni" Type="Int32" />
+          <Property Name="obcinaZacasni" Type="Int32" />
+          <Property Name="drzavaZacasni" Type="Int32" />
+          <Property Name="studijskiProgram" Type="Int32" />
+          <Property Name="smer" Type="Int32" />
+          <Property Name="krajIzvajanja" Type="Int32" />
+          <Property Name="izbirnaSkupina" Type="Int32" />
+          <Property Name="vrstaStudija" Type="Int32" />
+          <Property Name="vrstaVpisa" Type="Int32" />
+          <Property Name="letnikStudija" Type="Int32" />
+          <Property Name="nacinStudija" Type="Int32" />
+          <Property Name="oblikaStudija" Type="Int32" />
+          <Property Name="studijskoLetoPrvegaVpisa" Type="Int32" />
+          <Property Name="soglasje1" Type="Boolean" />
+          <Property Name="soglasje2" Type="Boolean" />
         </EntityType>
         <EntityContainer Name="studisEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="my_aspnet_applications" EntityType="Self.my_aspnet_applications" />
@@ -897,6 +941,8 @@
           <NavigationProperty Name="profesors" Relationship="studisModel.profesorinpredmet" FromRole="predmet" ToRole="profesor" />
           <NavigationProperty Name="students" Relationship="studisModel.studentinpredmet" FromRole="predmet" ToRole="student" />
           <NavigationProperty Name="ocenas" Relationship="studisModel.ocena_predmet" FromRole="predmet" ToRole="ocena" />
+          <Property Name="prostoizbirni" Type="Boolean" />
+          <Property Name="strokovnoizbirni" Type="Boolean" />
         </EntityType>
         <EntityType Name="profesor">
           <Key>
@@ -1170,6 +1216,36 @@
           <EntitySetMapping Name="students">
             <EntityTypeMapping TypeName="studisModel.student">
               <MappingFragment StoreEntitySet="student">
+                <ScalarProperty Name="soglasje2" ColumnName="soglasje2" />
+                <ScalarProperty Name="soglasje1" ColumnName="soglasje1" />
+                <ScalarProperty Name="studijskoLetoPrvegaVpisa" ColumnName="studijskoLetoPrvegaVpisa" />
+                <ScalarProperty Name="oblikaStudija" ColumnName="oblikaStudija" />
+                <ScalarProperty Name="nacinStudija" ColumnName="nacinStudija" />
+                <ScalarProperty Name="letnikStudija" ColumnName="letnikStudija" />
+                <ScalarProperty Name="vrstaVpisa" ColumnName="vrstaVpisa" />
+                <ScalarProperty Name="vrstaStudija" ColumnName="vrstaStudija" />
+                <ScalarProperty Name="izbirnaSkupina" ColumnName="izbirnaSkupina" />
+                <ScalarProperty Name="krajIzvajanja" ColumnName="krajIzvajanja" />
+                <ScalarProperty Name="smer" ColumnName="smer" />
+                <ScalarProperty Name="studijskiProgram" ColumnName="studijskiProgram" />
+                <ScalarProperty Name="drzavaZacasni" ColumnName="drzavaZacasni" />
+                <ScalarProperty Name="obcinaZacasni" ColumnName="obcinaZacasni" />
+                <ScalarProperty Name="postnaStevilkaZacasni" ColumnName="postnaStevilkaZacasni" />
+                <ScalarProperty Name="vrocanjeZacasni" ColumnName="vrocanjeZacasni" />
+                <ScalarProperty Name="naslovZacasni" ColumnName="naslovZacasni" />
+                <ScalarProperty Name="drzava" ColumnName="drzava" />
+                <ScalarProperty Name="obcina" ColumnName="obcina" />
+                <ScalarProperty Name="postnaStevilka" ColumnName="postnaStevilka" />
+                <ScalarProperty Name="vrocanje" ColumnName="vrocanje" />
+                <ScalarProperty Name="prenosniTelefon" ColumnName="prenosniTelefon" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="davcnaStevilka" ColumnName="davcnaStevilka" />
+                <ScalarProperty Name="emso" ColumnName="emso" />
+                <ScalarProperty Name="drzavljanstvo" ColumnName="drzavljanstvo" />
+                <ScalarProperty Name="drzavaRojstva" ColumnName="drzavaRojstva" />
+                <ScalarProperty Name="obcinaRojstva" ColumnName="obcinaRojstva" />
+                <ScalarProperty Name="kraj_rojstva" ColumnName="kraj_rojstva" />
+                <ScalarProperty Name="studijskoLeto" ColumnName="studijskoLeto" />
                 <ScalarProperty Name="userId" ColumnName="userId" />
                 <ScalarProperty Name="vpisna_stevilka" ColumnName="vpisna_stevilka" />
                 <ScalarProperty Name="ime" ColumnName="ime" />
@@ -1220,6 +1296,8 @@
           <EntitySetMapping Name="predmets">
             <EntityTypeMapping TypeName="studisModel.predmet">
               <MappingFragment StoreEntitySet="predmet">
+                <ScalarProperty Name="strokovnoizbirni" ColumnName="strokovnoizbirni" />
+                <ScalarProperty Name="prostoizbirni" ColumnName="prostoizbirni" />
                 <ScalarProperty Name="modulId" ColumnName="modulId" />
                 <ScalarProperty Name="obvezen" ColumnName="obvezen" />
                 <ScalarProperty Name="letnik" ColumnName="letnik" />
