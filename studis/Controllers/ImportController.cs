@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using studis.Models;
 using System.Web.Security;
+using System.ComponentModel.DataAnnotations;
 
 namespace studis.Controllers
 {
@@ -51,6 +52,7 @@ namespace studis.Controllers
                             var line = sr.ReadLine();
                             var length = line.Length;
                             var st = length / 127;
+
                             if ((length%127) == 0) {
                                 while (st != 0) 
                                 {
@@ -68,62 +70,89 @@ namespace studis.Controllers
                                     string[] tmp = mail.Split('@');
                                     string uname = tmp[0];
                                     string pass = Guid.NewGuid().ToString().Substring(0, 8);
-                                    /*
+                                    
                                     try
                                     {
-                                        // dodaj login podatke in vlogo
-                                        MembershipUser user = Membership.CreateUser(uname, pass, mail);
-                                        MembershipUser myObject = Membership.GetUser(uname);
-                                        Roles.AddUserToRole(uname, "Študent");
-                                        string userid = myObject.ProviderUserKey.ToString();
+                                        var model = new studis.Models.KandidatModel
+                                        {
+                                            ime = ime,
+                                            priimek = priimek,
+                                            studijskiProgram = Convert.ToInt32(prog),
+                                            email = mail,
+                                            vnesen = false
+                                        };
 
-                                        // dodaj v kandidat
-                                        kandidat k = new kandidat();
-                                        k.ime = ime;
-                                        k.priimek = priimek;
-                                        k.program = Convert.ToInt32(prog);
-                                        k.email = mail;
-                                        k.sprejet = false;
+                                        var context = new ValidationContext(model, null, null);
+                                        var results = new List<ValidationResult>();
 
-                                        db.kandidats.Add(k);
-                                        db.SaveChanges();
+                                        // preveri če parametri ustrezajo modelu in če je šifrant pravilen
+                                        if ((Validator.TryValidateObject(model, context, results, true)) && (Sifranti.STUDIJSKIPROGRAM.Single(item => item.id == Convert.ToInt32(prog)) != null))
+                                        {
+                                            /*
+                                            // dodaj login podatke in vlogo
+                                            MembershipUser user = Membership.CreateUser(uname, pass, mail);
+                                            MembershipUser myObject = Membership.GetUser(uname);
+                                            Roles.AddUserToRole(uname, "Študent");
+                                            string userid = myObject.ProviderUserKey.ToString();
 
-                                        name.Add(ime);
-                                        lname.Add(priimek);
-                                        program.Add(prog);
-                                        email.Add(mail);
-                                        username.Add(uname);
-                                        password.Add(pass);
-                                        added.Add("DA");
+                                            // dodaj v kandidat
+                                            kandidat k = new kandidat(model);
 
-                                        counter++;
+                                            db.kandidats.Add(k);
+                                            db.SaveChanges();
 
+                                            // dodaj v list če je OK
+                                            name.Add(ime);
+                                            lname.Add(priimek);
+                                            program.Add(prog);
+                                            email.Add(mail);
+                                            username.Add(uname);
+                                            password.Add(pass);
+                                            added.Add("DA");
+                                            
+                                            // povečaj število uspešno dodanih
+                                            counter++;
+                                            */
+                                            
+                                            // temp
+                                            name.Add(ime);
+                                            lname.Add(priimek);
+                                            program.Add(prog);
+                                            email.Add(mail);
+                                            username.Add(uname);
+                                            password.Add(pass);
+                                            added.Add("DA");
+
+                                            counter++;
+                                            // end temp
+                                            
+                                        }
+                                        else
+                                        {
+                                            // dodaj v list če ni OK
+                                            name.Add(ime);
+                                            lname.Add(priimek);
+                                            program.Add(prog);
+                                            email.Add(mail);
+                                            username.Add("/");
+                                            password.Add("/");
+                                            added.Add("NE");
+                                        }
                                     }
                                     catch
                                     {
+                                        // dodaj v list če ni OK, baza vrne exception
                                         name.Add(ime);
                                         lname.Add(priimek);
                                         program.Add(prog);
                                         email.Add(mail);
                                         username.Add("/");
-                                        password.Add("/";
+                                        password.Add("/");
                                         added.Add("NE");
                                     }
-                                    */
-
+                                    
+                                    // povečaj število vseh dodanih
                                     counterAll++;
-
-                                    // temp
-                                    name.Add(ime);
-                                    lname.Add(priimek);
-                                    program.Add(prog);
-                                    email.Add(mail);
-                                    username.Add(uname);
-                                    password.Add(pass);
-                                    added.Add("DA");
-
-                                    counter++;
-                                    // end temp
                                 }
                             }
                             else
