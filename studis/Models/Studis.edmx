@@ -195,8 +195,6 @@
           <Property Name="letnik" Type="int" Nullable="false" />
           <Property Name="obvezen" Type="bool" Nullable="false" />
           <Property Name="modulId" Type="uint" />
-          <Property Name="prostoizbirni" Type="bool" />
-          <Property Name="strokovnoizbirni" Type="bool" />
         </EntityType>
         <EntityType Name="profesor">
           <Key>
@@ -768,7 +766,7 @@
           <NavigationProperty Name="ocenas" Relationship="studisModel.ocena_student" FromRole="student" ToRole="ocena" />
           <NavigationProperty Name="vpisnilists" Relationship="studisModel.vpisnilist_student_fk" FromRole="student" ToRole="vpisnilist" />
           <NavigationProperty Name="zeton" Relationship="studisModel.zeton_student_fk" FromRole="student" ToRole="zeton" />
-          </EntityType>
+        </EntityType>
         <EntityContainer Name="studisEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="my_aspnet_applications" EntityType="Self.my_aspnet_applications" />
           <EntitySet Name="my_aspnet_membership" EntityType="Self.my_aspnet_membership" />
@@ -966,8 +964,6 @@
           <NavigationProperty Name="profesors" Relationship="studisModel.profesorinpredmet" FromRole="predmet" ToRole="profesor" />
           <NavigationProperty Name="students" Relationship="studisModel.studentinpredmet" FromRole="predmet" ToRole="student" />
           <NavigationProperty Name="ocenas" Relationship="studisModel.ocena_predmet" FromRole="predmet" ToRole="ocena" />
-          <Property Name="prostoizbirni" Type="Boolean" />
-          <Property Name="strokovnoizbirni" Type="Boolean" />
         </EntityType>
         <EntityType Name="profesor">
           <Key>
@@ -1338,8 +1334,6 @@
           <EntitySetMapping Name="predmets">
             <EntityTypeMapping TypeName="studisModel.predmet">
               <MappingFragment StoreEntitySet="predmet">
-                <ScalarProperty Name="strokovnoizbirni" ColumnName="strokovnoizbirni" />
-                <ScalarProperty Name="prostoizbirni" ColumnName="prostoizbirni" />
                 <ScalarProperty Name="modulId" ColumnName="modulId" />
                 <ScalarProperty Name="obvezen" ColumnName="obvezen" />
                 <ScalarProperty Name="letnik" ColumnName="letnik" />
