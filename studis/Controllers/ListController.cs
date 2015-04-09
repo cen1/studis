@@ -24,7 +24,6 @@ namespace studis.Controllers
                 var model = new studis.Models.VpisniListModel
                 {
                     studijskoLeto = list.studijskoLeto,
-                    vpisnaStevilka = list.vpisnaStevilka,
                     ime = list.ime,
                     priimek = list.priimek,
                     datumRojstva = list.datumRojstva,

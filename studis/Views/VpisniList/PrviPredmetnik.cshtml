@@ -1,15 +1,29 @@
-﻿@{
+﻿@model studis.Models.PrviPredmetnikModel
+
+@{
     ViewBag.Title = "Predmetnik 1 letnik";
 }
+
 
 <h2>Predmetnik za 1 letnik</h2>
 Na voljo so samo obvezni predmeti<br />
 
 <ul>
-@foreach (var item in ViewBag.obvezni)
-{
-    <li>@item.ime</li>
+    @foreach (var item in Model.predmeti) {
+        <li>@item.ime</li>
 }
 </ul>
 
-<a href="~/List/Pdf/@ViewBag.id">Natisni vpisni list</a>
+@Html.ValidationSummary(true, "Napaka!")
+
+
+@using (Html.BeginForm()) {
+    <div>
+        <fieldset>
+            @Html.HiddenFor(m => m.vlid)
+            <p>
+                <input type="submit" value="Shrani">
+            </p>
+        </fieldset>
+    </div>
+}

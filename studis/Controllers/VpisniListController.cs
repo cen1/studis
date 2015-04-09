@@ -4,9 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 
 namespace studis.Controllers
 {
+    [Authorize(Roles = "Študent")]
     public class VpisniListController : Controller
     {
         public studisEntities db = new studisEntities();
@@ -169,26 +171,39 @@ namespace studis.Controllers
         public ActionResult PrviPredmetnik(int id)
         {
             var vl = db.vpisnilists.Find(id);
-            ViewBag.obvezni = db.predmets.Where(l => l.letnik == vl.letnikStudija).Where(m => m.obvezen == true);
-            ViewBag.id = id;
-            return View();
+            PrviPredmetnikModel m = new PrviPredmetnikModel();
+            m.vlid = id;
+            m.predmeti = db.predmets.Where(l => l.letnik == vl.letnikStudija).Where(n => n.obvezen == true);
+            return View(m);
         }
 
-        /*[HttpPost]
-        public ActionResult PrviPredmetnik(int id)
+        [HttpPost]
+        public ActionResult PrviPredmetnik(studis.Models.PrviPredmetnikModel model)
         {
-            var vl = db.vpisnilists.Find(id);
-            ViewBag.obvezni = db.predmets.Where(l => l.letnik == vl.letnikStudija).Where(m => m.obvezen == true);
+            var vl = db.vpisnilists.Find(model.vlid);
             
             //kreiraj studenta
-            
+            student s = new student();
+            s.ime = vl.ime;
+            s.priimek = vl.priimek;
+            s.datum_rojstva = vl.datumRojstva.ToShortDateString();
+            s.naslov = vl.naslov;
+            s.spol = Sifranti.SPOL.SingleOrDefault(item => item.id == vl.spol).naziv;
+            s.userId = studis.Models.User.FindByName(db, User.Identity.Name).id;
+
+            var predmeti = db.predmets.Where(l => l.letnik == vl.letnikStudija).Where(n => n.obvezen == true);
 
             //shrani predmetnik
+            foreach (var p in predmeti)
+            {
+                s.predmets.Add(p);
+            }
 
-            
+            db.students.Add(s);
+            db.SaveChanges();
 
             return View();
-        }*/
+        }
 
         public JsonResult PreveriEmso(string emso)
         {

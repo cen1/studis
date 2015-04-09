@@ -10,10 +10,6 @@ namespace studis.Models
 {
     public class VpisniListModel
     {
-
-        [Display(Name = "Vpisna številka")]
-        public int? vpisnaStevilka { get; set; }
-
         [StringLength(45, ErrorMessage = "{0} mora biti dolgo vsaj {2} znakov.", MinimumLength = 1)]
         [Display(Name = "Študijsko leto")]
         public string studijskoLeto { get; set; }
@@ -63,7 +59,7 @@ namespace studis.Models
         public string emso { get; set; }
 
         [Required]
-        [StringLength(8, ErrorMessage = "{0} mora biti dolga vsaj {2} znakov.", MinimumLength = 8)]
+        [Range(10000000, 99999999, ErrorMessage = "Davčna štvilka mora biti dolga točno 8 znakov")]
         [Display(Name = "Davčna številka")]
         public int davcnaStevilka { get; set; }
 
