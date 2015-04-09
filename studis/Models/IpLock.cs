@@ -10,7 +10,8 @@ namespace studis.Models
 
         public static ip_lock FindActiveByIp(String ip)
         {
-            var L2EQuery = db.ip_lock.Where(a => a.ip == ip).Where(b => b.locked_until > DateTime.Now);
+            DateTime cet = UserHelper.TimeCET();
+            var L2EQuery = db.ip_lock.Where(a => a.ip == ip).Where(b => b.locked_until > cet);
             var ipl = L2EQuery.FirstOrDefault<ip_lock>();
             return ipl;
         }

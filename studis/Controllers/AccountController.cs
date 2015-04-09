@@ -24,10 +24,8 @@ namespace studis.Controllers
         [HttpPost]
         public ActionResult Login(LoginModel model, string returnUrl)
         {
-            System.Diagnostics.Debug.WriteLine("login post");
             if (ModelState.IsValid)
             {
-                System.Diagnostics.Debug.WriteLine("model ok");
                 //poglej ce je IP zaklenjen
                 string ip = Request.UserHostAddress;
                 var ipl = IpLock.FindActiveByIp(ip);
@@ -37,18 +35,15 @@ namespace studis.Controllers
                     var user = studis.Models.UserHelper.FindByName(model.UserName);
                     if (user != null)
                     {
-                        System.Diagnostics.Debug.WriteLine("notnull " + user.my_aspnet_membership.FailedPasswordAttemptCount);
                         if (user.my_aspnet_membership.FailedPasswordAttemptCount >= 3)
                         {
-                            System.Diagnostics.Debug.WriteLine("cntdecrease");
                             user.my_aspnet_membership.FailedPasswordAttemptCount = 0;
                         }
 
                     }
-                    System.Diagnostics.Debug.WriteLine("pred membership");
+                    
                     if (Membership.ValidateUser(model.UserName, model.Password))
                     {
-                        System.Diagnostics.Debug.WriteLine("po");
                         //resetiraj failed ob uspesnem loginu
                         user.my_aspnet_membership.FailedPasswordAttemptCount = 0;
                         db.SaveChanges();
@@ -73,8 +68,8 @@ namespace studis.Controllers
                             {
                                 ip_lock ipln = new ip_lock();
                                 ipln.ip = Request.UserHostAddress;
-                                ipln.locked_at = DateTime.Now;
-                                ipln.locked_until = DateTime.Now.AddMinutes(3);
+                                ipln.locked_at = UserHelper.TimeCET();
+                                ipln.locked_until = UserHelper.TimeCET().AddMinutes(3);
                                 ipln.userId = user.id;
                                 IpLock.Add(ipln);
 
@@ -90,7 +85,7 @@ namespace studis.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError("", "Vaš IP je zaklenjen. Poskusite po " + ipl.locked_until.ToString());
+                    ModelState.AddModelError("", "Vaš IP je zaklenjen. Poskusite po " + ipl.locked_until.ToString("dd.MM.yyyy HH:mm:ss"));
                 }
             }
             db.SaveChanges();
@@ -173,6 +168,16 @@ namespace studis.Controllers
                     return View("PasswordRecoverySuccess");
                 }
 
+                //preveri ce mail ze obstaja
+                int uid = studis.Models.UserHelper.FindByEmail(model.Email).userId;
+                DateTime temptime = UserHelper.TimeCET();
+                var prtemp = db.password_recovery.Where(uu => uu.userId == uid).Where(vu => vu.valid_until > temptime);
+                if (prtemp.Count() > 0)
+                {
+                    ModelState.AddModelError("", "Email je že bil poslan in bo potekel v eni uri.");
+                    return View(model);
+                }
+
                 string code = studis.Models.UserHelper.GeneratePasswordResetToken(user.userId);
                 string baseUrl = string.Format("{0}://{1}{2}", Request.Url.Scheme, Request.Url.Authority, Url.Content("~"));
                 string to = user.Email;
@@ -184,7 +189,7 @@ namespace studis.Controllers
                 password_recovery pr = new password_recovery();
                 pr.token=code;
                 pr.userId=user.userId;
-                pr.valid_until=DateTime.Now.AddHours(1);
+                pr.valid_until = UserHelper.TimeCET().AddHours(1);
 
                 db.password_recovery.Add(pr);
                 db.SaveChanges();
@@ -198,7 +203,8 @@ namespace studis.Controllers
 
         public ActionResult ResetPassword(string id)
         {
-            var L2EQuery = db.password_recovery.Where(t => t.token == id).Where(d => d.valid_until > DateTime.Now);
+            DateTime temptime = UserHelper.TimeCET();
+            var L2EQuery = db.password_recovery.Where(t => t.token == id).Where(d => d.valid_until > temptime);
             var pr = L2EQuery.FirstOrDefault<password_recovery>();
             if (pr == null)
             {

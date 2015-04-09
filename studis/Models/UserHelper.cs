@@ -52,6 +52,10 @@ namespace studis.Models
             smtpClient.EnableSsl = true;
             smtpClient.Send(msg);
         }
+
+        public static DateTime TimeCET() {
+            return TimeZoneInfo.ConvertTime (DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time"));
+        }
     }
 
 }

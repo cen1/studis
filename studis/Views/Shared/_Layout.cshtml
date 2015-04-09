@@ -25,7 +25,9 @@
             <div>
                 <ul id="menu">
                     <li>@Html.ActionLink("Domov", "Index", "Home")</li>
-                    <li>@Html.ActionLink("Vpisni list", "VpisniList", "VpisniList")</li>
+                    @if(User.IsInRole("Študent")) {
+                        <li>@Html.ActionLink("Vpisni list", "VpisniList", "VpisniList")</li>
+                    }
                     @if(User.IsInRole("Referent")) {
                         <li>@Html.ActionLink("Študenti", "Students", "Student")</li>
                     }
