@@ -33,8 +33,6 @@ namespace studis.Controllers
                 if (isNumerical)
                 {
                     students = students.Where(s => s.vpisna_stevilka == vpisna);
-                    if (!students.Any())
-                        students = null;
                 }
                 else
                 {
@@ -59,6 +57,8 @@ namespace studis.Controllers
                     }
                 }
             }
+            if (!students.Any())
+                students = null;
             return PartialView("_StudentSearchPartial",students);
         }
 
@@ -74,8 +74,6 @@ namespace studis.Controllers
                 if (isNumerical)
                 {
                     students = students.Where(s => s.vpisna_stevilka == vpisna);
-                    if (!students.Any())
-                        students = null;
                 }
                 else
                 {
@@ -100,6 +98,8 @@ namespace studis.Controllers
                     }
                 }
             }
+            if (!students.Any())
+                students = null;
             return PartialView("_StudentSearchPDFPartial", students);
         }
 
