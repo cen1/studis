@@ -20,6 +20,7 @@ namespace studis.Models
             this.students = new HashSet<student>();
             this.my_aspnet_roles = new HashSet<my_aspnet_roles>();
             this.password_recovery = new HashSet<password_recovery>();
+            this.kandidats = new HashSet<kandidat>();
         }
     
         public int id { get; set; }
@@ -34,5 +35,6 @@ namespace studis.Models
         public virtual ICollection<student> students { get; set; }
         public virtual ICollection<my_aspnet_roles> my_aspnet_roles { get; set; }
         public virtual ICollection<password_recovery> password_recovery { get; set; }
+        public virtual ICollection<kandidat> kandidats { get; set; }
     }
 }

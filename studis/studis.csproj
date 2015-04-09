@@ -184,6 +184,9 @@
     <Compile Include="Models\ip_lock.cs">
       <DependentUpon>Studis.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\kandidat.cs">
+      <DependentUpon>Studis.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\modul.cs">
       <DependentUpon>Studis.tt</DependentUpon>
     </Compile>
@@ -259,6 +262,9 @@
       <DependentUpon>Studis.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\VpisniListModel.cs" />
+    <Compile Include="Models\zeton.cs">
+      <DependentUpon>Studis.tt</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

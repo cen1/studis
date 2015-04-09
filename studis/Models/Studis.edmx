@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="studisModel.Store" Provider="MySql.Data.MySqlClient" ProviderManifestToken="5.5" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="studisModel.Store" Provider="MySql.Data.MySqlClient" ProviderManifestToken="5.5" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="ip_lock">
           <Key>
             <PropertyRef Name="id" />
@@ -13,6 +13,17 @@
           <Property Name="ip" Type="varchar" MaxLength="15" Nullable="false" />
           <Property Name="locked_at" Type="datetime" Precision="0" Nullable="false" />
           <Property Name="locked_until" Type="datetime" Precision="0" Nullable="false" />
+          <Property Name="userId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="kandidat">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ime" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="priimek" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="studijskiProgram" Type="int" Nullable="false" />
+          <Property Name="email" Type="varchar" MaxLength="60" Nullable="false" />
           <Property Name="userId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="modul">
@@ -208,28 +219,12 @@
             <PropertyRef Name="vpisna_stevilka" />
           </Key>
           <Property Name="vpisna_stevilka" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ime" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="priimek" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="naslov" Type="varchar" MaxLength="100" />
+          <Property Name="datum_rojstva" Type="varchar" MaxLength="100" />
+          <Property Name="spol" Type="varchar" MaxLength="10" />
           <Property Name="userId" Type="int" Nullable="false" />
-          <Property Name="ime" Type="varchar" MaxLength="45" Nullable="false" />
-          <Property Name="priimek" Type="varchar" MaxLength="45" Nullable="false" />
-          <Property Name="datum_rojstva" Type="varchar" MaxLength="50" />
-          <Property Name="kraj_rojstva" Type="varchar" MaxLength="45" />
-          <Property Name="obcinaRojstva" Type="int" />
-          <Property Name="drzavaRojstva" Type="int" />
-          <Property Name="drzavljanstvo" Type="int" />
-          <Property Name="spol" Type="varchar" MaxLength="50" />
-          <Property Name="emso" Type="varchar" MaxLength="45" />
-          <Property Name="davcnaStevilka" Type="int" />
-          <Property Name="email" Type="varchar" MaxLength="45" />
-          <Property Name="prenosniTelefon" Type="varchar" MaxLength="45" />
-          <Property Name="naslov" Type="varchar" MaxLength="45" />
-          <Property Name="postnaStevilka" Type="int" />
-          <Property Name="obcina" Type="int" />
-          <Property Name="drzava" Type="int" />
-          <Property Name="naslovZacasni" Type="varchar" MaxLength="45" />
-          <Property Name="vrocanjeZacasni" Type="bool" />
-          <Property Name="postnaStevilkaZacasni" Type="int" />
-          <Property Name="obcinaZacasni" Type="int" />
-          <Property Name="drzavaZacasni" Type="int" />
         </EntityType>
         <EntityType Name="studentinpredmet">
           <Key>
@@ -286,6 +281,26 @@
           <Property Name="soglasje2" Type="bool" />
           <Property Name="potrjen" Type="bool" Nullable="false" />
         </EntityType>
+        <EntityType Name="zeton">
+          <Key>
+            <PropertyRef Name="vpisnaStevilka" />
+          </Key>
+          <Property Name="vpisnaStevilka" Type="int" Nullable="false" />
+          <Property Name="letnik" Type="int" Nullable="false" />
+          <Property Name="porabljen" Type="bool" Nullable="false" />
+        </EntityType>
+        <Association Name="fk_userId">
+          <End Role="my_aspnet_users" Type="Self.my_aspnet_users" Multiplicity="1" />
+          <End Role="kandidat" Type="Self.kandidat" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="my_aspnet_users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="kandidat">
+              <PropertyRef Name="userId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="ip_lock_to_user">
           <End Role="my_aspnet_users" Type="Self.my_aspnet_users" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -422,6 +437,20 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="userID_student_users">
+          <End Role="my_aspnet_users" Type="Self.my_aspnet_users" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="student" Type="Self.student" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="my_aspnet_users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="student">
+              <PropertyRef Name="userId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="users_to_application">
           <End Role="my_aspnet_applications" Type="Self.my_aspnet_applications" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -478,8 +507,23 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="zeton_student_fk">
+          <End Role="student" Type="Self.student" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="zeton" Type="Self.zeton" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="student">
+              <PropertyRef Name="vpisna_stevilka" />
+            </Principal>
+            <Dependent Role="zeton">
+              <PropertyRef Name="vpisnaStevilka" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="studisModelStoreContainer">
           <EntitySet Name="ip_lock" EntityType="Self.ip_lock" Schema="studis" store:Type="Tables" />
+          <EntitySet Name="kandidat" EntityType="Self.kandidat" Schema="studis" store:Type="Tables" />
           <EntitySet Name="modul" EntityType="Self.modul" Schema="studis" store:Type="Tables" />
           <EntitySet Name="my_aspnet_applications" EntityType="Self.my_aspnet_applications" Schema="studis" store:Type="Tables" />
           <EntitySet Name="my_aspnet_membership" EntityType="Self.my_aspnet_membership" Schema="studis" store:Type="Tables" />
@@ -501,6 +545,11 @@
           <EntitySet Name="student" EntityType="Self.student" Schema="studis" store:Type="Tables" />
           <EntitySet Name="studentinpredmet" EntityType="Self.studentinpredmet" Schema="studis" store:Type="Tables" />
           <EntitySet Name="vpisnilist" EntityType="Self.vpisnilist" Schema="studis" store:Type="Tables" />
+          <EntitySet Name="zeton" EntityType="Self.zeton" Schema="studis" store:Type="Tables" />
+          <AssociationSet Name="fk_userId" Association="Self.fk_userId">
+            <End Role="my_aspnet_users" EntitySet="my_aspnet_users" />
+            <End Role="kandidat" EntitySet="kandidat" />
+          </AssociationSet>
           <AssociationSet Name="ip_lock_to_user" Association="Self.ip_lock_to_user">
             <End Role="my_aspnet_users" EntitySet="my_aspnet_users" />
             <End Role="ip_lock" EntitySet="ip_lock" />
@@ -541,6 +590,10 @@
             <End Role="predmet" EntitySet="predmet" />
             <End Role="studentinpredmet" EntitySet="studentinpredmet" />
           </AssociationSet>
+          <AssociationSet Name="userID_student_users" Association="Self.userID_student_users">
+            <End Role="my_aspnet_users" EntitySet="my_aspnet_users" />
+            <End Role="student" EntitySet="student" />
+          </AssociationSet>
           <AssociationSet Name="users_to_application" Association="Self.users_to_application">
             <End Role="my_aspnet_applications" EntitySet="my_aspnet_applications" />
             <End Role="my_aspnet_users" EntitySet="my_aspnet_users" />
@@ -556,6 +609,10 @@
           <AssociationSet Name="vpisnilist_student_fk" Association="Self.vpisnilist_student_fk">
             <End Role="student" EntitySet="student" />
             <End Role="vpisnilist" EntitySet="vpisnilist" />
+          </AssociationSet>
+          <AssociationSet Name="zeton_student_fk" Association="Self.zeton_student_fk">
+            <End Role="student" EntitySet="student" />
+            <End Role="zeton" EntitySet="zeton" />
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -693,6 +750,7 @@
           <NavigationProperty Name="students" Relationship="studisModel.userID_student_users" FromRole="my_aspnet_users" ToRole="student" />
           <NavigationProperty Name="my_aspnet_roles" Relationship="studisModel.my_aspnet_usersinroles1" FromRole="my_aspnet_users" ToRole="my_aspnet_roles" />
           <NavigationProperty Name="password_recovery" Relationship="studisModel.pr_to_user_fk" FromRole="my_aspnet_users" ToRole="password_recovery" />
+          <NavigationProperty Name="kandidats" Relationship="studisModel.fk_userId" FromRole="my_aspnet_users" ToRole="kandidat" />
         </EntityType>
         <EntityType Name="student">
           <Key>
@@ -709,22 +767,7 @@
           <NavigationProperty Name="predmets" Relationship="studisModel.studentinpredmet" FromRole="student" ToRole="predmet" />
           <NavigationProperty Name="ocenas" Relationship="studisModel.ocena_student" FromRole="student" ToRole="ocena" />
           <NavigationProperty Name="vpisnilists" Relationship="studisModel.vpisnilist_student_fk" FromRole="student" ToRole="vpisnilist" />
-          <Property Name="kraj_rojstva" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
-          <Property Name="obcinaRojstva" Type="Int32" />
-          <Property Name="drzavaRojstva" Type="Int32" />
-          <Property Name="drzavljanstvo" Type="Int32" />
-          <Property Name="emso" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
-          <Property Name="davcnaStevilka" Type="Int32" />
-          <Property Name="email" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
-          <Property Name="prenosniTelefon" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
-          <Property Name="postnaStevilka" Type="Int32" />
-          <Property Name="obcina" Type="Int32" />
-          <Property Name="drzava" Type="Int32" />
-          <Property Name="naslovZacasni" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
-          <Property Name="vrocanjeZacasni" Type="Boolean" />
-          <Property Name="postnaStevilkaZacasni" Type="Int32" />
-          <Property Name="obcinaZacasni" Type="Int32" />
-          <Property Name="drzavaZacasni" Type="Int32" />
+          <NavigationProperty Name="zeton" Relationship="studisModel.zeton_student_fk" FromRole="student" ToRole="zeton" />
           </EntityType>
         <EntityContainer Name="studisEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="my_aspnet_applications" EntityType="Self.my_aspnet_applications" />
@@ -793,6 +836,16 @@
           <AssociationSet Name="vpisnilist_student_fk" Association="studisModel.vpisnilist_student_fk">
             <End Role="student" EntitySet="students" />
             <End Role="vpisnilist" EntitySet="vpisnilists" />
+          </AssociationSet>
+          <EntitySet Name="kandidats" EntityType="studisModel.kandidat" />
+          <EntitySet Name="zetons" EntityType="studisModel.zeton" />
+          <AssociationSet Name="fk_userId" Association="studisModel.fk_userId">
+            <End Role="my_aspnet_users" EntitySet="my_aspnet_users" />
+            <End Role="kandidat" EntitySet="kandidats" />
+          </AssociationSet>
+          <AssociationSet Name="zeton_student_fk" Association="studisModel.zeton_student_fk">
+            <End Role="student" EntitySet="students" />
+            <End Role="zeton" EntitySet="zetons" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="ip_lock">
@@ -1046,6 +1099,53 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="kandidat">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ime" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="priimek" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="studijskiProgram" Type="Int32" Nullable="false" />
+          <Property Name="email" Type="String" Nullable="false" MaxLength="60" FixedLength="false" Unicode="false" />
+          <Property Name="userId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="my_aspnet_users" Relationship="studisModel.fk_userId" FromRole="kandidat" ToRole="my_aspnet_users" />
+        </EntityType>
+        <EntityType Name="zeton">
+          <Key>
+            <PropertyRef Name="vpisnaStevilka" />
+          </Key>
+          <Property Name="vpisnaStevilka" Type="Int32" Nullable="false" />
+          <Property Name="letnik" Type="Int32" Nullable="false" />
+          <Property Name="porabljen" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="student" Relationship="studisModel.zeton_student_fk" FromRole="zeton" ToRole="student" />
+        </EntityType>
+        <Association Name="fk_userId">
+          <End Type="studisModel.my_aspnet_users" Role="my_aspnet_users" Multiplicity="1" />
+          <End Type="studisModel.kandidat" Role="kandidat" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="my_aspnet_users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="kandidat">
+              <PropertyRef Name="userId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="zeton_student_fk">
+          <End Type="studisModel.student" Role="student" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="studisModel.zeton" Role="zeton" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="student">
+              <PropertyRef Name="vpisna_stevilka" />
+            </Principal>
+            <Dependent Role="zeton">
+              <PropertyRef Name="vpisnaStevilka" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1188,22 +1288,6 @@
           <EntitySetMapping Name="students">
             <EntityTypeMapping TypeName="studisModel.student">
               <MappingFragment StoreEntitySet="student">
-                <ScalarProperty Name="drzavaZacasni" ColumnName="drzavaZacasni" />
-                <ScalarProperty Name="obcinaZacasni" ColumnName="obcinaZacasni" />
-                <ScalarProperty Name="postnaStevilkaZacasni" ColumnName="postnaStevilkaZacasni" />
-                <ScalarProperty Name="vrocanjeZacasni" ColumnName="vrocanjeZacasni" />
-                <ScalarProperty Name="naslovZacasni" ColumnName="naslovZacasni" />
-                <ScalarProperty Name="drzava" ColumnName="drzava" />
-                <ScalarProperty Name="obcina" ColumnName="obcina" />
-                <ScalarProperty Name="postnaStevilka" ColumnName="postnaStevilka" />
-                <ScalarProperty Name="prenosniTelefon" ColumnName="prenosniTelefon" />
-                <ScalarProperty Name="email" ColumnName="email" />
-                <ScalarProperty Name="davcnaStevilka" ColumnName="davcnaStevilka" />
-                <ScalarProperty Name="emso" ColumnName="emso" />
-                <ScalarProperty Name="drzavljanstvo" ColumnName="drzavljanstvo" />
-                <ScalarProperty Name="drzavaRojstva" ColumnName="drzavaRojstva" />
-                <ScalarProperty Name="obcinaRojstva" ColumnName="obcinaRojstva" />
-                <ScalarProperty Name="kraj_rojstva" ColumnName="kraj_rojstva" />
                 <ScalarProperty Name="userId" ColumnName="userId" />
                 <ScalarProperty Name="vpisna_stevilka" ColumnName="vpisna_stevilka" />
                 <ScalarProperty Name="ime" ColumnName="ime" />
@@ -1348,6 +1432,27 @@
                 <ScalarProperty Name="vpisnaStevilka" ColumnName="vpisnaStevilka" />
                 <ScalarProperty Name="studijskoLeto" ColumnName="studijskoLeto" />
                 <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="kandidats">
+            <EntityTypeMapping TypeName="studisModel.kandidat">
+              <MappingFragment StoreEntitySet="kandidat">
+                <ScalarProperty Name="userId" ColumnName="userId" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="studijskiProgram" ColumnName="studijskiProgram" />
+                <ScalarProperty Name="priimek" ColumnName="priimek" />
+                <ScalarProperty Name="ime" ColumnName="ime" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="zetons">
+            <EntityTypeMapping TypeName="studisModel.zeton">
+              <MappingFragment StoreEntitySet="zeton">
+                <ScalarProperty Name="porabljen" ColumnName="porabljen" />
+                <ScalarProperty Name="letnik" ColumnName="letnik" />
+                <ScalarProperty Name="vpisnaStevilka" ColumnName="vpisnaStevilka" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

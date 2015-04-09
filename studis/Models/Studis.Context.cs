@@ -44,5 +44,7 @@ namespace studis.Models
         public virtual DbSet<profesor> profesors { get; set; }
         public virtual DbSet<ocena> ocenas { get; set; }
         public virtual DbSet<vpisnilist> vpisnilists { get; set; }
+        public virtual DbSet<kandidat> kandidats { get; set; }
+        public virtual DbSet<zeton> zetons { get; set; }
     }
 }
