@@ -63,7 +63,6 @@ namespace studis.Controllers
                     soglasje2 = Convert.ToBoolean(list.soglasje2)
                 };
 
-                // refactoring needed
                 ViewBag.PostnaStevilka = Sifranti.POSTNESTEVILKE.SingleOrDefault(item => item.id == list.postnaStevilka);
                 ViewBag.Obcina = Sifranti.OBCINE.SingleOrDefault(item => item.id == list.obcina);
                 ViewBag.Drzava = Sifranti.DRZAVE.SingleOrDefault(item => item.id == list.drzava);
@@ -83,6 +82,11 @@ namespace studis.Controllers
                 ViewBag.DrzavaRojstva = Sifranti.DRZAVE.SingleOrDefault(item => item.id == list.drzavaRojstva);
                 ViewBag.Drzavljanstvo = Sifranti.DRZAVE.SingleOrDefault(item => item.id == list.drzavljanstvo);
                 ViewBag.Vpisna = list.vpisnaStevilka;
+
+                var stud = db.students.Single(s => s.vpisna_stevilka == list.vpisnaStevilka);
+                var predmeti = stud.predmets;
+
+                ViewBag.Predmeti = predmeti;
             
                 return new PdfActionResult(model);
             }

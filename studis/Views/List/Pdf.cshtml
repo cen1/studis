@@ -234,19 +234,18 @@
             <td colspan="3">@ViewBag.StudijskiProgram</td>
         </tr>
         <tr>
-            <th>Učitelj</th>
+            <th>Koda</th>
             <th>Učna enota</th>
             <th>Število KT</th>
         </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td colspan="2"></td>
-            <td></td>
-        </tr>
+        @foreach (var predmet in @ViewBag.Predmeti)
+        {
+            <tr>
+                <td>@predmet.koda</td>
+                <td>@predmet.ime</td>
+                <td>@predmet.kreditne</td>
+            </tr>
+        }
     </tbody>
 </table>
 <br />
@@ -257,22 +256,18 @@
             <th colspan="3">Študijski program</th>
         </tr>
         <tr>
-            <td colspan="3">@ViewBag.StudijskiProgram</td>
+            <td colspan="3">/</td>
         </tr>
         <tr>
-            <th>Učitelj</th>
+            <th>Koda</th>
             <th>Učna enota</th>
             <th>Število KT</th>
         </tr>
         <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td colspan="2"></td>
-            <td></td>
-        </tr>
+            <td>/</td>
+            <td>/</td>
+            <td>/</td>
+        </tr>      
     </tbody>
 </table>
 <br />
