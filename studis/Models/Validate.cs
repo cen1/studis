@@ -9,6 +9,17 @@ namespace studis.Models
     public static class Validate
     {
 
+        public static bool veljavenDatum(DateTime datum)
+        {
+            Debug.WriteLine("Datum: " + datum.Day + "." + datum.Month + "." + datum.Year);
+            //daysinmoth //isleapyear
+            if (datum.Day > DateTime.DaysInMonth(datum.Year, datum.Month))
+            {
+                return false;
+            }
+            return true;
+        } 
+
         public static bool veljavnoIme(string ime)
         {
             string[] besede = ime.Split();
@@ -103,6 +114,8 @@ namespace studis.Models
         {
             return c - '0';
         }
+
+        
 
     }
 }

@@ -14,6 +14,10 @@ namespace studis.Controllers
         // GET: VpisniList
         public ActionResult VpisniList()
         {
+            if (false) //ni zetona
+            {
+                return View("");
+            }
             ViewBag.Title = "VpisniList";
             ViewBag.StudijskiProgrami = new SelectList(Sifranti.STUDIJSKIPROGRAM, "id", "naziv");
             ViewBag.Klasius = new SelectList(Sifranti.KLASIUS, "id", "naziv");
@@ -25,7 +29,7 @@ namespace studis.Controllers
             ViewBag.Drzava = new SelectList(Sifranti.DRZAVE, "id", "naziv");
             ViewBag.PostnaStevilka = new SelectList(Sifranti.POSTNESTEVILKE, "id", "naziv");
             ViewBag.Letnik = new SelectList(Sifranti.LETNIK, "id", "naziv");
-            ViewBag.StudijskoLetoPrvegaVpisa = new SelectList(Sifranti.STUDIJSKOLETO, "id", "naziv");
+            ViewBag.StudijskoLetoPrvegaVpisa = new SelectList(Sifranti.StudijskoLetoGenerator(DateTime.Now.Year, DateTime.Now.Year - 20), "id", "naziv");
             ViewBag.IzbirnaSkupina = new SelectList(Sifranti.IZBIRNASKUPINA, "id", "naziv");
             return View();
         }
@@ -191,5 +195,11 @@ namespace studis.Controllers
             return Json(result);
         }
 
+        public JsonResult PreveriDatum(DateTime datumRojstva)
+        {
+            System.Diagnostics.Debug.WriteLine("Preveri datum metoda");
+            var result= Validate.veljavenDatum(datumRojstva);
+            return Json(result);
+        }
     }
 }

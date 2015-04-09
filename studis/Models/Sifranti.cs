@@ -94,8 +94,51 @@ namespace studis.Models
             new Sifrant(1, "Popoldanska"),
         };
 
+        
+        public static Sifrant[] StudijskoLetoGenerator(int start, int end)
+        {
+            Sifrant[] studijskoLetoSeznam;
+            int n;
+            if (start < 0 || end < 0)
+            {
+                studijskoLetoSeznam = new Sifrant[1];
+                studijskoLetoSeznam[0] = new Sifrant(0, 0 + "/" + (0 + 1));
+            }
+            if (start < end)
+            {
+                n = end - start;
+                studijskoLetoSeznam = new Sifrant[n];
+                for (int i = 0; i < n; i++)
+                {
+                    studijskoLetoSeznam[i] = new Sifrant(start, start + "/" + (start + 1));
+                    start++;
+                }
+            }
+            else if (start > end)
+            {
+                n = start - end;
+                studijskoLetoSeznam = new Sifrant[n];
+                for (int i = 0; i < n; i++)
+                {
+                    studijskoLetoSeznam[i] = new Sifrant(start, start + "/" + (start + 1));
+                    start--;
+                }
+            }
+            else
+            {
+                studijskoLetoSeznam = new Sifrant[1];
+                studijskoLetoSeznam[0] = new Sifrant(start, start + "/" + (start + 1));
+            }
+            return studijskoLetoSeznam;
+        }
+
+        public static Sifrant plusLeto(Sifrant sifrant)
+        {
+            int id = sifrant.id + 1;
+            return new Sifrant(id, id + "/" + (id + 1));
+        }
+
         public static readonly Sifrant[] STUDIJSKOLETO = {
-            new Sifrant(0, "/"),
             new Sifrant(1991, "1991/1992"),
             new Sifrant(1992, "1992/1993"),
             new Sifrant(1993, "1993/1994"),
