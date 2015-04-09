@@ -80,6 +80,7 @@ namespace studis.Controllers
                 ViewBag.DrzavaRojstva = Sifranti.DRZAVE.SingleOrDefault(item => item.id == list.drzavaRojstva);
                 ViewBag.Drzavljanstvo = Sifranti.DRZAVE.SingleOrDefault(item => item.id == list.drzavljanstvo);
 
+                ViewBag.vpisna = list.vpisnaStevilka;
             
                 return new PdfActionResult(model);
             }
