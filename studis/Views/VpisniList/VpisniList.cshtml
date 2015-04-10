@@ -72,6 +72,7 @@
                     Text = i.ToString(),
                     //Selected = (i == Model.datumRojstva.Year && Model.datumRojstva != DateTime.MinValue && Model.datumRojstva != DateTime.MaxValue)                          
                 }))
+                <!--Html.TextBoxFor(m => m.datumRojstva.Year)-->
             
             @Html.ValidationMessageFor(m => m.datumRojstva)
         </div>

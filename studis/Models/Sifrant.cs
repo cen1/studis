@@ -10,6 +10,11 @@ namespace studis.Models
         public int id { get; set; }
         public string naziv { get; set; }
 
+        public string IdNaziv
+        {
+            get { return this.id + " - " + this.naziv; }
+        }
+
         public Sifrant(int id, string naziv)
         {
             this.id = id;
