@@ -24,14 +24,14 @@ namespace studis.Controllers
         [HttpPost]
         public ActionResult Login(LoginModel model, string returnUrl)
         {
-            foreach (var sif in studis.Models.Sifranti.DRZAVE)
+            /*foreach (var sif in studis.Models.Sifranti.DRZAVE)
             {
                 sifrant_drzave s = new sifrant_drzave();
                 s.id = sif.id.ToString().PadLeft(3, '0');
                 s.naziv = sif.naziv;
                 db.sifrant_drzave.Add(s);
             }
-            db.SaveChanges();
+            db.SaveChanges();*/
 
             if (ModelState.IsValid)
             {
