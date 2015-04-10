@@ -43,6 +43,7 @@ namespace studis.Models
         public int obcinaRojstva { get; set; }
 
         [Required]
+        [Remote("PreveriDrzavoInObcino", "VpisniList", HttpMethod = "POST", ErrorMessage = "Neujemanje z občino.", AdditionalFields="obcinaRojstva")]
         [Display(Name = "Država rojstva")]
         public int drzavaRojstva { get; set; }
 
@@ -92,6 +93,7 @@ namespace studis.Models
         public int obcina { get; set; }
 
         [Required]
+        [Remote("PreveriDrzavoInObcinoInPostno", "VpisniList", HttpMethod = "POST", ErrorMessage = "Neujemanje z občino/poštno številko.", AdditionalFields = "obcina,postnaStevilka")]
         [Display(Name = "Država")]
         public int drzava { get; set; }
 
@@ -110,6 +112,7 @@ namespace studis.Models
         public int? obcinaZacasni { get; set; }
 
         [Display(Name = "Država")]
+        [Remote("PreveriDrzavoInObcinoInPostno2", "VpisniList", HttpMethod = "POST", ErrorMessage = "Neujemanje z občino/poštno številko.", AdditionalFields = "obcinaZacasni,postnaStevilkaZacasni")]
         public int? drzavaZacasni { get; set; }
 
         //studij

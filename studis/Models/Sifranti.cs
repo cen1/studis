@@ -1191,6 +1191,7 @@ namespace studis.Models
             new Sifrant(4226, "Žiri"),
             new Sifrant(4274, "Žirovnica"),
             new Sifrant(8360, "Žužember"),
+            new Sifrant(-1  , "TUJINA"),
         };
 
     }
