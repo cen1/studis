@@ -12,7 +12,7 @@ namespace studis.Models
 
         public string IdNaziv
         {
-            get { return this.id + " - " + this.naziv; }
+            get { return this.ToString(); }
         }
 
         public Sifrant(int id, string naziv)
