@@ -33,8 +33,6 @@ namespace studis.Controllers
                 if (isNumerical)
                 {
                     students = students.Where(s => s.vpisna_stevilka == vpisna);
-                    if (!students.Any())
-                        students = null;
                 }
                 else
                 {
@@ -59,13 +57,15 @@ namespace studis.Controllers
                     }
                 }
             }
+            if (!students.Any())
+                students = null;
             return PartialView("_StudentSearchPartial",students);
         }
 
         [Authorize(Roles = "Referent")]
         public ActionResult StudentSearchPDFPartial(string searchString1)
         {
-            var students = from s in db.students select s;
+            var lists = from l in db.vpisnilists select l;
 
             if (!String.IsNullOrEmpty(searchString1))
             {
@@ -73,9 +73,7 @@ namespace studis.Controllers
                 bool isNumerical = int.TryParse(searchString1, out vpisna);
                 if (isNumerical)
                 {
-                    students = students.Where(s => s.vpisna_stevilka == vpisna);
-                    if (!students.Any())
-                        students = null;
+                    lists = lists.Where(l => l.vpisnaStevilka == vpisna);
                 }
                 else
                 {
@@ -86,21 +84,23 @@ namespace studis.Controllers
                         string firstChar = searchData[0];
                         string secondChar = searchData[1];
 
-                        var tempStudents = students.Where(s => s.ime.StartsWith(firstChar) && s.priimek.StartsWith(secondChar));
+                        var tempLists = lists.Where(l => l.ime.StartsWith(firstChar) && l.priimek.StartsWith(secondChar));
 
-                        if (tempStudents.Any())
-                            students = tempStudents;
+                        if (tempLists.Any())
+                            lists = tempLists;
                         else
-                            students = students.Where(s => s.ime.StartsWith(secondChar) && s.priimek.StartsWith(firstChar));
+                            lists = lists.Where(l => l.ime.StartsWith(secondChar) && l.priimek.StartsWith(firstChar));
                     }
                     else
                     {
                         string firstChar = searchData[0];
-                        students = students.Where(s => s.ime.StartsWith(firstChar) || s.priimek.StartsWith(firstChar));
+                        lists = lists.Where(l => l.ime.StartsWith(firstChar) || l.priimek.StartsWith(firstChar));
                     }
                 }
             }
-            return PartialView("_StudentSearchPDFPartial", students);
+            if (!lists.Any())
+                lists = null;
+            return PartialView("_StudentSearchPDFPartial", lists);
         }
 
         // GET: /Student/Details/5

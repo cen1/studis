@@ -18,7 +18,6 @@ namespace studis.Controllers
         public ActionResult Pdf(int id)
         {
             var list = db.vpisnilists.SingleOrDefault(v => v.id == id);
-
             // preveri če vpisni list obstaja
             try {
                 var model = new studis.Models.VpisniListModel
@@ -50,6 +49,7 @@ namespace studis.Controllers
                     smer = list.smer,
                     krajIzvajanja = list.krajIzvajanja,
                     izbirnaSkupina = list.izbirnaSkupina,
+                    studijskiProgram2 = list.studijskiProgram2,
                     smer2 = list.smer2,
                     krajIzvajanja2 = list.krajIzvajanja2,
                     izbirnaSkupina2 = list.izbirnaSkupina2,
@@ -63,7 +63,6 @@ namespace studis.Controllers
                     soglasje2 = Convert.ToBoolean(list.soglasje2)
                 };
 
-                // refactoring needed
                 ViewBag.PostnaStevilka = Sifranti.POSTNESTEVILKE.SingleOrDefault(item => item.id == list.postnaStevilka);
                 ViewBag.Obcina = Sifranti.OBCINE.SingleOrDefault(item => item.id == list.obcina);
                 ViewBag.Drzava = Sifranti.DRZAVE.SingleOrDefault(item => item.id == list.drzava);
@@ -71,17 +70,44 @@ namespace studis.Controllers
                 ViewBag.ObcinaZacasni = Sifranti.OBCINE.SingleOrDefault(item => item.id == Convert.ToInt32(list.obcinaZacasni));
                 ViewBag.DrzavaZacasni = Sifranti.DRZAVE.SingleOrDefault(item => item.id == Convert.ToInt32(list.drzavaZacasni));
                 ViewBag.StudijskiProgram = Sifranti.STUDIJSKIPROGRAM.SingleOrDefault(item => item.id == list.studijskiProgram);
-                ViewBag.VrstaStudija = Sifranti.KLASIUS.SingleOrDefault(item => item.id == list.vrstaVpisa);
+                ViewBag.StudijskiProgram2 = Sifranti.STUDIJSKIPROGRAM.SingleOrDefault(item => item.id == list.studijskiProgram2);
+                ViewBag.VrstaStudija = Sifranti.KLASIUS.SingleOrDefault(item => item.id == list.vrstaStudija);
                 ViewBag.NacinStudija = Sifranti.NACINSTUDIJA.SingleOrDefault(item => item.id == list.nacinStudija);
                 ViewBag.OblikaStudija = Sifranti.OBLIKASTUDIJA.SingleOrDefault(item => item.id == list.oblikaStudija);
                 ViewBag.KrajIzvajanja = Sifranti.OBCINE.SingleOrDefault(item => item.id == list.krajIzvajanja);
+                ViewBag.KrajIzvajanja2 = Sifranti.OBCINE.SingleOrDefault(item => item.id == list.krajIzvajanja2);
                 ViewBag.VrstaVpisa = Sifranti.VRSTAVPISA.SingleOrDefault(item => item.id == list.vrstaVpisa);
                 ViewBag.Spol = Sifranti.SPOL.SingleOrDefault(item => item.id == list.spol);
                 ViewBag.ObcinaRojstva = Sifranti.OBCINE.SingleOrDefault(item => item.id == list.obcinaRojstva);
                 ViewBag.DrzavaRojstva = Sifranti.DRZAVE.SingleOrDefault(item => item.id == list.drzavaRojstva);
                 ViewBag.Drzavljanstvo = Sifranti.DRZAVE.SingleOrDefault(item => item.id == list.drzavljanstvo);
+                ViewBag.IzbirnaSkupina = Sifranti.IZBIRNASKUPINA.SingleOrDefault(item => item.id == list.izbirnaSkupina);
+                ViewBag.IzbirnaSkupina2 = Sifranti.IZBIRNASKUPINA.SingleOrDefault(item => item.id == list.izbirnaSkupina2);
+                ViewBag.LetnikStudija = Sifranti.LETNIK.SingleOrDefault(item => item.id == list.letnikStudija);
+                ViewBag.Vpisna = list.vpisnaStevilka;
 
-                ViewBag.vpisna = list.vpisnaStevilka;
+                if (Convert.ToBoolean(list.vrocanje))
+                {
+                    ViewBag.Vrocanje = "DA";
+                }
+                else
+                {
+                    ViewBag.Vrocanje = "NE";
+                }
+
+                if (Convert.ToBoolean(list.vrocanjeZacasni))
+                {
+                    ViewBag.VrocanjeZacasni = "DA";
+                }
+                else
+                {
+                    ViewBag.VrocanjeZacasni = "NE";
+                }
+
+                var stud = db.students.Single(s => s.vpisna_stevilka == list.vpisnaStevilka);
+                var predmeti = stud.predmets;
+
+                ViewBag.Predmeti = predmeti;
             
                 return new PdfActionResult(model);
             }

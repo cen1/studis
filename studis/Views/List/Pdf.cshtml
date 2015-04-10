@@ -1,382 +1,354 @@
 ﻿@{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_PdfLayout.cshtml";
+    var imagePath = Server.MapPath("~/Content/images");
 }
 
 @model studis.Models.VpisniListModel
-<table>
+<div class="img" ><img class="displayed" src="@imagePath\fri.png" alt="fri logo" /></div>
+
+
+<br />
+
+<div class="naslov"><h2 style="position: center;">Vpisni list @Html.DisplayFor(m => m.studijskoLeto)</h2></div>
+<table class="prva">
     <tbody>
         <tr>
-            <th colspan="2">Vpisni list @Html.DisplayFor(m => m.studijskoLeto)</th>
+            <th>Vpisna številka</th>
+            <td>@ViewBag.Vpisna</td>
         </tr>
         <tr>
-            <td>Vpisna številka</td>
-            <td>@ViewBag.vpisna</td>
+            <th>Priimek in ime</th>
+            <td>@Html.DisplayFor(m => m.priimek), @Html.DisplayFor(m => m.ime)</td>
         </tr>
         <tr>
-            <td>Priimek</td>
-            <td>@Html.DisplayFor(m => m.priimek)</td>
-        </tr>
-        <tr>
-            <td>Dekliški priimek</td>
-            <td></td>
-        </tr>
-        <tr>
-            <td>Ime</td>
-            <td>@Html.DisplayFor(m => m.ime)</td>
-        </tr>
-        <tr>
-            <td>EMŠO</td>
-            <td>@Html.DisplayFor(m => m.emso)</td>
-        </tr>
-        <tr>
-            <td>Davčna številka</td>
-            <td>@Html.DisplayFor(m => m.davcnaStevilka)</td>
-        </tr>
-        <tr>
-            <td>Študent s posebnimi potrebami</td>
-            <td>DA / NE</td>
-        </tr>
-        <tr>
-            <th colspan="2">Naslov stalnega bivališča</th>
-        </tr>
-        <tr>
-            <td>Ulica in hišna številka</td>
-            <td>@Html.DisplayFor(m => m.naslov)</td>
-        </tr>
-        <tr>
-            <td>Pošta in poštna številka</td>
-            <td>@ViewBag.PostnaStevilka</td>
-        </tr>
-        <tr>
-            <td>Naslov za vročanje (označite)</td>
-            <td>@Html.DisplayFor(m => m.vrocanje)</td>
-        </tr>
-        <tr>
-            <td>Občina</td>
-            <td>@ViewBag.Obcina</td>
-        </tr>
-        <tr>
-            <td>Država</td>
-            <td>@ViewBag.Drzava</td>
-        </tr>
-        <tr>
-            <td>
-                Telefonska št.<br />
-                Prenosni telefon<br />
-                Elektronska pošta<br />
-                (Če tako želite, rubrike ni potrebno izpolniti.)
-            </td>
-            <td>@Html.DisplayFor(m => m.prenosniTelefon)<br />@Html.DisplayFor(m => m.email)</td>
-        </tr>
-        <tr>
-            <th colspan="2">Naslov začasnega bivališča</th>
-        </tr>
-        <tr>
-            <td>Ulica in hišna številka</td>
-            <td>@Html.DisplayFor(m => m.naslovZacasni)</td>
-        </tr>
-        <tr>
-            <td>Pošta in poštna številka</td>
-            <td>@ViewBag.PostnaStevilkaZacasni</td>
-        </tr>
-        <tr>
-            <td>Naslov za vročanje (označite)</td>
-            <td>@Html.DisplayFor(m => m.vrocanjeZacasni)</td>
-        </tr>
-        <tr>
-            <td>Občina</td>
-            <td>@ViewBag.ObcinaZacasni</td>
-        </tr>
-
-        <tr>
-            <th colspan="2">Podatki o vpisu</th>
-        </tr>
-        <tr>
-            <td>Visokošolski zavod/članica</td>
-            <td></td>
-        </tr>
-        <tr>
-            <td>Študijski program</td>
-            <td>@ViewBag.StudijskiProgram</td>
-        </tr>
-        <tr>
-            <td>Smer in izbirna skupina</td>
-            <td>@Html.DisplayFor(m => m.smer)</td>
-        </tr>
-        <tr>
-            <td>Skupina</td>
-            <td>@Html.DisplayFor(m => m.izbirnaSkupina)</td>
-        </tr>
-        <tr>
-            <td>Študijsko leto</td>
-            <td>@Html.DisplayFor(m => m.studijskoLeto)</td>
-        </tr>
-        <tr>
-            <td>Vrsta študija</td>
-            <td>@ViewBag.VrstaStudija</td>
-        </tr>
-        <tr>
-            <td>Letnik študija</td>
-            <td>@Html.DisplayFor(m => m.letnikStudija)</td>
-        </tr>
-        <tr>
-            <td>Način študija</td>
-            <td>@ViewBag.NacinStudija</td>
-        </tr>
-        <tr>
-            <td>Oblika študija</td>
-            <td>@ViewBag.OblikaStudija</td>
-        </tr>
-        <tr>
-            <td>Vrsta vpisa</td>
-            <td>@ViewBag.VrstaVpisa</td>
-        </tr>
-        <tr>
-            <td>Kraj izvajanja študija</td>
-            <td>@ViewBag.KrajIzvajanja</td>
-        </tr>
-        <tr>
-            <td>Na katerem visokošolskem zavodu/članici še študirate?</td>
-            <td></td>
-        </tr>
-
-        <tr>
-            <th colspan="2">Podatki o bivanju in prehrani med študijem</th>
-        </tr>
-        <tr>
-            <td>Bivanje v času študija</td>
-            <td>
-                1-pri starših  2-v lastnem gospodinjstvu<br />
-                3-v študentskem domu  4-pri sorodnikih ali znancih<br />
-                5-v podnajemniškem stanovanju  6-še ne vem
-            </td>
-        </tr>
-        <tr>
-            <td>Prehrana v času študija</td>
-            <td>
-                1-pri starših  2-v lastnem gospodinjstvu<br />
-                3-v študentskem domu  4-pri sorodnikih ali znancih<br />
-                5-v podnajemniškem stanovanju  6-še ne vem
-            </td>
-        </tr>
-
-        <tr>
-            <th colspan="2">Končana višja izobrazba</th>
-        </tr>
-        <tr>
-            <td>Visokošolski zavod ali višja strokovna šola</td>
-            <td></td>
-        </tr>
-        <tr>
-            <td>Program in smer</td>
-            <td></td>
-        </tr>
-        <tr>
-            <td>Kraj izvajanja študija</td>
-            <td></td>
-        </tr>
-        <tr>
-            <td>Leto izdaje diplomske listine</td>
-            <td></td>
-        </tr>
-        <tr>
-            <td>Država visokošolskega ali višješolskega zavoda</td>
-            <td></td>
-        </tr>
-
-        <tr>
-            <th colspan="2">Končana visokošolska izobrazba</th>
-        </tr>
-        <tr>
-            <td>Visokošolski zavod/članica</td>
-            <td></td>
-        </tr>
-        <tr>
-            <td>Program in smer</td>
-            <td></td>
-        </tr>
-        <tr>
-            <td>Vrsta študija</td>
-            <td>
-                J-visokošolski strokovni  K-univerzitezni<br />
-                L-magistrski  N-enoviti magistrski<br />
-                M-doktorski
-            </td>
-        </tr>
-        <tr>
-            <td>Kraj izvajanja študija</td>
-            <td></td>
-        </tr>
-        <tr>
-            <td>Leto izdaje diplomske listine</td>
-            <td></td>
-        </tr>
-        <tr>
-            <td>Povprečna ocena</td>
-            <td></td>
-        </tr>
-        <tr>
-            <td>Država visokošolskega zavoda/članice</td>
-            <td></td>
-        </tr>
-
-        <tr>
-            <th colspan="2">Šolnina</th>
-        </tr>
-        <tr>
-            <td>Plačilo šolnine</td>
-            <td>
-                1-DA  2-po računu<br />
-                3-šolnine ni  4-oproščen
-            </td>
-        </tr>
-        <tr>
-            <td>Plačnik</td>
-            <td>
-                1-šolnino v celoti plača podjetje ali druga organizacija<br />
-                2-šolnino v celoti plačam sam<br />
-                3-šolnino deloma plača podjetje ali druga organizacija, deloma pa sam
-            </td>
-        </tr>
-        <tr>
-            <td>Šolnina, ki jo plača študent ali zanj podjetje</td>
-            <td></td>
-        </tr>
-        <tr>
-            <th colspan="2">Podatki o prvem vpisu</th>
-        </tr>
-        <tr>
-            <td>Študijsko leto prvega vpisa v ta študijski program</td>
-            <td></td>
-        </tr>
-        <tr>
-            <td>Letnik prvega vpisa</td>
-            <td></td>
-        </tr>
-        <tr>
-            <td>Študijsko leto prvega vpisa v katerikoli visokošolski študijski program</td>
-            <td></td>
-        </tr>
-
-        <tr>
-            <th colspan="2">Osebni podatki</th>
-        </tr>
-        <tr>
-            <td>Spol</td>
-            <td>@ViewBag.Spol</td>
-        </tr>
-        <tr>
-            <td>Datum rojstva</td>
+            <th>Datum rojstva</th>
             <td>@Html.DisplayFor(m => m.datumRojstva)</td>
         </tr>
         <tr>
-            <td>Kraj rojstva</td>
+            <th>Kraj rojstva</th>
             <td>@Html.DisplayFor(m => m.krajRojstva)</td>
         </tr>
         <tr>
-            <td>Občina rojstva</td>
+            <th>Občina rojstva</th>
             <td>@ViewBag.ObcinaRojstva</td>
         </tr>
         <tr>
-            <td>Država rojstva</td>
+            <th>Država rojstva</th>
             <td>@ViewBag.DrzavaRojstva</td>
         </tr>
         <tr>
-            <td>Državljanstvo</td>
+            <th>Državljanstvo</th>
             <td>@ViewBag.Drzavljanstvo</td>
         </tr>
         <tr>
-            <td>Narodnost</td>
-            <td></td>
-        </tr>
-
-        <tr>
-            <th colspan="2">Podatki o srednješolski izobrazbi, na podlagi katere se kandidat vpisuje</th>
+            <th>Spol</th>
+            <td>@ViewBag.Spol</td>
         </tr>
         <tr>
-            <td>Država srednje šole</td>
-            <td></td>
+            <th>EMŠO</th>
+            <td>@Html.DisplayFor(m => m.emso)</td>
         </tr>
         <tr>
-            <td>Občina srednje šole</td>
-            <td></td>
+            <th>Davčna številka</th>
+            <td>@Html.DisplayFor(m => m.davcnaStevilka)</td>
         </tr>
         <tr>
-            <td>Program in smer oz. naziv poklicne ali strokovne izobrazbe</td>
-            <td></td>
+            <th>e-pošta</th>
+            <td>@Html.DisplayFor(m => m.email)</td>
         </tr>
         <tr>
-            <td>Leto izdaje zaključnega spričevala srednje šole</td>
-            <td></td>
+            <th>Prenosni telefon</th>
+            <td>@Html.DisplayFor(m => m.prenosniTelefon)</td>
         </tr>
         <tr>
-            <td>Ime srednje šole</td>
-            <td></td>
+            <th colspan="2">Stalno bivališče</th>
         </tr>
         <tr>
-            <td>Način končanja srednje šole</td>
-            <td>
-                1-splošna matura  3-poklicna matura<br />
-                2-zaključni izpit  4-srednješolka diploma
-            </td>
+            <th>Naslov</th>
+            <td>@Html.DisplayFor(m => m.naslov)</td>
         </tr>
         <tr>
-            <td>Ali ste pred vpisom v začetni letnik opravljali dodatne izpite</td>
-            <td>
-                0-nisem  1-drugi izpiti  2-dodatni maturitetni predmet
-            </td>
+            <th>Pošta in poštna številka</th>
+            <td>@ViewBag.PostnaStevilka</td>
         </tr>
         <tr>
-            <td>Znanje tujih jezikov</td>
-            <td></td>
+            <th>Občina</th>
+            <td>@ViewBag.Obcina</td>
+        </tr>
+        <tr>
+            <th>Država</th>
+            <td>@ViewBag.Drzava</td>
+        </tr>
+        <tr>
+            <th>Vročanje</th>
+            <td>@ViewBag.Vrocanje</td>
+        </tr>
+        <tr>
+            <th colspan="2">Začasno bivališče</th>
+        </tr>
+        <tr>
+            <th>Naslov</th>
+            <td>@Html.DisplayFor(m => m.naslovZacasni)</td>
+        </tr>
+        <tr>
+            <th>Pošta in poštna številka</th>
+            <td>@ViewBag.PostnaStevilkaZacasni</td>
+        </tr>
+        <tr>
+            <th>Občina</th>
+            <td>@ViewBag.ObcinaZacasni</td>
+        </tr>
+        <tr>
+            <th>Država</th>
+            <td>@ViewBag.DrzavaZacasni</td>
+        </tr>
+        <tr>
+            <th>Vročanje</th>
+            <td>@ViewBag.VrocanjeZacasni</td>
         </tr>
     </tbody>
+</table>
 
-    <tfoot>
+
+<h2>Podatki o vpisu</h2>
+<table class="druga">
+    <tbody>
         <tr>
-            <td colspan="2">
-                Podpisani v skladu z določili Zakona o varstvu osebnih podatkov (Uradni list RS
-                št. 94/07 – uradno prečiščeno besedilo) dovoljujem, da lahko <br />
-                visokošolski zavod, na katerega se vpisujem, uporablja: <br />
-                - moje osebne podatke za namen storitev knjižničnega sistema in <br />
-                - moje kontaktne podatke za namen kariernega oziroma študijskega svetovanja.
-            </td>
+            <th>Študijski program</th>
+            <td>@ViewBag.StudijskiProgram</td>
         </tr>
         <tr>
-            <td>
-                S podpisom jamčim za resničnost <br /> podatkov.<br />
-                V ____________________ <br />
-                dne ______________
-            </td>
-            <td>
-                Podpis študentke - študenta<br /><br /><br />
-                _______________________________
-            </td>
+            <th>Smer/usmeritev/modul/znanstveno področje</th>
+            <td>@Html.DisplayFor(m => m.smer)</td>
         </tr>
-    </tfoot>
+        <tr>
+            <th>Kraj izvajanja študija</th>
+            <td>@ViewBag.KrajIzvajanja</td>
+        </tr>
+        <tr>
+            <th>Izbirna skupina</th>
+            <td>@ViewBag.IzbirnaSkupina</td>
+        </tr>
+        <tr>
+            <th>Študijski program</th>
+            <td>@ViewBag.StudijskiProgram2</td>
+        </tr>
+        <tr>
+            <th>Smer/usmeritev/modul/znanstveno področje</th>
+            <td>@Html.DisplayFor(m => m.smer2)</td>
+        </tr>
+        <tr>
+            <th>Kraj izvajanja študija</th>
+            <td>@ViewBag.KrajIzvajanja2</td>
+        </tr>
+        <tr>
+            <th>Izbirna skupina</th>
+            <td>@ViewBag.IzbirnaSkupina2</td>
+        </tr>
+
+
+        <tr>
+            <th>Vrsta študija</th>
+            <td>@ViewBag.VrstaStudija</td>
+        </tr>
+        <tr>
+            <th>Vrsta vpisa</th>
+            <td>@ViewBag.VrstaVpisa</td>
+        </tr>
+        <tr>
+            <th>Letnik/dodatno leto</th>
+            <td>@ViewBag.LetnikStudija</td>
+        </tr>
+        <tr>
+            <th>Način in oblika študija</th>
+            <td>@ViewBag.NacinStudija, @ViewBag.OblikaStudija</td>
+        </tr>
+        <tr>
+            <th>Študijsko leto</th>
+            <td>@Html.DisplayFor(m => m.studijskoLeto)</td>
+        </tr>
+    </tbody>
+</table>
+
+<br />
+
+<h2>Podatki o vzporednem študiju</h2>
+<table class="tretja">
+    <tbody>
+        <tr>
+            <th>Zavod</th>
+            <td>/</td>
+        </tr>
+        <tr>
+            <th>Letnik/dodatno leto</th>
+            <td>/</td>
+        </tr>
+        <tr>
+            <th>Študijski program</th>
+            <td>/</td>
+        </tr>
+        <tr>
+            <th>Vrsta študija</th>
+            <td>/</td>
+        </tr>
+    </tbody>
+</table>
+
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+
+<p>
+    Podpisani, v skladu z določili Zakona o varstvu osebnih podatkov (Uradni list RS št. 94/07 - <br />
+    uradno prečiščeno besedilo)/ZVOP - 1 UPB1/ dovoljujem, da lahko visokošolski zavod, na <br />
+    katerega se vpisujem, uporablja<br />
+    - moje osebne podatke za koriščenje storitev knjižničnega sistema<br />
+    - moje kontaktne podatke za obveščanje o aktualnih študijskih zadevah ter za karierno <br />
+      svetovanje in za druge aktivnosti, povezane z zagotavljanjem kakovosti.<br />
+</p>
+
+<br />
+
+<table class="dovoli">
+    <tbody>
+        <tr>
+            <td>DA</td>
+            <td>NE</td>
+        </tr>
+    </tbody>
+</table>
+
+<br />
+
+<p>
+    S podpisom jamčim za resničnost podatkov. Spremembe podatkov bom članici UL prijavil <br />
+    v osmih dneh po nastanku sprememb.
+</p>
+<br />
+<br />
+<table class="cetrta">
+    <tbody>
+        <tr>
+            <th>Datum oddaje</th>
+            <th>Podpis študentke/študenta</th>
+        </tr>
+        <tr>
+            <td>_____________________________________</td>
+            <td>_____________________________________</td>
+        </tr>
+    </tbody>
+</table>
+
+<br />
+<br />
+<br />
+
+<table class="peta">
+    <tbody>
+        <tr>
+            <th colspan="3">Študijski program</th>
+        </tr>
+        <tr>
+            <td colspan="3">@ViewBag.StudijskiProgram</td>
+        </tr>
+        <tr>
+            <th>Koda</th>
+            <th>Učna enota</th>
+            <th>Število KT</th>
+        </tr>
+        @foreach (var predmet in @ViewBag.Predmeti)
+        {
+            <tr>
+                <td>@predmet.koda</td>
+                <td>@predmet.ime</td>
+                <td>@predmet.kreditne</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+
+<table class="sesta">
+    <tbody>
+        <tr>
+            <th colspan="3">Študijski program</th>
+        </tr>
+        <tr>
+            <td colspan="3">@ViewBag.StudijskiProgram2</td>
+        </tr>
+        <tr>
+            <th>Koda</th>
+            <th>Učna enota</th>
+            <th>Število KT</th>
+        </tr>
+        <tr>
+            <td>/</td>
+            <td>/</td>
+            <td>/</td>
+        </tr>      
+    </tbody>
 </table>
 
 <br />
 <br />
 
-<table>
-    <thead>
-        <tr>
-            <th>Šifra učitelja</th>
-            <th>Učitelj</th>
-            <th>Šifra učne enote</th>
-            <th>Učna enota</th>
-            <th>Število KT</th>
-        </tr>
-    </thead>
+<h2>Predhodno dosežena izobrazba</h2>
+<table class="sedma">
     <tbody>
         <tr>
-            <td>data</td>
-            <td>data</td>
-            <td>data</td>
-            <td>data</td>
-            <td>data</td>
+            <th>Zavod</th>
+            <td>/</td>
+        </tr>
+        <tr>
+            <th>Kraj</th>
+            <td>/</td>
+        </tr>
+        <tr>
+            <th>Država</th>
+            <td>/</td>
+        </tr>
+        <tr>
+            <th>Program</th>
+            <td>/</td>
+        </tr>
+        <tr>
+            <th>Leto zaključka</th>
+            <td>/</td>
+        </tr>
+        <tr>
+            <th>Uspeh</th>
+            <td>/</td>
+        </tr>
+        <tr>
+            <th>Smer/naziv strokovne izobrazbe</th>
+            <td>/</td>
+        </tr>
+        <tr>
+            <th>Način končanja srednje šole</th>
+            <td>/</td>
+        </tr>
+        <tr>
+            <th>KLASIUS SRV</th>
+            <td>/</td>
+        </tr>
+        <tr>
+            <th>Najvišja dosežena izobrazba</th>
+            <td>/</td>
         </tr>
     </tbody>
 </table>
