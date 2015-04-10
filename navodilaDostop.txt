@@ -1,0 +1,47 @@
+﻿Ime: Anton 
+Priimek: Alič 
+Program: 1000468 
+Email: aa1122@student.uni-lj.si
+Role: Študent
+Username: aa1122
+Password: 87af11fe
+
+
+Ime: Anže
+Priimek: Benko
+Program: 1000470
+Email: ab1122@student.uni-lj.si
+Role: Študent
+Username: ab1122
+Password: 10a46732
+
+
+Ime: Gregor
+Priimek: Berkopec
+Program: 1000468
+Email: gb1122@student.uni-lj.si
+Role: Študent
+Username: gb1122
+Password: 50128c2b
+
+
+Ime: Tim
+Priimek: Kralj
+Program: 1000471
+Email: tk1122@student.uni-lj.si
+Role: Študent
+Username: tk1122
+Password: 42ee0f80
+
+
+Role: Referent
+Username: Referent
+Password: testtest
+
+
+Navodila za vnos študentov:
+1. Vsi študenti so v eni vrstici
+2. Če ni dovolj znakov v imenu, priimku ali emailu, se dodajo presledki, tako da se zapolni pravo število znakov
+3. Program mora biti veljaven šifrant; seznam nekaterih: 1000475, 1000471, 1000468, 1000470
+
+Dodatno: glej datoteko primerImporta.txt

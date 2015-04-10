@@ -85,9 +85,9 @@ namespace studis.Controllers
                                         var results = new List<ValidationResult>();
 
                                         // preveri če parametri ustrezajo modelu in če je šifrant pravilen
-                                        if ((Validator.TryValidateObject(model, context, results, true)) && (Sifranti.STUDIJSKIPROGRAM.Single(item => item.id == Convert.ToInt32(prog)) != null))
+                                        if ((Validator.TryValidateObject(model, context, results, true)) && (Sifranti.STUDIJSKIPROGRAM.Single(item => item.id == Convert.ToInt32(prog)) != null)
+                                            && (db.my_aspnet_membership.Count(e => e.Email == mail) == 0))
                                         {
-                                            
                                             // dodaj login podatke in vlogo
                                             MembershipUser user = Membership.CreateUser(uname, pass, mail);
                                             MembershipUser myObject = Membership.GetUser(uname);
