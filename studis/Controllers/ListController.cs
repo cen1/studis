@@ -86,6 +86,24 @@ namespace studis.Controllers
                 ViewBag.LetnikStudija = Sifranti.LETNIK.SingleOrDefault(item => item.id == list.letnikStudija);
                 ViewBag.Vpisna = list.vpisnaStevilka;
 
+                if (Convert.ToBoolean(list.vrocanje))
+                {
+                    ViewBag.Vrocanje = "DA";
+                }
+                else
+                {
+                    ViewBag.Vrocanje = "NE";
+                }
+
+                if (Convert.ToBoolean(list.vrocanjeZacasni))
+                {
+                    ViewBag.VrocanjeZacasni = "DA";
+                }
+                else
+                {
+                    ViewBag.VrocanjeZacasni = "NE";
+                }
+
                 var stud = db.students.Single(s => s.vpisna_stevilka == list.vpisnaStevilka);
                 var predmeti = stud.predmets;
 
