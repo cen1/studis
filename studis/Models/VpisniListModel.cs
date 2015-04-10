@@ -146,6 +146,7 @@ namespace studis.Models
         public int vrstaStudija { get; set; }
 
         [Required]
+        [Remote("PreveriVrstaVpisa", "VpisniList", HttpMethod = "POST", ErrorMessage = "Neveljavna izbira")]
         [Display(Name = "Vrsta vpisa")]
         public int vrstaVpisa { get; set; }
 
