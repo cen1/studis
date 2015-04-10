@@ -1,81 +1,45 @@
-﻿@model studis.Models.student
+﻿@model studis.Models.zeton
 
 @{
-    ViewBag.Title = "Create";
+    ViewBag.Title = "Dodaj žeton";
 }
 
-<h2>Create</h2>
+<h2>Dodaj žeton</h2>
 
 
-@using (Html.BeginForm()) 
+@using (Html.BeginForm())
 {
-    @Html.AntiForgeryToken()
-    
-    <div class="form-horizontal">
-        <h4>student</h4>
-        <hr />
-        @Html.ValidationSummary(true)
+    @Html.ValidationSummary(true, "Prišlo je do napake. popravite vnose.")
+    <div>
+        <fieldset>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.vpisna_stevilka, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.vpisna_stevilka)
-                @Html.ValidationMessageFor(model => model.vpisna_stevilka)
+            <div class="editor-label">
+                @Html.LabelFor(m => m.OldPassword)
             </div>
-        </div>
+            <div class="editor-field">
+                @Html.PasswordFor(m => m.OldPassword)
+                @Html.ValidationMessageFor(m => m.OldPassword)
+            </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.ime, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.ime)
-                @Html.ValidationMessageFor(model => model.ime)
+            <div class="editor-label">
+                @Html.LabelFor(m => m.NewPassword)
             </div>
-        </div>
+            <div class="editor-field">
+                @Html.PasswordFor(m => m.NewPassword)
+                @Html.ValidationMessageFor(m => m.NewPassword)
+            </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.priimek, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.priimek)
-                @Html.ValidationMessageFor(model => model.priimek)
+            <div class="editor-label">
+                @Html.LabelFor(m => m.ConfirmPassword)
             </div>
-        </div>
+            <div class="editor-field">
+                @Html.PasswordFor(m => m.ConfirmPassword)
+                @Html.ValidationMessageFor(m => m.ConfirmPassword)
+            </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.naslov, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.naslov)
-                @Html.ValidationMessageFor(model => model.naslov)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.datum_rojstva, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.datum_rojstva)
-                @Html.ValidationMessageFor(model => model.datum_rojstva)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.spol, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.spol)
-                @Html.ValidationMessageFor(model => model.spol)
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
-            </div>
-        </div>
+            <p>
+                <input type="submit" value="Spremeni geslo" />
+            </p>
+        </fieldset>
     </div>
 }
-
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>
-
-<script src="~/Scripts/jquery-1.10.2.min.js"></script>
-<script src="~/Scripts/jquery.validate.min.js"></script>
-<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>

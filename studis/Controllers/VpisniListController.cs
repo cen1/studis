@@ -16,6 +16,10 @@ namespace studis.Controllers
         // GET: VpisniList
         public ActionResult VpisniList()
         {
+            //poglej ce obstaja vnos v tabeli student in ce ja, poglej zeton
+            //var sid = studis.Models.UserHelper.FindByName(User.Identity.Name).students.FirstOrDefault();
+            //if (sid != null) 
+
             ViewBag.Title = "VpisniList";
             ViewBag.StudijskiProgrami = new SelectList(Sifranti.STUDIJSKIPROGRAM, "id", "naziv");
             ViewBag.Klasius = new SelectList(Sifranti.KLASIUS, "id", "naziv");

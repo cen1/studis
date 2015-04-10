@@ -268,6 +268,7 @@
     <Compile Include="Models\zeton.cs">
       <DependentUpon>Studis.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\ZetonModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -379,10 +380,10 @@
     <Content Include="Views\VpisniList\VpisniListPredmetnik.cshtml" />
     <Content Include="Views\Shared\_StudentSearchPDFPartial.cshtml" />
     <Content Include="Views\Import\ImportError.cshtml" />
+    <Content Include="Views\Zeton\Dodaj.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Zeton\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\jquery-2.1.1.min.map" />

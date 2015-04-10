@@ -1,0 +1,35 @@
+﻿@model studis.Models.ZetonModel
+
+@{
+    ViewBag.Title = "Dodaj žeton";
+}
+
+<p>Dosedanji vpisi študenta @ViewBag.ime @ViewBag.priimek (@ViewBag.vpisna)</p>
+
+@if (ViewBag.sovpisi) { 
+    <ul>
+        @foreach (var item in ViewBag.vpisi)
+        {
+            <li>@item.ime</li>
+        }
+    </ul>
+}
+
+@using (Html.BeginForm()) {
+    <div>
+        <fieldset>
+            Možno je dodati žetone za naslednje letnike:
+            <ul>
+                @foreach (var item in ViewBag.letniki)
+                {
+                    <li>@item.naziv</li>
+                }
+            </ul>
+
+            @Html.HiddenFor(m => m.vpisna)
+            <p>
+                <input type="submit" value="Dodaj">
+            </p>
+        </fieldset>
+    </div>
+}
