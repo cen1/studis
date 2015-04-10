@@ -27,7 +27,7 @@ namespace studis.Controllers
             }
 
             ViewBag.Title = "VpisniList";
-            ViewBag.StudijskiProgrami = new SelectList(Sifranti.STUDIJSKIPROGRAM, "id", "naziv");
+            ViewBag.StudijskiProgrami = new SelectList(Sifranti.STUDIJSKIPROGRAM, "id", "IdNaziv");
             ViewBag.Klasius = new SelectList(Sifranti.KLASIUS, "id", "naziv");
             ViewBag.VrstaVpisa = new SelectList(Sifranti.VRSTAVPISA, "id", "naziv");
             ViewBag.NacinStudija = new SelectList(Sifranti.NACINSTUDIJA, "id", "naziv");
@@ -258,6 +258,51 @@ namespace studis.Controllers
             {
                 if (vrstaVpisa < 1 || vrstaVpisa > 7)
                     result = false;
+            }
+            return Json(result);
+        }
+
+        public JsonResult PreveriDrzavoInObcino(int obcinaRojstva, int drzavaRojstva)
+        {
+            bool result = false;
+            if (drzavaRojstva == 705 && obcinaRojstva != -1)
+            {
+                result = true;
+            }
+            else if (drzavaRojstva != 705 && obcinaRojstva == -1)
+            {
+                result = true;
+            }
+            return Json(result);
+        }
+
+        public JsonResult PreveriDrzavoInObcinoInPostno(int drzava, int obcina, int postnaStevilka)
+        {
+            bool result = false;
+            if (drzava == 705 && obcina != -1 && postnaStevilka != -1)
+            {
+                result = true;
+            }
+            else if (drzava != 705 && obcina == -1 && postnaStevilka == -1)
+            {
+                result = true;
+            }
+            return Json(result);
+        }
+
+        public JsonResult PreveriDrzavoInObcinoInPostno2(int drzavaZacasni, int obcinaZacasni, int postnaStevilkaZacasni)
+        {
+            int drzava = drzavaZacasni;
+            int obcina = obcinaZacasni;
+            int postnaStevilka = postnaStevilkaZacasni;
+            bool result = false;
+            if (drzava == 705 && obcina != -1 && postnaStevilka != -1)
+            {
+                result = true;
+            }
+            else if (drzava != 705 && obcina == -1 && postnaStevilka == -1)
+            {
+                result = true;
             }
             return Json(result);
         }
