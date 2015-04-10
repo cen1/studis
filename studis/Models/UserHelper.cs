@@ -56,6 +56,11 @@ namespace studis.Models
         public static DateTime TimeCET() {
             return TimeZoneInfo.ConvertTime (DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time"));
         }
+
+        public static DateTime TimeCET(DateTime t)
+        {
+            return TimeZoneInfo.ConvertTime(t, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time"));
+        }
     }
 
 }

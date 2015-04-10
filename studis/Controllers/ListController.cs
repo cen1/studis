@@ -85,6 +85,7 @@ namespace studis.Controllers
                 ViewBag.IzbirnaSkupina2 = Sifranti.IZBIRNASKUPINA.SingleOrDefault(item => item.id == list.izbirnaSkupina2);
                 ViewBag.LetnikStudija = Sifranti.LETNIK.SingleOrDefault(item => item.id == list.letnikStudija);
                 ViewBag.Vpisna = list.vpisnaStevilka;
+                ViewBag.datumRojstva = list.datumRojstva.ToString("dd.MM.yyyy");
 
                 if (Convert.ToBoolean(list.vrocanje))
                 {
