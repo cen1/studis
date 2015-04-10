@@ -195,6 +195,8 @@
           <Property Name="letnik" Type="int" Nullable="false" />
           <Property Name="obvezen" Type="bool" Nullable="false" />
           <Property Name="modulId" Type="uint" />
+          <Property Name="prostoizbirni" Type="bool" />
+          <Property Name="strokovnoizbirni" Type="bool" />
         </EntityType>
         <EntityType Name="profesor">
           <Key>
@@ -211,6 +213,62 @@
           </Key>
           <Property Name="profesorId" Type="uint" Nullable="false" />
           <Property Name="predmetId" Type="uint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sifrant_drzave">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="naziv" Type="varchar" MaxLength="255" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sifrant_izbirnaskupina">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="naziv" Type="varchar" MaxLength="255" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sifrant_klasius">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="naziv" Type="varchar" MaxLength="255" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sifrant_letnik">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="naziv" Type="varchar" MaxLength="255" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sifrant_nacinstudija">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="naziv" Type="varchar" MaxLength="255" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sifrant_obcine">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="naziv" Type="varchar" MaxLength="255" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sifrant_oblikastudija">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="naziv" Type="varchar" MaxLength="255" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sifrant_postnestevilke">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="naziv" Type="varchar" MaxLength="255" Nullable="false" />
         </EntityType>
         <EntityType Name="student">
           <Key>
@@ -540,6 +598,14 @@
           <EntitySet Name="predmet" EntityType="Self.predmet" Schema="studis" store:Type="Tables" />
           <EntitySet Name="profesor" EntityType="Self.profesor" Schema="studis" store:Type="Tables" />
           <EntitySet Name="profesorinpredmet" EntityType="Self.profesorinpredmet" Schema="studis" store:Type="Tables" />
+          <EntitySet Name="sifrant_drzave" EntityType="Self.sifrant_drzave" Schema="studis" store:Type="Tables" />
+          <EntitySet Name="sifrant_izbirnaskupina" EntityType="Self.sifrant_izbirnaskupina" Schema="studis" store:Type="Tables" />
+          <EntitySet Name="sifrant_klasius" EntityType="Self.sifrant_klasius" Schema="studis" store:Type="Tables" />
+          <EntitySet Name="sifrant_letnik" EntityType="Self.sifrant_letnik" Schema="studis" store:Type="Tables" />
+          <EntitySet Name="sifrant_nacinstudija" EntityType="Self.sifrant_nacinstudija" Schema="studis" store:Type="Tables" />
+          <EntitySet Name="sifrant_obcine" EntityType="Self.sifrant_obcine" Schema="studis" store:Type="Tables" />
+          <EntitySet Name="sifrant_oblikastudija" EntityType="Self.sifrant_oblikastudija" Schema="studis" store:Type="Tables" />
+          <EntitySet Name="sifrant_postnestevilke" EntityType="Self.sifrant_postnestevilke" Schema="studis" store:Type="Tables" />
           <EntitySet Name="student" EntityType="Self.student" Schema="studis" store:Type="Tables" />
           <EntitySet Name="studentinpredmet" EntityType="Self.studentinpredmet" Schema="studis" store:Type="Tables" />
           <EntitySet Name="vpisnilist" EntityType="Self.vpisnilist" Schema="studis" store:Type="Tables" />
@@ -845,6 +911,14 @@
             <End Role="student" EntitySet="students" />
             <End Role="zeton" EntitySet="zetons" />
           </AssociationSet>
+          <EntitySet Name="sifrant_drzave" EntityType="studisModel.sifrant_drzave" />
+          <EntitySet Name="sifrant_izbirnaskupina" EntityType="studisModel.sifrant_izbirnaskupina" />
+          <EntitySet Name="sifrant_klasius" EntityType="studisModel.sifrant_klasius" />
+          <EntitySet Name="sifrant_letnik" EntityType="studisModel.sifrant_letnik" />
+          <EntitySet Name="sifrant_nacinstudija" EntityType="studisModel.sifrant_nacinstudija" />
+          <EntitySet Name="sifrant_obcine" EntityType="studisModel.sifrant_obcine" />
+          <EntitySet Name="sifrant_oblikastudija" EntityType="studisModel.sifrant_oblikastudija" />
+          <EntitySet Name="sifrant_postnestevilke" EntityType="studisModel.sifrant_postnestevilke" />
         </EntityContainer>
         <EntityType Name="ip_lock">
           <Key>
@@ -964,6 +1038,8 @@
           <NavigationProperty Name="profesors" Relationship="studisModel.profesorinpredmet" FromRole="predmet" ToRole="profesor" />
           <NavigationProperty Name="students" Relationship="studisModel.studentinpredmet" FromRole="predmet" ToRole="student" />
           <NavigationProperty Name="ocenas" Relationship="studisModel.ocena_predmet" FromRole="predmet" ToRole="ocena" />
+          <Property Name="prostoizbirni" Type="Boolean" />
+          <Property Name="strokovnoizbirni" Type="Boolean" />
         </EntityType>
         <EntityType Name="profesor">
           <Key>
@@ -1142,6 +1218,62 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="sifrant_drzave">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="String" Nullable="false" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="naziv" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="sifrant_izbirnaskupina">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="String" Nullable="false" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="naziv" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="sifrant_klasius">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="String" Nullable="false" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="naziv" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="sifrant_letnik">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="String" Nullable="false" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="naziv" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="sifrant_nacinstudija">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="String" Nullable="false" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="naziv" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="sifrant_obcine">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="String" Nullable="false" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="naziv" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="sifrant_oblikastudija">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="String" Nullable="false" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="naziv" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="sifrant_postnestevilke">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="String" Nullable="false" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="naziv" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1334,6 +1466,8 @@
           <EntitySetMapping Name="predmets">
             <EntityTypeMapping TypeName="studisModel.predmet">
               <MappingFragment StoreEntitySet="predmet">
+                <ScalarProperty Name="strokovnoizbirni" ColumnName="strokovnoizbirni" />
+                <ScalarProperty Name="prostoizbirni" ColumnName="prostoizbirni" />
                 <ScalarProperty Name="modulId" ColumnName="modulId" />
                 <ScalarProperty Name="obvezen" ColumnName="obvezen" />
                 <ScalarProperty Name="letnik" ColumnName="letnik" />
@@ -1447,6 +1581,70 @@
                 <ScalarProperty Name="porabljen" ColumnName="porabljen" />
                 <ScalarProperty Name="letnik" ColumnName="letnik" />
                 <ScalarProperty Name="vpisnaStevilka" ColumnName="vpisnaStevilka" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sifrant_drzave">
+            <EntityTypeMapping TypeName="studisModel.sifrant_drzave">
+              <MappingFragment StoreEntitySet="sifrant_drzave">
+                <ScalarProperty Name="naziv" ColumnName="naziv" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sifrant_izbirnaskupina">
+            <EntityTypeMapping TypeName="studisModel.sifrant_izbirnaskupina">
+              <MappingFragment StoreEntitySet="sifrant_izbirnaskupina">
+                <ScalarProperty Name="naziv" ColumnName="naziv" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sifrant_klasius">
+            <EntityTypeMapping TypeName="studisModel.sifrant_klasius">
+              <MappingFragment StoreEntitySet="sifrant_klasius">
+                <ScalarProperty Name="naziv" ColumnName="naziv" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sifrant_letnik">
+            <EntityTypeMapping TypeName="studisModel.sifrant_letnik">
+              <MappingFragment StoreEntitySet="sifrant_letnik">
+                <ScalarProperty Name="naziv" ColumnName="naziv" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sifrant_nacinstudija">
+            <EntityTypeMapping TypeName="studisModel.sifrant_nacinstudija">
+              <MappingFragment StoreEntitySet="sifrant_nacinstudija">
+                <ScalarProperty Name="naziv" ColumnName="naziv" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sifrant_obcine">
+            <EntityTypeMapping TypeName="studisModel.sifrant_obcine">
+              <MappingFragment StoreEntitySet="sifrant_obcine">
+                <ScalarProperty Name="naziv" ColumnName="naziv" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sifrant_oblikastudija">
+            <EntityTypeMapping TypeName="studisModel.sifrant_oblikastudija">
+              <MappingFragment StoreEntitySet="sifrant_oblikastudija">
+                <ScalarProperty Name="naziv" ColumnName="naziv" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sifrant_postnestevilke">
+            <EntityTypeMapping TypeName="studisModel.sifrant_postnestevilke">
+              <MappingFragment StoreEntitySet="sifrant_postnestevilke">
+                <ScalarProperty Name="naziv" ColumnName="naziv" />
+                <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

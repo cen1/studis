@@ -40,14 +40,14 @@ namespace studis.Models
         };
 
         public static readonly Sifrant[] NACINSTUDIJA = {
-            new Sifrant(1, "redni"),
-            new Sifrant(3, "izredni"),
+            new Sifrant(1, "Redni"),
+            new Sifrant(3, "Izredni"),
         };
 
         public static readonly Sifrant[] OBLIKASTUDIJA = {
-            new Sifrant(1, "na lokaciji"),
-            new Sifrant(2, "na daljavo"),
-            new Sifrant(3, "e-študij"),
+            new Sifrant(1, "Na lokaciji"),
+            new Sifrant(2, "Na daljavo"),
+            new Sifrant(3, "E-študij"),
         };
 
         public static readonly Sifrant[] STUDIJSKIPROGRAM = {

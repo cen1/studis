@@ -35,5 +35,11 @@ namespace studis.Controllers
 
             return View(model);
         }
+
+        /*[HttpPost]
+        public ActionResult Dodaj()
+        {
+            
+        }*/
     }
 }

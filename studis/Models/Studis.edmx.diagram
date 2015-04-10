@@ -41,6 +41,14 @@
         <EntityTypeShape EntityType="studisModel.zeton" Width="1.5" PointX="4.625" PointY="20.875" />
         <AssociationConnector Association="studisModel.fk_userId" />
         <AssociationConnector Association="studisModel.zeton_student_fk" />
+        <EntityTypeShape EntityType="studisModel.sifrant_drzave" Width="1.5" PointX="0.75" PointY="9.75" />
+        <EntityTypeShape EntityType="studisModel.sifrant_izbirnaskupina" Width="1.5" PointX="10.75" PointY="0.75" />
+        <EntityTypeShape EntityType="studisModel.sifrant_klasius" Width="1.5" PointX="10.75" PointY="3.75" />
+        <EntityTypeShape EntityType="studisModel.sifrant_letnik" Width="1.5" PointX="10.75" PointY="9.75" />
+        <EntityTypeShape EntityType="studisModel.sifrant_nacinstudija" Width="1.5" PointX="12.75" PointY="0.75" />
+        <EntityTypeShape EntityType="studisModel.sifrant_obcine" Width="1.5" PointX="0.75" PointY="12.75" />
+        <EntityTypeShape EntityType="studisModel.sifrant_oblikastudija" Width="1.5" PointX="12.75" PointY="3.75" />
+        <EntityTypeShape EntityType="studisModel.sifrant_postnestevilke" Width="1.5" PointX="10.75" PointY="12.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

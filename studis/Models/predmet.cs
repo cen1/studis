@@ -30,6 +30,8 @@ namespace studis.Models
         public int letnik { get; set; }
         public bool obvezen { get; set; }
         public Nullable<long> modulId { get; set; }
+        public Nullable<bool> prostoizbirni { get; set; }
+        public Nullable<bool> strokovnoizbirni { get; set; }
     
         public virtual modul modul { get; set; }
         public virtual ICollection<profesor> profesors { get; set; }

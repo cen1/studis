@@ -46,5 +46,13 @@ namespace studis.Models
         public virtual DbSet<vpisnilist> vpisnilists { get; set; }
         public virtual DbSet<kandidat> kandidats { get; set; }
         public virtual DbSet<zeton> zetons { get; set; }
+        public virtual DbSet<sifrant_drzave> sifrant_drzave { get; set; }
+        public virtual DbSet<sifrant_izbirnaskupina> sifrant_izbirnaskupina { get; set; }
+        public virtual DbSet<sifrant_klasius> sifrant_klasius { get; set; }
+        public virtual DbSet<sifrant_letnik> sifrant_letnik { get; set; }
+        public virtual DbSet<sifrant_nacinstudija> sifrant_nacinstudija { get; set; }
+        public virtual DbSet<sifrant_obcine> sifrant_obcine { get; set; }
+        public virtual DbSet<sifrant_oblikastudija> sifrant_oblikastudija { get; set; }
+        public virtual DbSet<sifrant_postnestevilke> sifrant_postnestevilke { get; set; }
     }
 }
