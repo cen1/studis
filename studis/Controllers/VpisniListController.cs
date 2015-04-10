@@ -244,5 +244,16 @@ namespace studis.Controllers
             var result= Validate.veljavenDatum(datumRojstva);
             return Json(result);
         }
+
+        public JsonResult PreveriVrstaVpisa(int vrstaVpisa)
+        {
+            bool result = true;
+            if (User.IsInRole("Študent"))
+            {
+                if (vrstaVpisa < 1 || vrstaVpisa > 7)
+                    result = false;
+            }
+            return Json(result);
+        }
     }
 }
