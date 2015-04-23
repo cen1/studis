@@ -12,9 +12,18 @@ namespace studis.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class sifrant_drzave
+    public partial class sifrant_vrstavpisa
     {
-        public string id { get; set; }
+        public sifrant_vrstavpisa()
+        {
+            this.vpis = new HashSet<vpi>();
+            this.zetons = new HashSet<zeton>();
+        }
+    
+        public int id { get; set; }
         public string naziv { get; set; }
+    
+        public virtual ICollection<vpi> vpis { get; set; }
+        public virtual ICollection<zeton> zetons { get; set; }
     }
 }

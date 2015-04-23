@@ -18,6 +18,7 @@ namespace studis.Controllers
         {
 
             //poglej ce obstaja vnos v tabeli student in ce ja, poglej zeton
+            //ce vnosa ni je prvi vpis in ni treba preverjat
             //var sid = studis.Models.UserHelper.FindByName(User.Identity.Name).students.FirstOrDefault();
             //if (sid != null) 
 

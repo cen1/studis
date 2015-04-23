@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="1d3f79dc583b4c97953e0f85d49e781a" Name="Diagram1" ZoomLevel="100">
+      <Diagram DiagramId="1d3f79dc583b4c97953e0f85d49e781a" Name="Diagram1" ZoomLevel="74">
         <EntityTypeShape EntityType="studisModel.my_aspnet_applications" Width="1.5" PointX="0.625" PointY="0.5" IsExpanded="true" />
         <EntityTypeShape EntityType="studisModel.my_aspnet_membership" Width="1.5" PointX="8.25" PointY="0.5" IsExpanded="true" />
         <EntityTypeShape EntityType="studisModel.my_aspnet_paths" Width="1.5" PointX="0.5" PointY="6.75" IsExpanded="true" />
@@ -16,39 +16,82 @@
         <EntityTypeShape EntityType="studisModel.my_aspnet_sessions" Width="1.5" PointX="5.875" PointY="6.75" IsExpanded="true" />
         <EntityTypeShape EntityType="studisModel.my_aspnet_sitemap" Width="1.5" PointX="7.625" PointY="6.75" IsExpanded="true" />
         <EntityTypeShape EntityType="studisModel.my_aspnet_users" Width="1.5" PointX="6" PointY="0.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="studisModel.student" Width="1.5" PointX="2.375" PointY="3.625" IsExpanded="true" />
-        <EntityTypeShape EntityType="studisModel.ip_lock" Width="1.5" PointX="4.125" PointY="3.625" />
+        <EntityTypeShape EntityType="studisModel.ip_lock" Width="1.5" PointX="2.875" PointY="3.25" />
         <AssociationConnector Association="studisModel.ip_lock_to_user" />
         <AssociationConnector Association="studisModel.users_to_application" />
         <AssociationConnector Association="studisModel.membership_to_users" />
-        <AssociationConnector Association="studisModel.userID_student_users" />
         <AssociationConnector Association="studisModel.my_aspnet_usersinroles1" />
         <EntityTypeShape EntityType="studisModel.password_recovery" Width="1.5" PointX="8.25" PointY="10.125" />
         <AssociationConnector Association="studisModel.pr_to_user_fk" />
         <AssociationConnector Association="studisModel.userID_student_users1" />
-        <EntityTypeShape EntityType="studisModel.modul" Width="1.5" PointX="13.875" PointY="13.625" />
-        <EntityTypeShape EntityType="studisModel.predmet" Width="1.5" PointX="16.125" PointY="0.5" />
-        <EntityTypeShape EntityType="studisModel.profesor" Width="1.5" PointX="13.875" PointY="11" />
+        <EntityTypeShape EntityType="studisModel.sifrant_drzave" Width="1.5" PointX="25.75" PointY="1" />
+        <EntityTypeShape EntityType="studisModel.sifrant_izbirnaskupina" Width="1.5" PointX="20.5" PointY="1" />
+        <EntityTypeShape EntityType="studisModel.sifrant_klasius" Width="1.5" PointX="22.25" PointY="2.5" />
+        <EntityTypeShape EntityType="studisModel.sifrant_letnik" Width="1.5" PointX="24" PointY="2.5" />
+        <EntityTypeShape EntityType="studisModel.sifrant_nacinstudija" Width="1.5" PointX="22.25" PointY="1" />
+        <EntityTypeShape EntityType="studisModel.sifrant_obcine" Width="1.5" PointX="22.25" PointY="4.125" />
+        <EntityTypeShape EntityType="studisModel.sifrant_oblikastudija" Width="1.5" PointX="20.625" PointY="2.5" />
+        <EntityTypeShape EntityType="studisModel.sifrant_postnestevilke" Width="1.5" PointX="25.75" PointY="2.5" />
+        <EntityTypeShape EntityType="studisModel.sifrant_drzava" Width="1.5" PointX="24" PointY="4" />
+        <EntityTypeShape EntityType="studisModel.sifrant_obcina" Width="1.5" PointX="24" PointY="1" />
+        <EntityTypeShape EntityType="studisModel.sifrant_postnastevilka" Width="1.5" PointX="22.375" PointY="5.75" />
+        <EntityTypeShape EntityType="studisModel.sifrant_spol" Width="1.5" PointX="20.375" PointY="5.75" />
+        <EntityTypeShape EntityType="studisModel.sifrant_studijskiprogram" Width="1.5" PointX="25.75" PointY="4.125" />
+        <EntityTypeShape EntityType="studisModel.sifrant_studijskoleto" Width="1.5" PointX="25.875" PointY="5.75" />
+        <EntityTypeShape EntityType="studisModel.sifrant_studijskoletoprvegavpisa" Width="1.5" PointX="24.25" PointY="5.75" />
+        <EntityTypeShape EntityType="studisModel.sifrant_vrstavpisa" Width="1.5" PointX="20.5" PointY="4.125" />
+        <EntityTypeShape EntityType="studisModel.modul" Width="1.5" PointX="28.25" PointY="13.5" />
+        <EntityTypeShape EntityType="studisModel.ocena" Width="1.5" PointX="32.75" PointY="3.75" />
+        <EntityTypeShape EntityType="studisModel.predmet" Width="1.5" PointX="30.5" PointY="10.625" />
+        <EntityTypeShape EntityType="studisModel.profesor" Width="1.5" PointX="28.25" PointY="11" />
+        <EntityTypeShape EntityType="studisModel.student" Width="1.5" PointX="28.25" PointY="0.75" />
+        <EntityTypeShape EntityType="studisModel.studentinpredmet" Width="1.5" PointX="35.75" PointY="3.875" />
+        <EntityTypeShape EntityType="studisModel.vpi" Width="1.5" PointX="30.5" PointY="1" />
+        <EntityTypeShape EntityType="studisModel.zeton" Width="1.5" PointX="33.5" PointY="7.25" />
         <AssociationConnector Association="studisModel.predmet_modul_fk" />
-        <AssociationConnector Association="studisModel.profesorinpredmet" />
-        <AssociationConnector Association="studisModel.studentinpredmet" />
-        <EntityTypeShape EntityType="studisModel.ocena" Width="1.5" PointX="18.375" PointY="2.5" />
-        <EntityTypeShape EntityType="studisModel.vpisnilist" Width="1.5" PointX="4.625" PointY="10.5" />
+        <AssociationConnector Association="studisModel.userID_student_users" />
         <AssociationConnector Association="studisModel.ocena_predmet" />
         <AssociationConnector Association="studisModel.ocena_student" />
+        <AssociationConnector Association="studisModel.ocena_vpis" />
+        <AssociationConnector Association="studisModel.predmet_s_letnik" />
+        <AssociationConnector Association="studisModel.predmet_s_studijskiprogram" />
+        <AssociationConnector Association="studisModel.predmet_s_vrstastudija" />
+        <AssociationConnector Association="studisModel.student_predmet_fk" />
+        <AssociationConnector Association="studisModel.student_s_drzava" />
+        <AssociationConnector Association="studisModel.student_s_drzava_z" />
+        <AssociationConnector Association="studisModel.student_s_drzavarojstva" />
+        <AssociationConnector Association="studisModel.student_s_drzavljanstvo" />
+        <AssociationConnector Association="studisModel.vpis_s_izbirnaskupina" />
+        <AssociationConnector Association="studisModel.vpis_s_izbirnaskupina2" />
+        <AssociationConnector Association="studisModel.vpis_s_vrstastudija" />
+        <AssociationConnector Association="studisModel.zeton_s_vrstaStudija" />
+        <AssociationConnector Association="studisModel.vpis_s_letnik" />
+        <AssociationConnector Association="studisModel.zeton_s_letnik" />
+        <AssociationConnector Association="studisModel.vpis_s_nacinstudija" />
+        <AssociationConnector Association="studisModel.student_s_obcina" />
+        <AssociationConnector Association="studisModel.student_s_obcina_z" />
+        <AssociationConnector Association="studisModel.student_s_obcinarojstva" />
+        <AssociationConnector Association="studisModel.vpis_s_krajizvajanja" />
+        <AssociationConnector Association="studisModel.vpis_s_krajizvajanja2" />
+        <AssociationConnector Association="studisModel.vpis_s_oblikastudija" />
+        <AssociationConnector Association="studisModel.zeton_s_oblikastudija" />
+        <AssociationConnector Association="studisModel.student_s_postnastevilka" />
+        <AssociationConnector Association="studisModel.student_s_postnastevilka_z" />
+        <AssociationConnector Association="studisModel.student_s_spol" />
+        <AssociationConnector Association="studisModel.vpis_s_studijskiprogram" />
+        <AssociationConnector Association="studisModel.vpis_s_studisjkiprogram2" />
+        <AssociationConnector Association="studisModel.zeton_s_studijskiprogram" />
+        <AssociationConnector Association="studisModel.vpis_s_studijskoleto" />
+        <AssociationConnector Association="studisModel.vpis_s_studijskoletoprvegavpisa" />
+        <AssociationConnector Association="studisModel.vpis_s_vrstavpisa" />
+        <AssociationConnector Association="studisModel.zeton_s_vrstavpisa" />
+        <AssociationConnector Association="studisModel.predmet_student_fk" />
         <AssociationConnector Association="studisModel.vpisnilist_student_fk" />
-        <EntityTypeShape EntityType="studisModel.kandidat" Width="1.5" PointX="8.25" PointY="13.75" />
-        <EntityTypeShape EntityType="studisModel.zeton" Width="1.5" PointX="4.625" PointY="20.875" />
-        <AssociationConnector Association="studisModel.fk_userId" />
         <AssociationConnector Association="studisModel.zeton_student_fk" />
-        <EntityTypeShape EntityType="studisModel.sifrant_drzave" Width="1.5" PointX="0.75" PointY="9.75" />
-        <EntityTypeShape EntityType="studisModel.sifrant_izbirnaskupina" Width="1.5" PointX="10.75" PointY="0.75" />
-        <EntityTypeShape EntityType="studisModel.sifrant_klasius" Width="1.5" PointX="10.75" PointY="3.75" />
-        <EntityTypeShape EntityType="studisModel.sifrant_letnik" Width="1.5" PointX="10.75" PointY="9.75" />
-        <EntityTypeShape EntityType="studisModel.sifrant_nacinstudija" Width="1.5" PointX="12.75" PointY="0.75" />
-        <EntityTypeShape EntityType="studisModel.sifrant_obcine" Width="1.5" PointX="0.75" PointY="12.75" />
-        <EntityTypeShape EntityType="studisModel.sifrant_oblikastudija" Width="1.5" PointX="12.75" PointY="3.75" />
-        <EntityTypeShape EntityType="studisModel.sifrant_postnestevilke" Width="1.5" PointX="10.75" PointY="12.75" />
+        <AssociationConnector Association="studisModel.studentinpredmet_vpis" />
+        <AssociationConnector Association="studisModel.profesorinpredmet" />
+        <EntityTypeShape EntityType="studisModel.kandidat" Width="1.5" PointX="8.25" PointY="13" />
+        <AssociationConnector Association="studisModel.fk_userId" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

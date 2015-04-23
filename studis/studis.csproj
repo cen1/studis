@@ -240,7 +240,7 @@
     <Compile Include="Models\PrviPredmetnikModel.cs" />
     <Compile Include="Models\Sifrant.cs" />
     <Compile Include="Models\Sifranti.cs" />
-    <Compile Include="Models\sifrant_drzave.cs">
+    <Compile Include="Models\sifrant_drzava.cs">
       <DependentUpon>Studis.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\sifrant_izbirnaskupina.cs">
@@ -255,16 +255,34 @@
     <Compile Include="Models\sifrant_nacinstudija.cs">
       <DependentUpon>Studis.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\sifrant_obcine.cs">
+    <Compile Include="Models\sifrant_obcina.cs">
       <DependentUpon>Studis.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\sifrant_oblikastudija.cs">
       <DependentUpon>Studis.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\sifrant_postnestevilke.cs">
+    <Compile Include="Models\sifrant_postnastevilka.cs">
+      <DependentUpon>Studis.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sifrant_spol.cs">
+      <DependentUpon>Studis.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sifrant_studijskiprogram.cs">
+      <DependentUpon>Studis.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sifrant_studijskoleto.cs">
+      <DependentUpon>Studis.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sifrant_studijskoletoprvegavpisa.cs">
+      <DependentUpon>Studis.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sifrant_vrstavpisa.cs">
       <DependentUpon>Studis.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\student.cs">
+      <DependentUpon>Studis.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\studentinpredmet.cs">
       <DependentUpon>Studis.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Studis.Context.cs">
@@ -285,7 +303,7 @@
     <Compile Include="Models\UserHelper.cs" />
     <Compile Include="Models\UserModels.cs" />
     <Compile Include="Models\Validate.cs" />
-    <Compile Include="Models\vpisnilist.cs">
+    <Compile Include="Models\vpi.cs">
       <DependentUpon>Studis.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\VpisniListModel.cs" />

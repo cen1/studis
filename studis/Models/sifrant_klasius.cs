@@ -14,7 +14,18 @@ namespace studis.Models
     
     public partial class sifrant_klasius
     {
-        public string id { get; set; }
+        public sifrant_klasius()
+        {
+            this.predmets = new HashSet<predmet>();
+            this.vpis = new HashSet<vpi>();
+            this.zetons = new HashSet<zeton>();
+        }
+    
+        public int id { get; set; }
         public string naziv { get; set; }
+    
+        public virtual ICollection<predmet> predmets { get; set; }
+        public virtual ICollection<vpi> vpis { get; set; }
+        public virtual ICollection<zeton> zetons { get; set; }
     }
 }

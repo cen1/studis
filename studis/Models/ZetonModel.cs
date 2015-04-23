@@ -45,15 +45,5 @@ namespace studis.Models
 
             return letniki;
         }
-
-        public List<vpisnilist> pridobiVpise(int id)
-        {
-            List<vpisnilist> ret = new List<vpisnilist>();
-            var q = db.vpisnilists.Where(a=>a.vpisnaStevilka == id).Where(b=>b.potrjen == true);
-            foreach (var c in q)
-                ret.Add(c);
-
-            return ret;
-        }
     }
 }

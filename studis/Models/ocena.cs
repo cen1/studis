@@ -18,8 +18,10 @@ namespace studis.Models
         public long predmetId { get; set; }
         public int studentId { get; set; }
         public int ocena1 { get; set; }
+        public int vpisId { get; set; }
     
         public virtual predmet predmet { get; set; }
         public virtual student student { get; set; }
+        public virtual vpi vpi { get; set; }
     }
 }

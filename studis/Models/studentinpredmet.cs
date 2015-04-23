@@ -12,18 +12,14 @@ namespace studis.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class sifrant_oblikastudija
+    public partial class studentinpredmet
     {
-        public sifrant_oblikastudija()
-        {
-            this.vpis = new HashSet<vpi>();
-            this.zetons = new HashSet<zeton>();
-        }
+        public int studentId { get; set; }
+        public long predmetId { get; set; }
+        public int vpisId { get; set; }
     
-        public int id { get; set; }
-        public string naziv { get; set; }
-    
-        public virtual ICollection<vpi> vpis { get; set; }
-        public virtual ICollection<zeton> zetons { get; set; }
+        public virtual predmet predmet { get; set; }
+        public virtual student student { get; set; }
+        public virtual vpi vpi { get; set; }
     }
 }

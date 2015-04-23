@@ -36,23 +36,29 @@ namespace studis.Models
         public virtual DbSet<my_aspnet_sessions> my_aspnet_sessions { get; set; }
         public virtual DbSet<my_aspnet_sitemap> my_aspnet_sitemap { get; set; }
         public virtual DbSet<my_aspnet_users> my_aspnet_users { get; set; }
-        public virtual DbSet<student> students { get; set; }
         public virtual DbSet<ip_lock> ip_lock { get; set; }
         public virtual DbSet<password_recovery> password_recovery { get; set; }
-        public virtual DbSet<modul> moduls { get; set; }
-        public virtual DbSet<predmet> predmets { get; set; }
-        public virtual DbSet<profesor> profesors { get; set; }
-        public virtual DbSet<ocena> ocenas { get; set; }
-        public virtual DbSet<vpisnilist> vpisnilists { get; set; }
-        public virtual DbSet<kandidat> kandidats { get; set; }
-        public virtual DbSet<zeton> zetons { get; set; }
-        public virtual DbSet<sifrant_drzave> sifrant_drzave { get; set; }
         public virtual DbSet<sifrant_izbirnaskupina> sifrant_izbirnaskupina { get; set; }
         public virtual DbSet<sifrant_klasius> sifrant_klasius { get; set; }
         public virtual DbSet<sifrant_letnik> sifrant_letnik { get; set; }
         public virtual DbSet<sifrant_nacinstudija> sifrant_nacinstudija { get; set; }
-        public virtual DbSet<sifrant_obcine> sifrant_obcine { get; set; }
         public virtual DbSet<sifrant_oblikastudija> sifrant_oblikastudija { get; set; }
-        public virtual DbSet<sifrant_postnestevilke> sifrant_postnestevilke { get; set; }
+        public virtual DbSet<sifrant_drzava> sifrant_drzava { get; set; }
+        public virtual DbSet<sifrant_obcina> sifrant_obcina { get; set; }
+        public virtual DbSet<sifrant_postnastevilka> sifrant_postnastevilka { get; set; }
+        public virtual DbSet<sifrant_spol> sifrant_spol { get; set; }
+        public virtual DbSet<sifrant_studijskiprogram> sifrant_studijskiprogram { get; set; }
+        public virtual DbSet<sifrant_studijskoleto> sifrant_studijskoleto { get; set; }
+        public virtual DbSet<sifrant_studijskoletoprvegavpisa> sifrant_studijskoletoprvegavpisa { get; set; }
+        public virtual DbSet<sifrant_vrstavpisa> sifrant_vrstavpisa { get; set; }
+        public virtual DbSet<modul> moduls { get; set; }
+        public virtual DbSet<ocena> ocenas { get; set; }
+        public virtual DbSet<predmet> predmets { get; set; }
+        public virtual DbSet<profesor> profesors { get; set; }
+        public virtual DbSet<student> students { get; set; }
+        public virtual DbSet<studentinpredmet> studentinpredmets { get; set; }
+        public virtual DbSet<vpi> vpis { get; set; }
+        public virtual DbSet<zeton> zetons { get; set; }
+        public virtual DbSet<kandidat> kandidats { get; set; }
     }
 }

@@ -12,9 +12,18 @@ namespace studis.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class sifrant_obcine
+    public partial class sifrant_postnastevilka
     {
-        public string id { get; set; }
+        public sifrant_postnastevilka()
+        {
+            this.students = new HashSet<student>();
+            this.students1 = new HashSet<student>();
+        }
+    
+        public int id { get; set; }
         public string naziv { get; set; }
+    
+        public virtual ICollection<student> students { get; set; }
+        public virtual ICollection<student> students1 { get; set; }
     }
 }

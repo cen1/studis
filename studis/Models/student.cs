@@ -16,23 +16,50 @@ namespace studis.Models
     {
         public student()
         {
-            this.predmets = new HashSet<predmet>();
             this.ocenas = new HashSet<ocena>();
-            this.vpisnilists = new HashSet<vpisnilist>();
+            this.studentinpredmets = new HashSet<studentinpredmet>();
+            this.vpis = new HashSet<vpi>();
         }
     
-        public int vpisna_stevilka { get; set; }
+        public int vpisnaStevilka { get; set; }
         public string ime { get; set; }
         public string priimek { get; set; }
+        public System.DateTime datumRojstva { get; set; }
+        public string krajRojstva { get; set; }
+        public int obcinaRojstva { get; set; }
+        public int drzavaRojstva { get; set; }
+        public int spol { get; set; }
+        public int drzavljanstvo { get; set; }
+        public string emso { get; set; }
+        public Nullable<int> davcnaStevilka { get; set; }
+        public string email { get; set; }
+        public string prenosniTelefon { get; set; }
         public string naslov { get; set; }
-        public string datum_rojstva { get; set; }
-        public string spol { get; set; }
+        public Nullable<bool> vrocanje { get; set; }
+        public int postnaStevilka { get; set; }
+        public int obcina { get; set; }
+        public int drzava { get; set; }
+        public Nullable<int> naslovZacasni { get; set; }
+        public Nullable<bool> vrocanjeZacasni { get; set; }
+        public Nullable<int> postnaStevilkaZacasni { get; set; }
+        public Nullable<int> obcinaZacasni { get; set; }
+        public Nullable<int> drzavaZacasni { get; set; }
         public int userId { get; set; }
     
         public virtual my_aspnet_users my_aspnet_users { get; set; }
-        public virtual ICollection<predmet> predmets { get; set; }
         public virtual ICollection<ocena> ocenas { get; set; }
-        public virtual ICollection<vpisnilist> vpisnilists { get; set; }
+        public virtual sifrant_drzava sifrant_drzava { get; set; }
+        public virtual sifrant_drzava sifrant_drzava1 { get; set; }
+        public virtual sifrant_drzava sifrant_drzava2 { get; set; }
+        public virtual sifrant_drzava sifrant_drzava3 { get; set; }
+        public virtual sifrant_obcina sifrant_obcina { get; set; }
+        public virtual sifrant_obcina sifrant_obcina1 { get; set; }
+        public virtual sifrant_obcina sifrant_obcina2 { get; set; }
+        public virtual sifrant_postnastevilka sifrant_postnastevilka { get; set; }
+        public virtual sifrant_postnastevilka sifrant_postnastevilka1 { get; set; }
+        public virtual sifrant_spol sifrant_spol { get; set; }
+        public virtual ICollection<studentinpredmet> studentinpredmets { get; set; }
+        public virtual ICollection<vpi> vpis { get; set; }
         public virtual zeton zeton { get; set; }
     }
 }

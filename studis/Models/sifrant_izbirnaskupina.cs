@@ -14,7 +14,16 @@ namespace studis.Models
     
     public partial class sifrant_izbirnaskupina
     {
-        public string id { get; set; }
+        public sifrant_izbirnaskupina()
+        {
+            this.vpis = new HashSet<vpi>();
+            this.vpis1 = new HashSet<vpi>();
+        }
+    
+        public int id { get; set; }
         public string naziv { get; set; }
+    
+        public virtual ICollection<vpi> vpis { get; set; }
+        public virtual ICollection<vpi> vpis1 { get; set; }
     }
 }
