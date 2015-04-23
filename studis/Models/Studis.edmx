@@ -330,7 +330,7 @@
           <Property Name="postnaStevilka" Type="int" Nullable="false" />
           <Property Name="obcina" Type="int" Nullable="false" />
           <Property Name="drzava" Type="int" Nullable="false" />
-          <Property Name="naslovZacasni" Type="int" />
+          <Property Name="naslovZacasni" Type="varchar" MaxLength="45" />
           <Property Name="vrocanjeZacasni" Type="bool" />
           <Property Name="postnaStevilkaZacasni" Type="int" />
           <Property Name="obcinaZacasni" Type="int" />
@@ -1960,7 +1960,7 @@
           <Property Name="postnaStevilka" Type="Int32" Nullable="false" />
           <Property Name="obcina" Type="Int32" Nullable="false" />
           <Property Name="drzava" Type="Int32" Nullable="false" />
-          <Property Name="naslovZacasni" Type="Int32" />
+          <Property Name="naslovZacasni" Type="String" />
           <Property Name="vrocanjeZacasni" Type="Boolean" />
           <Property Name="postnaStevilkaZacasni" Type="Int32" />
           <Property Name="obcinaZacasni" Type="Int32" />
