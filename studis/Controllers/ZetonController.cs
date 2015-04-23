@@ -23,7 +23,7 @@ namespace studis.Controllers
             ZetonModel model = new ZetonModel();
             ViewBag.letniki = model.pridobiLetnike(id);
             model.vpisna = id;
-            List<vpisnilist> vpisi = model.pridobiVpise(id);
+            List<vpi> vpisi = model.pridobiVpise(id);
             ViewBag.vpisi = vpisi;
             ViewBag.sovpisi = false;
 

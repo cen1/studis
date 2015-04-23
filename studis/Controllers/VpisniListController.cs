@@ -49,60 +49,60 @@ namespace studis.Controllers
             model.studijskoLeto = "2014/2015";
             if (ModelState.IsValid)
             {
-                    vpisnilist v = new vpisnilist();
-                    v.datumRojstva = model.datumRojstva;
-                    v.davcnaStevilka = model.davcnaStevilka;
-                    v.drzava = model.davcnaStevilka;
-                    v.drzavaRojstva = model.drzavaRojstva;
-                    v.drzavaZacasni = model.drzavaZacasni;
-                    v.drzavljanstvo = model.drzavljanstvo;
-                    v.email = model.email;
-                    v.emso = model.emso;
-                    v.ime = model.ime;
+                    vpi v = new vpi();
+                    v.student.datumRojstva = model.datumRojstva;
+                    v.student.davcnaStevilka = model.davcnaStevilka;
+                    v.student.drzava = model.davcnaStevilka;
+                    v.student.drzavaRojstva = model.drzavaRojstva;
+                    v.student.drzavaZacasni = model.drzavaZacasni;
+                    v.student.drzavljanstvo = model.drzavljanstvo;
+                    v.student.email = model.email;
+                    v.student.emso = model.emso;
+                    v.student.ime = model.ime;
                     v.izbirnaSkupina = model.izbirnaSkupina;
                     v.izbirnaSkupina2 = model.izbirnaSkupina2;
                     v.krajIzvajanja = model.krajIzvajanja;
                     v.krajIzvajanja2 = model.krajIzvajanja2;
-                    v.krajRojstva = model.krajRojstva;
+                    v.student.krajRojstva = model.krajRojstva;
                     v.letnikStudija = model.letnikStudija;
                     v.nacinStudija = model.nacinStudija;
-                    v.naslov = model.naslov;
-                    v.naslovZacasni = model.naslovZacasni;
-                    v.obcina = model.obcina;
-                    v.obcinaRojstva = model.obcinaRojstva;
-                    v.obcinaZacasni = model.obcinaZacasni;
+                    v.student.naslov = model.naslov;
+                    v.student.naslovZacasni = model.naslovZacasni;
+                    v.student.obcina = model.obcina;
+                    v.student.obcinaRojstva = model.obcinaRojstva;
+                    v.student.obcinaZacasni = model.obcinaZacasni;
                     v.oblikaStudija = model.oblikaStudija;
-                    v.postnaStevilka = model.postnaStevilka;
-                    v.postnaStevilkaZacasni = model.postnaStevilkaZacasni;
-                    v.prenosniTelefon = model.prenosniTelefon;
-                    v.priimek = model.priimek;
+                    v.student.postnaStevilka = model.postnaStevilka;
+                    v.student.postnaStevilkaZacasni = model.postnaStevilkaZacasni;
+                    v.student.prenosniTelefon = model.prenosniTelefon;
+                    v.student.priimek = model.priimek;
                     v.smer = 0;
                     v.smer2 = 0;
                     v.soglasje1 = model.soglasje1;
                     v.soglasje2 = model.soglasje2;
-                    v.spol = model.spol;
+                    v.student.spol = model.spol;
                     v.studijskiProgram = model.studijskiProgram;
                     v.studijskiProgram2 = model.studijskiProgram2;
-                    v.studijskoLeto = model.studijskoLeto;
+                    v.studijskoLeto = Convert.ToInt32(model.studijskoLeto);
                     v.studijskoLetoPrvegaVpisa = model.studijskoLetoPrvegaVpisa;
-                    v.vrocanje = model.vrocanje;
+                    v.student.vrocanje = model.vrocanje;
                     v.vrstaStudija = model.vrstaStudija;
                     v.vrstaVpisa = model.vrstaVpisa;
 
-                    if (model.vrocanje) v.vrocanjeZacasni = false;
-                    else v.vrocanjeZacasni = model.vrocanjeZacasni;
+                    if (model.vrocanje) v.student.vrocanjeZacasni = false;
+                    else v.student.vrocanjeZacasni = model.vrocanjeZacasni;
                     if (!model.vrocanje && !model.vrocanjeZacasni)
                     {
                         ModelState.AddModelError("", "Izberite naslov za vročanje.");
                         return View(model);
                     }
 
-                    v.vpisnaStevilka = null;
+                    v.vpisnaStevilka = -1;
                     v.potrjen = false;
                     v.student = null;
-                    v.studijskoLeto = "2014/2015";
+                    v.studijskoLeto = DateTime.Now.Year;
 
-                    db.vpisnilists.Add(v);
+                    db.vpis.Add(v);
                     try
                     {
                         db.SaveChanges();
@@ -160,7 +160,7 @@ namespace studis.Controllers
 
         public ActionResult VpisniListPredmetnik(int id)
         {
-            var vl = db.vpisnilists.Find(id);
+            var vl = db.vpis.Find(id);
 
             System.Diagnostics.Debug.WriteLine(id);
             System.Diagnostics.Debug.WriteLine(vl.id);
@@ -182,7 +182,7 @@ namespace studis.Controllers
 
         public ActionResult PrviPredmetnik(int id)
         {
-            var vl = db.vpisnilists.Find(id);
+            var vl = db.vpis.Find(id);
             PrviPredmetnikModel m = new PrviPredmetnikModel();
             m.vlid = id;
             ViewBag.predmeti = db.predmets.Where(l => l.letnik == vl.letnikStudija).Where(n => n.obvezen == true);
@@ -192,7 +192,7 @@ namespace studis.Controllers
         [HttpPost]
         public ActionResult PrviPredmetnik(studis.Models.PrviPredmetnikModel model)
         {
-            var vl = db.vpisnilists.Find(model.vlid);
+            var vl = db.vpis.Find(model.vlid);
             
             //preveri ce student ze obstaja
             if (vl.student != null) {
@@ -202,10 +202,10 @@ namespace studis.Controllers
 
             //kreiraj studenta
             student s = new student();
-            s.ime = vl.ime;
-            s.priimek = vl.priimek;
-            s.datum_rojstva = vl.datumRojstva.ToShortDateString();
-            s.naslov = vl.naslov;
+            s.ime = vl.student.ime;
+            s.priimek = vl.student.priimek;
+            s.datumRojstva = vl.student.datumRojstva;//.ToShortDateString();
+            s.naslov = vl.student.naslov;
             s.spol = Sifranti.SPOL.SingleOrDefault(item => item.id == vl.spol).naziv;
             s.userId = studis.Models.UserHelper.FindByName(User.Identity.Name).id;
 

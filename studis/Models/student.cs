@@ -39,7 +39,7 @@ namespace studis.Models
         public int postnaStevilka { get; set; }
         public int obcina { get; set; }
         public int drzava { get; set; }
-        public Nullable<int> naslovZacasni { get; set; }
+        public string naslovZacasni { get; set; }
         public Nullable<bool> vrocanjeZacasni { get; set; }
         public Nullable<int> postnaStevilkaZacasni { get; set; }
         public Nullable<int> obcinaZacasni { get; set; }
