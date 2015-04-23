@@ -106,7 +106,7 @@ namespace studis.Controllers
                 }
 
                 var stud = db.students.Single(s => s.vpisnaStevilka == list.vpisnaStevilka);
-                var predmeti = stud.predmets;
+                var predmeti = stud.studentinpredmets.Where(a => a.predmetId == list.id);
 
                 ViewBag.Predmeti = predmeti;
             

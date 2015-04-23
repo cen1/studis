@@ -22,7 +22,7 @@ namespace studis.Models
         public List<Sifrant> pridobiLetnike(int id)
         {
             //pripravi seznam dovoljenih letnikov
-            var vls = db.vpisnilists.Where(a => a.vpisnaStevilka == id);
+            var vls = db.vpis.Where(a => a.vpisnaStevilka == id);
             //dovoljen je vpis +1 ali max ce se ne obstaja
             int max = 0;
             int ponavljal = 0;

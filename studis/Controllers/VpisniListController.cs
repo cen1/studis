@@ -206,7 +206,7 @@ namespace studis.Controllers
             s.priimek = vl.student.priimek;
             s.datumRojstva = vl.student.datumRojstva;//.ToShortDateString();
             s.naslov = vl.student.naslov;
-            s.spol = Sifranti.SPOL.SingleOrDefault(item => item.id == vl.spol).naziv;
+            s.spol = Sifranti.SPOL.SingleOrDefault(item => item.id == vl.student.spol).id;
             s.userId = studis.Models.UserHelper.FindByName(User.Identity.Name).id;
 
             var predmeti = db.predmets.Where(l => l.letnik == vl.letnikStudija).Where(n => n.obvezen == true);
@@ -214,7 +214,11 @@ namespace studis.Controllers
             //shrani predmetnik
             foreach (var p in predmeti)
             {
-                s.predmets.Add(p);
+                studentinpredmet sip = new studentinpredmet();
+                sip.predmetId = p.id;
+                sip.studentId = s.vpisnaStevilka;
+                sip.vpisId = vl.id;
+                s.studentinpredmets.Add(sip);
             }
 
             //fk v vl
