@@ -119,7 +119,7 @@ namespace studis.Models
         public int studijskiProgram { get; set; }
 
         [Required(ErrorMessage = "Obvezno izpolniti.")]
-        [Display(Name = "Smer/Usmeritev/Modul/Znastveno področje")]
+        [Display(Name = "Smer")]
         public int smer { get; set; }
 
         [Required(ErrorMessage = "Obvezno izpolniti.")]
@@ -133,7 +133,7 @@ namespace studis.Models
         [Display(Name = "Drugi študijski program")]
         public int? studijskiProgram2 { get; set; }
 
-        [Display(Name = "Smer/Usmeritev/Modul/Znastveno področje")]
+        [Display(Name = "Smer")]
         public int? smer2 { get; set; }
 
         [Display(Name = "Kraj izvajanja")]

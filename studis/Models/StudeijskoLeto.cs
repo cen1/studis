@@ -23,7 +23,8 @@ namespace studis.Models
             this.leto = Convert.ToInt32(leto);
         }
 
-        public string ToString()
+        
+        override public string ToString()
         {
             return leto + "/" + (leto+1);
         }

@@ -264,8 +264,14 @@
             @Html.ValidationMessageFor(m => m.studijskiProgram)
         </div>
 
-        @{ //smer
-           }
+        <!--Smer-->
+        <div class="editor-label">
+            @Html.LabelFor(m => m.smer)
+        </div>
+        <div>
+            @Html.DropDownListFor(m => m.smer, (SelectList)ViewBag.Smer)
+            @Html.ValidationMessageFor(m => m.smer)
+        </div>
 
         <!--Kraj izvajanja-->
         <div class="editor-label">
@@ -284,7 +290,7 @@
             @Html.DropDownListFor(m => m.izbirnaSkupina, (SelectList)ViewBag.IZBIRNASKUPINA)
             @Html.ValidationMessageFor(m => m.izbirnaSkupina)
         </div>
-
+        <hr style="width:50%;margin-left:0px">
         <!--Studijski program 2-->
         <div class="editor-label">
             @Html.LabelFor(m => m.studijskiProgram2)
@@ -294,8 +300,14 @@
             @Html.ValidationMessageFor(m => m.studijskiProgram2)
         </div>
 
-
-        <!-- smer2?-->
+        <!--Smer2-->
+        <div class="editor-label">
+            @Html.LabelFor(m => m.smer2)
+        </div>
+        <div>
+            @Html.DropDownListFor(m => m.smer2, (SelectList)ViewBag.Smer)
+            @Html.ValidationMessageFor(m => m.smer2)
+        </div>
 
         <!--Kraj izvajanja 2-->
         <div class="editor-label">
@@ -314,7 +326,7 @@
             @Html.DropDownListFor(m => m.izbirnaSkupina2, (SelectList)ViewBag.IZBIRNASKUPINA)
             @Html.ValidationMessageFor(m => m.izbirnaSkupina2)
         </div>
-
+        <hr style="width:50%;margin-left:0px">
         <!--  vrsta studija -->
         <div class="editor-label">
             @Html.LabelFor(m => m.vrstaStudija)
