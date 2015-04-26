@@ -40,6 +40,7 @@ namespace studis.Controllers
             ViewBag.Letnik = new SelectList(Sifranti.LETNIK, "id", "naziv");
             ViewBag.StudijskoLetoPrvegaVpisa = new SelectList(Sifranti.StudijskoLetoGenerator(DateTime.Now.Year, DateTime.Now.Year - 20), "id", "naziv");
             ViewBag.IzbirnaSkupina = new SelectList(Sifranti.IZBIRNASKUPINA, "id", "naziv");
+            ViewBag.Smer = new SelectList(Sifranti.SMER, "id", "naziv");
             return View();
         }
         
@@ -76,8 +77,8 @@ namespace studis.Controllers
                     v.student.postnaStevilkaZacasni = model.postnaStevilkaZacasni;
                     v.student.prenosniTelefon = model.prenosniTelefon;
                     v.student.priimek = model.priimek;
-                    v.smer = 0;
-                    v.smer2 = 0;
+                    v.smer = model.smer;
+                    v.smer2 = model.smer2;
                     v.soglasje1 = model.soglasje1;
                     v.soglasje2 = model.soglasje2;
                     v.student.spol = model.spol;

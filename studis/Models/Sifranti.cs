@@ -39,6 +39,10 @@ namespace studis.Models
             new Sifrant(98, "Vpis za zaključek"),
         };
 
+        public static readonly Sifrant[] SMER = {
+            new Sifrant(1, "Računalništvo in Informatika"),
+        };
+
         public static readonly Sifrant[] NACINSTUDIJA = {
             new Sifrant(1, "Redni"),
             new Sifrant(3, "Izredni"),
