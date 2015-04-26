@@ -162,10 +162,7 @@ namespace studis.Controllers
         public ActionResult VpisniListPredmetnik(int id)
         {
             var vl = db.vpis.Find(id);
-
-            System.Diagnostics.Debug.WriteLine(id);
-            System.Diagnostics.Debug.WriteLine(vl.id);
-            System.Diagnostics.Debug.WriteLine(vl.letnikStudija);
+            if (vl == null) return HttpNotFound();
 
             if (vl.letnikStudija==1)
                 return RedirectToAction("PrviPredmetnik", "VpisniList", new { id = vl.id });
@@ -175,26 +172,25 @@ namespace studis.Controllers
                 return RedirectToAction("TretjiPredmetnik", "VpisniList", new { id = vl.id });
             else
                 return RedirectToAction("NeznanPredmetnik", "VpisniList");
-
-            //ViewBag.strokovnoizbirni = db.predmets.Where(l => l.letnik == id).Where(m => m.strokovnoizbirni == 1);
-            //ViewBag.prostoizbirni = db.predmets.Where(l => l.letnik == id).Where(m => m.obvezen == 1);
-            //
         }
 
         public ActionResult PrviPredmetnik(int id)
         {
             var vl = db.vpis.Find(id);
+            if (vl == null) return HttpNotFound();
+
             PrviPredmetnikModel m = new PrviPredmetnikModel();
             m.vlid = id;
-            ViewBag.predmeti = db.predmets.Where(l => l.letnik == vl.letnikStudija).Where(n => n.obvezen == true);
+            ViewBag.predmeti = PredmetHelper.obvezni1();
             return View(m);
         }
 
         [HttpPost]
-        public ActionResult PrviPredmetnik(studis.Models.PrviPredmetnikModel model)
+        public ActionResult PrviPredmetnik(PrviPredmetnikModel model)
         {
             var vl = db.vpis.Find(model.vlid);
-            
+            if (vl == null) return HttpNotFound();
+
             //preveri ce student ze obstaja
             if (vl.student != null) {
                 TempData["id"] = model.vlid;
@@ -210,7 +206,7 @@ namespace studis.Controllers
             s.spol = Sifranti.SPOL.SingleOrDefault(item => item.id == vl.student.spol).id;
             s.userId = studis.Models.UserHelper.FindByName(User.Identity.Name).id;
 
-            var predmeti = db.predmets.Where(l => l.letnik == vl.letnikStudija).Where(n => n.obvezen == true);
+            var predmeti = PredmetHelper.obvezni1();
 
             //shrani predmetnik
             foreach (var p in predmeti)
@@ -230,6 +226,28 @@ namespace studis.Controllers
 
             TempData["id"] = model.vlid;
             return RedirectToAction("VpisniListSuccess");
+        }
+
+        public ActionResult DrugiPredmetnik(int id)
+        {
+            //var vl = db.vpis.Find(id);
+            //if (vl == null) return HttpNotFound();
+
+            //obvezni plus 1 strokovno izbirni plus 1 prosto izbirni
+            ViewBag.obvezniPredmeti = PredmetHelper.obvezni2();
+            ViewBag.strokovnoPredmeti = PredmetHelper.strokovnoizbirni2();
+            ViewBag.prostoPredmeti = PredmetHelper.prostoizbirni2();
+
+            int sumObv = 0;
+            foreach (var pr in PredmetHelper.obvezni2())
+                sumObv += pr.kreditne;
+
+            ViewBag.sumObv = sumObv;
+            ViewBag.sumIzb = 60 - sumObv;
+
+            var t = PredmetHelper.obvezni2();
+            System.Diagnostics.Debug.WriteLine(t.First().ime);
+            return View();
         }
 
         public JsonResult PreveriEmso(string emso)

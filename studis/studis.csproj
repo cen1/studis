@@ -233,6 +233,7 @@
     <Compile Include="Models\predmet.cs">
       <DependentUpon>Studis.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\PredmetHelper.cs" />
     <Compile Include="Models\profesor.cs">
       <DependentUpon>Studis.tt</DependentUpon>
     </Compile>
@@ -426,6 +427,7 @@
     <Content Include="Views\zetons\Delete.cshtml" />
     <Content Include="Views\zetons\Edit.cshtml" />
     <Content Include="Views\zetons\Index.cshtml" />
+    <Content Include="Views\VpisniList\DrugiPredmetnik.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,0 +1,47 @@
+﻿
+@{
+    ViewBag.Title = "Predmetnik za 2 letnik";
+}
+
+<h2>Predmetnik za 2 letnik</h2>
+
+@Html.ValidationSummary(true, "Napaka!")
+
+
+<p>Obvezni predmeti</p>
+
+@using (Html.BeginForm()) {
+
+<ul>
+    @foreach (var item in ViewBag.obvezniPredmeti)
+    {
+        <li>@item.ime <span>.. @item.kreditne KT</span></li>
+    }
+</ul>
+    
+    <hr />
+<p style="font-weight: bold">Obvezni predmeti skupaj dajo @ViewBag.sumObv kreditnih točk</p>
+<p style="font-weight: bold">Izbrati morate še o @ViewBag.sumIzb kreditnih točk iz izbirnih predmetov, vsaj en kora biti strokovno izbirni in vsaj en prosto izbirni.</p>
+
+
+<p>Strokovno izbirni predmeti</p>
+    foreach (var item in ViewBag.strokovnoPredmeti)
+{
+    <span>
+        <input type="radio" name="strokovni" value="@item.id"> @item.ime
+        .. @item.kreditne KT<br />
+    </span> 
+}
+
+<p>prosto izbirni predmet</p>
+    foreach (var item in ViewBag.prostoPredmeti)
+    {
+        <span>
+            <input type="checkbox" name="prosto_@item.id" value="@item.id"> @item.ime
+            .. @item.kreditne KT<br />
+        </span>
+    }
+
+
+    <input type="submit" value="Zaključi">
+}
