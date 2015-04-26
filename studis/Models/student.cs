@@ -19,6 +19,7 @@ namespace studis.Models
             this.ocenas = new HashSet<ocena>();
             this.studentinpredmets = new HashSet<studentinpredmet>();
             this.vpis = new HashSet<vpi>();
+            this.zetons = new HashSet<zeton>();
         }
     
         public int vpisnaStevilka { get; set; }
@@ -60,6 +61,6 @@ namespace studis.Models
         public virtual sifrant_spol sifrant_spol { get; set; }
         public virtual ICollection<studentinpredmet> studentinpredmets { get; set; }
         public virtual ICollection<vpi> vpis { get; set; }
-        public virtual zeton zeton { get; set; }
+        public virtual ICollection<zeton> zetons { get; set; }
     }
 }

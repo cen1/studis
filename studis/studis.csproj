@@ -177,7 +177,6 @@
     <Compile Include="Controllers\ListController.cs" />
     <Compile Include="Controllers\StudentController.cs" />
     <Compile Include="Controllers\VpisniListController.cs" />
-    <Compile Include="Controllers\ZetonController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -311,8 +310,8 @@
     <Compile Include="Models\zeton.cs">
       <DependentUpon>Studis.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\ZetonModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Controllers\zetonsController.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="bin\EntityFramework.dll" />
@@ -423,7 +422,10 @@
     <Content Include="Views\VpisniList\VpisniListPredmetnik.cshtml" />
     <Content Include="Views\Shared\_StudentSearchPDFPartial.cshtml" />
     <Content Include="Views\Import\ImportError.cshtml" />
-    <Content Include="Views\Zeton\Dodaj.cshtml" />
+    <Content Include="Views\zetons\Create.cshtml" />
+    <Content Include="Views\zetons\Delete.cshtml" />
+    <Content Include="Views\zetons\Edit.cshtml" />
+    <Content Include="Views\zetons\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
