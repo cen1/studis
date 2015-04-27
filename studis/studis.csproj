@@ -361,6 +361,8 @@
     <Content Include="bin\studis.dll.config" />
     <None Include="Properties\PublishProfiles\studis.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\FileSaver.js" />
+    <Content Include="Scripts\html2canvas.js" />
     <Content Include="Scripts\html2csv.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -375,6 +377,13 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\jspdf.js" />
+    <Content Include="Scripts\jspdf.plugin.addhtml.js" />
+    <Content Include="Scripts\jspdf.plugin.addimage.js" />
+    <Content Include="Scripts\jspdf.plugin.cell.js" />
+    <Content Include="Scripts\jspdf.plugin.from_html.js" />
+    <Content Include="Scripts\jspdf.plugin.split_text_to_size.js" />
+    <Content Include="Scripts\jspdf.plugin.standard_fonts_metrics.js" />
     <Content Include="Scripts\_studentSearch.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
