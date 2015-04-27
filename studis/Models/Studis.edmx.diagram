@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="1d3f79dc583b4c97953e0f85d49e781a" Name="Diagram1" ZoomLevel="97">
+      <Diagram DiagramId="1d3f79dc583b4c97953e0f85d49e781a" Name="Diagram1" ZoomLevel="84">
         <EntityTypeShape EntityType="studisModel.my_aspnet_applications" Width="1.5" PointX="0.625" PointY="0.5" IsExpanded="true" />
         <EntityTypeShape EntityType="studisModel.my_aspnet_membership" Width="1.5" PointX="8.25" PointY="0.5" IsExpanded="true" />
         <EntityTypeShape EntityType="studisModel.my_aspnet_paths" Width="1.5" PointX="0.5" PointY="6.75" IsExpanded="true" />
@@ -47,7 +47,6 @@
         <EntityTypeShape EntityType="studisModel.student" Width="1.5" PointX="28.25" PointY="0.75" />
         <EntityTypeShape EntityType="studisModel.studentinpredmet" Width="1.5" PointX="35.75" PointY="3.875" />
         <EntityTypeShape EntityType="studisModel.vpi" Width="1.5" PointX="30.5" PointY="1" />
-        <EntityTypeShape EntityType="studisModel.zeton" Width="1.5" PointX="33.5" PointY="7.25" />
         <AssociationConnector Association="studisModel.predmet_modul_fk" />
         <AssociationConnector Association="studisModel.userID_student_users" />
         <AssociationConnector Association="studisModel.ocena_predmet" />
@@ -64,9 +63,7 @@
         <AssociationConnector Association="studisModel.vpis_s_izbirnaskupina" />
         <AssociationConnector Association="studisModel.vpis_s_izbirnaskupina2" />
         <AssociationConnector Association="studisModel.vpis_s_vrstastudija" />
-        <AssociationConnector Association="studisModel.zeton_s_vrstaStudija" />
         <AssociationConnector Association="studisModel.vpis_s_letnik" />
-        <AssociationConnector Association="studisModel.zeton_s_letnik" />
         <AssociationConnector Association="studisModel.vpis_s_nacinstudija" />
         <AssociationConnector Association="studisModel.student_s_obcina" />
         <AssociationConnector Association="studisModel.student_s_obcina_z" />
@@ -74,24 +71,27 @@
         <AssociationConnector Association="studisModel.vpis_s_krajizvajanja" />
         <AssociationConnector Association="studisModel.vpis_s_krajizvajanja2" />
         <AssociationConnector Association="studisModel.vpis_s_oblikastudija" />
-        <AssociationConnector Association="studisModel.zeton_s_oblikastudija" />
         <AssociationConnector Association="studisModel.student_s_postnastevilka" />
         <AssociationConnector Association="studisModel.student_s_postnastevilka_z" />
         <AssociationConnector Association="studisModel.student_s_spol" />
         <AssociationConnector Association="studisModel.vpis_s_studijskiprogram" />
         <AssociationConnector Association="studisModel.vpis_s_studisjkiprogram2" />
-        <AssociationConnector Association="studisModel.zeton_s_studijskiprogram" />
         <AssociationConnector Association="studisModel.vpis_s_studijskoleto" />
         <AssociationConnector Association="studisModel.vpis_s_studijskoletoprvegavpisa" />
         <AssociationConnector Association="studisModel.vpis_s_vrstavpisa" />
-        <AssociationConnector Association="studisModel.zeton_s_vrstavpisa" />
         <AssociationConnector Association="studisModel.predmet_student_fk" />
         <AssociationConnector Association="studisModel.vpisnilist_student_fk" />
-        <AssociationConnector Association="studisModel.zeton_student_fk" />
         <AssociationConnector Association="studisModel.studentinpredmet_vpis" />
         <AssociationConnector Association="studisModel.profesorinpredmet" />
         <EntityTypeShape EntityType="studisModel.kandidat" Width="1.5" PointX="8.25" PointY="13" />
         <AssociationConnector Association="studisModel.fk_userId" />
+        <EntityTypeShape EntityType="studisModel.zeton" Width="1.5" PointX="34.375" PointY="7" />
+        <AssociationConnector Association="studisModel.zeton_s_vrstaStudija" />
+        <AssociationConnector Association="studisModel.zeton_s_letnik" />
+        <AssociationConnector Association="studisModel.zeton_s_oblikastudija" />
+        <AssociationConnector Association="studisModel.zeton_s_studijskiprogram" />
+        <AssociationConnector Association="studisModel.zeton_s_vrstavpisa" />
+        <AssociationConnector Association="studisModel.zeton_student_fk" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

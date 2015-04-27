@@ -1,0 +1,81 @@
+﻿@model studis.Models.zeton
+
+@{
+    ViewBag.Title = "Popravi";
+}
+
+<h2>Edit</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4>Žeton</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        Vpisna številka: @Model.vpisnaStevilka
+        @Html.HiddenFor(model => model.vpisnaStevilka)
+        @Html.HiddenFor(model => model.id)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.letnik, "Letnik", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("letnik", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.letnik, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.studijskiProgram, "Študijski program", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("studijskiProgram", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.studijskiProgram, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.porabljen, "Porabljen", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="checkbox">
+                    @Html.EditorFor(model => model.porabljen)
+                    @Html.ValidationMessageFor(model => model.porabljen, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.vrstaVpisa, "Vrsta vpisa", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("vrstaVpisa", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.vrstaVpisa, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.vrstaStudija, "Vrsta Študija", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("vrstaStudija", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.vrstaStudija, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.oblikaStudija, "Oblika Študija", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("oblikaStudija", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.oblikaStudija, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Shrani" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Nazaj na seznam", "Index")
+</div>

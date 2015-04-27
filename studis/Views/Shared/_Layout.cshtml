@@ -91,6 +91,10 @@
                     @if(User.IsInRole("Referent")) {
                         <li>@Html.ActionLink("Izpis vpisnega lista", "PdfSkrbnik", "List")</li>
                     }
+                    @if (User.IsInRole("Referent"))
+                    {
+                        <li>@Html.ActionLink("Žetoni", "Index", "zetons")</li>
+                    }
                     <li>
                         @Html.Partial("_LoginPartial")
                     </li>

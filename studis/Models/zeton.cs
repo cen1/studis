@@ -14,6 +14,7 @@ namespace studis.Models
     
     public partial class zeton
     {
+        public int id { get; set; }
         public int vpisnaStevilka { get; set; }
         public int letnik { get; set; }
         public int studijskiProgram { get; set; }

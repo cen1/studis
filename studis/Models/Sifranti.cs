@@ -12,7 +12,7 @@ namespace studis.Models
             new Sifrant(13001, "Nižja poklicna izobrazba"),
             new Sifrant(14001, "Srednja poklicna izobrazba"),
             new Sifrant(15001, "Srednja strokovna izobrazba"),
-            new Sifrant(15001, "Srednja splošna izobrazba"),
+            new Sifrant(15002, "Srednja splošna izobrazba"),
             new Sifrant(16102, "Višješolska izobrazba (predbolonjska)"),
             new Sifrant(16201, "Specialializacija po visokošolski izobrazbi (predbolonjska)"),
             new Sifrant(16202, "Visokošolska strokovna izobrazba (predbolonjska)"),

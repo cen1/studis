@@ -1,0 +1,81 @@
+﻿@model IEnumerable<studis.Models.zeton>
+
+@{
+    ViewBag.Title = "Žetoni";
+}
+
+<h2>Seznam žetonov</h2>
+    <span style="color:red">
+    @if (TempData["warning"] != null) {
+        @TempData["warning"]
+    }
+    </span>
+<table class="table">
+    <tr>
+        <th>
+            Vpisna številka
+        </th>
+        <th>
+            Ime
+        </th>
+        <th>
+            Priimek
+        </th>
+        <th>
+            Letnik
+        </th>
+        <th>
+            Klasius
+        </th>
+        <th>
+            Oblika študija
+        </th>
+        <th>
+            Študijski program
+        </th>
+        <th>
+            Vrsta vpisa
+        </th>
+        <th>
+            Porabljen?
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.student.vpisnaStevilka)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.student.ime)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.student.priimek)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.sifrant_letnik.naziv)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.sifrant_klasius.naziv)
+        </td>      
+        <td>
+            @Html.DisplayFor(modelItem => item.sifrant_oblikastudija.naziv)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.sifrant_studijskiprogram.naziv)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.sifrant_vrstavpisa.naziv)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.porabljen)
+        </td>
+        <td>
+            @Html.ActionLink("Popravi", "Edit", new { id=item.id }) |
+            @Html.ActionLink("Zbriši", "Delete", new { id=item.id })
+        </td>
+    </tr>
+}
+
+</table>
