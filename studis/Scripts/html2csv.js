@@ -74,7 +74,7 @@
     function download(text) {
         var pom = document.createElement('a');
         pom.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(text));
-        pom.setAttribute('download', "CSVdata.csv");
+        pom.setAttribute('download', "izpis.csv");
 
         pom.style.display = 'none';
         document.body.appendChild(pom);
