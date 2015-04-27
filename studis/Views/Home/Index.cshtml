@@ -6,6 +6,73 @@
 <p>
     Pozdravljeni v Studisu
 </p>
+
+@if (User.IsInRole("Študent"))
+{
+    if (ViewBag.vpisnast != null)
+    {
+        <p>Vaša vpisna številka je @ViewBag.vpisnast</p>
+    }
+    if(ViewBag.student != null) {
+        <p>@ViewBag.student</p>
+    }
+    if (ViewBag.zetoni != null)
+    {
+        <p>Na voljo imate naslednje vpise:</p>
+        <table>
+        <tr>
+            <th>Letnik</th>
+            <th>Klasius</th>
+            <th>Oblika študija</th>
+            <th>Študijski program</th>
+            <th>Vrsta vpisa</th>
+        </tr>
+    
+        @foreach (var z in ViewBag.zetoni)
+        {
+            <tr>
+            <td>
+                @z.sifrant_letnik.naziv
+            </td>
+            <td>
+                @z.sifrant_klasius.naziv
+            </td>
+            <td>
+                @z.sifrant_oblikastudija.naziv
+            </td>
+            <td>
+                @z.sifrant_studijskiprogram.naziv
+            </td>
+            <td>
+                @z.sifrant_vrstavpisa.naziv
+            </td>
+                </tr>
+        }
+            </table>
+    }
+    if (ViewBag.vpisi != null)
+    {
+        <p>Dosedanji vpisi</p>
+        <table>
+            <tr>
+                <th>Letnik</th>
+                <th>Študijsko leto</th>
+                <th>Program</th>
+                <th>Vrsta vpisa</th>
+                <th>Pdf vpisni list</th>
+            </tr>
+        @foreach (var v in ViewBag.vpisi)
+        {
+            <td>@v.letnikStudija</td>
+            <td>@v.studijskoLeto</td>
+            <td>@v.studijskiProgram</td>
+            <td>@v.vrstaVpisa</td>
+            <td><a href="~/List/Pdf/@v.id">Pdf</a></td>
+        }
+        </table>
+    }
+}
+
 @if (Request.IsAuthenticated)
 {
     <a href="~/Account/ChangePassword">Spremeni geslo</a>

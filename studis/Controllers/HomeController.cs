@@ -12,7 +12,23 @@ namespace studis.Controllers
         public ActionResult Index()
         {
             ViewBag.Message = "Pozdravljeni v v sistemu studis";
-           
+            
+            var usr = UserHelper.FindByName(User.Identity.Name);
+
+            if (usr != null)
+            {
+                var s = usr.students;
+                if (s.Count() == 0)
+                {
+                    ViewBag.student = "Niste še vpisani kot študent.";
+                }
+                else
+                {
+                    ViewBag.vpisnast = usr.students.First().vpisnaStevilka;
+                    ViewBag.zetoni = usr.students.First().zetons.Where(a => a.porabljen == false);
+                    ViewBag.vpisi = usr.students.First().vpis;
+                }
+            }
 
             return View();
    
