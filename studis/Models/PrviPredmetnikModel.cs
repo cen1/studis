@@ -10,11 +10,7 @@ namespace studis.Models
 {
     public class PrviPredmetnikModel
     {
-
-        [Display(Name = "vpisnilist")]
         public int vlid { get; set; }
 
-
-        public IQueryable<predmet> predmeti { get; set; }
     }
 }

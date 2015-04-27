@@ -373,8 +373,9 @@
         </EntityType>
         <EntityType Name="zeton">
           <Key>
-            <PropertyRef Name="vpisnaStevilka" />
+            <PropertyRef Name="id" />
           </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="vpisnaStevilka" Type="int" Nullable="false" />
           <Property Name="letnik" Type="int" Nullable="false" />
           <Property Name="studijskiProgram" Type="int" Nullable="false" />
@@ -1065,7 +1066,7 @@
           <End Role="student" Type="Self.student" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
-          <End Role="zeton" Type="Self.zeton" Multiplicity="0..1" />
+          <End Role="zeton" Type="Self.zeton" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="student">
               <PropertyRef Name="vpisnaStevilka" />
@@ -1505,7 +1506,6 @@
           <EntitySet Name="students" EntityType="studisModel.student" />
           <EntitySet Name="studentinpredmets" EntityType="studisModel.studentinpredmet" />
           <EntitySet Name="vpis" EntityType="studisModel.vpi" />
-          <EntitySet Name="zetons" EntityType="studisModel.zeton" />
           <AssociationSet Name="predmet_modul_fk" Association="studisModel.predmet_modul_fk">
             <End Role="modul" EntitySet="moduls" />
             <End Role="predmet" EntitySet="predmets" />
@@ -1570,17 +1570,9 @@
             <End Role="sifrant_klasius" EntitySet="sifrant_klasius" />
             <End Role="vpi" EntitySet="vpis" />
           </AssociationSet>
-          <AssociationSet Name="zeton_s_vrstaStudija" Association="studisModel.zeton_s_vrstaStudija">
-            <End Role="sifrant_klasius" EntitySet="sifrant_klasius" />
-            <End Role="zeton" EntitySet="zetons" />
-          </AssociationSet>
           <AssociationSet Name="vpis_s_letnik" Association="studisModel.vpis_s_letnik">
             <End Role="sifrant_letnik" EntitySet="sifrant_letnik" />
             <End Role="vpi" EntitySet="vpis" />
-          </AssociationSet>
-          <AssociationSet Name="zeton_s_letnik" Association="studisModel.zeton_s_letnik">
-            <End Role="sifrant_letnik" EntitySet="sifrant_letnik" />
-            <End Role="zeton" EntitySet="zetons" />
           </AssociationSet>
           <AssociationSet Name="vpis_s_nacinstudija" Association="studisModel.vpis_s_nacinstudija">
             <End Role="sifrant_nacinstudija" EntitySet="sifrant_nacinstudija" />
@@ -1610,10 +1602,6 @@
             <End Role="sifrant_oblikastudija" EntitySet="sifrant_oblikastudija" />
             <End Role="vpi" EntitySet="vpis" />
           </AssociationSet>
-          <AssociationSet Name="zeton_s_oblikastudija" Association="studisModel.zeton_s_oblikastudija">
-            <End Role="sifrant_oblikastudija" EntitySet="sifrant_oblikastudija" />
-            <End Role="zeton" EntitySet="zetons" />
-          </AssociationSet>
           <AssociationSet Name="student_s_postnastevilka" Association="studisModel.student_s_postnastevilka">
             <End Role="sifrant_postnastevilka" EntitySet="sifrant_postnastevilka" />
             <End Role="student" EntitySet="students" />
@@ -1634,10 +1622,6 @@
             <End Role="sifrant_studijskiprogram" EntitySet="sifrant_studijskiprogram" />
             <End Role="vpi" EntitySet="vpis" />
           </AssociationSet>
-          <AssociationSet Name="zeton_s_studijskiprogram" Association="studisModel.zeton_s_studijskiprogram">
-            <End Role="sifrant_studijskiprogram" EntitySet="sifrant_studijskiprogram" />
-            <End Role="zeton" EntitySet="zetons" />
-          </AssociationSet>
           <AssociationSet Name="vpis_s_studijskoleto" Association="studisModel.vpis_s_studijskoleto">
             <End Role="sifrant_studijskoleto" EntitySet="sifrant_studijskoleto" />
             <End Role="vpi" EntitySet="vpis" />
@@ -1650,10 +1634,6 @@
             <End Role="sifrant_vrstavpisa" EntitySet="sifrant_vrstavpisa" />
             <End Role="vpi" EntitySet="vpis" />
           </AssociationSet>
-          <AssociationSet Name="zeton_s_vrstavpisa" Association="studisModel.zeton_s_vrstavpisa">
-            <End Role="sifrant_vrstavpisa" EntitySet="sifrant_vrstavpisa" />
-            <End Role="zeton" EntitySet="zetons" />
-          </AssociationSet>
           <AssociationSet Name="predmet_student_fk" Association="studisModel.predmet_student_fk">
             <End Role="student" EntitySet="students" />
             <End Role="studentinpredmet" EntitySet="studentinpredmets" />
@@ -1661,10 +1641,6 @@
           <AssociationSet Name="vpisnilist_student_fk" Association="studisModel.vpisnilist_student_fk">
             <End Role="student" EntitySet="students" />
             <End Role="vpi" EntitySet="vpis" />
-          </AssociationSet>
-          <AssociationSet Name="zeton_student_fk" Association="studisModel.zeton_student_fk">
-            <End Role="student" EntitySet="students" />
-            <End Role="zeton" EntitySet="zetons" />
           </AssociationSet>
           <AssociationSet Name="studentinpredmet_vpis" Association="studisModel.studentinpredmet_vpis">
             <End Role="vpi" EntitySet="vpis" />
@@ -1678,6 +1654,31 @@
           <AssociationSet Name="fk_userId" Association="studisModel.fk_userId">
             <End Role="my_aspnet_users" EntitySet="my_aspnet_users" />
             <End Role="kandidat" EntitySet="kandidats" />
+          </AssociationSet>
+          <EntitySet Name="zetons" EntityType="studisModel.zeton" />
+          <AssociationSet Name="zeton_s_vrstaStudija" Association="studisModel.zeton_s_vrstaStudija">
+            <End Role="sifrant_klasius" EntitySet="sifrant_klasius" />
+            <End Role="zeton" EntitySet="zetons" />
+          </AssociationSet>
+          <AssociationSet Name="zeton_s_letnik" Association="studisModel.zeton_s_letnik">
+            <End Role="sifrant_letnik" EntitySet="sifrant_letnik" />
+            <End Role="zeton" EntitySet="zetons" />
+          </AssociationSet>
+          <AssociationSet Name="zeton_s_oblikastudija" Association="studisModel.zeton_s_oblikastudija">
+            <End Role="sifrant_oblikastudija" EntitySet="sifrant_oblikastudija" />
+            <End Role="zeton" EntitySet="zetons" />
+          </AssociationSet>
+          <AssociationSet Name="zeton_s_studijskiprogram" Association="studisModel.zeton_s_studijskiprogram">
+            <End Role="sifrant_studijskiprogram" EntitySet="sifrant_studijskiprogram" />
+            <End Role="zeton" EntitySet="zetons" />
+          </AssociationSet>
+          <AssociationSet Name="zeton_s_vrstavpisa" Association="studisModel.zeton_s_vrstavpisa">
+            <End Role="sifrant_vrstavpisa" EntitySet="sifrant_vrstavpisa" />
+            <End Role="zeton" EntitySet="zetons" />
+          </AssociationSet>
+          <AssociationSet Name="zeton_student_fk" Association="studisModel.zeton_student_fk">
+            <End Role="student" EntitySet="students" />
+            <End Role="zeton" EntitySet="zetons" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="ip_lock">
@@ -1980,7 +1981,7 @@
           <NavigationProperty Name="sifrant_spol" Relationship="studisModel.student_s_spol" FromRole="student" ToRole="sifrant_spol" />
           <NavigationProperty Name="studentinpredmets" Relationship="studisModel.predmet_student_fk" FromRole="student" ToRole="studentinpredmet" />
           <NavigationProperty Name="vpis" Relationship="studisModel.vpisnilist_student_fk" FromRole="student" ToRole="vpi" />
-          <NavigationProperty Name="zeton" Relationship="studisModel.zeton_student_fk" FromRole="student" ToRole="zeton" />
+          <NavigationProperty Name="zetons" Relationship="studisModel.zeton_student_fk" FromRole="student" ToRole="zeton" />
         </EntityType>
         <EntityType Name="studentinpredmet">
           <Key>
@@ -2034,24 +2035,6 @@
           <NavigationProperty Name="sifrant_vrstavpisa" Relationship="studisModel.vpis_s_vrstavpisa" FromRole="vpi" ToRole="sifrant_vrstavpisa" />
           <NavigationProperty Name="student" Relationship="studisModel.vpisnilist_student_fk" FromRole="vpi" ToRole="student" />
           <NavigationProperty Name="studentinpredmets" Relationship="studisModel.studentinpredmet_vpis" FromRole="vpi" ToRole="studentinpredmet" />
-        </EntityType>
-        <EntityType Name="zeton">
-          <Key>
-            <PropertyRef Name="vpisnaStevilka" />
-          </Key>
-          <Property Name="vpisnaStevilka" Type="Int32" Nullable="false" />
-          <Property Name="letnik" Type="Int32" Nullable="false" />
-          <Property Name="studijskiProgram" Type="Int32" Nullable="false" />
-          <Property Name="porabljen" Type="Boolean" Nullable="false" />
-          <Property Name="vrstaVpisa" Type="Int32" Nullable="false" />
-          <Property Name="vrstaStudija" Type="Int32" Nullable="false" />
-          <Property Name="oblikaStudija" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="sifrant_klasius" Relationship="studisModel.zeton_s_vrstaStudija" FromRole="zeton" ToRole="sifrant_klasius" />
-          <NavigationProperty Name="sifrant_letnik" Relationship="studisModel.zeton_s_letnik" FromRole="zeton" ToRole="sifrant_letnik" />
-          <NavigationProperty Name="sifrant_oblikastudija" Relationship="studisModel.zeton_s_oblikastudija" FromRole="zeton" ToRole="sifrant_oblikastudija" />
-          <NavigationProperty Name="sifrant_studijskiprogram" Relationship="studisModel.zeton_s_studijskiprogram" FromRole="zeton" ToRole="sifrant_studijskiprogram" />
-          <NavigationProperty Name="sifrant_vrstavpisa" Relationship="studisModel.zeton_s_vrstavpisa" FromRole="zeton" ToRole="sifrant_vrstavpisa" />
-          <NavigationProperty Name="student" Relationship="studisModel.zeton_student_fk" FromRole="zeton" ToRole="student" />
         </EntityType>
         <Association Name="predmet_modul_fk">
           <End Type="studisModel.modul" Role="modul" Multiplicity="0..1">
@@ -2275,20 +2258,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="zeton_s_vrstaStudija">
-          <End Type="studisModel.sifrant_klasius" Role="sifrant_klasius" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="studisModel.zeton" Role="zeton" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="sifrant_klasius">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="zeton">
-              <PropertyRef Name="vrstaStudija" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="vpis_s_letnik">
           <End Type="studisModel.sifrant_letnik" Role="sifrant_letnik" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -2300,20 +2269,6 @@
             </Principal>
             <Dependent Role="vpi">
               <PropertyRef Name="letnikStudija" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="zeton_s_letnik">
-          <End Type="studisModel.sifrant_letnik" Role="sifrant_letnik" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="studisModel.zeton" Role="zeton" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="sifrant_letnik">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="zeton">
-              <PropertyRef Name="letnik" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2415,20 +2370,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="zeton_s_oblikastudija">
-          <End Type="studisModel.sifrant_oblikastudija" Role="sifrant_oblikastudija" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="studisModel.zeton" Role="zeton" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="sifrant_oblikastudija">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="zeton">
-              <PropertyRef Name="oblikaStudija" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="student_s_postnastevilka">
           <End Type="studisModel.sifrant_postnastevilka" Role="sifrant_postnastevilka" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -2497,20 +2438,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="zeton_s_studijskiprogram">
-          <End Type="studisModel.sifrant_studijskiprogram" Role="sifrant_studijskiprogram" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="studisModel.zeton" Role="zeton" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="sifrant_studijskiprogram">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="zeton">
-              <PropertyRef Name="studijskiProgram" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="vpis_s_studijskoleto">
           <End Type="studisModel.sifrant_studijskoleto" Role="sifrant_studijskoleto" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -2553,20 +2480,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="zeton_s_vrstavpisa">
-          <End Type="studisModel.sifrant_vrstavpisa" Role="sifrant_vrstavpisa" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="studisModel.zeton" Role="zeton" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="sifrant_vrstavpisa">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="zeton">
-              <PropertyRef Name="vrstaVpisa" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="predmet_student_fk">
           <End Type="studisModel.student" Role="student" Multiplicity="1" />
           <End Type="studisModel.studentinpredmet" Role="studentinpredmet" Multiplicity="*" />
@@ -2589,20 +2502,6 @@
               <PropertyRef Name="vpisnaStevilka" />
             </Principal>
             <Dependent Role="vpi">
-              <PropertyRef Name="vpisnaStevilka" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="zeton_student_fk">
-          <End Type="studisModel.student" Role="student" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="studisModel.zeton" Role="zeton" Multiplicity="0..1" />
-          <ReferentialConstraint>
-            <Principal Role="student">
-              <PropertyRef Name="vpisnaStevilka" />
-            </Principal>
-            <Dependent Role="zeton">
               <PropertyRef Name="vpisnaStevilka" />
             </Dependent>
           </ReferentialConstraint>
@@ -2646,6 +2545,109 @@
             </Principal>
             <Dependent Role="kandidat">
               <PropertyRef Name="userId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="zeton">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="vpisnaStevilka" Type="Int32" Nullable="false" />
+          <Property Name="letnik" Type="Int32" Nullable="false" />
+          <Property Name="studijskiProgram" Type="Int32" Nullable="false" />
+          <Property Name="porabljen" Type="Boolean" Nullable="false" />
+          <Property Name="vrstaVpisa" Type="Int32" Nullable="false" />
+          <Property Name="vrstaStudija" Type="Int32" Nullable="false" />
+          <Property Name="oblikaStudija" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="sifrant_klasius" Relationship="studisModel.zeton_s_vrstaStudija" FromRole="zeton" ToRole="sifrant_klasius" />
+          <NavigationProperty Name="sifrant_letnik" Relationship="studisModel.zeton_s_letnik" FromRole="zeton" ToRole="sifrant_letnik" />
+          <NavigationProperty Name="sifrant_oblikastudija" Relationship="studisModel.zeton_s_oblikastudija" FromRole="zeton" ToRole="sifrant_oblikastudija" />
+          <NavigationProperty Name="sifrant_studijskiprogram" Relationship="studisModel.zeton_s_studijskiprogram" FromRole="zeton" ToRole="sifrant_studijskiprogram" />
+          <NavigationProperty Name="sifrant_vrstavpisa" Relationship="studisModel.zeton_s_vrstavpisa" FromRole="zeton" ToRole="sifrant_vrstavpisa" />
+          <NavigationProperty Name="student" Relationship="studisModel.zeton_student_fk" FromRole="zeton" ToRole="student" />
+        </EntityType>
+        <Association Name="zeton_s_vrstaStudija">
+          <End Type="studisModel.sifrant_klasius" Role="sifrant_klasius" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="studisModel.zeton" Role="zeton" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="sifrant_klasius">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="zeton">
+              <PropertyRef Name="vrstaStudija" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="zeton_s_letnik">
+          <End Type="studisModel.sifrant_letnik" Role="sifrant_letnik" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="studisModel.zeton" Role="zeton" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="sifrant_letnik">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="zeton">
+              <PropertyRef Name="letnik" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="zeton_s_oblikastudija">
+          <End Type="studisModel.sifrant_oblikastudija" Role="sifrant_oblikastudija" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="studisModel.zeton" Role="zeton" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="sifrant_oblikastudija">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="zeton">
+              <PropertyRef Name="oblikaStudija" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="zeton_s_studijskiprogram">
+          <End Type="studisModel.sifrant_studijskiprogram" Role="sifrant_studijskiprogram" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="studisModel.zeton" Role="zeton" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="sifrant_studijskiprogram">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="zeton">
+              <PropertyRef Name="studijskiProgram" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="zeton_s_vrstavpisa">
+          <End Type="studisModel.sifrant_vrstavpisa" Role="sifrant_vrstavpisa" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="studisModel.zeton" Role="zeton" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="sifrant_vrstavpisa">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="zeton">
+              <PropertyRef Name="vrstaVpisa" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="zeton_student_fk">
+          <End Type="studisModel.student" Role="student" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="studisModel.zeton" Role="zeton" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="student">
+              <PropertyRef Name="vpisnaStevilka" />
+            </Principal>
+            <Dependent Role="zeton">
+              <PropertyRef Name="vpisnaStevilka" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -3033,19 +3035,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="zetons">
-            <EntityTypeMapping TypeName="studisModel.zeton">
-              <MappingFragment StoreEntitySet="zeton">
-                <ScalarProperty Name="oblikaStudija" ColumnName="oblikaStudija" />
-                <ScalarProperty Name="vrstaStudija" ColumnName="vrstaStudija" />
-                <ScalarProperty Name="vrstaVpisa" ColumnName="vrstaVpisa" />
-                <ScalarProperty Name="porabljen" ColumnName="porabljen" />
-                <ScalarProperty Name="studijskiProgram" ColumnName="studijskiProgram" />
-                <ScalarProperty Name="letnik" ColumnName="letnik" />
-                <ScalarProperty Name="vpisnaStevilka" ColumnName="vpisnaStevilka" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <AssociationSetMapping Name="profesorinpredmet" TypeName="studisModel.profesorinpredmet" StoreEntitySet="profesorinpredmet">
             <EndProperty Name="predmet">
               <ScalarProperty Name="id" ColumnName="predmetId" />
@@ -3062,6 +3051,20 @@
                 <ScalarProperty Name="studijskiProgram" ColumnName="studijskiProgram" />
                 <ScalarProperty Name="priimek" ColumnName="priimek" />
                 <ScalarProperty Name="ime" ColumnName="ime" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="zetons">
+            <EntityTypeMapping TypeName="studisModel.zeton">
+              <MappingFragment StoreEntitySet="zeton">
+                <ScalarProperty Name="oblikaStudija" ColumnName="oblikaStudija" />
+                <ScalarProperty Name="vrstaStudija" ColumnName="vrstaStudija" />
+                <ScalarProperty Name="vrstaVpisa" ColumnName="vrstaVpisa" />
+                <ScalarProperty Name="porabljen" ColumnName="porabljen" />
+                <ScalarProperty Name="studijskiProgram" ColumnName="studijskiProgram" />
+                <ScalarProperty Name="letnik" ColumnName="letnik" />
+                <ScalarProperty Name="vpisnaStevilka" ColumnName="vpisnaStevilka" />
                 <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>

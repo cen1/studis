@@ -1,0 +1,20 @@
+﻿@model studis.Models.zeton
+
+@{
+    ViewBag.Title = "Zbriši";
+}
+
+<h2>Zbriši</h2>
+
+<h3>Ste prepričani da želite zbrisati ta žeton?</h3>
+<div>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Zbriši" class="btn btn-default" /> |
+            @Html.ActionLink("Nazaj na seznam", "Index")
+        </div>
+    }
+</div>
