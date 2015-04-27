@@ -47,7 +47,7 @@ namespace studis.Controllers
             return View();
         }
 
-        [HttpPost]
+        [HttpGet]
         [Authorize(Roles = "Referent")]
         public ActionResult VpisniList(int id)
         {
