@@ -41,11 +41,19 @@ namespace studis.Controllers
             ViewBag.StudijskoLetoPrvegaVpisa = new SelectList(Sifranti.StudijskoLetoGenerator(DateTime.Now.Year, DateTime.Now.Year - 20), "id", "naziv");
             ViewBag.IzbirnaSkupina = new SelectList(Sifranti.IZBIRNASKUPINA, "id", "naziv");
             ViewBag.Smer = new SelectList(Sifranti.SMER, "id", "naziv");
-            /*
-            var vpis = db.vpis.SingleOrDefault(v => v.student == User);
-            VpisniListModel model = Baza.getVpisniList(vpis.id);
-            */
-            return View();
+
+            try
+            {
+                var user = UserHelper.FindByName(User.Identity.Name);
+                int vpisId = user.students.FirstOrDefault().vpis.Last().id;
+                VpisniListModel model = Baza.getVpisniList(vpisId);
+                return View(model);
+            }
+            catch (Exception e)
+            {
+                return View();
+            }
+
         }
 
         /*
