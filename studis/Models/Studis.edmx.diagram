@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="1d3f79dc583b4c97953e0f85d49e781a" Name="Diagram1" ZoomLevel="84">
+      <Diagram DiagramId="1d3f79dc583b4c97953e0f85d49e781a" Name="Diagram1" ZoomLevel="83">
         <EntityTypeShape EntityType="studisModel.my_aspnet_applications" Width="1.5" PointX="0.625" PointY="0.5" IsExpanded="true" />
         <EntityTypeShape EntityType="studisModel.my_aspnet_membership" Width="1.5" PointX="8.25" PointY="0.5" IsExpanded="true" />
         <EntityTypeShape EntityType="studisModel.my_aspnet_paths" Width="1.5" PointX="0.5" PointY="6.75" IsExpanded="true" />
@@ -26,27 +26,27 @@
         <AssociationConnector Association="studisModel.userID_student_users1" />
         <EntityTypeShape EntityType="studisModel.sifrant_drzave" Width="1.5" PointX="25.75" PointY="1" />
         <EntityTypeShape EntityType="studisModel.sifrant_izbirnaskupina" Width="1.5" PointX="20.5" PointY="1" />
-        <EntityTypeShape EntityType="studisModel.sifrant_klasius" Width="1.5" PointX="22.25" PointY="2.5" />
-        <EntityTypeShape EntityType="studisModel.sifrant_letnik" Width="1.5" PointX="24" PointY="2.5" />
+        <EntityTypeShape EntityType="studisModel.sifrant_klasius" Width="1.5" PointX="22.25" PointY="3" />
+        <EntityTypeShape EntityType="studisModel.sifrant_letnik" Width="1.5" PointX="18.875" PointY="0.625" />
         <EntityTypeShape EntityType="studisModel.sifrant_nacinstudija" Width="1.5" PointX="22.25" PointY="1" />
         <EntityTypeShape EntityType="studisModel.sifrant_obcine" Width="1.5" PointX="22.25" PointY="4.125" />
-        <EntityTypeShape EntityType="studisModel.sifrant_oblikastudija" Width="1.5" PointX="20.625" PointY="2.5" />
+        <EntityTypeShape EntityType="studisModel.sifrant_oblikastudija" Width="1.5" PointX="18.875" PointY="2.875" />
         <EntityTypeShape EntityType="studisModel.sifrant_postnestevilke" Width="1.5" PointX="25.75" PointY="2.5" />
         <EntityTypeShape EntityType="studisModel.sifrant_drzava" Width="1.5" PointX="24" PointY="4" />
-        <EntityTypeShape EntityType="studisModel.sifrant_obcina" Width="1.5" PointX="24" PointY="1" />
+        <EntityTypeShape EntityType="studisModel.sifrant_obcina" Width="1.5" PointX="24" PointY="0.875" />
         <EntityTypeShape EntityType="studisModel.sifrant_postnastevilka" Width="1.5" PointX="22.375" PointY="5.75" />
-        <EntityTypeShape EntityType="studisModel.sifrant_spol" Width="1.5" PointX="20.375" PointY="5.75" />
-        <EntityTypeShape EntityType="studisModel.sifrant_studijskiprogram" Width="1.5" PointX="25.75" PointY="4.125" />
-        <EntityTypeShape EntityType="studisModel.sifrant_studijskoleto" Width="1.5" PointX="25.875" PointY="5.75" />
-        <EntityTypeShape EntityType="studisModel.sifrant_studijskoletoprvegavpisa" Width="1.5" PointX="24.25" PointY="5.75" />
-        <EntityTypeShape EntityType="studisModel.sifrant_vrstavpisa" Width="1.5" PointX="20.5" PointY="4.125" />
+        <EntityTypeShape EntityType="studisModel.sifrant_spol" Width="1.5" PointX="20.375" PointY="6.625" />
+        <EntityTypeShape EntityType="studisModel.sifrant_studijskiprogram" Width="1.5" PointX="26" PointY="4" />
+        <EntityTypeShape EntityType="studisModel.sifrant_studijskoleto" Width="1.5" PointX="25.75" PointY="6.625" />
+        <EntityTypeShape EntityType="studisModel.sifrant_studijskoletoprvegavpisa" Width="1.5" PointX="24" PointY="6.625" />
+        <EntityTypeShape EntityType="studisModel.sifrant_vrstavpisa" Width="1.5" PointX="20.5" PointY="4.5" />
         <EntityTypeShape EntityType="studisModel.modul" Width="1.5" PointX="28.25" PointY="13.5" />
         <EntityTypeShape EntityType="studisModel.ocena" Width="1.5" PointX="32.75" PointY="3.75" />
         <EntityTypeShape EntityType="studisModel.predmet" Width="1.5" PointX="30.5" PointY="10.625" />
         <EntityTypeShape EntityType="studisModel.profesor" Width="1.5" PointX="28.25" PointY="11" />
         <EntityTypeShape EntityType="studisModel.student" Width="1.5" PointX="28.25" PointY="0.75" />
         <EntityTypeShape EntityType="studisModel.studentinpredmet" Width="1.5" PointX="35.75" PointY="3.875" />
-        <EntityTypeShape EntityType="studisModel.vpi" Width="1.5" PointX="30.5" PointY="1" />
+        <EntityTypeShape EntityType="studisModel.vpi" Width="1.625" PointX="30.625" PointY="1.25" />
         <AssociationConnector Association="studisModel.predmet_modul_fk" />
         <AssociationConnector Association="studisModel.userID_student_users" />
         <AssociationConnector Association="studisModel.ocena_predmet" />
@@ -80,7 +80,8 @@
         <AssociationConnector Association="studisModel.vpis_s_studijskoletoprvegavpisa" />
         <AssociationConnector Association="studisModel.vpis_s_vrstavpisa" />
         <AssociationConnector Association="studisModel.predmet_student_fk" />
-        <AssociationConnector Association="studisModel.vpisnilist_student_fk" />
+        <AssociationConnector Association="studisModel.vpisnilist_student_fk" ManuallyRouted="false" >
+        </AssociationConnector>
         <AssociationConnector Association="studisModel.studentinpredmet_vpis" />
         <AssociationConnector Association="studisModel.profesorinpredmet" />
         <EntityTypeShape EntityType="studisModel.kandidat" Width="1.5" PointX="8.25" PointY="13" />
@@ -92,6 +93,9 @@
         <AssociationConnector Association="studisModel.zeton_s_studijskiprogram" />
         <AssociationConnector Association="studisModel.zeton_s_vrstavpisa" />
         <AssociationConnector Association="studisModel.zeton_student_fk" />
+        <EntityTypeShape EntityType="studisModel.sifrant_smer" Width="1.5" PointX="17.875" PointY="2.125" />
+        <AssociationConnector Association="studisModel.vpisifrant_smer" />
+        <AssociationConnector Association="studisModel.vpis_s_smer" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

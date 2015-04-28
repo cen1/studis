@@ -42,14 +42,16 @@ namespace studis.Controllers
             ViewBag.IzbirnaSkupina = new SelectList(Sifranti.IZBIRNASKUPINA, "id", "naziv");
             ViewBag.Smer = new SelectList(Sifranti.SMER, "id", "naziv");
 
-            //VpisniListModel model = Baza.getVpisniList();
+            var vpis = db.vpis.SingleOrDefault(v => v.student == User);
+            VpisniListModel model = Baza.getVpisniList(vpis.id);
 
-            return View();
+            return View(model);
         }
 
-        [HttpPost]
+        
         [Authorize(Roles = "Referent")]
-        public ActionResult VpisniList(int id)
+        [ActionName("VpisniList")]
+        public ActionResult VpisniListReferent(int id)
         {
             ViewBag.Title = "VpisniList";
             ViewBag.StudijskiProgrami = new SelectList(Sifranti.STUDIJSKIPROGRAM, "id", "IdNaziv");
@@ -274,7 +276,18 @@ namespace studis.Controllers
             ViewBag.sumIzb = 60 - sumObv;
 
             var t = PredmetHelper.obvezni2();
-            System.Diagnostics.Debug.WriteLine(t.First().ime);
+     
+            return View();
+        }
+
+        public ActionResult TretjiPredmetnik(int id)
+        {
+            //var vl = db.vpis.Find(id);
+            //if (vl == null) return HttpNotFound();
+
+            //če je povprečna ocena 8 ali več si prosto izbira, sicer izbere 2 modula plus en izbirni plus diploma obvezni
+            //if (UserHelper.preveriPovprecje()) return RedirectToAction("TretjiPredmetnikProsti");
+            //else return RedirectToAction("TretjiPredmetnikModuli");
             return View();
         }
 

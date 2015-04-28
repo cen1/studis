@@ -67,7 +67,7 @@ namespace studis
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             zeton zeton = db.zetons.Find(id);
-            if (zeton == null)
+            if (zeton == null || zeton.porabljen)
             {
                 return HttpNotFound();
             }
@@ -93,6 +93,10 @@ namespace studis
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
+            else
+            {
+                ModelState.AddModelError("err", "Napaka pri enem izmed polj");
+            }
             ViewBag.vrstaStudija = new SelectList(db.sifrant_klasius, "id", "naziv", zeton.vrstaStudija);
             ViewBag.letnik = new SelectList(db.sifrant_letnik, "id", "naziv", zeton.letnik);
             ViewBag.oblikaStudija = new SelectList(db.sifrant_oblikastudija, "id", "naziv", zeton.oblikaStudija);
@@ -110,7 +114,7 @@ namespace studis
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             zeton zeton = db.zetons.Find(id);
-            if (zeton == null)
+            if (zeton == null || zeton.porabljen)
             {
                 return HttpNotFound();
             }
@@ -123,6 +127,10 @@ namespace studis
         public ActionResult DeleteConfirmed(int id)
         {
             zeton zeton = db.zetons.Find(id);
+            if (zeton.porabljen)
+            {
+                return HttpNotFound();
+            }
             db.zetons.Remove(zeton);
             db.SaveChanges();
             return RedirectToAction("Index");
