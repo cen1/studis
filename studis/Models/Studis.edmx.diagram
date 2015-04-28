@@ -96,6 +96,8 @@
         <EntityTypeShape EntityType="studisModel.sifrant_smer" Width="1.5" PointX="17.875" PointY="2.125" />
         <AssociationConnector Association="studisModel.vpisifrant_smer" />
         <AssociationConnector Association="studisModel.vpis_s_smer" />
+        <EntityTypeShape EntityType="studisModel.sklep" Width="1.5" PointX="30.5" PointY="16.875" />
+        <AssociationConnector Association="studisModel.sklep_student" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

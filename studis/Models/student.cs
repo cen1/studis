@@ -20,6 +20,7 @@ namespace studis.Models
             this.studentinpredmets = new HashSet<studentinpredmet>();
             this.vpis = new HashSet<vpi>();
             this.zetons = new HashSet<zeton>();
+            this.skleps = new HashSet<sklep>();
         }
     
         public int vpisnaStevilka { get; set; }
@@ -62,5 +63,6 @@ namespace studis.Models
         public virtual ICollection<studentinpredmet> studentinpredmets { get; set; }
         public virtual ICollection<vpi> vpis { get; set; }
         public virtual ICollection<zeton> zetons { get; set; }
+        public virtual ICollection<sklep> skleps { get; set; }
     }
 }

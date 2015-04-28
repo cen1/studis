@@ -283,6 +283,9 @@
     <Compile Include="Models\sifrant_vrstavpisa.cs">
       <DependentUpon>Studis.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\sklep.cs">
+      <DependentUpon>Studis.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\StudeijskoLeto.cs" />
     <Compile Include="Models\student.cs">
       <DependentUpon>Studis.tt</DependentUpon>

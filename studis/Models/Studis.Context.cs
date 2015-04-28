@@ -61,5 +61,6 @@ namespace studis.Models
         public virtual DbSet<kandidat> kandidats { get; set; }
         public virtual DbSet<zeton> zetons { get; set; }
         public virtual DbSet<sifrant_smer> sifrant_smer { get; set; }
+        public virtual DbSet<sklep> skleps { get; set; }
     }
 }
