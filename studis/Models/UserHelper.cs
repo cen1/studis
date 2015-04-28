@@ -72,6 +72,22 @@ namespace studis.Models
             // Return char and concat substring.
             return char.ToUpper(s[0]) + s.Substring(1);
         }
+
+        public static bool preveriPovprecje(student s)
+        {
+            vpi vp = s.vpis.Where(a => a.letnikStudija == 2).Last();
+            double sum = 0;
+            int cnt = 0;
+            foreach (var o in vp.ocenas)
+            {
+                sum += o.ocena1;
+                cnt++;
+            }
+            double avg = sum / cnt;
+            if (avg >= 8) return true;
+            else return false;
+
+        }
     }
 
 }

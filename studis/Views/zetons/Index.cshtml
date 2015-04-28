@@ -72,8 +72,11 @@
             @Html.DisplayFor(modelItem => item.porabljen)
         </td>
         <td>
-            @Html.ActionLink("Popravi", "Edit", new { id=item.id }) |
-            @Html.ActionLink("Zbriši", "Delete", new { id=item.id })
+            @if (!item.porabljen) { 
+                @Html.ActionLink("Popravi", "Edit", new { id=item.id })
+                <span>| </span>
+                @Html.ActionLink("Zbriši", "Delete", new { id=item.id })
+            }
         </td>
     </tr>
 }

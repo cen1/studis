@@ -274,7 +274,18 @@ namespace studis.Controllers
             ViewBag.sumIzb = 60 - sumObv;
 
             var t = PredmetHelper.obvezni2();
-            System.Diagnostics.Debug.WriteLine(t.First().ime);
+     
+            return View();
+        }
+
+        public ActionResult TretjiPredmetnik(int id)
+        {
+            //var vl = db.vpis.Find(id);
+            //if (vl == null) return HttpNotFound();
+
+            //če je povprečna ocena 8 ali več si prosto izbira, sicer izbere 2 modula plus en izbirni plus diploma obvezni
+            //if (UserHelper.preveriPovprecje()) return RedirectToAction("TretjiPredmetnikProsti");
+            //else return RedirectToAction("TretjiPredmetnikModuli");
             return View();
         }
 
