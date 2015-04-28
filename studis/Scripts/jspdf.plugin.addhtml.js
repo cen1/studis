@@ -45,7 +45,7 @@
 			options = null;
 		}
 
-		var I = this.internal, K = I.scaleFactor, W = I.pageSize.width, H = I.pageSize.height;
+		var I = this.internal, K = I.scaleFactor, W = I.pageSize.width - x*2, H = I.pageSize.height - y*2;
 
 		options = options || {};
 		options.onrendered = function(obj) {
@@ -53,7 +53,7 @@
 			y = parseInt(y) || 0;
 			var dim = options.dim || {};
 			var h = dim.h || 0;
-			var w = dim.w || Math.min(W,obj.width/K) - x;
+			var w = dim.w || Math.min(W,obj.width/K);
 
 			var format = 'JPEG';
 			if(options.format)
@@ -63,12 +63,12 @@
 				var crop = function() {
 					var cy = 0;
 					while(1) {
-						var canvas = document.createElement('canvas');
+					    var canvas = document.createElement('canvas');
 						canvas.width = Math.min(W*K,obj.width);
-						canvas.height = Math.min(H*K,obj.height-cy);
+						canvas.height = Math.min(H*K,obj.height);
 						var ctx = canvas.getContext('2d');
-						ctx.drawImage(obj,0,cy,obj.width,canvas.height,0,0,canvas.width,canvas.height);
-						var args = [canvas, x,cy?0:y,canvas.width/K,canvas.height/K, format,null,'SLOW'];
+						ctx.drawImage(obj,0,cy,obj.width,canvas.height,0,0,obj.width,canvas.height);
+						var args = [canvas,x,y,canvas.width/K,canvas.height/K, 'PNG',null,'SLOW'];
 						this.addImage.apply(this, args);
 						cy += canvas.height;
 						if(cy >= obj.height) break;
