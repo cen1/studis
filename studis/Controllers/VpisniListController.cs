@@ -41,17 +41,17 @@ namespace studis.Controllers
             ViewBag.StudijskoLetoPrvegaVpisa = new SelectList(Sifranti.StudijskoLetoGenerator(DateTime.Now.Year, DateTime.Now.Year - 20), "id", "naziv");
             ViewBag.IzbirnaSkupina = new SelectList(Sifranti.IZBIRNASKUPINA, "id", "naziv");
             ViewBag.Smer = new SelectList(Sifranti.SMER, "id", "naziv");
-
+            /*
             var vpis = db.vpis.SingleOrDefault(v => v.student == User);
             VpisniListModel model = Baza.getVpisniList(vpis.id);
-
-            return View(model);
+            */
+            return View();
         }
 
-        
+        /*
         [Authorize(Roles = "Referent")]
         [ActionName("VpisniList")]
-        public ActionResult VpisniListReferent(int id)
+        public ActionResult VpisniList(int id)
         {
             ViewBag.Title = "VpisniList";
             ViewBag.StudijskiProgrami = new SelectList(Sifranti.STUDIJSKIPROGRAM, "id", "IdNaziv");
@@ -73,6 +73,7 @@ namespace studis.Controllers
 
             return View(model);
         }
+        */
         
         [HttpPost]
         public ActionResult VpisniList(studis.Models.VpisniListModel model)
