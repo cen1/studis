@@ -230,7 +230,7 @@
             @Html.LabelFor(m => m.postnaStevilkaZacasni)
         </div>
         <div class="editor-field">
-            @Html.DropDownListFor(m => m.postnaStevilkaZacasni, (SelectList)ViewBag.PostnaStevilka)
+            @Html.DropDownListFor(m => m.postnaStevilkaZacasni, (SelectList)ViewBag.PostnaStevilka, String.Empty)
             @Html.ValidationMessageFor(m => m.postnaStevilkaZacasni)
         </div>
 
@@ -239,7 +239,7 @@
             @Html.LabelFor(m => m.obcinaZacasni)
         </div>
         <div class="editor-field">
-            @Html.DropDownListFor(m => m.obcinaZacasni, (SelectList)ViewBag.Obcina)
+            @Html.DropDownListFor(m => m.obcinaZacasni, (SelectList)ViewBag.Obcina, String.Empty)
             @Html.ValidationMessageFor(m => m.obcinaZacasni)
         </div>
 
@@ -248,7 +248,7 @@
             @Html.LabelFor(m => m.drzavaZacasni)
         </div>
         <div class="editor-field">
-            @Html.DropDownListFor(m => m.drzavaZacasni, (SelectList)ViewBag.Drzava)
+            @Html.DropDownListFor(m => m.drzavaZacasni, (SelectList)ViewBag.Drzava, String.Empty)
             @Html.ValidationMessageFor(m => m.drzavaZacasni)
         </div>
 
@@ -296,7 +296,7 @@
             @Html.LabelFor(m => m.studijskiProgram2)
         </div>
         <div class="editor-field">
-            @Html.DropDownListFor(m => m.studijskiProgram2, (SelectList)ViewBag.StudijskiProgrami)
+            @Html.DropDownListFor(m => m.studijskiProgram2, (SelectList)ViewBag.StudijskiProgrami, string.Empty)
             @Html.ValidationMessageFor(m => m.studijskiProgram2)
         </div>
 
@@ -305,7 +305,7 @@
             @Html.LabelFor(m => m.smer2)
         </div>
         <div>
-            @Html.DropDownListFor(m => m.smer2, (SelectList)ViewBag.Smer)
+            @Html.DropDownListFor(m => m.smer2, (SelectList)ViewBag.Smer, string.Empty)
             @Html.ValidationMessageFor(m => m.smer2)
         </div>
 
@@ -314,7 +314,7 @@
             @Html.LabelFor(m => m.krajIzvajanja2)
         </div>
         <div class="editor-field">
-            @Html.DropDownListFor(m => m.krajIzvajanja2, (SelectList)ViewBag.Obcina)
+            @Html.DropDownListFor(m => m.krajIzvajanja2, (SelectList)ViewBag.Obcina, String.Empty)
             @Html.ValidationMessageFor(m => m.krajIzvajanja2)
         </div>
         
@@ -323,7 +323,7 @@
             @Html.LabelFor(m => m.izbirnaSkupina2)
         </div>
         <div class="editor-field">
-            @Html.DropDownListFor(m => m.izbirnaSkupina2, (SelectList)ViewBag.IZBIRNASKUPINA)
+            @Html.DropDownListFor(m => m.izbirnaSkupina2, (SelectList)ViewBag.IZBIRNASKUPINA, String.Empty)
             @Html.ValidationMessageFor(m => m.izbirnaSkupina2)
         </div>
         <hr style="width:50%;margin-left:0px">
