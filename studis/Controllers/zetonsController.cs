@@ -47,7 +47,7 @@ namespace studis
                 db.zetons.Add(zeton);
                 db.SaveChanges();
                 if (zeton.studijskiProgram != 1000468 || zeton.letnik>=4 || zeton.vrstaStudija != 16204)
-                    TempData["warning"] = "Dodali ste žeton s parametri za program, ki trenutno ni podrt. Še enkrat poglejte če je to res bil vaš namen.";
+                    TempData["warning"] = "Dodali ste žeton s parametri za program, ki trenutno ni podprt. Še enkrat poglejte če je to res bil vaš namen.";
                 return RedirectToAction("Index");
             }
 
