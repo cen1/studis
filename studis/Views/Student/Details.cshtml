@@ -1,15 +1,23 @@
 ﻿@model studis.Models.student
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "StudentPodatki";
 }
 
-<h2>Details</h2>
+<h2>Podatki o študentu</h2>
 
 <div>
-    <h4>student</h4>
-	<hr />
+    <h4>Študent</h4>
+    <hr />
     <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.vpisnaStevilka)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.vpisnaStevilka)
+        </dd>
+
         <dt>
             @Html.DisplayNameFor(model => model.ime)
         </dt>
@@ -27,32 +35,23 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.naslov)
+            @Html.DisplayNameFor(model => model.email)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.naslov)
+            @Html.DisplayFor(model => model.email)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.datum_rojstva)
+            @Html.DisplayNameFor(model => model.prenosniTelefon)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.datum_rojstva)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.spol)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.spol)
+            @Html.DisplayFor(model => model.prenosniTelefon)
         </dd>
 
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.vpisna_stevilka }) |
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Nazaj", "Students")
 </p>
