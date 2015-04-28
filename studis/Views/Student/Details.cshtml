@@ -1,58 +1,58 @@
 ﻿@model studis.Models.student
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "StudentPodatki";
 }
 
-<h2>Details</h2>
+<h2>Podatki o študentu</h2>
 
 <div>
-    <h4>student</h4>
-	<hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.ime)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.ime)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.priimek)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.priimek)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.naslov)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.naslov)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.datum_rojstva)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.datum_rojstva)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.spol)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.spol)
-        </dd>
-
-    </dl>
+    <hr />
+    <h3>Študent</h3>
+    <table class="table">
+        <tr>
+            <th>Vpisna številka</th>
+            <th>Ime</th>
+            <th>Priimek</th>
+            <th>Email</th>
+            <th>Prenosni telefon</th>
+        </tr>
+        <tr>
+            <td>@Html.DisplayFor(model => model.vpisnaStevilka)</td>
+            <td>@Html.DisplayFor(model => model.ime)</td>
+            <td>@Html.DisplayFor(model => model.priimek)</td>
+            <td>@Html.DisplayFor(model => model.email)</td>
+            <td>@Html.DisplayFor(model => model.prenosniTelefon)</td>
+        </tr>
+    </table>
+</div>
+<div>
+    <h3>Sklepi</h3>
+    <table class="table">
+        <tr>
+            <th>Datum</th>
+            <th>Veljaven do</th>
+            <th>Besedilo</th>
+            <th>Izdajatelj</th>
+        </tr>
+@foreach (var s in ViewBag.sklep)
+{
+        <tr>
+            <td>@s.datum</td>
+            @if(s.veljavnost==null)
+            { 
+                <td>/</td>
+            }
+            else
+            {
+                <td>@s.veljavnost</td>
+            }
+            <td>@s.besedilo</td>
+            <td>@s.izdajatelj</td>
+        </tr>
+}
+    </table>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.vpisna_stevilka }) |
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Nazaj", "Students")
 </p>

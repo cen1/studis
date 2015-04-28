@@ -103,18 +103,23 @@ namespace studis.Controllers
             return PartialView("_StudentSearchPDFPartial", lists);
         }
 
-        // GET: /Student/Details/5
-        public ActionResult Details(int? id)
+        // GET: /Student/Details/63060363
+        [Authorize(Roles = "Referent, Profesor")]
+        public ActionResult Details(int? vpisnaSt)
         {
-            if (id == null)
+            if (vpisnaSt == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            student student = db.students.Find(id);
+            
+            student student = db.students.Find(vpisnaSt);
             if (student == null)
             {
                 return HttpNotFound();
             }
+
+            ViewBag.sklep = student.skleps.ToList();
+
             return View(student);
         }
 

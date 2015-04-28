@@ -14,7 +14,11 @@
             <th>Vpisna številka</th>
             <th>Ime</th>
             <th>Priimek</th>
-            <th>Žeton za vpis</th>
+            <th>Podrobnosti</th>
+            @if (!User.IsInRole("Profesor"))
+            {
+                <th>Žeton za vpis</th>
+            }
         </tr>
 @if (Model != null)
 {
@@ -25,7 +29,11 @@
             <td>@Html.DisplayFor(modelItem => item.vpisnaStevilka)</td>
             <td>@Html.DisplayFor(modelItem => item.ime)</td>
             <td>@Html.DisplayFor(modelItem => item.priimek)</td>
-            <td><a href='@string.Format("/zetons/Create/{0}", item.vpisnaStevilka)'>Ustvari</a></td>
+            <td><a href='@string.Format("/Student/Details?vpisnaSt="+item.vpisnaStevilka)'>Prikaži</a></td>
+            @if (!User.IsInRole("Profesor"))
+            {
+                <td><a href='@string.Format("/zetons/Create/{0}", item.vpisnaStevilka)'>Ustvari</a></td>
+            }
     </tr>
     }
 }

@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="studisModel.Store" Provider="MySql.Data.MySqlClient" ProviderManifestToken="5.5" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="studisModel.Store" Provider="MySql.Data.MySqlClient" ProviderManifestToken="5.5" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="ip_lock">
           <Key>
             <PropertyRef Name="id" />
@@ -315,6 +315,17 @@
           <Property Name="id" Type="int" Nullable="false" />
           <Property Name="naziv" Type="varchar" MaxLength="255" Nullable="false" />
         </EntityType>
+        <EntityType Name="sklep">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="vpisnaSt" Type="int" Nullable="false" />
+          <Property Name="datum" Type="datetime" Precision="0" Nullable="false" />
+          <Property Name="veljavnost" Type="datetime" Precision="0" />
+          <Property Name="besedilo" Type="varchar" MaxLength="10000" Nullable="false" />
+          <Property Name="izdajatelj" Type="varchar" MaxLength="45" Nullable="false" />
+        </EntityType>
         <EntityType Name="student">
           <Key>
             <PropertyRef Name="vpisnaStevilka" />
@@ -578,6 +589,18 @@
             </Principal>
             <Dependent Role="profesorinpredmet">
               <PropertyRef Name="predmetId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="sklep_student">
+          <End Role="student" Type="Self.student" Multiplicity="1" />
+          <End Role="sklep" Type="Self.sklep" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="student">
+              <PropertyRef Name="vpisnaStevilka" />
+            </Principal>
+            <Dependent Role="sklep">
+              <PropertyRef Name="vpisnaSt" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1132,6 +1155,7 @@
           <EntitySet Name="sifrant_studijskoleto" EntityType="Self.sifrant_studijskoleto" Schema="studis" store:Type="Tables" />
           <EntitySet Name="sifrant_studijskoletoprvegavpisa" EntityType="Self.sifrant_studijskoletoprvegavpisa" Schema="studis" store:Type="Tables" />
           <EntitySet Name="sifrant_vrstavpisa" EntityType="Self.sifrant_vrstavpisa" Schema="studis" store:Type="Tables" />
+          <EntitySet Name="sklep" EntityType="Self.sklep" Schema="studis" store:Type="Tables" />
           <EntitySet Name="student" EntityType="Self.student" Schema="studis" store:Type="Tables" />
           <EntitySet Name="studentinpredmet" EntityType="Self.studentinpredmet" Schema="studis" store:Type="Tables" />
           <EntitySet Name="vpis" EntityType="Self.vpis" Schema="studis" store:Type="Tables" />
@@ -1191,6 +1215,10 @@
           <AssociationSet Name="profesor_predmet_fk" Association="Self.profesor_predmet_fk">
             <End Role="predmet" EntitySet="predmet" />
             <End Role="profesorinpredmet" EntitySet="profesorinpredmet" />
+          </AssociationSet>
+          <AssociationSet Name="sklep_student" Association="Self.sklep_student">
+            <End Role="student" EntitySet="student" />
+            <End Role="sklep" EntitySet="sklep" />
           </AssociationSet>
           <AssociationSet Name="student_predmet_fk" Association="Self.student_predmet_fk">
             <End Role="predmet" EntitySet="predmet" />
@@ -1711,6 +1739,11 @@
             <End Role="sifrant_smer" EntitySet="sifrant_smer" />
             <End Role="vpi" EntitySet="vpis" />
           </AssociationSet>
+          <EntitySet Name="skleps" EntityType="studisModel.sklep" />
+          <AssociationSet Name="sklep_student" Association="studisModel.sklep_student">
+            <End Role="student" EntitySet="students" />
+            <End Role="sklep" EntitySet="skleps" />
+          </AssociationSet>
           
           </EntityContainer>
         <EntityType Name="ip_lock">
@@ -2014,6 +2047,7 @@
           <NavigationProperty Name="studentinpredmets" Relationship="studisModel.predmet_student_fk" FromRole="student" ToRole="studentinpredmet" />
           <NavigationProperty Name="vpis" Relationship="studisModel.vpisnilist_student_fk" FromRole="student" ToRole="vpi" />
           <NavigationProperty Name="zetons" Relationship="studisModel.zeton_student_fk" FromRole="student" ToRole="zeton" />
+          <NavigationProperty Name="skleps" Relationship="studisModel.sklep_student" FromRole="student" ToRole="sklep" />
         </EntityType>
         <EntityType Name="studentinpredmet">
           <Key>
@@ -2706,6 +2740,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="sklep">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="vpisnaSt" Type="Int32" Nullable="false" />
+          <Property Name="datum" Type="DateTime" Nullable="false" />
+          <Property Name="veljavnost" Type="DateTime" />
+          <Property Name="besedilo" Type="String" Nullable="false" MaxLength="10000" FixedLength="false" Unicode="false" />
+          <Property Name="izdajatelj" Type="String" MaxLength="45" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="student" Relationship="studisModel.sklep_student" FromRole="sklep" ToRole="student" />
+        </EntityType>
+        <Association Name="sklep_student">
+          <End Type="studisModel.student" Role="student" Multiplicity="1" />
+          <End Type="studisModel.sklep" Role="sklep" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="student">
+              <PropertyRef Name="vpisnaStevilka" />
+            </Principal>
+            <Dependent Role="sklep">
+              <PropertyRef Name="vpisnaSt" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         
         </Schema>
     </edmx:ConceptualModels>
@@ -3129,6 +3187,18 @@
             <EntityTypeMapping TypeName="studisModel.sifrant_smer">
               <MappingFragment StoreEntitySet="sifrant_smer">
                 <ScalarProperty Name="naziv" ColumnName="naziv" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="skleps">
+            <EntityTypeMapping TypeName="studisModel.sklep">
+              <MappingFragment StoreEntitySet="sklep">
+                <ScalarProperty Name="izdajatelj" ColumnName="izdajatelj" />
+                <ScalarProperty Name="besedilo" ColumnName="besedilo" />
+                <ScalarProperty Name="veljavnost" ColumnName="veljavnost" />
+                <ScalarProperty Name="datum" ColumnName="datum" />
+                <ScalarProperty Name="vpisnaSt" ColumnName="vpisnaSt" />
                 <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>

@@ -77,7 +77,8 @@
                     @if(User.IsInRole("Študent")) {
                         <li>@Html.ActionLink("Vpisni list", "VpisniList", "VpisniList")</li>
                     }
-                    @if(User.IsInRole("Referent")) {
+                    @if (User.IsInRole("Referent") || User.IsInRole("Profesor"))
+                    {
                         <li>@Html.ActionLink("Študenti", "Students", "Student")</li>
                     }
                     @if(User.IsInRole("Skrbnik") || User.IsInRole("Referent")) {
