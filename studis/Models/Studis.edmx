@@ -1680,6 +1680,11 @@
             <End Role="student" EntitySet="students" />
             <End Role="zeton" EntitySet="zetons" />
           </AssociationSet>
+          <EntitySet Name="sifrant_smer" EntityType="studisModel.sifrant_smer" />
+          <AssociationSet Name="vpisifrant_smer" Association="studisModel.vpisifrant_smer">
+            <End Role="vpi" EntitySet="vpis" />
+            <End Role="sifrant_smer" EntitySet="sifrant_smer" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="ip_lock">
           <Key>
@@ -2035,6 +2040,7 @@
           <NavigationProperty Name="sifrant_vrstavpisa" Relationship="studisModel.vpis_s_vrstavpisa" FromRole="vpi" ToRole="sifrant_vrstavpisa" />
           <NavigationProperty Name="student" Relationship="studisModel.vpisnilist_student_fk" FromRole="vpi" ToRole="student" />
           <NavigationProperty Name="studentinpredmets" Relationship="studisModel.studentinpredmet_vpis" FromRole="vpi" ToRole="studentinpredmet" />
+          <NavigationProperty Name="sifrant_smer" Relationship="studisModel.vpisifrant_smer" FromRole="vpi" ToRole="sifrant_smer" />
         </EntityType>
         <Association Name="predmet_modul_fk">
           <End Type="studisModel.modul" Role="modul" Multiplicity="0..1">
@@ -2650,6 +2656,18 @@
               <PropertyRef Name="vpisnaStevilka" />
             </Dependent>
           </ReferentialConstraint>
+        </Association>
+        <EntityType Name="sifrant_smer">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <Property Name="naziv" Type="String" Nullable="false" FixedLength="false" MaxLength="255" Unicode="false" />
+          <NavigationProperty Name="vpis" Relationship="studisModel.vpisifrant_smer" FromRole="sifrant_smer" ToRole="vpi" />
+        </EntityType>
+        <Association Name="vpisifrant_smer">
+          <End Type="studisModel.vpi" Role="vpi" Multiplicity="*" />
+          <End Type="studisModel.sifrant_smer" Role="sifrant_smer" Multiplicity="1" />
         </Association>
         </Schema>
     </edmx:ConceptualModels>
