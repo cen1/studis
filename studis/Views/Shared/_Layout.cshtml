@@ -14,9 +14,13 @@
     <script src="@Url.Content("~/Scripts/jspdf.plugin.from_html.js")" type="text/javascript"></script>
     <script src="@Url.Content("~/Scripts/jspdf.plugin.cell.js")" type="text/javascript"></script>
     <script src="@Url.Content("~/Scripts/jspdf.plugin.addhtml.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jspdf.plugin.png_support.js")" type="text/javascript"></script>
     <script src="@Url.Content("~/Scripts/html2canvas.js")" type="text/javascript"></script>
     <script src="@Url.Content("~/Scripts/jspdf.plugin.addimage.js")" type="text/javascript"></script>
     <script src="@Url.Content("~/Scripts/FileSaver.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/png.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/zlib.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/deflate.js")" type="text/javascript"></script>  
 
     <script>
         $(document).ready(function () {
@@ -41,17 +45,8 @@
         function printPdf() {
             var pdf = new jsPDF('p', 'pt', 'a4');
 
-            var specialElementHandlers = {
-                '#izpis': function (element, renderer) {
-                    return true;
-                }
-            };
-
-            pdf.addHTML(document.getElementById('izpis'), 30, 30, {
-                'margin': 1,
-                'elementHandlers': specialElementHandlers,
-                'pagesplit': true,
-                'nodeName': 'CANVAS'
+            pdf.addHTML(document.getElementById('izpis'), 13, 13, {
+                'pagesplit': true
             }, function () {
                 pdf.save('izpis.pdf');
             });
