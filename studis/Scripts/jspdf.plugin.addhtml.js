@@ -55,7 +55,7 @@
 			var h = dim.h || 0;
 			var w = dim.w || Math.min(W,obj.width/K);
 
-			var format = 'JPEG';
+			var format = 'PNG';
 			if(options.format)
 				format = options.format;
 
@@ -68,7 +68,7 @@
 						canvas.height = Math.min(H*K,obj.height);
 						var ctx = canvas.getContext('2d');
 						ctx.drawImage(obj,0,cy,obj.width,canvas.height,0,0,obj.width,canvas.height);
-						var args = [canvas,x,y,canvas.width/K,canvas.height/K, 'PNG',null,'SLOW'];
+						var args = [canvas,x,y,canvas.width/K,canvas.height/K,format,null,'SLOW'];
 						this.addImage.apply(this, args);
 						cy += canvas.height;
 						if(cy >= obj.height) break;

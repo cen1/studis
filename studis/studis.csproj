@@ -176,7 +176,6 @@
     <Compile Include="Controllers\ImportController.cs" />
     <Compile Include="Controllers\ListController.cs" />
     <Compile Include="Controllers\StudentController.cs" />
-    <Compile Include="Controllers\TabelaController.cs" />
     <Compile Include="Controllers\VpisniListController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -446,7 +445,6 @@
     <Content Include="Views\zetons\Edit.cshtml" />
     <Content Include="Views\zetons\Index.cshtml" />
     <Content Include="Views\VpisniList\DrugiPredmetnik.cshtml" />
-    <Content Include="Views\Tabela\Tabela.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
