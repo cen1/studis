@@ -19,7 +19,7 @@ namespace studis.Models
             this.vpis = new HashSet<vpi>();
         }
     
-        public int Id { get; set; }
+        public int id { get; set; }
         public string naziv { get; set; }
     
         public virtual ICollection<vpi> vpis { get; set; }

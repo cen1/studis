@@ -273,6 +273,13 @@
           <Property Name="id" Type="int" Nullable="false" />
           <Property Name="naziv" Type="varchar" MaxLength="255" Nullable="false" />
         </EntityType>
+        <EntityType Name="sifrant_smer">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="naziv" Type="varchar" MaxLength="255" Nullable="false" />
+        </EntityType>
         <EntityType Name="sifrant_spol">
           <Key>
             <PropertyRef Name="id" />
@@ -896,6 +903,20 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="vpis_s_smer">
+          <End Role="sifrant_smer" Type="Self.sifrant_smer" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="vpis" Type="Self.vpis" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="sifrant_smer">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="vpis">
+              <PropertyRef Name="smer" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="vpis_s_studijskiprogram">
           <End Role="sifrant_studijskiprogram" Type="Self.sifrant_studijskiprogram" Multiplicity="1" />
           <End Role="vpis" Type="Self.vpis" Multiplicity="*" />
@@ -1105,6 +1126,7 @@
           <EntitySet Name="sifrant_obcina" EntityType="Self.sifrant_obcina" Schema="studis" store:Type="Tables" />
           <EntitySet Name="sifrant_oblikastudija" EntityType="Self.sifrant_oblikastudija" Schema="studis" store:Type="Tables" />
           <EntitySet Name="sifrant_postnastevilka" EntityType="Self.sifrant_postnastevilka" Schema="studis" store:Type="Tables" />
+          <EntitySet Name="sifrant_smer" EntityType="Self.sifrant_smer" Schema="studis" store:Type="Tables" />
           <EntitySet Name="sifrant_spol" EntityType="Self.sifrant_spol" Schema="studis" store:Type="Tables" />
           <EntitySet Name="sifrant_studijskiprogram" EntityType="Self.sifrant_studijskiprogram" Schema="studis" store:Type="Tables" />
           <EntitySet Name="sifrant_studijskoleto" EntityType="Self.sifrant_studijskoleto" Schema="studis" store:Type="Tables" />
@@ -1260,6 +1282,10 @@
           </AssociationSet>
           <AssociationSet Name="vpis_s_oblikastudija" Association="Self.vpis_s_oblikastudija">
             <End Role="sifrant_oblikastudija" EntitySet="sifrant_oblikastudija" />
+            <End Role="vpis" EntitySet="vpis" />
+          </AssociationSet>
+          <AssociationSet Name="vpis_s_smer" Association="Self.vpis_s_smer">
+            <End Role="sifrant_smer" EntitySet="sifrant_smer" />
             <End Role="vpis" EntitySet="vpis" />
           </AssociationSet>
           <AssociationSet Name="vpis_s_studijskiprogram" Association="Self.vpis_s_studijskiprogram">
@@ -1681,10 +1707,11 @@
             <End Role="zeton" EntitySet="zetons" />
           </AssociationSet>
           <EntitySet Name="sifrant_smer" EntityType="studisModel.sifrant_smer" />
-          <AssociationSet Name="vpisifrant_smer" Association="studisModel.vpisifrant_smer">
-            <End Role="vpi" EntitySet="vpis" />
+          <AssociationSet Name="vpis_s_smer" Association="studisModel.vpis_s_smer">
             <End Role="sifrant_smer" EntitySet="sifrant_smer" />
+            <End Role="vpi" EntitySet="vpis" />
           </AssociationSet>
+          
           </EntityContainer>
         <EntityType Name="ip_lock">
           <Key>
@@ -2040,7 +2067,7 @@
           <NavigationProperty Name="sifrant_vrstavpisa" Relationship="studisModel.vpis_s_vrstavpisa" FromRole="vpi" ToRole="sifrant_vrstavpisa" />
           <NavigationProperty Name="student" Relationship="studisModel.vpisnilist_student_fk" FromRole="vpi" ToRole="student" />
           <NavigationProperty Name="studentinpredmets" Relationship="studisModel.studentinpredmet_vpis" FromRole="vpi" ToRole="studentinpredmet" />
-          <NavigationProperty Name="sifrant_smer" Relationship="studisModel.vpisifrant_smer" FromRole="vpi" ToRole="sifrant_smer" />
+          <NavigationProperty Name="sifrant_smer" Relationship="studisModel.vpis_s_smer" FromRole="vpi" ToRole="sifrant_smer" />
         </EntityType>
         <Association Name="predmet_modul_fk">
           <End Type="studisModel.modul" Role="modul" Multiplicity="0..1">
@@ -2659,16 +2686,27 @@
         </Association>
         <EntityType Name="sifrant_smer">
           <Key>
-            <PropertyRef Name="Id" />
+            <PropertyRef Name="id" />
           </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="None" />
-          <Property Name="naziv" Type="String" Nullable="false" FixedLength="false" MaxLength="255" Unicode="false" />
-          <NavigationProperty Name="vpis" Relationship="studisModel.vpisifrant_smer" FromRole="sifrant_smer" ToRole="vpi" />
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="naziv" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="vpis" Relationship="studisModel.vpis_s_smer" FromRole="sifrant_smer" ToRole="vpi" />
         </EntityType>
-        <Association Name="vpisifrant_smer">
+        <Association Name="vpis_s_smer">
+          <End Type="studisModel.sifrant_smer" Role="sifrant_smer" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Type="studisModel.vpi" Role="vpi" Multiplicity="*" />
-          <End Type="studisModel.sifrant_smer" Role="sifrant_smer" Multiplicity="1" />
+          <ReferentialConstraint>
+            <Principal Role="sifrant_smer">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="vpi">
+              <PropertyRef Name="smer" />
+            </Dependent>
+          </ReferentialConstraint>
         </Association>
+        
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -3083,6 +3121,14 @@
                 <ScalarProperty Name="studijskiProgram" ColumnName="studijskiProgram" />
                 <ScalarProperty Name="letnik" ColumnName="letnik" />
                 <ScalarProperty Name="vpisnaStevilka" ColumnName="vpisnaStevilka" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sifrant_smer">
+            <EntityTypeMapping TypeName="studisModel.sifrant_smer">
+              <MappingFragment StoreEntitySet="sifrant_smer">
+                <ScalarProperty Name="naziv" ColumnName="naziv" />
                 <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>
