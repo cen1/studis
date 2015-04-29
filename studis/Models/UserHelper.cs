@@ -88,6 +88,13 @@ namespace studis.Models
             else return false;
 
         }
+
+        public static bool imaZeton(student s)
+        {
+            var z = s.zetons.Where(a => a.porabljen == false);
+            if (z.Count() > 0) return true;
+            else return false;
+        }
     }
 
 }

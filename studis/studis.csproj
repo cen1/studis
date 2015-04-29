@@ -448,6 +448,7 @@
     <Content Include="Views\zetons\Edit.cshtml" />
     <Content Include="Views\zetons\Index.cshtml" />
     <Content Include="Views\VpisniList\DrugiPredmetnik.cshtml" />
+    <Content Include="Views\VpisniList\NiZetona.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

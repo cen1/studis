@@ -17,34 +17,36 @@ namespace studis.Controllers
         public ActionResult VpisniList()
         {
 
-            //poglej ce obstaja vnos v tabeli student in ce ja, poglej zeton
-            //ce vnosa ni je prvi vpis in ni treba preverjat
-            //var sid = studis.Models.UserHelper.FindByName(User.Identity.Name).students.FirstOrDefault();
-            //if (sid != null) 
-
-            if (false && User.IsInRole("Student")) //ni zetona
-            {
-                return RedirectToAction("");
+            //poglej ce obstaja vnos v tabeli student
+            var sid = studis.Models.UserHelper.FindByName(User.Identity.Name).students.FirstOrDefault();
+            if (sid != null) {
+                //poglej ce ima zeton
+                if (!UserHelper.imaZeton(sid))
+                {
+                    return RedirectToAction("NiZetona");
+                }
             }
 
-            ViewBag.Title = "VpisniList";
-            ViewBag.StudijskiProgrami = new SelectList(Sifranti.STUDIJSKIPROGRAM, "id", "IdNaziv");
-            ViewBag.Klasius = new SelectList(Sifranti.KLASIUS, "id", "naziv");
-            ViewBag.VrstaVpisa = new SelectList(Sifranti.VRSTAVPISA, "id", "naziv");
-            ViewBag.NacinStudija = new SelectList(Sifranti.NACINSTUDIJA, "id", "naziv");
-            ViewBag.OblikaStudija = new SelectList(Sifranti.OBLIKASTUDIJA, "id", "naziv");
-            ViewBag.Spol = new SelectList(Sifranti.SPOL, "id", "naziv");
-            ViewBag.Obcina = new SelectList(Sifranti.OBCINE, "id", "naziv");
-            ViewBag.Drzava = new SelectList(Sifranti.DRZAVE, "id", "naziv");
-            ViewBag.PostnaStevilka = new SelectList(Sifranti.POSTNESTEVILKE, "id", "IdNaziv");
-            ViewBag.Letnik = new SelectList(Sifranti.LETNIK, "id", "naziv");
-            ViewBag.StudijskoLetoPrvegaVpisa = new SelectList(Sifranti.StudijskoLetoGenerator(DateTime.Now.Year, DateTime.Now.Year - 20), "id", "naziv");
-            ViewBag.IzbirnaSkupina = new SelectList(Sifranti.IZBIRNASKUPINA, "id", "naziv");
-            ViewBag.Smer = new SelectList(Sifranti.SMER, "id", "naziv");
-            /*
-            var vpis = db.vpis.SingleOrDefault(v => v.student == User);
-            VpisniListModel model = Baza.getVpisniList(vpis.id);
-            */
+            ViewBag.Title = "Vpisni List";
+            ViewBag.StudijskiProgrami = new SelectList(db.sifrant_studijskiprogram, "id", "naziv");
+            ViewBag.Klasius = new SelectList(db.sifrant_klasius, "id", "naziv");
+            ViewBag.VrstaVpisa = new SelectList(db.sifrant_vrstavpisa, "id", "naziv");
+            ViewBag.NacinStudija = new SelectList(db.sifrant_nacinstudija, "id", "naziv");
+            ViewBag.OblikaStudija = new SelectList(db.sifrant_oblikastudija, "id", "naziv");
+            ViewBag.Spol = new SelectList(db.sifrant_spol, "id", "naziv");
+            ViewBag.Obcina = new SelectList(db.sifrant_obcina, "id", "naziv");
+            ViewBag.Drzava = new SelectList(db.sifrant_drzava, "id", "naziv");
+            ViewBag.PostnaStevilka = new SelectList(db.sifrant_postnastevilka, "id", "naziv");
+            ViewBag.Letnik = new SelectList(db.sifrant_letnik, "id", "naziv");
+            ViewBag.StudijskoLetoPrvegaVpisa = new SelectList(db.sifrant_studijskoletoprvegavpisa, "id", "naziv");
+            ViewBag.IzbirnaSkupina = new SelectList(db.sifrant_izbirnaskupina, "id", "naziv");
+            ViewBag.Smer = new SelectList(db.sifrant_smer, "id", "naziv");
+            
+            return View();
+        }
+
+        public ActionResult NiZetona()
+        {
             return View();
         }
 
@@ -78,6 +80,17 @@ namespace studis.Controllers
         [HttpPost]
         public ActionResult VpisniList(studis.Models.VpisniListModel model)
         {
+            //poglej ce obstaja vnos v tabeli student
+            var sid = studis.Models.UserHelper.FindByName(User.Identity.Name).students.FirstOrDefault();
+            if (sid != null)
+            {
+                //poglej ce ima zeton
+                if (!UserHelper.imaZeton(sid))
+                {
+                    return RedirectToAction("NiZetona");
+                }
+            }
+
             model.studijskoLeto = "2015/2016";
             if (ModelState.IsValid)
             {
@@ -167,19 +180,20 @@ namespace studis.Controllers
             }
 
             //repopulate model lists
-            ViewBag.Title = "VpisniList";
-            ViewBag.StudijskiProgrami = new SelectList(Sifranti.STUDIJSKIPROGRAM, "id", "naziv");
-            ViewBag.Klasius = new SelectList(Sifranti.KLASIUS, "id", "naziv");
-            ViewBag.VrstaVpisa = new SelectList(Sifranti.VRSTAVPISA, "id", "naziv");
-            ViewBag.NacinStudija = new SelectList(Sifranti.NACINSTUDIJA, "id", "naziv");
-            ViewBag.OblikaStudija = new SelectList(Sifranti.OBLIKASTUDIJA, "id", "naziv");
-            ViewBag.Spol = new SelectList(Sifranti.SPOL, "id", "naziv");
-            ViewBag.Obcina = new SelectList(Sifranti.OBCINE, "id", "naziv");
-            ViewBag.Drzava = new SelectList(Sifranti.DRZAVE, "id", "naziv");
-            ViewBag.PostnaStevilka = new SelectList(Sifranti.POSTNESTEVILKE, "id", "naziv");
-            ViewBag.Letnik = new SelectList(Sifranti.LETNIK, "id", "naziv");
-            ViewBag.StudijskoLetoPrvegaVpisa = new SelectList(Sifranti.STUDIJSKOLETO, "id", "naziv");
-            ViewBag.IzbirnaSkupina = new SelectList(Sifranti.IZBIRNASKUPINA, "id", "naziv");
+            ViewBag.Title = "Vpisni List";
+            ViewBag.StudijskiProgrami = new SelectList(db.sifrant_studijskiprogram, "id", "naziv");
+            ViewBag.Klasius = new SelectList(db.sifrant_klasius, "id", "naziv");
+            ViewBag.VrstaVpisa = new SelectList(db.sifrant_vrstavpisa, "id", "naziv");
+            ViewBag.NacinStudija = new SelectList(db.sifrant_nacinstudija, "id", "naziv");
+            ViewBag.OblikaStudija = new SelectList(db.sifrant_oblikastudija, "id", "naziv");
+            ViewBag.Spol = new SelectList(db.sifrant_spol, "id", "naziv");
+            ViewBag.Obcina = new SelectList(db.sifrant_obcina, "id", "naziv");
+            ViewBag.Drzava = new SelectList(db.sifrant_drzava, "id", "naziv");
+            ViewBag.PostnaStevilka = new SelectList(db.sifrant_postnastevilka, "id", "IdNaziv");
+            ViewBag.Letnik = new SelectList(db.sifrant_letnik, "id", "naziv");
+            ViewBag.StudijskoLetoPrvegaVpisa = new SelectList(db.sifrant_studijskoletoprvegavpisa, "id", "naziv");
+            ViewBag.IzbirnaSkupina = new SelectList(db.sifrant_izbirnaskupina, "id", "naziv");
+            ViewBag.Smer = new SelectList(db.sifrant_smer, "id", "naziv");
 
             return View(model);
         }
