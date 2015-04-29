@@ -41,17 +41,24 @@ namespace studis.Controllers
             ViewBag.StudijskoLetoPrvegaVpisa = new SelectList(Sifranti.StudijskoLetoGenerator(DateTime.Now.Year, DateTime.Now.Year - 20), "id", "naziv");
             ViewBag.IzbirnaSkupina = new SelectList(Sifranti.IZBIRNASKUPINA, "id", "naziv");
             ViewBag.Smer = new SelectList(Sifranti.SMER, "id", "naziv");
-            /*
-            var vpis = db.vpis.SingleOrDefault(v => v.student == User);
-            VpisniListModel model = Baza.getVpisniList(vpis.id);
-            */
-            return View();
+
+            try
+            {
+                var user = UserHelper.FindByName(User.Identity.Name);
+                int vpisId = user.students.FirstOrDefault().vpis.Last().id;
+                VpisniListModel model = Baza.getVpisniList(vpisId);
+                return View(model);
+            }
+            catch (Exception e)
+            {
+                return View();
+            }
+
         }
 
-        /*
+        
         [Authorize(Roles = "Referent")]
-        [ActionName("VpisniList")]
-        public ActionResult VpisniList(int id)
+        public ActionResult VpisniListEdit(int id)
         {
             ViewBag.Title = "VpisniList";
             ViewBag.StudijskiProgrami = new SelectList(Sifranti.STUDIJSKIPROGRAM, "id", "IdNaziv");
@@ -73,7 +80,7 @@ namespace studis.Controllers
 
             return View(model);
         }
-        */
+        
         
         [HttpPost]
         public ActionResult VpisniList(studis.Models.VpisniListModel model)
@@ -92,9 +99,9 @@ namespace studis.Controllers
                     v.student.emso = model.emso;
                     v.student.ime = model.ime;
                     v.izbirnaSkupina = model.izbirnaSkupina;
-                    v.izbirnaSkupina2 = model.izbirnaSkupina2;
+                    //v.izbirnaSkupina2 = model.izbirnaSkupina2;
                     v.krajIzvajanja = model.krajIzvajanja;
-                    v.krajIzvajanja2 = model.krajIzvajanja2;
+                    //v.krajIzvajanja2 = model.krajIzvajanja2;
                     v.student.krajRojstva = model.krajRojstva;
                     v.letnikStudija = model.letnikStudija;
                     v.nacinStudija = model.nacinStudija;
@@ -109,12 +116,12 @@ namespace studis.Controllers
                     v.student.prenosniTelefon = model.prenosniTelefon;
                     v.student.priimek = model.priimek;
                     v.smer = model.smer;
-                    v.smer2 = model.smer2;
+                    //v.smer2 = model.smer2;
                     v.soglasje1 = model.soglasje1;
                     v.soglasje2 = model.soglasje2;
                     v.student.spol = model.spol;
                     v.studijskiProgram = model.studijskiProgram;
-                    v.studijskiProgram2 = model.studijskiProgram2;
+                    //v.studijskiProgram2 = model.studijskiProgram2;
                     v.studijskoLeto = Convert.ToInt32(model.studijskoLeto);
                     v.studijskoLetoPrvegaVpisa = model.studijskoLetoPrvegaVpisa;
                     v.student.vrocanje = model.vrocanje;

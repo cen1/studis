@@ -1,0 +1,61 @@
+﻿@{
+    ViewBag.Title = "IzpitniRok";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@Model studis.Models.IzpitniRok
+
+<h2>Dodaj Izpitni Rok</h2>
+
+@using (Html.BeginForm())
+{
+    <div>
+        <fieldset>
+            <!--Izbira Predmeta-->
+            <div class="editor-label">
+                @Html.LabelFor(m => m.predmet)
+            </div>
+            <div class="editor-field">
+                @Html.DropDownListFor(m => m.predmet, new SelectList(ViewBag.Predmets, "id", "id, ime"))
+                @Html.ValidationMessageFor(m => m.predmet)
+            </div>
+
+            <!--Izbira profesorja-->
+            <div class="editor-label">
+                @Html.LabelFor(m => m.profesors)
+            </div>
+            <div class="editor-field">
+                <script language="javascript" type="text/javascript">
+                $(document).ready(function () {
+                    $("#predmet").change(function () {
+                        $.get("/IzpitniRok/GetProfesorsForPredmet/" + $(this).val(), function (response) {
+                            var profesors = $.evalJSON(response);
+                            var ddlProfesors = $("profesor");
+
+                            //pocisti
+                            $("#profesor > option").remove();
+
+                            //napolni
+                            for (i = 0; i < profesors.lenght; i++) {
+                                ddlProfesors.append('<option value="' + profesors[i].Value + '">' + profesors[i].Text + '</option>');
+                            }
+                        })
+                    })
+                });
+                </script>
+            </div>
+
+            <!--Izbira datuma-->
+            <div class="editor-label">
+                @Html.LabelFor(m => m.datum)
+            </div>
+            <div class="editor-field">
+                @Html.TextBoxFor(m => m.datum)
+                @Html.ValidationMessageFor(m => m.datum)
+            </div>
+
+            <p>
+                <input type="submit" value="Dodaj">
+            </p>
+        </fieldset>
+    </div>
+}
