@@ -290,8 +290,9 @@
             @Html.DropDownListFor(m => m.izbirnaSkupina, (SelectList)ViewBag.IZBIRNASKUPINA)
             @Html.ValidationMessageFor(m => m.izbirnaSkupina)
         </div>
+        <!--
         <hr style="width:50%;margin-left:0px">
-        <!--Studijski program 2-->
+        <!--Studijski program 2--/>
         <div class="editor-label">
             @Html.LabelFor(m => m.studijskiProgram2)
         </div>
@@ -299,7 +300,6 @@
             @Html.DropDownListFor(m => m.studijskiProgram2, (SelectList)ViewBag.StudijskiProgrami, string.Empty)
             @Html.ValidationMessageFor(m => m.studijskiProgram2)
         </div>
-        <!--
         <!--Smer2--/>
         <div class="editor-label">
             @Html.LabelFor(m => m.smer2)
