@@ -52,5 +52,12 @@ namespace studis.Models
 
             return vpisniList;
         }
+
+        public static List<profesor> getProfesorsForPredmet(int id)
+        {
+            studisEntities db = new studisEntities();
+            var predmet = db.predmets.SingleOrDefault(v => v.id == id);
+            return predmet.profesors.ToList();
+        }
     }
 }

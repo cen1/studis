@@ -24,7 +24,8 @@ namespace studis.Models
         {
             throw new UnintentionalCodeFirstException();
         }
-    
+
+        public virtual DbSet<IzpitniRok> IzpitniRoks { get; set; }
         public virtual DbSet<my_aspnet_applications> my_aspnet_applications { get; set; }
         public virtual DbSet<my_aspnet_membership> my_aspnet_membership { get; set; }
         public virtual DbSet<my_aspnet_paths> my_aspnet_paths { get; set; }
