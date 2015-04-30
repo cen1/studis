@@ -59,7 +59,9 @@
                 <th>Študijsko leto</th>
                 <th>Program</th>
                 <th>Vrsta vpisa</th>
+                <th>Potrjen vpis</th>
                 <th>Pdf vpisni list</th>
+                <th>Vzpostavi Predmetnik</th>
             </tr>
         @foreach (var v in ViewBag.vpisi)
         {
@@ -67,7 +69,25 @@
             <td>@v.studijskoLeto</td>
             <td>@v.studijskiProgram</td>
             <td>@v.vrstaVpisa</td>
+            <td>@(v.potrjen ? "Da" : "Ne")</td>
             <td><a href="~/List/Pdf/@v.id">Pdf</a></td>
+            <td>
+                @if (!ViewBag.uh.jePredmetnikVzpostavljen(v))
+                {
+                    if (v.letnikStudija == 1)
+                    {
+                        <a href="~/VpisniList/PrviPredmetnik/@v.id">Vzpostavi</a>
+                    }
+                    if (v.letnikStudija == 2)
+                    {
+                        <a href="~/VpisniList/DrugiPredmetnik/@v.id">Vzpostavi</a>
+                    }
+                    if (v.letnikStudija == 3)
+                    {
+                        <a href="~/VpisniList/DrugiPredmetnik/@v.id">Vzpostavi</a>
+                    }
+                }
+             </td>
         }
         </table>
     }

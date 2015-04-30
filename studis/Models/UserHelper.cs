@@ -129,6 +129,7 @@ namespace studis.Models
                 if (k.studijskiProgram != vlm.studijskiProgram) napake.Add("Študijski program ni enak programu v seznamu kandidatov");
                 if (k.email != vlm.email) napake.Add("Email ni enak tistemu v seznamu kandidatov");
                 if (vlm.letnikStudija != 1) napake.Add("Letnik ni enak 1");
+                if (vlm.vrstaVpisa != 1) napake.Add("izberete lahko le prvi vpis v letnik");
             }
             else
             {
@@ -137,7 +138,8 @@ namespace studis.Models
 
                 //preveri da je letnik enak ob ponavljanju ali vecji od zadnjega vpisa
                 int stponavljanj = 0;
-                foreach (var v in s.vpis.Where(a => a.studijskiProgram == vlm.studijskiProgram))
+                var vpisi_sp = s.vpis.Where(a => a.studijskiProgram == vlm.studijskiProgram);
+                foreach (var v in vpisi_sp)
                 {
                     if (vlm.vrstaVpisa == 1)
                     {
@@ -151,6 +153,10 @@ namespace studis.Models
                     }
                 }
                 if (stponavljanj > 1) napake.Add("Samo enkrat lahko povaljate isti letnik");
+                if (stponavljanj == 0 && vlm.vrstaVpisa == 2) napake.Add("Ne morete ponavljati letnika, ki ga še niste delali");
+
+                if (vlm.vrstaVpisa == 7 && (vpisi_sp.Last().letnikStudija != vlm.letnikStudija)) napake.Add("Letnik mora biti enak zadnjemu vpisu");
+                if (vlm.vrstaVpisa == 5 && (vlm.letnikStudija <= vpisi_sp.Last().letnikStudija)) napake.Add("Letnik mora biti večji od zadnjega vpisa");
             }
 
             //preveri da se emso in datum rojstva ujemata
@@ -179,24 +185,33 @@ namespace studis.Models
             //blokiraj vpis 98
             if (vlm.vrstaVpisa == 98) napake.Add("Izbrana vrsta vpisa ni podprta");
 
+            //preveri vrocanje
+            if (vlm.vrocanje && vlm.vrocanjeZacasni) napake.Add("Izberite le en naslov za vročanje");
+            if (!vlm.vrocanje && !vlm.vrocanjeZacasni) napake.Add("Izberite vsaj en naslov za vročanje");
+
             return napake;
         }
 
         public bool jePredmetnikVzpostavljen(vpi v)
         {
-            if (v.studentinpredmets.Count() == 0) return false;
-            else return true;
+            if (v.studentinpredmets.Count() == 0)
+            {
+                System.Diagnostics.Debug.WriteLine("Vzpostavljen za " + v.id.ToString() + " je false");
+                return false;
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("Vzpostavljen za " + v.id.ToString() + " je true");
+                return true;
+            }
         }
 
         public string linkZaPredmetnik(vpi v)
         {
-            string r = "~/VpisniList/";
-            if (v.letnikStudija == 1) r += "PrviPredmetnik/";
-            if (v.letnikStudija == 2) r += "DrugiPredmetnik/";
-            if (v.letnikStudija == 3) r += "TretjiPredmetnik/";
-
-            r += "/" + v.id.ToString();
-
+            string r = "";
+            if (v.letnikStudija == 1) r += "PrviPredmetnik";
+            if (v.letnikStudija == 2) r += "DrugiPredmetnik";
+            if (v.letnikStudija == 3) r += "TretjiPredmetnik";
             return r;
         }
     }

@@ -309,8 +309,13 @@ namespace studis.Controllers
 
         public ActionResult PrviPredmetnik(int id)
         {
+            //preveri ce vpisni sploh obstaja
             var vl = db.vpis.Find(id);
             if (vl == null) return HttpNotFound();
+
+            //preveri ce je predmetnik ze bil izpolnjen
+            UserHelper uh = new UserHelper();
+            if (uh.jePredmetnikVzpostavljen(vl)) return HttpNotFound();
 
             PredmetHelper ph = new PredmetHelper();
             PrviPredmetnikModel m = new PrviPredmetnikModel();
@@ -324,6 +329,10 @@ namespace studis.Controllers
         {
             var vl = db.vpis.Find(model.vlid);
             if (vl == null) return HttpNotFound();
+
+            //preveri ce je predmetnik ze bil izpolnjen
+            UserHelper uh = new UserHelper();
+            if (uh.jePredmetnikVzpostavljen(vl)) return HttpNotFound();
 
             PredmetHelper ph = new PredmetHelper();
 
@@ -345,8 +354,13 @@ namespace studis.Controllers
 
         public ActionResult DrugiPredmetnik(int id)
         {
-            //var vl = db.vpis.Find(id);
-            //if (vl == null) return HttpNotFound();
+            //preveri ce vpisni sploh obstaja
+            var vl = db.vpis.Find(id);
+            if (vl == null) return HttpNotFound();
+
+            //preveri ce je predmetnik ze bil izpolnjen
+            UserHelper uh = new UserHelper();
+            if (uh.jePredmetnikVzpostavljen(vl)) return HttpNotFound();
 
             PredmetHelper ph = new PredmetHelper();
 
@@ -369,8 +383,14 @@ namespace studis.Controllers
 
         public ActionResult TretjiPredmetnik(int id)
         {
-            //var vl = db.vpis.Find(id);
-            //if (vl == null) return HttpNotFound();
+            //preveri ce vpisni sploh obstaja
+            var vl = db.vpis.Find(id);
+            if (vl == null) return HttpNotFound();
+
+            //preveri ce je predmetnik ze bil izpolnjen
+            UserHelper uh = new UserHelper();
+            if (uh.jePredmetnikVzpostavljen(vl)) return HttpNotFound();
+
 
             //če je povprečna ocena 8 ali več si prosto izbira, sicer izbere 2 modula plus en izbirni plus diploma obvezni
             //if (UserHelper.preveriPovprecje()) return RedirectToAction("TretjiPredmetnikProsti");
