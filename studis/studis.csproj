@@ -176,6 +176,7 @@
     <Compile Include="Controllers\ImportController.cs" />
     <Compile Include="Controllers\IzpitniRokController.cs" />
     <Compile Include="Controllers\ListController.cs" />
+    <Compile Include="Controllers\PredmetController.cs" />
     <Compile Include="Controllers\StudentController.cs" />
     <Compile Include="Controllers\VpisniListController.cs" />
     <Compile Include="Global.asax.cs">
@@ -453,6 +454,8 @@
     <Content Include="Views\VpisniList\NiZetona.cshtml" />
     <Content Include="Views\IzpitniRok.cshtml" />
     <Content Include="Views\IzpitniRok\Dodaj.cshtml" />
+    <Content Include="Views\Predmet\Predmeti.cshtml" />
+    <Content Include="Views\Predmet\PredmetStudenti.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

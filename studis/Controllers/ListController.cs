@@ -15,9 +15,9 @@ namespace studis.Controllers
     {
         public studisEntities db = new studisEntities();
 
-        public ActionResult Pdf(int id)
+        public ActionResult Pdf(int vpisnaStevilka)
         {
-            var list = db.vpis.SingleOrDefault(v => v.id == id);
+            var list = db.vpis.SingleOrDefault(v => v.vpisnaStevilka == vpisnaStevilka);
             // preveri če vpisni list obstaja
             try {
                 var model = new studis.Models.VpisniListModel
