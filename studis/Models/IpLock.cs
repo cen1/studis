@@ -6,9 +6,14 @@ namespace studis.Models
 {
     public class IpLock
     {
-        public static studisEntities db = new studisEntities();
+        private studisEntities db;
 
-        public static ip_lock FindActiveByIp(String ip)
+        public IpLock()
+        {
+            db = new studisEntities();
+        }
+
+        public ip_lock FindActiveByIp(String ip)
         {
             DateTime cet = UserHelper.TimeCET();
             var L2EQuery = db.ip_lock.Where(a => a.ip == ip).Where(b => b.locked_until > cet);
@@ -16,7 +21,7 @@ namespace studis.Models
             return ipl;
         }
 
-        public static void Add(ip_lock ipl)
+        public void Add(ip_lock ipl)
         {
             db.ip_lock.Add(ipl);
             db.SaveChanges();
