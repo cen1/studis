@@ -15,9 +15,24 @@ namespace studis.Controllers
     {
         public studisEntities db = new studisEntities();
 
-        public ActionResult Pdf(int vpisnaStevilka)
+        public ActionResult Pdf(int id)
         {
-            var list = db.vpis.SingleOrDefault(v => v.vpisnaStevilka == vpisnaStevilka);
+            if (id > 60000000)
+            {
+                try
+                {
+                    var tmp = db.vpis.Single(v => v.vpisnaStevilka == id);
+                    id = tmp.id;
+                }
+                catch
+                {
+                    return RedirectToAction("ListEmpty");
+                }
+                
+            }
+            var list = db.vpis.SingleOrDefault(v => v.id == id);
+            
+
             // preveri če vpisni list obstaja
             try {
                 var model = new studis.Models.VpisniListModel
@@ -63,29 +78,31 @@ namespace studis.Controllers
                     soglasje2 = Convert.ToBoolean(list.soglasje2)
                 };
 
-                ViewBag.PostnaStevilka = Sifranti.POSTNESTEVILKE.SingleOrDefault(item => item.id == list.student.postnaStevilka);
-                ViewBag.Obcina = Sifranti.OBCINE.SingleOrDefault(item => item.id == list.student.obcina);
-                ViewBag.Drzava = Sifranti.DRZAVE.SingleOrDefault(item => item.id == list.student.drzava);
-                ViewBag.PostnaStevilkaZacasni = Sifranti.POSTNESTEVILKE.SingleOrDefault(item => item.id == Convert.ToInt32(list.student.postnaStevilkaZacasni));
-                ViewBag.ObcinaZacasni = Sifranti.OBCINE.SingleOrDefault(item => item.id == Convert.ToInt32(list.student.obcinaZacasni));
-                ViewBag.DrzavaZacasni = Sifranti.DRZAVE.SingleOrDefault(item => item.id == Convert.ToInt32(list.student.drzavaZacasni));
-                ViewBag.StudijskiProgram = Sifranti.STUDIJSKIPROGRAM.SingleOrDefault(item => item.id == list.studijskiProgram);
-                ViewBag.StudijskiProgram2 = Sifranti.STUDIJSKIPROGRAM.SingleOrDefault(item => item.id == list.studijskiProgram2);
-                ViewBag.VrstaStudija = Sifranti.KLASIUS.SingleOrDefault(item => item.id == list.vrstaStudija);
-                ViewBag.NacinStudija = Sifranti.NACINSTUDIJA.SingleOrDefault(item => item.id == list.nacinStudija);
-                ViewBag.OblikaStudija = Sifranti.OBLIKASTUDIJA.SingleOrDefault(item => item.id == list.oblikaStudija);
-                ViewBag.KrajIzvajanja = Sifranti.OBCINE.SingleOrDefault(item => item.id == list.krajIzvajanja);
-                ViewBag.KrajIzvajanja2 = Sifranti.OBCINE.SingleOrDefault(item => item.id == list.krajIzvajanja2);
-                ViewBag.VrstaVpisa = Sifranti.VRSTAVPISA.SingleOrDefault(item => item.id == list.vrstaVpisa);
-                ViewBag.Spol = Sifranti.SPOL.SingleOrDefault(item => item.id == list.student.spol);
-                ViewBag.ObcinaRojstva = Sifranti.OBCINE.SingleOrDefault(item => item.id == list.student.obcinaRojstva);
-                ViewBag.DrzavaRojstva = Sifranti.DRZAVE.SingleOrDefault(item => item.id == list.student.drzavaRojstva);
-                ViewBag.Drzavljanstvo = Sifranti.DRZAVE.SingleOrDefault(item => item.id == list.student.drzavljanstvo);
-                ViewBag.IzbirnaSkupina = Sifranti.IZBIRNASKUPINA.SingleOrDefault(item => item.id == list.izbirnaSkupina);
-                ViewBag.IzbirnaSkupina2 = Sifranti.IZBIRNASKUPINA.SingleOrDefault(item => item.id == list.izbirnaSkupina2);
-                ViewBag.LetnikStudija = Sifranti.LETNIK.SingleOrDefault(item => item.id == list.letnikStudija);
+                ViewBag.PostnaStevilka = list.student.sifrant_postnastevilka.id;
+                ViewBag.Posta = list.student.sifrant_postnastevilka.naziv;
+                ViewBag.Obcina = db.sifrant_obcina.SingleOrDefault(v => v.id == list.student.obcina);//list.student.sifrant_obcina1.naziv;
+                ViewBag.Drzava = db.sifrant_drzava.SingleOrDefault(v => v.id == list.student.drzava);//list.student.sifrant_drzava2.naziv;
+                ViewBag.PostnaStevilkaZacasni = db.sifrant_postnastevilka.SingleOrDefault(v => v.id == list.student.postnaStevilkaZacasni);//list.student.sifrant_postnastevilka1.id;
+                ViewBag.PostaZacasni = db.sifrant_postnastevilka.SingleOrDefault(v => v.id == list.student.postnaStevilkaZacasni);//list.student.sifrant_postnastevilka1.naziv;
+                ViewBag.ObcinaZacasni = db.sifrant_obcina.SingleOrDefault(v => v.id == list.student.obcinaZacasni);//list.student.sifrant_obcina2.naziv;
+                ViewBag.DrzavaZacasni = db.sifrant_drzava.SingleOrDefault(v => v.id == list.student.drzavaZacasni);//list.student.sifrant_drzava3.naziv;
+                ViewBag.StudijskiProgram = list.sifrant_studijskiprogram.naziv;
+                ViewBag.StudijskiProgram2 = db.sifrant_studijskiprogram.SingleOrDefault(v => v.id == list.studijskiProgram2);//list.sifrant_studijskiprogram1.naziv;
+                ViewBag.VrstaStudija = list.sifrant_klasius.naziv;
+                ViewBag.NacinStudija = list.sifrant_nacinstudija.naziv;
+                ViewBag.OblikaStudija = list.sifrant_oblikastudija.naziv;
+                ViewBag.KrajIzvajanja = list.sifrant_obcina.naziv;
+                ViewBag.KrajIzvajanja2 = db.sifrant_obcina.SingleOrDefault(v => v.id == list.krajIzvajanja2);//list.sifrant_obcina1.naziv;
+                ViewBag.VrstaVpisa = list.sifrant_vrstavpisa.naziv;
+                ViewBag.Spol = list.student.sifrant_spol.naziv;
+                ViewBag.ObcinaRojstva = list.student.sifrant_obcina.naziv;
+                ViewBag.DrzavaRojstva = list.student.sifrant_drzava.naziv;
+                ViewBag.Drzavljanstvo = db.sifrant_drzava.SingleOrDefault(v => v.id == list.student.drzavljanstvo);         
+                ViewBag.IzbirnaSkupina = list.sifrant_izbirnaskupina.naziv;
+                ViewBag.IzbirnaSkupina2 = db.sifrant_izbirnaskupina.SingleOrDefault(v => v.id == list.izbirnaSkupina2);//list.sifrant_izbirnaskupina1.naziv;
+                ViewBag.LetnikStudija = list.sifrant_letnik.naziv;
                 ViewBag.Vpisna = list.vpisnaStevilka;
-                ViewBag.datumRojstva = list.student.datumRojstva.ToString("dd.MM.yyyy");
+                ViewBag.DatumRojstva = list.student.datumRojstva.ToString("dd.MM.yyyy");
 
                 if (Convert.ToBoolean(list.student.vrocanje))
                 {
@@ -105,8 +122,8 @@ namespace studis.Controllers
                     ViewBag.VrocanjeZacasni = "NE";
                 }
 
-                var stud = db.students.Single(s => s.vpisnaStevilka == list.vpisnaStevilka);
-                var predmeti = stud.studentinpredmets.Where(a => a.predmetId == list.id);
+                //var stud = db.students.Single(s => s.vpisnaStevilka == list.vpisnaStevilka);
+                var predmeti = list.studentinpredmets.Where(a => a.vpisId == list.id);
 
                 ViewBag.Predmeti = predmeti;
             

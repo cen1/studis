@@ -25,7 +25,7 @@
                     <td>@Html.DisplayFor(modelItem => item.vpisnaStevilka)</td>
                     <td>@Html.DisplayFor(modelItem => item.ime)</td>
                     <td>@Html.DisplayFor(modelItem => item.priimek)</td>
-                    <td>@Html.ActionLink("Izvoz", "Pdf", "List", new { vpisnaStevilka = item.vpisnaStevilka }, null)</td>
+                    <td>@Html.ActionLink("Izvoz", "Pdf", "List", new { id = item.vpisnaStevilka }, null)</td>
                 </tr>
             }
         }
