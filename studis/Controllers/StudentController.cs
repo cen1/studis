@@ -65,7 +65,7 @@ namespace studis.Controllers
         [Authorize(Roles = "Referent")]
         public ActionResult StudentSearchPDFPartial(string searchString1)
         {
-            var lists = from l in db.vpis select l;
+            var students = from s in db.students select s;
 
             if (!String.IsNullOrEmpty(searchString1))
             {
@@ -73,7 +73,7 @@ namespace studis.Controllers
                 bool isNumerical = int.TryParse(searchString1, out vpisna);
                 if (isNumerical)
                 {
-                    lists = lists.Where(l => l.vpisnaStevilka == vpisna);
+                    students = students.Where(s => s.vpisnaStevilka == vpisna);
                 }
                 else
                 {
@@ -84,23 +84,23 @@ namespace studis.Controllers
                         string firstChar = searchData[0];
                         string secondChar = searchData[1];
 
-                        var tempLists = lists.Where(l => l.student.ime.StartsWith(firstChar) && l.student.priimek.StartsWith(secondChar));
+                        var tempStudents = students.Where(s => s.ime.StartsWith(firstChar) && s.priimek.StartsWith(secondChar));
 
-                        if (tempLists.Any())
-                            lists = tempLists;
+                        if (tempStudents.Any())
+                            students = tempStudents;
                         else
-                            lists = lists.Where(l => l.student.ime.StartsWith(secondChar) && l.student.priimek.StartsWith(firstChar));
+                            students = students.Where(s => s.ime.StartsWith(secondChar) && s.priimek.StartsWith(firstChar));
                     }
                     else
                     {
                         string firstChar = searchData[0];
-                        lists = lists.Where(l => l.student.ime.StartsWith(firstChar) || l.student.priimek.StartsWith(firstChar));
+                        students = students.Where(s => s.ime.StartsWith(firstChar) || s.priimek.StartsWith(firstChar));
                     }
                 }
             }
-            if (!lists.Any())
-                lists = null;
-            return PartialView("_StudentSearchPDFPartial", lists);
+            if (!students.Any())
+                students = null;
+            return PartialView("_StudentSearchPDFPartial", students);
         }
 
         // GET: /Student/Details/63060363

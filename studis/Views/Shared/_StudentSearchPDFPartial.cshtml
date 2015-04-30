@@ -1,4 +1,4 @@
-﻿@model IEnumerable<studis.Models.vpisnilist>
+﻿@model IEnumerable<studis.Models.student>
 
 
 @using (Html.BeginForm())
@@ -9,9 +9,8 @@
     </p>
 }
 <div id="searchDiv">
-    <table id="seznamStudentov" class="table">
+    <table id="izpis" class="table">
         <tr>
-            <th>Štud.leto</th>
             <th>Vpisna Številka</th>
             <th>Ime</th>
             <th>Priimek</th>
@@ -23,19 +22,17 @@
             {
                 var imeID = item.ime;
                 <tr>
-                    <td>@Html.DisplayFor(modelItem => item.studijskoLeto)</td>
                     <td>@Html.DisplayFor(modelItem => item.vpisnaStevilka)</td>
                     <td>@Html.DisplayFor(modelItem => item.ime)</td>
                     <td>@Html.DisplayFor(modelItem => item.priimek)</td>
-                    <td>@Html.ActionLink("Izvoz", "Pdf", "List", new { id = item.id }, null)</td>
+                    <td>@Html.ActionLink("Izvoz", "Pdf", "List", new { vpisnaStevilka = item.vpisnaStevilka }, null)</td>
                 </tr>
             }
         }
     </table>
-@if (Model == null)
-{
-    <h4>Ni zadetkov!</h4>
-    <p>Uporaba: iskanje s celo vpisno številko ali začetnicami imena in priimka.</p>
-}
-
+    @if (Model == null)
+    {
+        <h4>Ni zadetkov!</h4>
+        <p>Uporaba: iskanje s celo vpisno številko ali začetnicami imena in priimka.</p>
+    }
 </div>
