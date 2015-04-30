@@ -8,20 +8,21 @@ namespace studis.Models
 {
     public class UserHelper
     {
-        public static studisEntities db = new studisEntities();
+        private studisEntities db;
 
-        public static my_aspnet_users FindByName(String name)
+        public UserHelper()
         {
-            var L2EQuery = db.my_aspnet_users.Where(a => a.applicationId == 1).Where(b => b.name == name);
-            var user = L2EQuery.FirstOrDefault<my_aspnet_users>();
-            return user;
+            db = new studisEntities();
         }
 
-        public static my_aspnet_membership FindByEmail(String email)
+        public my_aspnet_users FindByName(String name)
         {
-            var L2EQuery = db.my_aspnet_membership.Where(b => b.Email == email);
-            var m = L2EQuery.FirstOrDefault<my_aspnet_membership>();
-            return m;
+            return db.my_aspnet_users.Where(a => a.applicationId == 1).Where(b => b.name == name).FirstOrDefault();
+        }
+
+        public my_aspnet_membership FindByEmail(String email)
+        {
+            return db.my_aspnet_membership.Where(b => b.Email == email).FirstOrDefault();
         }
 
         public static string GeneratePasswordResetToken(int id)
@@ -73,7 +74,7 @@ namespace studis.Models
             return char.ToUpper(s[0]) + s.Substring(1);
         }
 
-        public static bool preveriPovprecje(student s)
+        public bool preveriPovprecje(student s)
         {
             vpi vp = s.vpis.Where(a => a.letnikStudija == 2).Last();
             double sum = 0;
@@ -89,7 +90,7 @@ namespace studis.Models
 
         }
 
-        public static bool imaZeton(student s)
+        public bool imaZeton(student s)
         {
             var z = s.zetons.Where(a => a.porabljen == false);
             if (z.Count() > 0) return true;

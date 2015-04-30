@@ -35,13 +35,15 @@ namespace studis.Controllers
 
             if (ModelState.IsValid)
             {
+                IpLock ilh = new IpLock();
                 //poglej ce je IP zaklenjen
                 string ip = Request.UserHostAddress;
-                var ipl = IpLock.FindActiveByIp(ip);
+                var ipl = ilh.FindActiveByIp(ip);
                 if (ipl == null)
                 {
                     //ip zaklepa ni ali pa je potekel
-                    var user = studis.Models.UserHelper.FindByName(model.UserName);
+                    UserHelper uh = new UserHelper();
+                    var user = uh.FindByName(model.UserName);
                     if (user != null)
                     {
                         if (user.my_aspnet_membership.FailedPasswordAttemptCount >= 3)
@@ -80,7 +82,7 @@ namespace studis.Controllers
                                 ipln.locked_at = UserHelper.TimeCET();
                                 ipln.locked_until = UserHelper.TimeCET().AddMinutes(3);
                                 ipln.userId = user.id;
-                                IpLock.Add(ipln);
+                                ilh.Add(ipln);
 
                                 System.Diagnostics.Debug.WriteLine("iplock");
                             }
@@ -170,7 +172,9 @@ namespace studis.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = studis.Models.UserHelper.FindByEmail(model.Email);
+                UserHelper uh = new UserHelper();
+
+                var user = uh.FindByEmail(model.Email);
                 if (user == null )
                 {
                     // Don't reveal that the user does not exist or is not confirmed
@@ -178,7 +182,7 @@ namespace studis.Controllers
                 }
 
                 //preveri ce mail ze obstaja
-                int uid = studis.Models.UserHelper.FindByEmail(model.Email).userId;
+                int uid = uh.FindByEmail(model.Email).userId;
                 DateTime temptime = UserHelper.TimeCET();
                 var prtemp = db.password_recovery.Where(uu => uu.userId == uid).Where(vu => vu.valid_until > temptime);
                 if (prtemp.Count() > 0)

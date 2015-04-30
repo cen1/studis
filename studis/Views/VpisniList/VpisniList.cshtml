@@ -12,6 +12,40 @@
 
 <h2>Vpisni List</h2>
 
+@if (ViewBag.zetoni != null) {
+    <p>Na voljo imate naslednje vpise:</p>
+    <table>
+        <tr>
+            <th>Letnik</th>
+            <th>Klasius</th>
+            <th>Oblika študija</th>
+            <th>Študijski program</th>
+            <th>Vrsta vpisa</th>
+        </tr>
+
+        @foreach (var z in ViewBag.zetoni)
+        {
+            <tr>
+                <td>
+                    @z.sifrant_letnik.naziv
+                </td>
+                <td>
+                    @z.sifrant_klasius.naziv
+                </td>
+                <td>
+                    @z.sifrant_oblikastudija.naziv
+                </td>
+                <td>
+                    @z.sifrant_studijskiprogram.naziv
+                </td>
+                <td>
+                    @z.sifrant_vrstavpisa.naziv
+                </td>
+            </tr>
+        }
+    </table>
+}
+
 @Html.ValidationSummary(true, "Oddaja ni uspela. Popravite napake in poskusite ponovno.")
 
 

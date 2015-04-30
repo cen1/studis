@@ -86,7 +86,8 @@ namespace studis.Controllers
 
         public string GetProfesorsForPredmet(string id)
         {
-            var profesors= Baza.getProfesorsForPredmet(Convert.ToInt32(id));
+            int iid = Convert.ToInt32(id);
+            var profesors = db.predmets.SingleOrDefault(v => v.id == iid).profesors.ToList();
             var seznamProfesorjev = new List<SelectListItem>();
             foreach (profesor p in profesors)
             {

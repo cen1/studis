@@ -12,8 +12,9 @@ namespace studis.Controllers
         public ActionResult Index()
         {
             ViewBag.Message = "Pozdravljeni v v sistemu studis";
-            
-            var usr = UserHelper.FindByName(User.Identity.Name);
+
+            UserHelper uh = new UserHelper();
+            var usr = uh.FindByName(User.Identity.Name);
 
             if (usr != null)
             {

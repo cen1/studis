@@ -6,14 +6,20 @@ using studis.Models;
 
 namespace studis.Models
 {
-    public static class Baza
-    {
-        
-        public static VpisniListModel getVpisniList(int id)
+    public class Baza
+    {       
+ 
+        private studisEntities db;
+
+        public Baza()
         {
-            studisEntities db = new studisEntities();
-            var vpi = db.vpis.SingleOrDefault(v => v.id == id);
-            var student = vpi.student;
+            db = new studisEntities();
+        }
+
+        public VpisniListModel getVpisniList(int id)
+        {
+            vpi vpi = db.vpis.Where(a => a.id == id).First();
+            student student = vpi.student;
 
             VpisniListModel vpisniList = new VpisniListModel();
             vpisniList.ime = student.ime;
@@ -53,11 +59,18 @@ namespace studis.Models
             return vpisniList;
         }
 
-        public static List<profesor> getProfesorsForPredmet(int id)
+        //my_aspnet_user
+        public static VpisniListModel getVpisniListKandidat(my_aspnet_users user)
         {
-            studisEntities db = new studisEntities();
-            var predmet = db.predmets.SingleOrDefault(v => v.id == id);
-            return predmet.profesors.ToList();
+            VpisniListModel vpisniList = new VpisniListModel();
+            kandidat k = user.kandidats.First();
+
+            vpisniList.ime = k.ime;
+            vpisniList.priimek = k.priimek;
+            vpisniList.email = k.email;
+            vpisniList.studijskiProgram = k.studijskiProgram;
+
+            return vpisniList;
         }
     }
 }
