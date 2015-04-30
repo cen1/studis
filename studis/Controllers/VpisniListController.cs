@@ -38,7 +38,7 @@ namespace studis.Controllers
             ViewBag.Obcina = new SelectList(db.sifrant_obcina.OrderBy(a => a.naziv != "Ljubljana").ThenBy(a => a.naziv), "id", "naziv");
             ViewBag.Drzava = new SelectList(db.sifrant_drzava.OrderBy(a => a.naziv != "Slovenija").ThenBy(a => a.naziv), "id", "naziv");
             ViewBag.PostnaStevilka = new SelectList(db.sifrant_postnastevilka.OrderBy(a => a.naziv), "id", "naziv");
-            ViewBag.Letnik = new SelectList(db.sifrant_letnik, "id", "naziv");
+            ViewBag.Letnik = new SelectList(db.sifrant_letnik.OrderBy(a => a.naziv != "Prvi").ThenBy(b => b.id), "id", "naziv");
             ViewBag.StudijskoLetoPrvegaVpisa = new SelectList(db.sifrant_studijskoletoprvegavpisa.OrderByDescending(a => a.id), "id", "naziv");
             ViewBag.IzbirnaSkupina = new SelectList(db.sifrant_izbirnaskupina, "id", "naziv");
             ViewBag.Smer = new SelectList(db.sifrant_smer, "id", "naziv");
@@ -76,7 +76,7 @@ namespace studis.Controllers
             ViewBag.Obcina = new SelectList(db.sifrant_obcina, "id", "naziv");
             ViewBag.Drzava = new SelectList(db.sifrant_drzava, "id", "naziv");
             ViewBag.PostnaStevilka = new SelectList(db.sifrant_postnastevilka, "id", "naziv");
-            ViewBag.Letnik = new SelectList(db.sifrant_letnik, "id", "naziv");
+            ViewBag.Letnik = new SelectList(db.sifrant_letnik.OrderBy(a => a.naziv != "Prvi").ThenBy(b => b.id), "id", "naziv");
             ViewBag.StudijskoLetoPrvegaVpisa = new SelectList(db.sifrant_studijskoletoprvegavpisa, "id", "naziv");
             ViewBag.IzbirnaSkupina = new SelectList(db.sifrant_izbirnaskupina, "id", "naziv");
             ViewBag.Smer = new SelectList(db.sifrant_smer, "id", "naziv");
@@ -104,7 +104,13 @@ namespace studis.Controllers
                 }
             }
 
-            model.studijskoLeto = "2015/2016";
+            //sestavi datum rojstva
+            DateTime temp_dr = new DateTime(); ;
+            DateTime.TryParse(model.dr_mesec.ToString()+"/"+model.dr_dan.ToString() + "/" + model.dr_leto.ToString(), out temp_dr);
+            model.datumRojstva = temp_dr;
+
+            System.Diagnostics.Debug.WriteLine(model.datumRojstva);
+            model.studijskoLeto = "2015";
             if (ModelState.IsValid)
             {
                 vpi v = new vpi();
@@ -117,7 +123,7 @@ namespace studis.Controllers
 
                     v.student.datumRojstva = model.datumRojstva;
                     v.student.davcnaStevilka = model.davcnaStevilka;
-                    v.student.drzava = model.davcnaStevilka;
+                    v.student.drzava = model.drzava;
                     v.student.drzavaRojstva = model.drzavaRojstva;
                     v.student.drzavaZacasni = model.drzavaZacasni;
                     v.student.drzavljanstvo = model.drzavljanstvo;
@@ -171,7 +177,7 @@ namespace studis.Controllers
 
                     s.datumRojstva = model.datumRojstva;
                     s.davcnaStevilka = model.davcnaStevilka;
-                    s.drzava = model.davcnaStevilka;
+                    s.drzava = model.drzava;
                     s.drzavaRojstva = model.drzavaRojstva;
                     s.drzavaZacasni = model.drzavaZacasni;
                     s.drzavljanstvo = model.drzavljanstvo;
