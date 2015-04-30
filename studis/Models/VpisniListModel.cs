@@ -26,7 +26,7 @@ namespace studis.Models
         [Display(Name = "Priimek")]
         public string priimek { get; set; }
 
-        [Required(ErrorMessage = "Obvezno izpolniti.")]
+        [Required(ErrorMessage = "Neveljaven datum.")]
         [DataType(DataType.Date)]
         [Remote("PreveriDatum", "VpisniList", HttpMethod = "POST", ErrorMessage = "Neveljaven datum.")]
         //[DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
