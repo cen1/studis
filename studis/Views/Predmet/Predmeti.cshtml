@@ -1,0 +1,23 @@
+﻿@model studis.Models.predmet
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Izberite predmet</h2>
+
+@using (Html.BeginForm()) 
+{
+    <fieldset>
+        <div class="editor-label">
+            Izberite predmet
+        </div>
+        <div class="editor-field">
+            @Html.DropDownListFor(m => m.id, (SelectList)ViewBag.Seznam)
+        </div>
+        <p>
+            <input type="submit" value="Seznam študentov">
+        </p>
+    </fieldset>
+}
