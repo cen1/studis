@@ -28,11 +28,12 @@ namespace studis.Controllers
         public ActionResult Predmeti(long id)
         {
             //vsi študenti
-            var students = db.students.Include(p => p.studentinpredmets).Include(p => p.vpis);
+            var students = db.students.Include(p => p.studentinpredmets).Include(p => p.vpis).ToList();
 
             //studenti iz povezovalne tabele, ki imajo ta predmet
             var povezovalna = from p in db.studentinpredmets select p;
             povezovalna = povezovalna.Where(p => p.predmetId == id).Distinct();
+            //povezovalna = povezovalna.ToList();
 
             //med vsemi študenti izberi tiste ki imajo ta predmet
             List<student> list = new List<student>();
@@ -42,7 +43,8 @@ namespace studis.Controllers
                 if (st != null)
                     list.Add(st);
             }
-            
+
+            list = list.OrderBy(o => o.priimek).ToList();
             return View("PredmetStudenti", list);
         }
 
