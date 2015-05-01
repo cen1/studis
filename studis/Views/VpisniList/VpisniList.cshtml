@@ -52,19 +52,6 @@
 @using (Html.BeginForm()) {
     <div>
     <fieldset>
-        <!-- studijsko leto 
-        <div class="editor-label">
-            @Html.LabelFor(m => m.studijskoLeto)
-        </div>
-        <div class="editor-field">
-            @Html.TextBoxFor(m => m.studijskoLeto)
-            @Html.ValidationMessageFor(m => m.studijskoLeto)
-        </div>
-        -->
-
-        <!--Vrsta vpisnega lista-->
-        <!--Fakulteta-->
-
         <!-- ime -->
         <div class="editor-label">
             @Html.LabelFor(m => m.ime)
@@ -87,28 +74,11 @@
         <div class="editor-label">
             @Html.LabelFor(m => m.datumRojstva)
         </div>
-        <div class="editor-field">
-           <!-- Html.TextBoxFor(m => m.datumRojstva)-->
-            
-                @Html.DropDownListFor(m => m.datumRojstva.Day, Enumerable.Range(1,31).Select(i => new SelectListItem {
-                    Value = i.ToString(),                              
-                    Text = i.ToString(),
-                    //Selected = (i == Model.datumRojstva.Day && Model.datumRojstva != DateTime.MinValue && Model.datumRojstva != DateTime.MaxValue)
-                }))
-                @Html.DropDownListFor(m => m.datumRojstva.Month, Enumerable.Range(1, 12).Select(i => new SelectListItem {                              
-                    Value = i.ToString(),                              
-                    Text = i.ToString(),
-                    //Selected = (i == Model.datumRojstva.Month && Model.datumRojstva != DateTime.MinValue && Model.datumRojstva != DateTime.MaxValue)                         
-                }))
-                @Html.DropDownListFor(m => m.datumRojstva.Year, Enumerable.Range(DateTime.Now.Year - 99, 100).Select(i => new SelectListItem
-                {                                                            
-                    Value = i.ToString(),                               
-                    Text = i.ToString(),
-                    //Selected = (i == Model.datumRojstva.Year && Model.datumRojstva != DateTime.MinValue && Model.datumRojstva != DateTime.MaxValue)                          
-                }))
-                <!--Html.TextBoxFor(m => m.datumRojstva.Year)-->
-            
-            @Html.ValidationMessageFor(m => m.datumRojstva)
+        <div class="editor-field">            
+                @Html.DropDownListFor(m => m.dr_dan, (IEnumerable < SelectListItem >)ViewBag.dr_dan)
+                @Html.DropDownListFor(m => m.dr_mesec, (IEnumerable < SelectListItem >) ViewBag.dr_mesec)
+                @Html.DropDownListFor(m => m.dr_leto, (IEnumerable < SelectListItem >) ViewBag.dr_leto)            
+                @Html.ValidationMessageFor(m => m.datumRojstva)
         </div>
 
         <!-- kraj rojstva -->

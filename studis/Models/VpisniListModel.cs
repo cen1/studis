@@ -26,11 +26,18 @@ namespace studis.Models
         [Display(Name = "Priimek")]
         public string priimek { get; set; }
 
-        [Required(ErrorMessage = "Obvezno izpolniti.")]
         [DataType(DataType.Date)]
-        [Remote("PreveriDatum", "VpisniList", HttpMethod = "POST", ErrorMessage = "Neveljaven datum.")]
         [Display(Name = "Datum rojstva")]
         public DateTime datumRojstva { get; set; }
+
+        [Required(ErrorMessage = "Obvezno izpolniti.")]
+        public int dr_dan { get; set; }
+
+        [Required(ErrorMessage = "Obvezno izpolniti.")]
+        public int dr_mesec { get; set; }
+
+        [Required(ErrorMessage = "Obvezno izpolniti.")]
+        public int dr_leto { get; set; }
 
         [Required(ErrorMessage = "Obvezno izpolniti.")]
         [StringLength(45, ErrorMessage = "{0} mora biti dolg vsaj {2} znakov.", MinimumLength = 1)]

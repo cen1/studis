@@ -3,6 +3,7 @@ using System.Linq;
 using studis.Models;
 using System.Security.Cryptography;
 using System.Net.Mail;
+using System.Collections.Generic;
 
 namespace studis.Models
 {
@@ -95,6 +96,123 @@ namespace studis.Models
             var z = s.zetons.Where(a => a.porabljen == false);
             if (z.Count() > 0) return true;
             else return false;
+        }
+
+        public bool preveriZeton(student s, VpisniListModel vlm)
+        {
+            foreach (var z in s.zetons.Where(a => a.porabljen == false))
+            {
+                if (z.letnik == vlm.letnikStudija &&
+                    z.oblikaStudija == vlm.oblikaStudija &&
+                    z.studijskiProgram == vlm.studijskiProgram &&
+                    z.vrstaStudija == vlm.vrstaStudija &&
+                    z.vrstaVpisa == vlm.vrstaVpisa
+                )
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public List<string> preveriLogiko(VpisniListModel vlm, student s, my_aspnet_users user)
+        {
+            List<string> napake = new List<string>();
+
+            kandidat k = user.kandidats.First();
+
+            //prvi vpis
+            if (s == null)
+            {
+                if (k.ime != vlm.ime) napake.Add("Ime ni enako imenu v seznamu kandidatov");
+                if (k.priimek != vlm.priimek) napake.Add("Priimek ni enak imenu v seznamu kandidatov");
+                if (k.studijskiProgram != vlm.studijskiProgram) napake.Add("Študijski program ni enak programu v seznamu kandidatov");
+                if (k.email != vlm.email) napake.Add("Email ni enak tistemu v seznamu kandidatov");
+                if (vlm.letnikStudija != 1) napake.Add("Letnik ni enak 1");
+                if (vlm.vrstaVpisa != 1) napake.Add("izberete lahko le prvi vpis v letnik");
+            }
+            else
+            {
+                //preveri kdaj je bil prvi vpis v ta letnik, ce je pravilen
+                if (vlm.studijskoLetoPrvegaVpisa > DateTime.Now.Year) napake.Add("Prvo leto vpisa je preveliko");
+
+                //preveri da je letnik enak ob ponavljanju ali vecji od zadnjega vpisa
+                int stponavljanj = 0;
+                var vpisi_sp = s.vpis.Where(a => a.studijskiProgram == vlm.studijskiProgram);
+                foreach (var v in vpisi_sp)
+                {
+                    if (vlm.vrstaVpisa == 1)
+                    {
+                        //prvi vpis v letnik
+                        if (vlm.letnikStudija == v.letnikStudija) napake.Add("Izbran je prvi vpis v letnik čeprav ste bili v ta letnik že vpisani");
+                    }
+                    if (vlm.vrstaVpisa == 2) {
+                        //ponavljanje
+                        if (v.letnikStudija > vlm.letnikStudija) napake.Add("Ne morete ponavljati ker ste že bili vpisani v višji letnik");
+                        if (v.letnikStudija == vlm.letnikStudija) stponavljanj++;
+                    }
+                }
+                if (stponavljanj > 1) napake.Add("Samo enkrat lahko povaljate isti letnik");
+                if (stponavljanj == 0 && vlm.vrstaVpisa == 2) napake.Add("Ne morete ponavljati letnika, ki ga še niste delali");
+
+                if (vlm.vrstaVpisa == 7 && (vpisi_sp.Last().letnikStudija != vlm.letnikStudija)) napake.Add("Letnik mora biti enak zadnjemu vpisu");
+                if (vlm.vrstaVpisa == 5 && (vlm.letnikStudija <= vpisi_sp.Last().letnikStudija)) napake.Add("Letnik mora biti večji od zadnjega vpisa");
+            }
+
+            //preveri da se emso in datum rojstva ujemata
+            string dan = vlm.emso.Substring(0, 2);
+            string mesec = vlm.emso.Substring(2, 2);
+            string leto = vlm.emso.Substring(4, 3);
+            if (Convert.ToInt32(dan) != vlm.dr_dan ||
+                Convert.ToInt32(mesec) != vlm.dr_mesec ||
+                Convert.ToInt32(leto) != Convert.ToInt32(vlm.dr_leto.ToString().Substring(1, 3))
+                )
+            {
+                napake.Add("Rojstni datum se ne ujema z EMŠO");
+            }
+
+            //preveri drzavo in obcino rojstva
+            if (vlm.drzavaRojstva != 705 && vlm.obcinaRojstva != -1) napake.Add("Za občino rojstva izberite možnost TUJINA");
+            if (vlm.drzava != 705 && vlm.obcina != -1) napake.Add("Za občino prebivanja izberite možnost TUJINA");
+            if (vlm.drzavaZacasni != 705 && vlm.obcinaZacasni != -1 && vlm.drzavaZacasni != null) napake.Add("Za občino začasnega prebivališča izberite možnost TUJINA");
+
+            //preveri letnik in studijski program
+            if (vlm.studijskiProgram == 1000468 && vlm.letnikStudija > 3) napake.Add("Za ta program je maksimalen letnik 3");
+
+            //preveri studijski program in klasius
+            if (vlm.vrstaStudija != 16204) napake.Add("Izbira klasius/vrsta študija ni podprta");
+
+            //blokiraj vpis 98
+            if (vlm.vrstaVpisa == 98) napake.Add("Izbrana vrsta vpisa ni podprta");
+
+            //preveri vrocanje
+            if (vlm.vrocanje && vlm.vrocanjeZacasni) napake.Add("Izberite le en naslov za vročanje");
+            if (!vlm.vrocanje && !vlm.vrocanjeZacasni) napake.Add("Izberite vsaj en naslov za vročanje");
+
+            return napake;
+        }
+
+        public bool jePredmetnikVzpostavljen(vpi v)
+        {
+            if (v.studentinpredmets.Count() == 0)
+            {
+                System.Diagnostics.Debug.WriteLine("Vzpostavljen za " + v.id.ToString() + " je false");
+                return false;
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("Vzpostavljen za " + v.id.ToString() + " je true");
+                return true;
+            }
+        }
+
+        public string linkZaPredmetnik(vpi v)
+        {
+            string r = "";
+            if (v.letnikStudija == 1) r += "PrviPredmetnik";
+            if (v.letnikStudija == 2) r += "DrugiPredmetnik";
+            if (v.letnikStudija == 3) r += "TretjiPredmetnik";
+            return r;
         }
     }
 

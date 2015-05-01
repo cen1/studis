@@ -28,6 +28,7 @@ namespace studis.Controllers
                     ViewBag.vpisnast = usr.students.First().vpisnaStevilka;
                     ViewBag.zetoni = usr.students.First().zetons.Where(a => a.porabljen == false);
                     ViewBag.vpisi = usr.students.First().vpis;
+                    ViewBag.uh = new UserHelper();
                 }
             }
 
