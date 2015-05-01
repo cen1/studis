@@ -3,14 +3,16 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
 namespace studis.Models
 {
     public class IzpitniRokModel
     {
+        [Remote("PreveriDatum", "IzpitniRok", HttpMethod = "POST", ErrorMessage = "Datum ne sme biti v preteklosti.")]
         [Required(ErrorMessage = "Obvezno izpolniti.")]
         [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{dd.MM.yyyy}")]//, ApplyFormatInEditMode = true)]
         [Display(Name = "Datum")]
         public DateTime datum { get; set; }
 
