@@ -75,18 +75,9 @@
             @Html.LabelFor(m => m.datumRojstva)
         </div>
         <div class="editor-field">            
-                @Html.DropDownListFor(m => m.dr_dan, Enumerable.Range(1,31).Select(i => new SelectListItem {
-                    Value = i.ToString(),                              
-                    Text = i.ToString()
-                }))
-                @Html.DropDownListFor(m => m.dr_mesec, Enumerable.Range(1, 12).Select(i => new SelectListItem {                              
-                    Value = i.ToString(),                              
-                    Text = i.ToString()                         
-                }))
-                @Html.DropDownListFor(m => m.dr_leto, Enumerable.Range(DateTime.Now.Year - 99, 100).Select(i => new SelectListItem {                                                            
-                    Value = i.ToString(),                               
-                    Text = i.ToString()                          
-                }))            
+                @Html.DropDownListFor(m => m.dr_dan, (IEnumerable < SelectListItem >)ViewBag.dr_dan)
+                @Html.DropDownListFor(m => m.dr_mesec, (IEnumerable < SelectListItem >) ViewBag.dr_mesec)
+                @Html.DropDownListFor(m => m.dr_leto, (IEnumerable < SelectListItem >) ViewBag.dr_leto)            
                 @Html.ValidationMessageFor(m => m.datumRojstva)
         </div>
 
