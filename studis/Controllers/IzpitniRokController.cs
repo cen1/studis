@@ -1,6 +1,7 @@
 ﻿using studis.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -17,15 +18,29 @@ namespace studis.Controllers
         //GET: IzpitniRok/New
         public ActionResult Dodaj()
         {
-            ViewBag.Predmets = db.predmets;
-
+            SelectList temp = new SelectList(db.predmets.OrderBy(a => a.ime), "id", "ime");
             
+            List<SelectListItem> predmeti = new List<SelectListItem>();
+            foreach(SelectListItem i in temp) {
+                //Debug.WriteLine(i.Value + " " + i.Text);
+                //i.Text = i.Value  + i.Text;
+                SelectListItem p = new SelectListItem();
+                p.Value = i.Value;
+                p.Text = Convert.ToInt32(i.Value).ToString("000") + " - " + i.Text;
+                predmeti.Add(p);
+            }
+            List<SelectListItem> ltemp = new List<SelectListItem>();
+            ltemp.Add(new SelectListItem() { Value="", Text="Izbira profesorja" });
+            ViewBag.Prazen = new SelectList(ltemp, "Value", "Text");
+            ViewBag.Predmets = new SelectList(predmeti, "Value", "Text");
+            //new SelectList(db.sifrant_studijskiprogram.OrderBy(a => a.naziv), "id", "naziv");
+            //IzpitniRokModel model= new IzpitniRokModel();
             return View();
         }
 
         // POST: IzpitniRok/Create
         [HttpPost]
-        public ActionResult Create(IzpitniRok izpitniRok)
+        public ActionResult Dodaj(IzpitniRok izpitniRok)
         {
             try
             {
@@ -86,14 +101,27 @@ namespace studis.Controllers
 
         public string GetProfesorsForPredmet(string id)
         {
+            
             int iid = Convert.ToInt32(id);
             var profesors = db.predmets.SingleOrDefault(v => v.id == iid).profesors.ToList();
             var seznamProfesorjev = new List<SelectListItem>();
+            int c = 0;
             foreach (profesor p in profesors)
             {
-                seznamProfesorjev.Add(new SelectListItem() {Text = (p.ime + " " + p.priimek), Value = p.id.ToString() });
+                c++;
+                seznamProfesorjev.Add(new SelectListItem() { Value = p.id.ToString(), Text = (p.ime + " " + p.priimek) });
             }
-
+            if (c < 1)
+            {
+                seznamProfesorjev.Add(new SelectListItem() { Value = "0", Text = "Ta predmet nima nosilca." });
+            }
+            /*
+            var seznam = new List<SelectListItem>();
+            Random rand= new Random();
+            for(int i = 0; i< 5; i++) {
+                seznam.Add(new SelectListItem() { Value = i.ToString(), Text = rand.Next(i, 100).ToString() });
+            }
+            */
             return new JavaScriptSerializer().Serialize(seznamProfesorjev);
         }
     }
