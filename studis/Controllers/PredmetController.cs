@@ -22,7 +22,7 @@ namespace studis.Controllers
 
             var sList = new SelectList(new[] 
             {
-                new { Value = "2014", Text = "2014/2015" },
+                new { Value = "0", Text = "Vsa leta" },
                 new { Value = "2015", Text = "2015/2016" },
                 new { Value = "2016", Text = "2016/2017" },
             },
@@ -33,22 +33,23 @@ namespace studis.Controllers
         }
 
         [HttpPost]
-        public ActionResult Predmeti(long id)
+        public ActionResult Predmeti(long id, string Value)
         {
+            int leto = Convert.ToInt32(Value);
+
             //vsi študenti
             var students = db.students.Include(p => p.studentinpredmets).Include(p => p.vpis).ToList();
 
             //studenti iz povezovalne tabele, ki imajo ta predmet
             var povezovalna = from p in db.studentinpredmets select p;
             povezovalna = povezovalna.Where(p => p.predmetId == id).Distinct();
-            //povezovalna = povezovalna.ToList();
 
             //med vsemi študenti izberi tiste ki imajo ta predmet
             List<student> list = new List<student>();
             foreach(var vpisna in povezovalna)
             {
                 student st = students.Where(s => s.vpisnaStevilka == vpisna.studentId).SingleOrDefault();
-                if (st != null)
+                if (st != null && st.vpis.Last().studijskoLeto == leto)
                     list.Add(st);
             }
 
