@@ -45,7 +45,7 @@ namespace studis.Controllers
             IzpitniRok izpitniRok = new IzpitniRok();
             izpitniRok.datum = model.datum;
             izpitniRok.predmet = db.predmets.SingleOrDefault(v => v.id == model.predmet);
-            izpitniRok.profesors.Add(db.profesors.SingleOrDefault(p => p.id == model.profesor);
+            izpitniRok.profesors.Add(db.profesors.SingleOrDefault(p => p.id == model.profesor));
             try
             {
                 // TODO: Add insert logic here
