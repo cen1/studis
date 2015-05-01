@@ -1,0 +1,74 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width; charset=UTF-8" />
+    <title>Potrdila</title>
+    <style>
+        html {
+            font-family: 'Arial';
+        }
+
+        table {
+            font-family: 'Arial';
+            border: hidden;
+        }
+
+        table td {
+            font-family: 'Arial';
+            padding: 5px;
+        }
+
+        table th {
+            font-family: 'Arial';
+            padding: 6px 5px;
+            text-align: right;
+        }
+
+        p {
+            font-family: 'Arial';
+        }
+
+        h2 {
+            font-family: 'Arial';
+        }
+
+        div.img {
+            position: relative;
+            left: 165px;
+            float: left;
+        }
+
+        div.naslov {
+            position: relative;
+            left: 250px;
+        }
+
+        table.podatki {
+            width: 100%;
+        }
+
+        table.podatki th {
+            width: 30%;
+        }
+        
+        table.podatki td {
+            width: 70%;
+        }
+
+        table.dodatno {
+            width: 90%;
+            table-layout: fixed;
+        }
+
+        table.dodatno td {
+            width: 45%;
+        }
+    </style>
+</head>
+<body>
+    @RenderBody()
+</body>
+</html>

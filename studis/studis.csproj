@@ -176,6 +176,7 @@
     <Compile Include="Controllers\ImportController.cs" />
     <Compile Include="Controllers\IzpitniRokController.cs" />
     <Compile Include="Controllers\ListController.cs" />
+    <Compile Include="Controllers\PotrditevController.cs" />
     <Compile Include="Controllers\PredmetController.cs" />
     <Compile Include="Controllers\StudentController.cs" />
     <Compile Include="Controllers\VpisniListController.cs" />
@@ -456,6 +457,9 @@
     <Content Include="Views\IzpitniRok\Dodaj.cshtml" />
     <Content Include="Views\Predmet\Predmeti.cshtml" />
     <Content Include="Views\Predmet\PredmetStudenti.cshtml" />
+    <Content Include="Views\Potrditev\Izpis.cshtml" />
+    <Content Include="Views\Potrditev\Napaka.cshtml" />
+    <Content Include="Views\Shared\_PdfPotrdilaLayout.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
