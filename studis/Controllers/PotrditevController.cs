@@ -11,12 +11,17 @@ using System.Web.Security;
 
 namespace studis.Controllers
 {
-    [Authorize(Roles = "Profesor, Referent, Študent")]
-    public class ListController : Controller
+    [Authorize(Roles = "Referent")]
+    public class PotrditevController : Controller
     {
         public studisEntities db = new studisEntities();
 
-        public ActionResult Pdf(int id)
+        public ActionResult Potriditev()
+        {
+            return View();
+        }
+
+        public ActionResult Izpis(int id)
         {
             if (id > 60000000)
             {
@@ -27,18 +32,18 @@ namespace studis.Controllers
                 }
                 catch
                 {
-                    return RedirectToAction("ListEmpty");
+                    return RedirectToAction("Napaka");
                 }
-                
+
             }
             var list = db.vpis.SingleOrDefault(v => v.id == id);
             
-
             // preveri če vpisni list obstaja
-            try {
+            try
+            {
                 var model = new studis.Models.VpisniListModel
                 {
-                    studijskoLeto = StudijskoLeto.toString(list.studijskoLeto),//studijskoLeto,
+                    studijskoLeto = StudijskoLeto.toString(list.studijskoLeto),
                     ime = list.student.ime,
                     priimek = list.student.priimek,
                     datumRojstva = list.student.datumRojstva,
@@ -79,60 +84,6 @@ namespace studis.Controllers
                     soglasje2 = Convert.ToBoolean(list.soglasje2)
                 };
 
-                ViewBag.PostnaStevilka = list.student.sifrant_postnastevilka.id;
-                ViewBag.Posta = list.student.sifrant_postnastevilka.naziv;
-                ViewBag.Obcina = list.student.sifrant_obcina.naziv;
-                ViewBag.Drzava = list.student.sifrant_drzava.naziv;
-
-                if (list.student.sifrant_postnastevilka1 != null)
-                {
-                    ViewBag.PostnaStevilkaZacasni = list.student.sifrant_postnastevilka1.id;
-                    ViewBag.PostaZacasni = list.student.sifrant_postnastevilka1.naziv;
-                }
-
-                if (list.student.sifrant_obcina1 != null)
-                {
-                    ViewBag.ObcinaZacasni = list.student.sifrant_obcina1.naziv;
-                }
-
-                if (list.student.sifrant_drzava1 != null)
-                {
-                    ViewBag.DrzavaZacasni = list.student.sifrant_drzava1.naziv;
-                }
-                  
-                ViewBag.StudijskiProgram = list.sifrant_studijskiprogram.naziv;
-
-                if (list.sifrant_studijskiprogram1 != null)
-                {
-                    ViewBag.StudijskiProgram2 = list.sifrant_studijskiprogram1.naziv;
-                }
-                
-                ViewBag.VrstaStudija = list.sifrant_klasius.naziv;
-                ViewBag.NacinStudija = list.sifrant_nacinstudija.naziv;
-                ViewBag.OblikaStudija = list.sifrant_oblikastudija.naziv;
-                ViewBag.KrajIzvajanja = list.sifrant_obcina.naziv;
-
-                if (list.sifrant_obcina1 != null) 
-                {
-                    ViewBag.KrajIzvajanja2 = list.sifrant_obcina1.naziv;
-                }
-                
-                ViewBag.VrstaVpisa = list.sifrant_vrstavpisa.naziv;
-                ViewBag.Spol = list.student.sifrant_spol.naziv;
-                ViewBag.ObcinaRojstva = list.student.sifrant_obcina2.naziv;
-                ViewBag.DrzavaRojstva = list.student.sifrant_drzava2.naziv;
-                ViewBag.Drzavljanstvo = list.student.sifrant_drzava3.naziv;         
-                ViewBag.IzbirnaSkupina = list.sifrant_izbirnaskupina.naziv;
-
-                if (list.sifrant_izbirnaskupina1 != null)
-                {
-                    ViewBag.IzbirnaSkupina2 = list.sifrant_izbirnaskupina1.naziv;
-                }
-                
-                ViewBag.LetnikStudija = list.sifrant_letnik.naziv;
-                ViewBag.Vpisna = list.vpisnaStevilka;
-                ViewBag.DatumRojstva = list.student.datumRojstva.ToString("dd.MM.yyyy");
-
                 if (Convert.ToBoolean(list.student.vrocanje))
                 {
                     ViewBag.Vrocanje = "DA";
@@ -151,27 +102,21 @@ namespace studis.Controllers
                     ViewBag.VrocanjeZacasni = "NE";
                 }
 
-                var predmeti = list.studentinpredmets.Where(v => v.vpisId == id);
+                ViewBag.LetnikStudija = list.sifrant_letnik.naziv;
+                ViewBag.Vpisna = list.vpisnaStevilka;
+                ViewBag.DatumRojstva = list.student.datumRojstva.ToString("dd.MM.yyyy");
+                ViewBag.StudijskiProgram = list.sifrant_studijskiprogram.naziv;
+                ViewBag.NacinStudija = list.sifrant_nacinstudija.naziv;
+                ViewBag.Spol = list.student.sifrant_spol.naziv;
+                ViewBag.Stevilo = 6;
 
-                ViewBag.Predmeti = predmeti;
-            
                 return new PdfActionResult(model);
+
             }
             catch
             {
-                return RedirectToAction("ListEmpty");
+                return RedirectToAction("Napaka");
             }
-        }
-
-        [Authorize(Roles = "Referent")]
-        public ActionResult PdfSkrbnik()
-        {
-            return View();
-        }
-
-        public ActionResult ListEmpty()
-        {
-            return View();
         }
     }
 }

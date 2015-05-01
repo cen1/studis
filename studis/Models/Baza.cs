@@ -55,6 +55,9 @@ namespace studis.Models
             vpisniList.studijskoLetoPrvegaVpisa = vpi.studijskoLetoPrvegaVpisa;
             vpisniList.soglasje1 = vpi.soglasje1 ?? default(bool);
             vpisniList.soglasje2 = vpi.soglasje2 ?? default(bool);
+            vpisniList.dr_dan = vpi.student.datumRojstva.Day;
+            vpisniList.dr_mesec = vpi.student.datumRojstva.Month;
+            vpisniList.dr_leto = vpi.student.datumRojstva.Year;
 
             return vpisniList;
         }
