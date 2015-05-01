@@ -39,7 +39,7 @@
         </tr>
         <tr>
             <th>Državljanstvo</th>
-            <td>@ViewBag.Drzavljanstvo.naziv</td>
+            <td>@ViewBag.Drzavljanstvo</td>
         </tr>
         <tr>
             <th>Spol</th>
@@ -74,11 +74,11 @@
         </tr>
         <tr>
             <th>Občina</th>
-            <td>@ViewBag.Obcina.naziv</td>
+            <td>@ViewBag.Obcina</td>
         </tr>
         <tr>
             <th>Država</th>
-            <td>@ViewBag.Drzava.naziv</td>
+            <td>@ViewBag.Drzava</td>
         </tr>
         <tr>
             <th>Vročanje</th>
@@ -93,15 +93,15 @@
         </tr>
         <tr>
             <th>Pošta in poštna številka</th>
-            <td>@ViewBag.PostnaStevilkaZacasni.id @ViewBag.PostaZacasni.naziv</td>
+            <td>@ViewBag.PostnaStevilkaZacasni @ViewBag.PostaZacasni</td>
         </tr>
         <tr>
             <th>Občina</th>
-            <td>@ViewBag.ObcinaZacasni.naziv</td>
+            <td>@ViewBag.ObcinaZacasni</td>
         </tr>
         <tr>
             <th>Država</th>
-            <td>@ViewBag.DrzavaZacasni.naziv</td>
+            <td>@ViewBag.DrzavaZacasni</td>
         </tr>
         <tr>
             <th>Vročanje</th>
@@ -132,7 +132,7 @@
         </tr>
         <tr>
             <th>Študijski program</th>
-            <td>@ViewBag.StudijskiProgram2.naziv</td>
+            <td>@ViewBag.StudijskiProgram2</td>
         </tr>
         <tr>
             <th>Smer/usmeritev/modul/znanstveno področje</th>
@@ -140,11 +140,11 @@
         </tr>
         <tr>
             <th>Kraj izvajanja študija</th>
-            <td>@ViewBag.KrajIzvajanja2.naziv</td>
+            <td>@ViewBag.KrajIzvajanja2</td>
         </tr>
         <tr>
             <th>Izbirna skupina</th>
-            <td>@ViewBag.IzbirnaSkupina2.naziv</td>
+            <td>@ViewBag.IzbirnaSkupina2</td>
         </tr>
 
 
@@ -265,12 +265,12 @@
             <th>Učna enota</th>
             <th>Število KT</th>
         </tr>
-        @foreach (var predmet in @ViewBag.Predmeti)
+        @foreach (var data in @ViewBag.Predmeti)
         {
             <tr>
-                <td>@predmet.koda</td>
-                <td>@predmet.ime</td>
-                <td>@predmet.kreditne</td>
+                <td>@data.predmet.koda</td>
+                <td>@data.predmet.ime</td>
+                <td>@data.predmet.kreditne</td>
             </tr>
         }
     </tbody>
