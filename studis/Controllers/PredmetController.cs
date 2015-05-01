@@ -49,7 +49,7 @@ namespace studis.Controllers
             foreach(var vpisna in povezovalna)
             {
                 student st = students.Where(s => s.vpisnaStevilka == vpisna.studentId).SingleOrDefault();
-                if (st != null && st.vpis.Last().studijskoLeto == leto)
+                if (st != null && (st.vpis.Last().studijskoLeto == leto || leto == 0))
                     list.Add(st);
             }
 
