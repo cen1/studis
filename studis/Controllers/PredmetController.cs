@@ -17,9 +17,17 @@ namespace studis.Controllers
         // GET: /Predmet/
         public ActionResult Predmeti()
         {
-            var predmets = db.predmets;//.Include(p => p.modul).Include(p => p.sifrant_letnik).Include(p => p.sifrant_studijskiprogram).Include(p => p.sifrant_klasius);
-
+            var predmets = db.predmets;
             ViewBag.Seznam = new SelectList((from s in predmets.ToList() select new { id = s.id, nameCode = s.koda + " - " + s.ime }), "id", "nameCode", null);
+
+            var sList = new SelectList(new[] 
+            {
+                new { Value = "2014", Text = "2014/2015" },
+                new { Value = "2015", Text = "2015/2016" },
+                new { Value = "2016", Text = "2016/2017" },
+            },
+            "Value", "Text", 1);
+            ViewData["sList"] = sList;
 
             return View();
         }
