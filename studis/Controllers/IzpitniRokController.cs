@@ -40,14 +40,18 @@ namespace studis.Controllers
 
         // POST: IzpitniRok/Create
         [HttpPost]
-        public ActionResult Dodaj(IzpitniRok izpitniRok)
+        public ActionResult Dodaj(IzpitniRokModel model)
         {
+            IzpitniRok izpitniRok = new IzpitniRok();
+            izpitniRok.datum = model.datum;
+            izpitniRok.predmet = db.predmets.SingleOrDefault(v => v.id == model.predmet);
+            izpitniRok.profesors.Add(db.profesors.SingleOrDefault(p => p.id == model.profesor));
             try
             {
                 // TODO: Add insert logic here
                 db.IzpitniRoks.Add(izpitniRok);
 
-                return RedirectToAction("Index");
+                return RedirectToAction("");
             }
             catch
             {
@@ -123,6 +127,17 @@ namespace studis.Controllers
             }
             */
             return new JavaScriptSerializer().Serialize(seznamProfesorjev);
+        }
+
+        public JsonResult PreveriDatum(DateTime datum)
+        {
+            Debug.WriteLine("Datum: " + datum);
+            var result = Validate.veljavenDatum(datum);
+            if (datum < DateTime.Today)
+            {
+                result = false;
+            }
+            return Json(result);
         }
     }
 }
