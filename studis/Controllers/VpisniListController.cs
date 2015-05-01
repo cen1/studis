@@ -42,6 +42,51 @@ namespace studis.Controllers
             ViewBag.StudijskoLetoPrvegaVpisa = new SelectList(db.sifrant_studijskoletoprvegavpisa.OrderByDescending(a => a.id), "id", "naziv");
             ViewBag.IzbirnaSkupina = new SelectList(db.sifrant_izbirnaskupina, "id", "naziv");
             ViewBag.Smer = new SelectList(db.sifrant_smer, "id", "naziv");
+            
+            if (sid == null)
+            {
+                var rdan = Enumerable.Range(1, 31).Select(i => new SelectListItem
+                {
+                    Value = i.ToString(),
+                    Text = i.ToString()
+                });
+                var rmesec = Enumerable.Range(1, 12).Select(i => new SelectListItem
+                {
+                    Value = i.ToString(),
+                    Text = i.ToString()
+                });
+                var rleto = Enumerable.Range(DateTime.Now.Year - 99, 100).Select(i => new SelectListItem
+                {
+                    Value = i.ToString(),
+                    Text = i.ToString()
+                });
+                ViewBag.dr_dan = rdan;
+                ViewBag.dr_mesec = rmesec;
+                ViewBag.dr_leto = rleto;
+            }
+            else
+            {
+                var rdan = Enumerable.Range(sid.datumRojstva.Day, 1).Select(i => new SelectListItem
+                {
+                    Value = i.ToString(),
+                    Text = i.ToString()
+                });
+                var rmesec = Enumerable.Range(sid.datumRojstva.Month, 1).Select(i => new SelectListItem
+                {
+                    Value = i.ToString(),
+                    Text = i.ToString()
+                });
+                var rleto = Enumerable.Range(sid.datumRojstva.Year, 1).Select(i => new SelectListItem
+                {
+                    Value = i.ToString(),
+                    Text = i.ToString()
+                });
+                ViewBag.dr_dan = rdan;
+                ViewBag.dr_mesec = rmesec;
+                ViewBag.dr_leto = rleto;
+            }
+
+            
 
             //napolnimo podatke ce se da
             if (sid != null) {
@@ -137,43 +182,42 @@ namespace studis.Controllers
                 if (sid != null) {
                     
                     v.vpisnaStevilka = sid.vpisnaStevilka;
-                    v.student = sid;
 
-                    v.student.datumRojstva = model.datumRojstva;
-                    v.student.davcnaStevilka = model.davcnaStevilka;
-                    v.student.drzava = model.drzava;
-                    v.student.drzavaRojstva = model.drzavaRojstva;
-                    v.student.drzavaZacasni = model.drzavaZacasni;
-                    v.student.drzavljanstvo = model.drzavljanstvo;
-                    v.student.email = model.email;
-                    v.student.emso = model.emso;
-                    v.student.ime = model.ime;
+                    sid.datumRojstva = model.datumRojstva;
+                    sid.davcnaStevilka = model.davcnaStevilka;
+                    sid.drzava = model.drzava;
+                    sid.drzavaRojstva = model.drzavaRojstva;
+                    sid.drzavaZacasni = model.drzavaZacasni;
+                    sid.drzavljanstvo = model.drzavljanstvo;
+                    sid.email = model.email;
+                    sid.emso = model.emso;
+                    sid.ime = model.ime;
+                    sid.krajRojstva = model.krajRojstva;
+                    sid.naslov = model.naslov;
+                    sid.naslovZacasni = model.naslovZacasni;
+                    sid.obcina = model.obcina;
+                    sid.obcinaRojstva = model.obcinaRojstva;
+                    sid.obcinaZacasni = model.obcinaZacasni;
+                    sid.postnaStevilka = model.postnaStevilka;
+                    sid.postnaStevilkaZacasni = model.postnaStevilkaZacasni;
+                    sid.prenosniTelefon = model.prenosniTelefon;
+                    sid.priimek = model.priimek;
+                    sid.vrocanje = model.vrocanje;
+                    sid.spol = model.spol;
+
                     v.izbirnaSkupina = model.izbirnaSkupina;
-                    v.krajIzvajanja = model.krajIzvajanja;
-                    v.student.krajRojstva = model.krajRojstva;
+                    v.krajIzvajanja = model.krajIzvajanja;      
                     v.letnikStudija = model.letnikStudija;
-                    v.nacinStudija = model.nacinStudija;
-                    v.student.naslov = model.naslov;
-                    v.student.naslovZacasni = model.naslovZacasni;
-                    v.student.obcina = model.obcina;
-                    v.student.obcinaRojstva = model.obcinaRojstva;
-                    v.student.obcinaZacasni = model.obcinaZacasni;
+                    v.nacinStudija = model.nacinStudija;   
                     v.oblikaStudija = model.oblikaStudija;
-                    v.student.postnaStevilka = model.postnaStevilka;
-                    v.student.postnaStevilkaZacasni = model.postnaStevilkaZacasni;
-                    v.student.prenosniTelefon = model.prenosniTelefon;
-                    v.student.priimek = model.priimek;
                     v.smer = model.smer;
                     v.soglasje1 = model.soglasje1;
                     v.soglasje2 = model.soglasje2;
-                    v.student.spol = model.spol;
                     v.studijskiProgram = model.studijskiProgram;
                     v.studijskoLeto = Convert.ToInt32(model.studijskoLeto);
                     v.studijskoLetoPrvegaVpisa = model.studijskoLetoPrvegaVpisa;
-                    v.student.vrocanje = model.vrocanje;
                     v.vrstaStudija = model.vrstaStudija;
                     v.vrstaVpisa = model.vrstaVpisa;
-
                     v.potrjen = false;
                     v.studijskoLeto = DateTime.Now.Year;
 
