@@ -85,5 +85,14 @@ namespace studis.Models
             if (sum != 60) return false;
             else return true;
         }
+
+        public int getKreditObv2()
+        {
+            int sumObv = 0;
+            foreach (var pr in this.obvezni2())
+                sumObv += pr.kreditne;
+
+            return sumObv;
+        }
     }
 }

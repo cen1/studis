@@ -361,6 +361,10 @@ namespace studis.Controllers
             UserHelper uh = new UserHelper();
             if (uh.jePredmetnikVzpostavljen(vl)) return HttpNotFound();
 
+            //preveri ce trenutni user sploh lahko dostopa do tega predmetnika
+            my_aspnet_users usr = uh.FindByName(User.Identity.Name);
+            if (vl.student.userId != usr.id) return HttpNotFound();
+
             PredmetHelper ph = new PredmetHelper();
             PrviPredmetnikModel m = new PrviPredmetnikModel();
             m.vlid = id;
@@ -377,6 +381,10 @@ namespace studis.Controllers
             //preveri ce je predmetnik ze bil izpolnjen
             UserHelper uh = new UserHelper();
             if (uh.jePredmetnikVzpostavljen(vl)) return HttpNotFound();
+
+            //preveri ce trenutni user sploh lahko dostopa do tega predmetnika
+            my_aspnet_users usr = uh.FindByName(User.Identity.Name);
+            if (vl.student.userId != usr.id) return HttpNotFound();
 
             PredmetHelper ph = new PredmetHelper();
 
@@ -406,6 +414,10 @@ namespace studis.Controllers
             UserHelper uh = new UserHelper();
             if (uh.jePredmetnikVzpostavljen(vl)) return HttpNotFound();
 
+            //preveri ce trenutni user sploh lahko dostopa do tega predmetnika
+            my_aspnet_users usr = uh.FindByName(User.Identity.Name);
+            if (vl.student.userId != usr.id) return HttpNotFound();
+
             PredmetHelper ph = new PredmetHelper();
 
             //obvezni plus 1 strokovno izbirni plus 1 prosto izbirni
@@ -413,9 +425,7 @@ namespace studis.Controllers
             ViewBag.strokovnoPredmeti = ph.strokovnoizbirni2();
             ViewBag.prostoPredmeti = ph.prostoizbirni2();
 
-            int sumObv = 0;
-            foreach (var pr in ph.obvezni2())
-                sumObv += pr.kreditne;
+            int sumObv = ph.getKreditObv2();
 
             ViewBag.sumObv = sumObv;
             ViewBag.sumIzb = 60 - sumObv;
@@ -423,6 +433,76 @@ namespace studis.Controllers
             var t = ph.obvezni2();
      
             return View();
+        }
+
+        [HttpPost]
+        public ActionResult DrugiPredmetnik(DrugiPredmetnikModel model, int id)
+        {
+            //preveri ce vpisni sploh obstaja
+            var vl = db.vpis.Find(id);
+            if (vl == null) return HttpNotFound();
+
+            //preveri ce je predmetnik ze bil izpolnjen
+            UserHelper uh = new UserHelper();
+            if (uh.jePredmetnikVzpostavljen(vl)) return HttpNotFound();
+
+            //preveri ce trenutni user sploh lahko dostopa do tega predmetnika
+            my_aspnet_users usr = uh.FindByName(User.Identity.Name);
+            if (vl.student.userId != usr.id) return HttpNotFound();
+
+            PredmetHelper ph = new PredmetHelper();
+            int kreditne = 60 - ph.getKreditObv2();
+            List<predmet> dodaj_p = new List<predmet>();
+            
+            foreach(string key in Request.Form) {
+                if (key.StartsWith("prosto_")) {
+                    int k = Convert.ToInt32(Request.Form[key]);
+                    predmet p = db.predmets.Where(a => a.id == k).First();
+                    if (p != null) {
+                        dodaj_p.Add(p);
+                        kreditne -= p.kreditne;
+                    }
+                }
+                else if (key == "strokovni")
+                {
+                    int k = Convert.ToInt32(Request.Form[key]);
+                    predmet p = db.predmets.Where(a => a.id == k).First();
+                    if (p != null) {
+                        dodaj_p.Add(p);
+                        kreditne -= p.kreditne;
+                    }
+                }
+            }
+
+            if (kreditne == 0) {
+                //dodaj izbirne
+                foreach (var p in dodaj_p) {
+                    studentinpredmet sip = new studentinpredmet();
+                    sip.predmetId = p.id;
+                    sip.studentId = vl.student.vpisnaStevilka;
+                    sip.vpisId = vl.id;
+                    db.studentinpredmets.Add(sip);
+                }
+                //dodaj obvezne
+                foreach (var o in ph.obvezni2())
+                {
+                    studentinpredmet sip = new studentinpredmet();
+                    sip.predmetId = o.id;
+                    sip.studentId = vl.student.vpisnaStevilka;
+                    sip.vpisId = vl.id;
+                    db.studentinpredmets.Add(sip);
+                }
+
+                db.SaveChanges();
+
+                TempData["id"] = id;
+                return RedirectToAction("VpisniListSuccess");
+            }
+            else {
+                Session["error"] = "Nepravilno število izbranih kreditnih točk";
+                return RedirectToAction("DrugiPredmetnik", new { id = id } );
+            }
+
         }
 
         public ActionResult TretjiPredmetnik(int id)
