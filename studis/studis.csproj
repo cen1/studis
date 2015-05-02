@@ -498,6 +498,7 @@
     <Content Include="Views\Potrditev\Napaka.cshtml" />
     <Content Include="Views\Shared\_PdfPotrdilaLayout.cshtml" />
     <Content Include="Views\Potrditev\Potrditev.cshtml" />
+    <Content Include="Views\IzpitniRok\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
