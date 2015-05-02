@@ -60,14 +60,15 @@ namespace studis.Controllers
         }
 
         // GET: IzpitniRok/Edit/5
-        public ActionResult Edit(int id)
+        public ActionResult Edit()
         {
+
             return View();
         }
 
         // POST: IzpitniRok/Edit/5
         [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
+        public ActionResult Edit(IzpitniRokModel model)
         {
             try
             {
@@ -127,6 +128,19 @@ namespace studis.Controllers
             }
             */
             return new JavaScriptSerializer().Serialize(seznamProfesorjev);
+        }
+
+        public string GetIzpitniRoksForPredmet(string idPredmet)
+        {
+            int iid = Convert.ToInt32(idPredmet);
+            //var izpitniRoki = db.predmets.SingleOrDefault(v => v.id == iid).izpitniRoks.ToList();
+
+            return "";
+        }
+
+        public string GetDatumForIzpitniRok(string idIzpitniRok)
+        {
+            return "";
         }
 
         public JsonResult PreveriDatum(DateTime datum)

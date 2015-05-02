@@ -503,6 +503,7 @@
     <Content Include="Views\Potrditev\Potrditev.cshtml" />
     <Content Include="Views\VpisniList\TretjiPredmetnikProsti.cshtml" />
     <Content Include="Views\VpisniList\TretjiPredmetnikModuli.cshtml" />
+    <Content Include="Views\IzpitniRok\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
