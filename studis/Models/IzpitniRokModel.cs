@@ -9,6 +9,8 @@ namespace studis.Models
 {
     public class IzpitniRokModel
     {
+        public int id { get; set; }
+
         [Remote("PreveriDatum", "IzpitniRok", HttpMethod = "POST", ErrorMessage = "Datum ne sme biti v preteklosti.")]
         [Required(ErrorMessage = "Obvezno izpolniti.")]
         [DataType(DataType.Date)]
