@@ -1,11 +1,15 @@
-﻿
+﻿@model studis.Models.DrugiPredmetnikModel
+
 @{
     ViewBag.Title = "Predmetnik za 2 letnik";
 }
 
 <h2>Predmetnik za 2 letnik</h2>
 
-@Html.ValidationSummary(true, "Napaka!")
+@if (Session["error"] != null)
+{
+    <span style="color: red; font-weight: bold">@Session["error"]</span>
+}
 
 
 <p>Obvezni predmeti</p>
@@ -41,7 +45,7 @@
             .. @item.kreditne KT<br />
         </span>
     }
-
+    @Html.HiddenFor(m => m.vlid)
 
     <input type="submit" value="Zaključi">
 }

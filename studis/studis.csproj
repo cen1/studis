@@ -183,6 +183,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Baza.cs" />
+    <Compile Include="Models\DrugiPredmetnikModel.cs" />
     <Compile Include="Models\IpLock.cs" />
     <Compile Include="Models\ip_lock.cs">
       <DependentUpon>Studis.tt</DependentUpon>
