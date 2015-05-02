@@ -7,7 +7,7 @@
 
 <h2>Študenti prijavljeni v predmet</h2>
 
-<table class="table">
+<table id="izpis" class="table">
     <tr>
         <th>
             Zaporedna številka
@@ -16,10 +16,10 @@
             Vpisna številka
         </th>
         <th>
-            Ime
+            Priimek
         </th>
         <th>
-            Priimek
+            Ime
         </th>
         <th>
             Vrsta vpisa
@@ -39,13 +39,13 @@
             @Html.DisplayFor(modelItem => item.vpisnaStevilka)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.ime)
-        </td>
-        <td>
             @Html.DisplayFor(modelItem => item.priimek)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.vpis.Last().vrstaVpisa)
+            @Html.DisplayFor(modelItem => item.ime)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.vpis.Last().sifrant_vrstavpisa.naziv)
         </td>
     </tr>
     }

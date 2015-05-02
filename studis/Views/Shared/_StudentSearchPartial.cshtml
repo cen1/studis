@@ -19,6 +19,10 @@
             {
                 <th>Žeton za vpis</th>
             }
+            @if (User.IsInRole("Referent"))
+            {
+                <th>Potrditev vpisnega lista</th>
+            }
         </tr>
 @if (Model != null)
 {
@@ -33,6 +37,10 @@
             @if (!User.IsInRole("Profesor"))
             {
                 <td><a href='@string.Format("/zetons/Create/{0}", item.vpisnaStevilka)'>Ustvari</a></td>
+            }
+            @if (User.IsInRole("Referent"))
+            {
+                <td>@Html.ActionLink("Potrditev", "Potrditev", "Potrditev", new { id = item.vpisnaStevilka }, null)</td>
             }
     </tr>
     }

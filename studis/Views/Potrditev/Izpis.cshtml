@@ -1,0 +1,110 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_PdfPotrdilaLayout.cshtml";
+    var imagePath = Server.MapPath("~/Content/images");
+}
+
+@model studis.Models.VpisniListModel
+@{
+    for (var i = 0; i < @ViewBag.Stevilo; i++)
+    {
+        <div class="img"><img class="displayed" src="@imagePath\fri.png" alt="fri logo" /></div>
+
+        <br />
+        <div class="naslov"><h2 style="position: center;">Potrdilo o vpisu</h2></div>
+
+        <div>
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+        </div>
+        
+
+        <table class="podatki">
+            <tbody>
+                <tr>
+                    <th>Potrjujemo, da je študent:</th>
+                    <td>@Html.DisplayFor(m => m.priimek), @Html.DisplayFor(m => m.ime)</td>
+                </tr>
+                <tr>
+                    <th>z vpisno številko:</th>
+                    <td>@ViewBag.Vpisna</td>
+                </tr>
+                <tr>
+                    @if (@ViewBag.Spol.Contains("Moški"))
+                    {
+                        <th>rojen dne:</th>
+                    }
+                    else
+                    {
+                        <th>rojena dne:</th>
+                    }
+                    <td>@ViewBag.DatumRojstva</td>
+                </tr>
+                <tr>
+                    <th>v kraju:</th>
+                    <td>@Html.DisplayFor(m => m.krajRojstva)</td>
+                </tr>
+                <tr>
+                    <th>EMŠO:</th>
+                    <td>@Html.DisplayFor(m => m.emso)</td>
+                </tr>
+                <tr>
+                    @if (@ViewBag.Spol.Contains("Moški"))
+                    {
+                        <th>Vpisan v:</th>
+                    }
+                    else
+                    {
+                        <th>Vpisana v:</th>
+                    }
+
+                    @if (@ViewBag.LetnikStudija.Contains("Dodatno"))
+                    {
+                        <td>@ViewBag.LetnikStudija</td>
+                    }
+                    else
+                    {
+                        <td>@ViewBag.LetnikStudija letnik</td>
+                    }
+                </tr>
+                <tr>
+                    <th>v študijskem letu:</th>
+                    <td>@Html.DisplayFor(m => m.studijskoLeto)</td>
+                </tr>
+                <tr>
+                    <th>Način študija:</th>
+                    <td>@ViewBag.NacinStudija</td>
+                </tr>
+                <tr>
+                    <th>Študijski program:</th>
+                    <td>@ViewBag.StudijskiProgram</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div>
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+        </div>
+
+        <table class="dodatno">
+            <tbody>
+                <tr>
+                    <td>Žig:</td>
+                    <td style="text-align: right">Podpis odgovorne osebe:</td>
+                </tr>
+            </tbody>
+        </table>
+
+    }
+}

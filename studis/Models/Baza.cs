@@ -43,10 +43,10 @@ namespace studis.Models
             vpisniList.smer = vpi.smer ?? default(int);
             vpisniList.krajIzvajanja = vpi.krajIzvajanja;
             vpisniList.izbirnaSkupina = vpi.izbirnaSkupina;
-            vpisniList.studijskiProgram2 = vpi.studijskiProgram2;
+            vpisniList.studijskiProgram2 = vpi.studijskiProgram2 ?? default(int);
             vpisniList.smer2 = vpi.smer2 ?? default(int);
-            vpisniList.krajIzvajanja2 = vpi.krajIzvajanja2;
-            vpisniList.izbirnaSkupina2 = vpi.izbirnaSkupina2;
+            vpisniList.krajIzvajanja2 = vpi.krajIzvajanja2 ?? default(int);
+            vpisniList.izbirnaSkupina2 = vpi.izbirnaSkupina2 ?? default(int);
             vpisniList.vrstaStudija = vpi.vrstaStudija;
             vpisniList.vrstaVpisa = vpi.vrstaVpisa;
             vpisniList.letnikStudija = vpi.letnikStudija;

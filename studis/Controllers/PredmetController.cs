@@ -17,18 +17,28 @@ namespace studis.Controllers
         // GET: /Predmet/
         public ActionResult Predmeti()
         {
-            var predmets = db.predmets;//.Include(p => p.modul).Include(p => p.sifrant_letnik).Include(p => p.sifrant_studijskiprogram).Include(p => p.sifrant_klasius);
-
+            var predmets = db.predmets;
             ViewBag.Seznam = new SelectList((from s in predmets.ToList() select new { id = s.id, nameCode = s.koda + " - " + s.ime }), "id", "nameCode", null);
+
+            var sList = new SelectList(new[] 
+            {
+                new { Value = "0", Text = "Vsa leta" },
+                new { Value = "2015", Text = "2015/2016" },
+                new { Value = "2016", Text = "2016/2017" },
+            },
+            "Value", "Text", 1);
+            ViewData["sList"] = sList;
 
             return View();
         }
 
         [HttpPost]
-        public ActionResult Predmeti(long id)
+        public ActionResult Predmeti(long id, string Value)
         {
+            int leto = Convert.ToInt32(Value);
+
             //vsi študenti
-            var students = db.students.Include(p => p.studentinpredmets).Include(p => p.vpis);
+            var students = db.students.Include(p => p.studentinpredmets).Include(p => p.vpis).ToList();
 
             //studenti iz povezovalne tabele, ki imajo ta predmet
             var povezovalna = from p in db.studentinpredmets select p;
@@ -39,10 +49,11 @@ namespace studis.Controllers
             foreach(var vpisna in povezovalna)
             {
                 student st = students.Where(s => s.vpisnaStevilka == vpisna.studentId).SingleOrDefault();
-                if (st != null)
+                if (st != null && (st.vpis.Last().studijskoLeto == leto || leto == 0))
                     list.Add(st);
             }
-            
+
+            list = list.OrderBy(o => o.priimek).ToList();
             return View("PredmetStudenti", list);
         }
 

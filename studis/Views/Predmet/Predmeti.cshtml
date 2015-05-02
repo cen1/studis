@@ -16,6 +16,12 @@
         <div class="editor-field">
             @Html.DropDownListFor(m => m.id, (SelectList)ViewBag.Seznam)
         </div>
+        <div class="editor-label">
+            Izberite študijsko leto
+        </div>
+        <div class="editor-field">
+            @Html.DropDownList("Value",ViewData["sList"] as SelectList)
+        </div>
         <p>
             <input type="submit" value="Seznam študentov">
         </p>
