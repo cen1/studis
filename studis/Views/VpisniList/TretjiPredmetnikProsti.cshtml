@@ -1,0 +1,49 @@
+﻿@model studis.Models.TretjiPredmetnikProstiModel
+
+@{
+    ViewBag.Title = "Predmetnik za 3 letnik - prosta izbira";
+}
+
+<h2>Predmetnik za 3 letnik</h2>
+
+@if (Session["error"] != null)
+{
+    <span style="color: red; font-weight: bold">@Session["error"]</span>
+}
+
+
+<p>Obvezni predmeti</p>
+
+@using (Html.BeginForm())
+{
+
+    <ul>
+        @foreach (var item in ViewBag.obvezniPredmeti)
+        {
+            <li>@item.ime <span>.. @item.kreditne KT</span></li>
+        }
+    </ul>
+
+    <hr />
+    <p style="font-weight: bold">Obvezni predmeti skupaj dajo @ViewBag.sumObv kreditnih točk</p>
+    <p style="font-weight: bold">Izbrati morate še o @ViewBag.sumIzb kreditnih točk iz izbirnih predmetov, vsaj en kora biti strokovno izbirni in vsaj en prosto izbirni.</p>
+
+
+    <p>Izbirni predmeti</p>
+    foreach (var modul in ViewBag.izbirniPredmeti)
+    {
+        <div style="font-weight: bold">
+            @modul.ime
+        </div>
+        foreach (var predmet in modul.predmets) { 
+            <div>
+                <input type="checkbox" name="prosto_@predmet.id" value="@predmet.id"> @predmet.ime
+                .. @predmet.kreditne KT<br />
+            </div>
+        }
+    }
+
+    @Html.HiddenFor(m => m.vlid)
+
+    <input type="submit" value="Zaključi">
+}

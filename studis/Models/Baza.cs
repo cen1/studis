@@ -26,19 +26,26 @@ namespace studis.Models
             vpisniList.priimek = student.priimek;
             vpisniList.prenosniTelefon = student.prenosniTelefon;
             vpisniList.datumRojstva = student.datumRojstva;
-            vpisniList.davcnaStevilka = student.davcnaStevilka ?? default(int);
+            vpisniList.davcnaStevilka = student.davcnaStevilka ?? 00000000;
             vpisniList.emso = student.emso;
             vpisniList.email = student.email;
             vpisniList.krajRojstva = student.krajRojstva;
             vpisniList.obcinaRojstva = student.obcinaRojstva;
             vpisniList.drzavaRojstva = student.drzavaRojstva;
             vpisniList.drzavljanstvo = student.drzavljanstvo;
+            
+            vpisniList.vrocanje = student.vrocanje ?? default(bool);
             vpisniList.naslov = student.naslov;
             vpisniList.obcina = student.obcina;
-            vpisniList.vrocanje = student.vrocanje ?? default(bool);
-            vpisniList.naslov = student.naslovZacasni;
-            vpisniList.obcina = student.obcinaZacasni ?? default(int);
+            vpisniList.postnaStevilka = student.postnaStevilka;
+            vpisniList.drzava = student.drzava;
+
             vpisniList.vrocanjeZacasni = student.vrocanjeZacasni ?? default(bool);
+            vpisniList.naslovZacasni = student.naslovZacasni ?? default(string);
+            vpisniList.obcinaZacasni = student.obcinaZacasni ?? default(int);
+            vpisniList.postnaStevilkaZacasni = student.postnaStevilkaZacasni ?? default(int);
+            vpisniList.drzavaZacasni = student.drzavaZacasni ?? default(int);
+            
             vpisniList.studijskiProgram = vpi.studijskiProgram;
             vpisniList.smer = vpi.smer ?? default(int);
             vpisniList.krajIzvajanja = vpi.krajIzvajanja;
