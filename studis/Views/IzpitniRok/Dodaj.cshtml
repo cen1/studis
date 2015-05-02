@@ -65,7 +65,9 @@
             $.get("/IzpitniRok/GetProfesorsForPredmet/" + $(this).val(), function (response) {
                 var profesors = $.parseJSON(response);
                 var ddlProfesors = $("#profesor");
-                $("#predmet option:first-child").remove();
+                if ($("#predmet option:first-child").text() == "Izberi predmet") {
+                    $("#predmet option:first-child").remove();
+                }
                 //pocisti
                 $("#profesor > option").remove();
 
