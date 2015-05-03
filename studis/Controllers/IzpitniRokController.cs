@@ -15,7 +15,7 @@ namespace studis.Controllers
         public studisEntities db = new studisEntities();
 
 
-        //GET: IzpitniRok/New
+        //GET: IzpitniRok/Dodaj
         public ActionResult Dodaj()
         {
             SelectList temp = new SelectList(db.predmets.OrderBy(a => a.ime), "id", "ime");
@@ -38,7 +38,7 @@ namespace studis.Controllers
             return View();
         }
 
-        // POST: IzpitniRok/Create
+        // POST: IzpitniRok/Dodaj
         [HttpPost]
         public ActionResult Dodaj(IzpitniRokModel model)
         {
@@ -59,7 +59,7 @@ namespace studis.Controllers
             }
         }
 
-        // GET: IzpitniRok/Edit/5
+        // GET: IzpitniRok/Edit
         public ActionResult Edit()
         {
             SelectList temp = new SelectList(db.predmets.OrderBy(a => a.ime), "id", "ime");
@@ -81,7 +81,7 @@ namespace studis.Controllers
             return View();
         }
 
-        // POST: IzpitniRok/Edit/5
+        // POST: IzpitniRok/Edit
         [HttpPost]
         public ActionResult Edit(IzpitniRokModel model)
         {

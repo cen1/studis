@@ -436,21 +436,43 @@ namespace studis.Controllers
                 }
                 catch
                 {
-                    TempData["Napaka"] = "Študent nima izpolnjenega vpisnega lista za 3. letnik!";
+                    TempData["Napaka"] = "Študent nima izpolnjenega vpisnega lista za 2. letnik!";
                     return RedirectToAction("Napaka");
                 }
             }
+            
+            var vl = db.vpis.Find(id);
+            if (vl == null) return HttpNotFound();
 
-            var list = db.vpis.SingleOrDefault(v => v.id == id);
+            //preveri ce je predmetnik ze bil izpolnjen
+            /*UserHelper uh = new UserHelper();
+            if (!uh.jePredmetnikVzpostavljen(vl))
+            {
+                return RedirectToAction("DrugiPredmetnik", "VpisniList", new { id = vl.id });
+            }
+            else 
+            {*/
+                // logika za prikaz predmetov za urejanje
+                PredmetHelper ph = new PredmetHelper();
 
-            // logika za prikaz predmetov za urejanje
+                //obvezni plus 1 strokovno izbirni plus 1 prosto izbirni
+                ViewBag.strokovnoPredmeti = ph.strokovnoizbirni2();
+                ViewBag.prostoPredmeti = ph.prostoizbirni2();
 
-            return View();
+                int sumObv = ph.getKreditObv2();
+
+                ViewBag.sumObv = sumObv;
+                ViewBag.sumIzb = 60 - sumObv;
+
+                // označi tiste ki so že izbrani
+
+                return View();
+            //}
         }
 
         /*[HttpPost]
         [Authorize(Roles = "Referent")]
-        public ActionResult UrediPredmetnik2(int id)
+        public ActionResult UrediPredmetnik2(DrugiPredmetnikModel model, int id)
         {
 
             // validacija
@@ -476,16 +498,108 @@ namespace studis.Controllers
                 }
             }
 
-            var list = db.vpis.SingleOrDefault(v => v.id == id);
+            var vl = db.vpis.Find(id);
+            if (vl == null) return HttpNotFound();
 
-            // logika za prikaz predmetov za urejanje
+            //preveri ce je predmetnik ze bil izpolnjen
+            UserHelper uh = new UserHelper();
+            /*if (!uh.jePredmetnikVzpostavljen(vl))
+            {
+                //če je povprečna ocena 8 ali več si prosto izbira, sicer izbere 2 modula plus en izbirni plus diploma obvezni
+                if (uh.preveriPovprecje(vl.student))
+                {
+                    return RedirectToAction("TretjiPredmetnikProsti", new { id = id });
+                }
+                else
+                {
+                    return RedirectToAction("TretjiPredmetnikModuli", new { id = id });
+                }
+            }
+            else
+            {*/
+                //če je povprečna ocena 8 ali več si prosto izbira, sicer izbere 2 modula plus en izbirni plus diploma obvezni
+                if (uh.preveriPovprecje(vl.student))
+                {
+                    return RedirectToAction("UrediPredmetnik3Prosti", new { id = id });
+                }
+                else
+                {
+                    return RedirectToAction("UrediPredmetnik3Moduli", new { id = id });
+                }
+            //}
+        }
+
+        [Authorize(Roles = "Referent")]
+        public ActionResult UrediPredmetnik3Prosti(int id)
+        {
+
+            //preveri ce vpisni sploh obstaja
+            var vl = db.vpis.Find(id);
+            if (vl == null) return HttpNotFound();
+
+            //preveri ce ima povprecje
+            UserHelper uh = new UserHelper();
+            if (!uh.preveriPovprecje(vl.student)) return HttpNotFound();
+
+            PredmetHelper ph = new PredmetHelper();
+
+            //obvezni plus vsi predmeti iz modula na izbiro
+            ViewBag.obvezniPredmeti = ph.obvezni3();
+            ViewBag.izbirniPredmeti = db.moduls.ToList();
+
+            int sumObv = ph.getKreditObv3();
+
+            ViewBag.sumObv = sumObv;
+            ViewBag.sumIzb = 60 - sumObv;
+
+            // označi tiste ki so že izbrani
 
             return View();
         }
 
         /*[HttpPost]
         [Authorize(Roles = "Referent")]
-        public ActionResult UrediPredmetnik3(int id)
+        public ActionResult UrediPredmetnik3Prosti(TretjiPredmetnikProstiModel model, int id)
+        {
+
+            // validacija
+
+            return View();
+        }
+
+        [Authorize(Roles = "Referent")]
+        public ActionResult UrediPredmetnik3Moduli(int id)
+        {
+
+            //preveri ce vpisni sploh obstaja
+            var vl = db.vpis.Find(id);
+            if (vl == null) return HttpNotFound();
+
+            //preveri ce ima povprecje
+            UserHelper uh = new UserHelper();
+            if (uh.preveriPovprecje(vl.student)) return HttpNotFound();
+
+            PredmetHelper ph = new PredmetHelper();
+
+            //dva modula plus en izbirni
+            ViewBag.obvezniPredmeti = ph.obvezni3();
+            ViewBag.izbirniPredmeti = new SelectList(ph.izbirni3(), "id", "ime");
+            ViewBag.moduli = db.moduls.ToList();
+            ViewBag.vlid = id;
+
+            int sumObv = ph.getKreditObv3();
+
+            ViewBag.sumObv = sumObv;
+            ViewBag.sumIzb = 60 - sumObv;
+
+            // označi tiste ki so že izbrani
+
+            return View();
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Referent")]
+        public ActionResult UrediPredmetnik3Moduli(TretjiPredmetnikModuliModel model, int id)
         {
 
             // validacija
