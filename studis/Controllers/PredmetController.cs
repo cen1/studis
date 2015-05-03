@@ -23,8 +23,10 @@ namespace studis.Controllers
             var sList = new SelectList(new[] 
             {
                 new { Value = "0", Text = "Vsa leta" },
+                new { Value = "2013", Text = "2013/2014" },
+                new { Value = "2014", Text = "2014/2015" },
                 new { Value = "2015", Text = "2015/2016" },
-                new { Value = "2016", Text = "2016/2017" },
+                
             },
             "Value", "Text", 1);
             ViewData["sList"] = sList;
@@ -36,6 +38,7 @@ namespace studis.Controllers
         public ActionResult Predmeti(long id, string Value)
         {
             int leto = Convert.ToInt32(Value);
+            System.Diagnostics.Debug.WriteLine(leto);
 
             //vsi študenti
             var students = db.students.Include(p => p.studentinpredmets).Include(p => p.vpis).ToList();
@@ -49,11 +52,29 @@ namespace studis.Controllers
             foreach(var vpisna in povezovalna)
             {
                 student st = students.Where(s => s.vpisnaStevilka == vpisna.studentId).SingleOrDefault();
-                if (st != null && (st.vpis.Last().studijskoLeto == leto || leto == 0))
-                    list.Add(st);
+                if (st != null);// && (st.vpis.Last().studijskoLeto == leto || leto == 0))
+                {
+                    if (leto == 0)
+                        list.Add(st);
+                    else
+                    {
+                        foreach (vpi v in st.vpis)
+                        {
+                            if (v.studijskoLeto == leto)
+                            {
+                                list.Add(st);
+                                break;
+                            }
+                        }
+                    }
+                }
             }
 
-            list = list.OrderBy(o => o.priimek).ToList();
+            if (list.Any())
+                list = list.OrderBy(o => o.priimek).ToList();
+            else
+                list = null;
+
             return View("PredmetStudenti", list);
         }
 
