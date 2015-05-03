@@ -111,20 +111,20 @@ namespace studis.Controllers
         }
 
         // GET: IzpitniRok/Delete/5
-        public ActionResult Delete(int id)
+        public ActionResult Izbrisi()
         {
             return View();
         }
 
         // POST: IzpitniRok/Delete/5
         [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
+        public ActionResult Izbrisi(int id)
         {
             try
             {
                 // TODO: Add delete logic here
 
-                return RedirectToAction("Index");
+                return RedirectToAction("UspesnoIzbrisan");
             }
             catch
             {
