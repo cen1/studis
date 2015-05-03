@@ -148,6 +148,11 @@ namespace studis.Controllers
                 ViewBag.Vpisna = list.vpisnaStevilka;
                 ViewBag.DatumRojstva = list.student.datumRojstva.ToString("dd.MM.yyyy");
 
+                if (list.smer != null)
+                {
+                    ViewBag.Smer = list.sifrant_smer.naziv;
+                }
+
                 if (Convert.ToBoolean(list.student.vrocanje))
                 {
                     ViewBag.Vrocanje = "DA";
