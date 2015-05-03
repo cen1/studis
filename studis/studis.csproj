@@ -353,6 +353,7 @@
     <Content Include="bin\System.Web.WebPages.Razor.dll" />
     <Content Include="bin\WebMatrix.Data.dll" />
     <Content Include="bin\WebMatrix.WebData.dll" />
+    <Content Include="Content\images\fri.png" />
     <Content Include="Content\images\indeks.png" />
     <Content Include="Content\themes\base\accordion.css" />
     <Content Include="Content\themes\base\all.css" />
