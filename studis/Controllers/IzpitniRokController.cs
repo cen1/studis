@@ -62,7 +62,22 @@ namespace studis.Controllers
         // GET: IzpitniRok/Edit/5
         public ActionResult Edit()
         {
+            SelectList temp = new SelectList(db.predmets.OrderBy(a => a.ime), "id", "ime");
 
+            List<SelectListItem> predmeti = new List<SelectListItem>();
+            foreach (SelectListItem i in temp)
+            {
+                //Debug.WriteLine(i.Value + " " + i.Text);
+                //i.Text = i.Value  + i.Text;
+                SelectListItem p = new SelectListItem();
+                p.Value = i.Value;
+                p.Text = Convert.ToInt32(i.Value).ToString("000") + " - " + i.Text;
+                predmeti.Add(p);
+            }
+            List<SelectListItem> ltemp = new List<SelectListItem>();
+            ltemp.Add(new SelectListItem() { Value = "", Text = "Izbira" });
+            ViewBag.Prazen = new SelectList(ltemp, "Value", "Text");
+            ViewBag.Predmets = new SelectList(predmeti, "Value", "Text");
             return View();
         }
 
@@ -70,10 +85,14 @@ namespace studis.Controllers
         [HttpPost]
         public ActionResult Edit(IzpitniRokModel model)
         {
+            IzpitniRok izpitniRok = new IzpitniRok();
+            izpitniRok.datum = model.datum;
+            izpitniRok.predmet = db.predmets.SingleOrDefault(v => v.id == model.predmet);
+            izpitniRok.profesors.Add(db.profesors.SingleOrDefault(p => p.id == model.profesor));
             try
             {
                 // TODO: Add update logic here
-
+                //db.IzpitniRoks.//SingleOrDefault(r => r.ID == model.id).;
                 return RedirectToAction("Index");
             }
             catch

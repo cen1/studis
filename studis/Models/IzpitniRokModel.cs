@@ -9,6 +9,7 @@ namespace studis.Models
 {
     public class IzpitniRokModel
     {
+        [Display(Name = "Izpitni rok")]
         public int id { get; set; }
 
         [Remote("PreveriDatum", "IzpitniRok", HttpMethod = "POST", ErrorMessage = "Datum ne sme biti v preteklosti.")]
