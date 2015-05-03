@@ -17,20 +17,21 @@
 <h2>Spreminjaje izpitnega roka</h2>
 
 
-<!--Izbira Predmeta-->
-<div class="editor-label">
-    @Html.LabelFor(m => m.predmet)
-</div>
-<div class="editor-field">
-    @Html.DropDownListFor(m => m.predmet, (SelectList)ViewBag.Predmets, "Izberi predmet")
-    @Html.ValidationMessageFor(m => m.predmet)
-</div>
+
 
 
 @using (Html.BeginForm())
 {
     <div>
         <fieldset>
+            <!--Izbira Predmeta-->
+            <div class="editor-label">
+                @Html.LabelFor(m => m.predmet)
+            </div>
+            <div class="editor-field">
+                @Html.DropDownListFor(m => m.predmet, (SelectList)ViewBag.Predmets, "Izberi predmet")
+                @Html.ValidationMessageFor(m => m.predmet)
+            </div>
 
             <!--Izbira IzpitnegaRoka-->
             <div class="editor-label">
@@ -123,7 +124,7 @@
     $(document).ready(function () {
         $("#id").change(function () {
             $.get("/IzpitniRok/GetDatumForIzpitniRok/" + $(this).val(), function (response) {
-                var datum = $.parseJSON(response);
+                var datum = response;
                 $("#datum").val(datum);
             });
         });
