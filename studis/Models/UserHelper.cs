@@ -78,6 +78,8 @@ namespace studis.Models
         public bool preveriPovprecje(student s)
         {
             vpi vp = s.vpis.Where(a => a.letnikStudija == 2).Last();
+            if (vp == null) return false;
+
             double sum = 0;
             int cnt = 0;
             foreach (var o in vp.ocenas)
@@ -189,6 +191,31 @@ namespace studis.Models
             if (vlm.vrocanje && vlm.vrocanjeZacasni) napake.Add("Izberite le en naslov za vročanje");
             if (!vlm.vrocanje && !vlm.vrocanjeZacasni) napake.Add("Izberite vsaj en naslov za vročanje");
 
+            //preveri da so izpolnjeni vsi ali noben podatek o zacasnem
+            if (vlm.naslovZacasni != null || vlm.obcinaZacasni != null || vlm.postnaStevilkaZacasni != null || vlm.drzavaZacasni != null || vlm.vrocanjeZacasni != null)
+            {
+                if (vlm.naslovZacasni == null || vlm.obcinaZacasni == null || vlm.postnaStevilkaZacasni == null || vlm.drzavaZacasni == null)
+                {
+                    napake.Add("Izpolnjeni morajo biti vsi podatki o začasnem prebivališču");
+                }
+            }
+
+            //preveri ce res obstaja studijsko leto prvega vpisa
+            vpi slpv = db.vpis.Where(a => a.studijskiProgram == vlm.studijskiProgram).Where(b => b.letnikStudija == vlm.letnikStudija).FirstOrDefault();
+            if (slpv != null) {
+                if (vlm.studijskoLetoPrvegaVpisa != slpv.studijskoLeto)
+                {
+                    napake.Add("Študijsko leto prvega vpisa je napačno (nimate vpisa iz tistega leta)");
+                }
+            }
+            else
+            {
+                if (vlm.studijskoLetoPrvegaVpisa != DateTime.Now.Year)
+                {
+                    napake.Add("Študijsko leto prvega vpisa je lahko le letošnje");
+                }
+            }
+
             return napake;
         }
 
@@ -196,12 +223,12 @@ namespace studis.Models
         {
             if (v.studentinpredmets.Count() == 0)
             {
-                System.Diagnostics.Debug.WriteLine("Vzpostavljen za " + v.id.ToString() + " je false");
+                //System.Diagnostics.Debug.WriteLine("Vzpostavljen za " + v.id.ToString() + " je false");
                 return false;
             }
             else
             {
-                System.Diagnostics.Debug.WriteLine("Vzpostavljen za " + v.id.ToString() + " je true");
+                //System.Diagnostics.Debug.WriteLine("Vzpostavljen za " + v.id.ToString() + " je true");
                 return true;
             }
         }
@@ -213,6 +240,21 @@ namespace studis.Models
             if (v.letnikStudija == 2) r += "DrugiPredmetnik";
             if (v.letnikStudija == 3) r += "TretjiPredmetnik";
             return r;
+        }
+
+        public static string DateToString(DateTime datum)
+        {
+            return datum.Day + "." + datum.Month + "." + datum.Year;
+        }
+
+        //dd.MM.yyyy
+        public static DateTime StringToDate(string datum)
+        {
+            char[] delimiters = { '.', '/' };
+            string[] stevilke = datum.Split(delimiters);
+            DateTime date = new DateTime(Convert.ToInt32(stevilke[2]), Convert.ToInt32(stevilke[1]), Convert.ToInt32(stevilke[0]));
+
+            return date;
         }
     }
 

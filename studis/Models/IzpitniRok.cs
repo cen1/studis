@@ -13,16 +13,13 @@ namespace studis.Models
     {
         public int ID { get; set; }
 
-        [Required]
         [DataType(DataType.Date)]
-        [Display(Name = "Datum")]
         public DateTime datum { get; set; }
 
-        [Display(Name = "Predmet")]
         public predmet predmet { get; set; }
 
-        [Display(Name = "Profesor")]
-        public virtual ICollection<profesor> profesors { get; set; }
+        
+        public profesor profesor { get; set; }
 
         public virtual ICollection<student> students { get; set; }
 

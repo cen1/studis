@@ -25,10 +25,10 @@ namespace studis
         // GET: zetons/Create
         public ActionResult Create(int id)
         {
-            ViewBag.vrstaStudija = new SelectList(db.sifrant_klasius, "id", "naziv");
-            ViewBag.letnik = new SelectList(db.sifrant_letnik, "id", "naziv");
+            ViewBag.vrstaStudija = new SelectList(db.sifrant_klasius.OrderBy(a => a.id != 16204).ThenBy(b => b.id), "id", "naziv");
+            ViewBag.letnik = new SelectList(db.sifrant_letnik.OrderBy(a => a.naziv != "Prvi").ThenBy(b => b.id), "id", "naziv");
             ViewBag.oblikaStudija = new SelectList(db.sifrant_oblikastudija, "id", "naziv");
-            ViewBag.studijskiProgram = new SelectList(db.sifrant_studijskiprogram, "id", "naziv");
+            ViewBag.studijskiProgram = new SelectList(db.sifrant_studijskiprogram.OrderBy(a => a.id != 1000468).ThenBy(a => a.naziv), "id", "naziv");
             ViewBag.vrstaVpisa = new SelectList(db.sifrant_vrstavpisa, "id", "naziv");
             return View();
         }
@@ -51,11 +51,11 @@ namespace studis
                 return RedirectToAction("Index");
             }
 
-            ViewBag.vrstaStudija = new SelectList(db.sifrant_klasius, "id", "naziv", zeton.vrstaStudija);
-            ViewBag.letnik = new SelectList(db.sifrant_letnik, "id", "naziv", zeton.letnik);
-            ViewBag.oblikaStudija = new SelectList(db.sifrant_oblikastudija, "id", "naziv", zeton.oblikaStudija);
-            ViewBag.studijskiProgram = new SelectList(db.sifrant_studijskiprogram, "id", "naziv", zeton.studijskiProgram);
-            ViewBag.vrstaVpisa = new SelectList(db.sifrant_vrstavpisa, "id", "naziv", zeton.vrstaVpisa);
+            ViewBag.vrstaStudija = new SelectList(db.sifrant_klasius.OrderBy(a => a.id != 16204).ThenBy(b => b.id), "id", "naziv");
+            ViewBag.letnik = new SelectList(db.sifrant_letnik.OrderBy(a => a.naziv != "Prvi").ThenBy(b => b.id), "id", "naziv");
+            ViewBag.oblikaStudija = new SelectList(db.sifrant_oblikastudija, "id", "naziv");
+            ViewBag.studijskiProgram = new SelectList(db.sifrant_studijskiprogram.OrderBy(a => a.id != 1000468).ThenBy(a => a.naziv), "id", "naziv");
+            ViewBag.vrstaVpisa = new SelectList(db.sifrant_vrstavpisa, "id", "naziv");
             return View(zeton);
         }
 
@@ -71,12 +71,13 @@ namespace studis
             {
                 return HttpNotFound();
             }
-            ViewBag.vrstaStudija = new SelectList(db.sifrant_klasius, "id", "naziv", zeton.vrstaStudija);
-            ViewBag.letnik = new SelectList(db.sifrant_letnik, "id", "naziv", zeton.letnik);
-            ViewBag.oblikaStudija = new SelectList(db.sifrant_oblikastudija, "id", "naziv", zeton.oblikaStudija);
-            ViewBag.studijskiProgram = new SelectList(db.sifrant_studijskiprogram, "id", "naziv", zeton.studijskiProgram);
-            ViewBag.vrstaVpisa = new SelectList(db.sifrant_vrstavpisa, "id", "naziv", zeton.vrstaVpisa);
-            ViewBag.vpisnaStevilka = new SelectList(db.students, "vpisnaStevilka", "ime", zeton.vpisnaStevilka);
+            ViewBag.vrstaStudijaVB = new SelectList(db.sifrant_klasius.OrderBy(a => a.id != 16204).ThenBy(b => b.id), "id", "naziv");
+            ViewBag.letnikVB = new SelectList(db.sifrant_letnik.OrderBy(a => a.naziv != "Prvi").ThenBy(b => b.id), "id", "naziv");
+            ViewBag.oblikaStudijaVB = new SelectList(db.sifrant_oblikastudija, "id", "naziv");
+            ViewBag.studijskiProgramVB = new SelectList(db.sifrant_studijskiprogram.OrderBy(a => a.id != 1000468).ThenBy(a => a.naziv), "id", "naziv");
+            ViewBag.vrstaVpisaVB = new SelectList(db.sifrant_vrstavpisa, "id", "naziv");
+            ViewBag.vpisnaStevilkaVB = new SelectList(db.students, "vpisnaStevilka", "ime", zeton.vpisnaStevilka);
+
             return View(zeton);
         }
 
@@ -97,11 +98,11 @@ namespace studis
             {
                 ModelState.AddModelError("err", "Napaka pri enem izmed polj");
             }
-            ViewBag.vrstaStudija = new SelectList(db.sifrant_klasius, "id", "naziv", zeton.vrstaStudija);
-            ViewBag.letnik = new SelectList(db.sifrant_letnik, "id", "naziv", zeton.letnik);
-            ViewBag.oblikaStudija = new SelectList(db.sifrant_oblikastudija, "id", "naziv", zeton.oblikaStudija);
-            ViewBag.studijskiProgram = new SelectList(db.sifrant_studijskiprogram, "id", "naziv", zeton.studijskiProgram);
-            ViewBag.vrstaVpisa = new SelectList(db.sifrant_vrstavpisa, "id", "naziv", zeton.vrstaVpisa);
+            ViewBag.vrstaStudija = new SelectList(db.sifrant_klasius.OrderBy(a => a.id != 16204).ThenBy(b => b.id), "id", "naziv");
+            ViewBag.letnik = new SelectList(db.sifrant_letnik.OrderBy(a => a.naziv != "Prvi").ThenBy(b => b.id), "id", "naziv");
+            ViewBag.oblikaStudija = new SelectList(db.sifrant_oblikastudija, "id", "naziv");
+            ViewBag.studijskiProgram = new SelectList(db.sifrant_studijskiprogram.OrderBy(a => a.id != 1000468).ThenBy(a => a.naziv), "id", "naziv");
+            ViewBag.vrstaVpisa = new SelectList(db.sifrant_vrstavpisa, "id", "naziv");
             ViewBag.vpisnaStevilka = new SelectList(db.students, "vpisnaStevilka", "ime", zeton.vpisnaStevilka);
             return View(zeton);
         }

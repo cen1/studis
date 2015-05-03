@@ -1,0 +1,13 @@
+﻿
+@{
+    ViewBag.Title = "Izbira letnika za urejanje";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Izbira letnika za urejanje</h2>
+
+<fieldset>
+    <br />
+    <p>@Html.ActionLink("Drugi letnik", "UrediPredmetnik2", "VpisniList", new { id = ViewBag.Id }, null)</p>
+    <p>@Html.ActionLink("Tretji letnik", "UrediPredmetnik3", "VpisniList", new { id = ViewBag.Id }, null)</p>
+</fieldset>

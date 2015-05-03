@@ -1,0 +1,58 @@
+﻿@model studis.Models.TretjiPredmetnikModuliModel
+
+@{
+    ViewBag.Title = "Predmetnik za 3 letnik - izbira modulov";
+}
+
+<h2>Predmetnik za 3 letnik</h2>
+
+@if (Session["error"] != null)
+{
+    <span style="color: red; font-weight: bold">@Session["error"]</span>
+}
+
+
+<p>Obvezni predmeti</p>
+
+@using (Html.BeginForm())
+{
+
+    <ul>
+        @foreach (var item in ViewBag.obvezniPredmeti)
+        {
+            <li>@item.ime <span>.. @item.kreditne KT</span></li>
+        }
+    </ul>
+
+    <hr />
+    <p style="font-weight: bold">Obvezni predmeti skupaj dajo @ViewBag.sumObv kreditnih točk</p>
+    <p style="font-weight: bold">Izbrati morate še o @ViewBag.sumIzb kreditnih točk iz izbirnih predmetov, dva modula in en izbirni predmet.</p>
+
+
+    <p>Izbirni predmeti</p>
+    foreach (var modul in ViewBag.moduli)
+    {
+        <div style="font-weight: bold">
+            <input type="checkbox" name="modul_@modul.id" value="@modul.id"> @modul.ime
+        </div>
+        foreach (var predmet in modul.predmets)
+        {
+            <div>
+                @predmet.ime
+                .. @predmet.kreditne KT<br />
+            </div>
+        }
+    }
+
+    <div class="editor-label">
+        @Html.LabelFor(m => m.izbirni)
+    </div>
+    <div class="editor-field">
+        @Html.DropDownListFor(m => m.izbirni, (SelectList)ViewBag.izbirniPredmeti)
+        @Html.ValidationMessageFor(m => m.izbirni)
+    </div>
+
+    
+
+    <input type="submit" value="Zaključi">
+}

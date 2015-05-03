@@ -1,0 +1,259 @@
+﻿
+@{
+    ViewBag.Title = "Potrditev";
+}
+
+@model studis.Models.VpisniListModel
+
+<style>
+        table.prva {
+            width: 50%;
+            table-layout: fixed;
+        }
+        table.druga {
+            width: 50%;
+            table-layout: fixed;
+        }
+        table.tretja {
+            width: 50%;
+            table-layout: fixed;
+        }
+        table.tretja th {
+            width: 25%;
+        }
+        table.tretja td {
+            width: 25%;
+        }
+        table.peta {
+            width: 50%;
+        }
+        table.sesta {
+            width: 50%;
+        }
+        table.sedma {
+            width: 50%;
+            table-layout: fixed;
+        }
+        table.sedma th {
+            width: 25%;
+        }
+        table.sedma td {
+            width: 25%;
+        }
+        table.dovoli {
+             width: 50%;
+             table-layout: fixed;
+        }
+        table.dovoli td {
+            width: 25%;
+            text-align: center;
+        }
+</style>
+
+<br />
+<h2>Vpisni list @Html.DisplayFor(m => m.studijskoLeto)</h2>
+<table class="prva">
+    <tbody>
+        <tr>
+            <th>Vpisna številka</th>
+            <td>@ViewBag.Vpisna</td>
+        </tr>
+        <tr>
+            <th>Priimek in ime</th>
+            <td>@Html.DisplayFor(m => m.priimek), @Html.DisplayFor(m => m.ime)</td>
+        </tr>
+        <tr>
+            <th>Datum rojstva</th>
+            <td>@ViewBag.DatumRojstva</td>
+        </tr>
+        <tr>
+            <th>Kraj rojstva</th>
+            <td>@Html.DisplayFor(m => m.krajRojstva)</td>
+        </tr>
+        <tr>
+            <th>Občina rojstva</th>
+            <td>@ViewBag.ObcinaRojstva</td>
+        </tr>
+        <tr>
+            <th>Država rojstva</th>
+            <td>@ViewBag.DrzavaRojstva</td>
+        </tr>
+        <tr>
+            <th>Državljanstvo</th>
+            <td>@ViewBag.Drzavljanstvo</td>
+        </tr>
+        <tr>
+            <th>Spol</th>
+            <td>@ViewBag.Spol</td>
+        </tr>
+        <tr>
+            <th>EMŠO</th>
+            <td>@Html.DisplayFor(m => m.emso)</td>
+        </tr>
+        <tr>
+            <th>Davčna številka</th>
+            <td>@Html.DisplayFor(m => m.davcnaStevilka)</td>
+        </tr>
+        <tr>
+            <th>e-pošta</th>
+            <td>@Html.DisplayFor(m => m.email)</td>
+        </tr>
+        <tr>
+            <th>Prenosni telefon</th>
+            <td>@Html.DisplayFor(m => m.prenosniTelefon)</td>
+        </tr>
+        <tr>
+            <th colspan="2">Stalno bivališče</th>
+        </tr>
+        <tr>
+            <th>Naslov</th>
+            <td>@Html.DisplayFor(m => m.naslov)</td>
+        </tr>
+        <tr>
+            <th>Pošta in poštna številka</th>
+            <td>@ViewBag.PostnaStevilka @ViewBag.Posta</td>
+        </tr>
+        <tr>
+            <th>Občina</th>
+            <td>@ViewBag.Obcina</td>
+        </tr>
+        <tr>
+            <th>Država</th>
+            <td>@ViewBag.Drzava</td>
+        </tr>
+        <tr>
+            <th>Vročanje</th>
+            <td>@ViewBag.Vrocanje</td>
+        </tr>
+        <tr>
+            <th colspan="2">Začasno bivališče</th>
+        </tr>
+        <tr>
+            <th>Naslov</th>
+            <td>@Html.DisplayFor(m => m.naslovZacasni)</td>
+        </tr>
+        <tr>
+            <th>Pošta in poštna številka</th>
+            <td>@ViewBag.PostnaStevilkaZacasni @ViewBag.PostaZacasni</td>
+        </tr>
+        <tr>
+            <th>Občina</th>
+            <td>@ViewBag.ObcinaZacasni</td>
+        </tr>
+        <tr>
+            <th>Država</th>
+            <td>@ViewBag.DrzavaZacasni</td>
+        </tr>
+        <tr>
+            <th>Vročanje</th>
+            <td>@ViewBag.VrocanjeZacasni</td>
+        </tr>
+    </tbody>
+</table>
+
+<h2>Podatki o vpisu</h2>
+<table class="druga">
+    <tbody>
+        <tr>
+            <th>Študijski program</th>
+            <td>@ViewBag.StudijskiProgram</td>
+        </tr>
+        <tr>
+            <th>Smer/usmeritev/modul/znanstveno področje</th>
+            <td>@Html.DisplayFor(m => m.smer)</td>
+        </tr>
+        <tr>
+            <th>Kraj izvajanja študija</th>
+            <td>@ViewBag.KrajIzvajanja</td>
+        </tr>
+        <tr>
+            <th>Izbirna skupina</th>
+            <td>@ViewBag.IzbirnaSkupina</td>
+        </tr>
+
+        <tr>
+            <th>Vrsta študija</th>
+            <td>@ViewBag.VrstaStudija</td>
+        </tr>
+        <tr>
+            <th>Vrsta vpisa</th>
+            <td>@ViewBag.VrstaVpisa</td>
+        </tr>
+        <tr>
+            <th>Letnik/dodatno leto</th>
+            <td>@ViewBag.LetnikStudija</td>
+        </tr>
+        <tr>
+            <th>Način in oblika študija</th>
+            <td>@ViewBag.NacinStudija, @ViewBag.OblikaStudija</td>
+        </tr>
+        <tr>
+            <th>Študijsko leto</th>
+            <td>@Html.DisplayFor(m => m.studijskoLeto)</td>
+        </tr>
+    </tbody>
+</table>
+
+<br />
+<h2>Predmetnik</h2>
+<table class="peta">
+    <tbody>
+        <tr>
+            <th colspan="3">Študijski program</th>
+        </tr>
+        <tr>
+            <td colspan="3">@ViewBag.StudijskiProgram</td>
+        </tr>
+        <tr>
+            <th>Koda</th>
+            <th>Učna enota</th>
+            <th>Število KT</th>
+        </tr>
+        @foreach (var data in @ViewBag.Predmeti)
+        {
+            <tr>
+                <td>@data.predmet.koda</td>
+                <td>@data.predmet.ime</td>
+                <td>@data.predmet.kreditne</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<br />
+@if(@ViewBag.StudijskiProgram2 != null) {
+    <table class="sesta">
+        <tbody>
+            <tr>
+                <th colspan="3">Študijski program</th>
+            </tr>
+            <tr>
+                <td colspan="3">@ViewBag.StudijskiProgram2</td>
+            </tr>
+            <tr>
+                <th>Koda</th>
+                <th>Učna enota</th>
+                <th>Število KT</th>
+            </tr>
+            <tr>
+                <td>/</td>
+                <td>/</td>
+                <td>/</td>
+            </tr>
+        </tbody>
+    </table>
+}
+<br />
+<br />
+@using (Html.BeginForm("Izpis", "Potrditev", new { id = ViewBag.id }, FormMethod.Post, null))
+{
+    <div>
+        <b>Število potrdil za tiskanje:   </b>
+        @Html.DropDownList("Selektor", new SelectList(new[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" }))
+    </div>
+    
+    <br />
+    
+    <input type="submit" value="Potrdi in tiskaj" />
+
+}

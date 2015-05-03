@@ -46,13 +46,12 @@ namespace studis.Models
             return db.predmets.Where(a => a.letnik == 3).Where(b => b.obvezen == false);
         }
 
-        public bool preveriIzbirne3(List<modul> moduli, List<predmet> predmeti)
+        public bool preveriIzbirne3(List<modul> moduli, predmet pr)
         {
             foreach (var m in moduli)
             {
                 foreach (var p in m.predmets)
                 {
-                    foreach (var pr in predmeti)
                         if (pr.id == p.id) return false; //izbirni predmet je tudi v izbranem modulu, napaka
                 }
             }
@@ -84,6 +83,24 @@ namespace studis.Models
 
             if (sum != 60) return false;
             else return true;
+        }
+
+        public int getKreditObv2()
+        {
+            int sumObv = 0;
+            foreach (var pr in this.obvezni2())
+                sumObv += pr.kreditne;
+
+            return sumObv;
+        }
+
+        public int getKreditObv3()
+        {
+            int sumObv = 0;
+            foreach (var pr in this.obvezni3())
+                sumObv += pr.kreditne;
+
+            return sumObv;
         }
     }
 }

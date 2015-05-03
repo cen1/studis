@@ -1,0 +1,32 @@
+﻿
+@{
+    ViewBag.Title = "Seznam Vpisov";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Seznam Nepotrjenih Vpisov</h2>
+
+@if (ViewBag.vpisi != null)
+{
+    <table>
+        <tr>
+            <th>Letnik</th>
+            <th>Študijsko leto</th>
+            <th>Program</th>
+            <th>Vrsta vpisa</th>
+            <th>Potrdi</th>
+        </tr>
+        @foreach (var v in ViewBag.vpisi)
+        {
+            <tr>
+                <td>@v.letnikStudija</td>
+                <td>@v.studijskoLeto</td>
+                <td>@v.sifrant_studijskiprogram.naziv</td>
+                <td>@v.sifrant_vrstavpisa.naziv</td>
+                <td>
+                    <a href="~/Potrditev/Potrditev/@v.id">Potrdi</a>
+                </td>
+            </tr>
+        }
+    </table>
+}
