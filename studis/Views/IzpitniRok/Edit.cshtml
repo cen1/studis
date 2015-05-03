@@ -114,7 +114,7 @@
     //naponi datum
     $(document).ready(function () {
         $("#predmet").change(function () {
-            $.get("/IzpitniRok/GetProfesorsForPredmet/" + $(this).val(), function (response) {
+            $.get("/IzpitniRok/GetDatumForIzpitniRok/" + $(this).val(), function (response) {
                 var datum = $.parseJSON(response);
                 $("#datum").val(datum);
             });
