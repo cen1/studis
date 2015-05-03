@@ -201,7 +201,7 @@ namespace studis.Models
             }
 
             //preveri ce res obstaja studijsko leto prvega vpisa
-            vpi slpv = db.vpis.Where(a => a.studijskiProgram == vlm.studijskiProgram).Where(b => b.letnikStudija == vlm.letnikStudija).First();
+            vpi slpv = db.vpis.Where(a => a.studijskiProgram == vlm.studijskiProgram).Where(b => b.letnikStudija == vlm.letnikStudija).FirstOrDefault();
             if (slpv != null) {
                 if (vlm.studijskoLetoPrvegaVpisa != slpv.studijskoLeto)
                 {

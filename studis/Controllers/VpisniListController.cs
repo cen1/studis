@@ -516,7 +516,10 @@ namespace studis.Controllers
             PredmetHelper ph = new PredmetHelper();
             int kreditne = 60 - ph.getKreditObv2();
             List<predmet> dodaj_p = new List<predmet>();
-            
+
+            int num_prosto = 0;
+            int num_strok = 0;
+
             foreach(string key in Request.Form) {
                 if (key.StartsWith("prosto_")) {
                     int k = Convert.ToInt32(Request.Form[key]);
@@ -524,6 +527,7 @@ namespace studis.Controllers
                     if (p != null) {
                         dodaj_p.Add(p);
                         kreditne -= p.kreditne;
+                        num_prosto++;
                     }
                 }
                 else if (key == "strokovni")
@@ -533,8 +537,15 @@ namespace studis.Controllers
                     if (p != null) {
                         dodaj_p.Add(p);
                         kreditne -= p.kreditne;
+                        num_strok++;
                     }
                 }
+            }
+
+            if (num_strok == 0 || num_prosto == 0)
+            {
+                Session["error"] = "Izbrati morate vsaj en strokovno ali prosto izbirni predmet";
+                return RedirectToAction("DrugiPredmetnik", new { id = id });
             }
 
             if (kreditne == 0) {
