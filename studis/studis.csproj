@@ -314,6 +314,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Studis.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Models\TretjiPredmetnikModuliModel.cs" />
+    <Compile Include="Models\TretjiPredmetnikProstiModel.cs" />
     <Compile Include="Models\UserHelper.cs" />
     <Compile Include="Models\UserModels.cs" />
     <Compile Include="Models\Validate.cs" />
@@ -499,6 +501,8 @@
     <Content Include="Views\Potrditev\Napaka.cshtml" />
     <Content Include="Views\Shared\_PdfPotrdilaLayout.cshtml" />
     <Content Include="Views\Potrditev\Potrditev.cshtml" />
+    <Content Include="Views\VpisniList\TretjiPredmetnikProsti.cshtml" />
+    <Content Include="Views\VpisniList\TretjiPredmetnikModuli.cshtml" />
     <Content Include="Views\IzpitniRok\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>

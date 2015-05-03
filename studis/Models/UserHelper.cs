@@ -78,6 +78,8 @@ namespace studis.Models
         public bool preveriPovprecje(student s)
         {
             vpi vp = s.vpis.Where(a => a.letnikStudija == 2).Last();
+            if (vp == null) return false;
+
             double sum = 0;
             int cnt = 0;
             foreach (var o in vp.ocenas)
@@ -196,12 +198,12 @@ namespace studis.Models
         {
             if (v.studentinpredmets.Count() == 0)
             {
-                System.Diagnostics.Debug.WriteLine("Vzpostavljen za " + v.id.ToString() + " je false");
+                //System.Diagnostics.Debug.WriteLine("Vzpostavljen za " + v.id.ToString() + " je false");
                 return false;
             }
             else
             {
-                System.Diagnostics.Debug.WriteLine("Vzpostavljen za " + v.id.ToString() + " je true");
+                //System.Diagnostics.Debug.WriteLine("Vzpostavljen za " + v.id.ToString() + " je true");
                 return true;
             }
         }
