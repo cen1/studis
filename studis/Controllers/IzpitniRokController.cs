@@ -43,7 +43,7 @@ namespace studis.Controllers
         public ActionResult Dodaj(IzpitniRokModel model)
         {
             IzpitniRok izpitniRok = new IzpitniRok();
-            izpitniRok.datum = model.datum;
+            izpitniRok.datum = UserHelper.StringToDate(model.datum);
             izpitniRok.predmet = db.predmets.SingleOrDefault(v => v.id == model.predmet);
             izpitniRok.profesors.Add(db.profesors.SingleOrDefault(p => p.id == model.profesor));
             try
@@ -86,7 +86,7 @@ namespace studis.Controllers
         public ActionResult Edit(IzpitniRokModel model)
         {
             IzpitniRok izpitniRok = new IzpitniRok();
-            izpitniRok.datum = model.datum;
+            izpitniRok.datum = UserHelper.StringToDate(model.datum);
             izpitniRok.predmet = db.predmets.SingleOrDefault(v => v.id == model.predmet);
             izpitniRok.profesors.Add(db.profesors.SingleOrDefault(p => p.id == model.profesor));
             try
@@ -162,11 +162,13 @@ namespace studis.Controllers
             return "";
         }
 
-        public JsonResult PreveriDatum(DateTime datum)
+        public JsonResult PreveriDatum(string datum)
         {
-            Debug.WriteLine("Datum: " + datum);
-            var result = Validate.veljavenDatum(datum);
-            if (datum < DateTime.Today)
+            Debug.WriteLine("datum: " + datum);
+            DateTime d = UserHelper.StringToDate(datum);
+            Debug.WriteLine("Datum: " + d);
+            var result = Validate.veljavenDatum(d);
+            if (d < DateTime.Today)
             {
                 result = false;
             }

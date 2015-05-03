@@ -9,19 +9,20 @@ namespace studis.Models
 {
     public class IzpitniRokModel
     {
+        [Required(ErrorMessage = "Obvezno izbrati.")]
         [Display(Name = "Izpitni rok")]
         public int id { get; set; }
 
         [Remote("PreveriDatum", "IzpitniRok", HttpMethod = "POST", ErrorMessage = "Datum ne sme biti v preteklosti.")]
         [Required(ErrorMessage = "Obvezno izpolniti.")]
-        [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{dd.MM.yyyy}")]//, ApplyFormatInEditMode = true)]
         [Display(Name = "Datum")]
-        public DateTime datum { get; set; }
+        public string datum { get; set; }
 
+        [Required(ErrorMessage = "Obvezno izbrati.")]
         [Display(Name = "Predmet")]
         public int predmet { get; set; }
 
+        [Required(ErrorMessage = "Obvezno izbrati.")]
         [Display(Name = "Profesor")]
         public int profesor { get; set; }
 
