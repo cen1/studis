@@ -191,6 +191,31 @@ namespace studis.Models
             if (vlm.vrocanje && vlm.vrocanjeZacasni) napake.Add("Izberite le en naslov za vročanje");
             if (!vlm.vrocanje && !vlm.vrocanjeZacasni) napake.Add("Izberite vsaj en naslov za vročanje");
 
+            //preveri da so izpolnjeni vsi ali noben podatek o zacasnem
+            if (vlm.naslovZacasni != null || vlm.obcinaZacasni != null || vlm.postnaStevilkaZacasni != null || vlm.drzavaZacasni != null || vlm.vrocanjeZacasni != null)
+            {
+                if (vlm.naslovZacasni == null || vlm.obcinaZacasni == null || vlm.postnaStevilkaZacasni == null || vlm.drzavaZacasni == null)
+                {
+                    napake.Add("Izpolnjeni morajo biti vsi podatki o začasnem prebivališču");
+                }
+            }
+
+            //preveri ce res obstaja studijsko leto prvega vpisa
+            vpi slpv = db.vpis.Where(a => a.studijskiProgram == vlm.studijskiProgram).Where(b => b.letnikStudija == vlm.letnikStudija).First();
+            if (slpv != null) {
+                if (vlm.studijskoLetoPrvegaVpisa != slpv.studijskoLeto)
+                {
+                    napake.Add("Študijsko leto prvega vpisa je napačno (nimate vpisa iz tistega leta)");
+                }
+            }
+            else
+            {
+                if (vlm.studijskoLetoPrvegaVpisa != DateTime.Now.Year)
+                {
+                    napake.Add("Študijsko leto prvega vpisa je lahko le letošnje");
+                }
+            }
+
             return napake;
         }
 
