@@ -21,7 +21,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.letnik, "Letnik", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownListFor(model => model.letnik, (SelectList)ViewBag.letnik)
+                @Html.DropDownListFor(model => model.letnik, (SelectList)ViewBag.letnikVB)
                 @Html.ValidationMessageFor(model => model.letnik, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -29,7 +29,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.studijskiProgram, "Študijski program", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownListFor(model => model.studijskiProgram, (SelectList)ViewBag.studijskiProgram)
+                @Html.DropDownListFor(model => model.studijskiProgram, (SelectList)ViewBag.studijskiProgramVB)
                 @Html.ValidationMessageFor(model => model.studijskiProgram, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -47,7 +47,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.vrstaVpisa, "Vrsta vpisa", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownListFor(model => model.vrstaVpisa, (SelectList)ViewBag.vrstaVpisa)
+                @Html.DropDownListFor(model => model.vrstaVpisa, (SelectList)ViewBag.vrstaVpisaVB)
                 @Html.ValidationMessageFor(model => model.vrstaVpisa, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -55,7 +55,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.vrstaStudija, "Vrsta Študija", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownListFor(model => model.vrstaStudija, (SelectList)ViewBag.vrstaStudija)
+                @Html.DropDownListFor(model => model.vrstaStudija, (SelectList)ViewBag.vrstaStudijaVB)
                 @Html.ValidationMessageFor(model => model.vrstaStudija, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -63,7 +63,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.oblikaStudija, "Oblika Študija", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownListFor(model => model.oblikaStudija, (SelectList)ViewBag.oblikaStudija)
+                @Html.DropDownListFor(model => model.oblikaStudija, (SelectList)ViewBag.oblikaStudijaVB)
                 @Html.ValidationMessageFor(model => model.oblikaStudija, "", new { @class = "text-danger" })
             </div>
         </div>

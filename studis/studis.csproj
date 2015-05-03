@@ -509,6 +509,7 @@
     <Content Include="Views\VpisniList\IzbiraLetnika.cshtml" />
     <Content Include="Views\VpisniList\UrediPredmetnik3Prosti.cshtml" />
     <Content Include="Views\VpisniList\UrediPredmetnik3Moduli.cshtml" />
+    <Content Include="Views\Potrditev\SeznamVpisov.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

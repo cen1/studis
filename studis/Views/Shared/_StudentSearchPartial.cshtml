@@ -40,7 +40,7 @@
             }
             @if (User.IsInRole("Referent"))
             {
-                <td>@Html.ActionLink("Potrditev", "Potrditev", "Potrditev", new { id = item.vpisnaStevilka }, null)</td>
+                <td>@Html.ActionLink("Seznam Vpisov", "SeznamVpisov", "Potrditev", new { id = item.vpisnaStevilka }, null)</td>
             }
     </tr>
     }
