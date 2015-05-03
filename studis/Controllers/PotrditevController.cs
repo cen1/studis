@@ -189,20 +189,6 @@ namespace studis.Controllers
         [HttpPost]
         public ActionResult Izpis(int id, string Selektor)
         {
-            if (id > 60000000)
-            {
-                try
-                {
-                    var tmp = db.vpis.Single(v => v.vpisnaStevilka == id);
-                    id = tmp.id;
-                }
-                catch
-                {
-                    TempData["Napaka"] = "Študent nima na voljo vpisega lista za potrditev";
-                    return RedirectToAction("Napaka");
-                }
-
-            }
             var list = db.vpis.SingleOrDefault(v => v.id == id);
             
             // preveri če vpisni list obstaja
