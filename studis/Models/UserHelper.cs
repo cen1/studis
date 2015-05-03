@@ -216,6 +216,21 @@ namespace studis.Models
             if (v.letnikStudija == 3) r += "TretjiPredmetnik";
             return r;
         }
+
+        public string DateToString(DateTime datum)
+        {
+            return datum.Day + "." + datum.Month + "." + datum.Year;
+        }
+
+        //dd.MM.yyyy
+        public DateTime StringToDate(string datum)
+        {
+            char[] delimiters = { '.', '/' };
+            string[] stevilke = datum.Split(delimiters);
+            DateTime date = new DateTime(Convert.ToInt32(stevilke[2]), Convert.ToInt32(stevilke[1]), Convert.ToInt32(stevilke[0]));
+
+            return date;
+        }
     }
 
 }
