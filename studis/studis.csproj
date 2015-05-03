@@ -353,6 +353,7 @@
     <Content Include="bin\System.Web.WebPages.Razor.dll" />
     <Content Include="bin\WebMatrix.Data.dll" />
     <Content Include="bin\WebMatrix.WebData.dll" />
+    <Content Include="Content\images\fri.png" />
     <Content Include="Content\images\indeks.png" />
     <Content Include="Content\themes\base\accordion.css" />
     <Content Include="Content\themes\base\all.css" />
@@ -504,6 +505,9 @@
     <Content Include="Views\VpisniList\TretjiPredmetnikProsti.cshtml" />
     <Content Include="Views\VpisniList\TretjiPredmetnikModuli.cshtml" />
     <Content Include="Views\IzpitniRok\Edit.cshtml" />
+    <Content Include="Views\VpisniList\UrediPredmetnik2.cshtml" />
+    <Content Include="Views\VpisniList\IzbiraLetnika.cshtml" />
+    <Content Include="Views\VpisniList\UrediPredmetnik3.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

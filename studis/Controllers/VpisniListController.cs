@@ -416,6 +416,83 @@ namespace studis.Controllers
                 return RedirectToAction("NeznanPredmetnik", "VpisniList");
         }
 
+        [Authorize(Roles = "Referent")]
+        public ActionResult IzbiraLetnika(int id)
+        {
+            ViewBag.Id = id;
+            return View();
+        }
+
+        [Authorize(Roles = "Referent")]
+        public ActionResult UrediPredmetnik2(int id)
+        {
+            // klic z vpisno stevilko
+            if (id > 60000000)
+            {
+                try
+                {
+                    var tmp = db.vpis.Where(v => v.vpisnaStevilka == id && v.letnikStudija == 2).ToList();
+                    id = tmp.Last().id;
+                }
+                catch
+                {
+                    TempData["Napaka"] = "Študent nima izpolnjenega vpisnega lista za 3. letnik!";
+                    return RedirectToAction("Napaka");
+                }
+            }
+
+            var list = db.vpis.SingleOrDefault(v => v.id == id);
+
+            // logika za prikaz predmetov za urejanje
+
+            return View();
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Referent")]
+        public ActionResult UrediPredmetnik2(int id)
+        {
+
+            // validacija
+
+            return View();
+        }
+
+        [Authorize(Roles = "Referent")]
+        public ActionResult UrediPredmetnik3(int id)
+        {
+            // klic z vpisno stevilko
+            if (id > 60000000)
+            {
+                try
+                {
+                    var tmp = db.vpis.Where(v => v.vpisnaStevilka == id && v.letnikStudija == 3).ToList();
+                    id = tmp.Last().id;
+                }
+                catch
+                {
+                    TempData["Napaka"] = "Študent nima izpolnjenega vpisnega lista za 3. letnik!";
+                    return RedirectToAction("Napaka");
+                }
+            }
+
+            var list = db.vpis.SingleOrDefault(v => v.id == id);
+
+            // logika za prikaz predmetov za urejanje
+
+            return View();
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Referent")]
+        public ActionResult UrediPredmetnik3(int id)
+        {
+
+            // validacija
+
+            return View();
+        }
+
         public ActionResult PrviPredmetnik(int id)
         {
             //preveri ce vpisni sploh obstaja
@@ -516,7 +593,10 @@ namespace studis.Controllers
             PredmetHelper ph = new PredmetHelper();
             int kreditne = 60 - ph.getKreditObv2();
             List<predmet> dodaj_p = new List<predmet>();
-            
+
+            int num_prosto = 0;
+            int num_strok = 0;
+
             foreach(string key in Request.Form) {
                 if (key.StartsWith("prosto_")) {
                     int k = Convert.ToInt32(Request.Form[key]);
@@ -524,6 +604,7 @@ namespace studis.Controllers
                     if (p != null) {
                         dodaj_p.Add(p);
                         kreditne -= p.kreditne;
+                        num_prosto++;
                     }
                 }
                 else if (key == "strokovni")
@@ -533,8 +614,15 @@ namespace studis.Controllers
                     if (p != null) {
                         dodaj_p.Add(p);
                         kreditne -= p.kreditne;
+                        num_strok++;
                     }
                 }
+            }
+
+            if (num_strok == 0 || num_prosto == 0)
+            {
+                Session["error"] = "Izbrati morate vsaj en strokovno ali prosto izbirni predmet";
+                return RedirectToAction("DrugiPredmetnik", new { id = id });
             }
 
             if (kreditne == 0) {

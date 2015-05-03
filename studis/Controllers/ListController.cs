@@ -18,19 +18,34 @@ namespace studis.Controllers
 
         public ActionResult Pdf(int id)
         {
+            // klic z vpisno stevilko
             if (id > 60000000)
             {
                 try
                 {
-                    var tmp = db.vpis.Single(v => v.vpisnaStevilka == id);
-                    id = tmp.id;
+                    var tmp = db.vpis.Where(v => v.vpisnaStevilka == id && v.potrjen == false && v.studijskoLeto == DateTime.Now.Year).ToList();
+                    var compare = db.vpis.Where(v => v.vpisnaStevilka == id && v.studijskoLeto == DateTime.Now.Year).ToList();
+
+                    // ali je vseh za to studijsko leto enako kot nepotrjenih
+                    if (compare.Count() == tmp.Count())
+                    {
+                        var last = tmp.Last();
+                        id = last.id;
+                    }
+                    else
+                    {
+                        TempData["Napaka"] = "Vpisni list za študenta je že potrjen!";
+                        return RedirectToAction("ListEmpty");
+                    }
+
                 }
                 catch
                 {
+                    TempData["Napaka"] = "Študent nima izpolnjenega vpisega lista za tekoče leto!";
                     return RedirectToAction("ListEmpty");
                 }
-                
             }
+
             var list = db.vpis.SingleOrDefault(v => v.id == id);
             
 
@@ -133,6 +148,11 @@ namespace studis.Controllers
                 ViewBag.Vpisna = list.vpisnaStevilka;
                 ViewBag.DatumRojstva = list.student.datumRojstva.ToString("dd.MM.yyyy");
 
+                if (list.smer != null)
+                {
+                    ViewBag.Smer = list.sifrant_smer.naziv;
+                }
+
                 if (Convert.ToBoolean(list.student.vrocanje))
                 {
                     ViewBag.Vrocanje = "DA";
@@ -159,6 +179,7 @@ namespace studis.Controllers
             }
             catch
             {
+                TempData["Napaka"] = "Nekateri obvezni podatki niso izpolnjeni!";
                 return RedirectToAction("ListEmpty");
             }
         }
@@ -171,6 +192,7 @@ namespace studis.Controllers
 
         public ActionResult ListEmpty()
         {
+            ViewBag.Message = TempData["Napaka"];
             return View();
         }
     }
