@@ -513,6 +513,7 @@
     <Content Include="Views\IzpitniRok\UspesnoDodan.cshtml" />
     <Content Include="Views\IzpitniRok\UspesnoSpremenjen.cshtml" />
     <Content Include="Views\IzpitniRok\UspesnoIzbrisan.cshtml" />
+    <Content Include="Views\IzpitniRok\Izbrisi.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
