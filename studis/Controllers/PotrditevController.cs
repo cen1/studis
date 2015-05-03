@@ -19,16 +19,30 @@ namespace studis.Controllers
         // izpis vpisnega lista
         public ActionResult Potrditev(int id)
         {
+            // klic z vpisno stevilko
             if (id > 60000000)
             {
                 try
                 {
-                    var tmp = db.vpis.SingleOrDefault(v => v.vpisnaStevilka == id && v.potrjen == false);
-                    id = tmp.id;
+                    var tmp = db.vpis.Where(v => v.vpisnaStevilka == id && v.potrjen == false && v.studijskoLeto == DateTime.Now.Year).ToList();
+                    var compare = db.vpis.Where(v => v.vpisnaStevilka == id && v.studijskoLeto == DateTime.Now.Year).ToList();
+
+                    // ali je vseh za to studijsko leto enako kot nepotrjenih
+                    if (compare.Count() == tmp.Count())
+                    {
+                        var last = tmp.Last();
+                        id = last.id;
+                    }
+                    else
+                    {
+                        TempData["Napaka"] = "Vpisni list za to študijsko leto je že potrjen";
+                        return RedirectToAction("Napaka");
+                    }
+                    
                 }
                 catch
                 {
-                    TempData["Napaka"] = "Študent nima na voljo vpisega lista za potrditev";
+                    TempData["Napaka"] = "Študent nima vpisega lista za potrditev";
                     return RedirectToAction("Napaka");
                 }
             }
