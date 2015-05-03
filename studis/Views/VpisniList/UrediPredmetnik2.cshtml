@@ -1,9 +1,44 @@
-﻿@{
+﻿@model studis.Models.DrugiPredmetnikModel
+
+@{
     ViewBag.Title = "Uredi predmetnik";
 }
 
 <h2>Uredi predmetnik 2. letnika</h2>
 
-<fieldset>
-    <p>Predmetnik za 2. letnik</p>
-</fieldset>
+@if (Session["error"] != null)
+{
+    <span style="color: red; font-weight: bold">@Session["error"]</span>
+}
+
+
+<p>Obvezni predmeti</p>
+
+@using (Html.BeginForm())
+{
+    <hr />
+    <p style="font-weight: bold">Obvezni predmeti skupaj dajo @ViewBag.sumObv kreditnih točk</p>
+    <p style="font-weight: bold">Izbrati morate še @ViewBag.sumIzb kreditnih točk iz izbirnih predmetov, vsaj en mora biti strokovno izbirni in vsaj en prosto izbirni.</p>
+
+
+    <p>Strokovno izbirni predmeti</p>
+    foreach (var item in ViewBag.strokovnoPredmeti)
+    {
+        <span>
+            <input type="radio" name="strokovni" value="@item.id"> @item.ime .. @item.kreditne KT<br />
+        </span>
+    }
+
+    <p>Prosto izbirni predmet</p>
+    foreach (var item in ViewBag.prostoPredmeti)
+    {
+        <span>
+            <input type="checkbox" name="prosto_@item.id" value="@item.id"> @item.ime .. @item.kreditne KT<br />
+        </span>
+    }
+    @Html.HiddenFor(m => m.vlid)
+    
+    <br />
+
+    <input type="submit" value="Spremeni">
+}
