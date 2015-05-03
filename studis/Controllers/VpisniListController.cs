@@ -470,7 +470,7 @@ namespace studis.Controllers
             //}
         }
 
-        [HttpPost]
+        /*[HttpPost]
         [Authorize(Roles = "Referent")]
         public ActionResult UrediPredmetnik2(DrugiPredmetnikModel model, int id)
         {
@@ -478,7 +478,7 @@ namespace studis.Controllers
             // validacija
 
             return View();
-        }
+        }*/
 
         [Authorize(Roles = "Referent")]
         public ActionResult UrediPredmetnik3(int id)
@@ -557,7 +557,7 @@ namespace studis.Controllers
             return View();
         }
 
-        [HttpPost]
+        /*[HttpPost]
         [Authorize(Roles = "Referent")]
         public ActionResult UrediPredmetnik3Prosti(TretjiPredmetnikProstiModel model, int id)
         {
@@ -605,7 +605,7 @@ namespace studis.Controllers
             // validacija
 
             return View();
-        }
+        }*/
 
         public ActionResult PrviPredmetnik(int id)
         {

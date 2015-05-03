@@ -77,6 +77,7 @@ namespace studis
             ViewBag.studijskiProgram = new SelectList(db.sifrant_studijskiprogram.OrderBy(a => a.id != 1000468).ThenBy(a => a.naziv), "id", "naziv");
             ViewBag.vrstaVpisa = new SelectList(db.sifrant_vrstavpisa, "id", "naziv");
             ViewBag.vpisnaStevilka = new SelectList(db.students, "vpisnaStevilka", "ime", zeton.vpisnaStevilka);
+
             return View(zeton);
         }
 
