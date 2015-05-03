@@ -38,7 +38,6 @@ namespace studis.Controllers
         public ActionResult Predmeti(long id, string Value)
         {
             int leto = Convert.ToInt32(Value);
-            System.Diagnostics.Debug.WriteLine(leto);
 
             //vsi študenti
             var students = db.students.Include(p => p.studentinpredmets).Include(p => p.vpis).ToList();
