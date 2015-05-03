@@ -19,7 +19,7 @@ namespace studis.Models
         public predmet predmet { get; set; }
 
         
-        public virtual ICollection<profesor> profesors { get; set; }
+        public profesor profesor { get; set; }
 
         public virtual ICollection<student> students { get; set; }
 
