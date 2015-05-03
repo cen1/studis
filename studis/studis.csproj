@@ -510,6 +510,9 @@
     <Content Include="Views\VpisniList\UrediPredmetnik3Prosti.cshtml" />
     <Content Include="Views\VpisniList\UrediPredmetnik3Moduli.cshtml" />
     <Content Include="Views\Potrditev\SeznamVpisov.cshtml" />
+    <Content Include="Views\IzpitniRok\UspesnoDodan.cshtml" />
+    <Content Include="Views\IzpitniRok\UspesnoSpremenjen.cshtml" />
+    <Content Include="Views\IzpitniRok\UspesnoIzbrisan.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -242,13 +242,13 @@ namespace studis.Models
             return r;
         }
 
-        public string DateToString(DateTime datum)
+        public static string DateToString(DateTime datum)
         {
             return datum.Day + "." + datum.Month + "." + datum.Year;
         }
 
         //dd.MM.yyyy
-        public DateTime StringToDate(string datum)
+        public static DateTime StringToDate(string datum)
         {
             char[] delimiters = { '.', '/' };
             string[] stevilke = datum.Split(delimiters);
