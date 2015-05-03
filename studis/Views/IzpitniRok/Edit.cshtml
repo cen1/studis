@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
 
 @model studis.Models.IzpitniRokModel
-<h2>Edit</h2>
+<h2>Spreminjaje izpitnega roka</h2>
 
 
 <!--Izbira Predmeta-->
@@ -72,12 +72,12 @@
         $("#predmet").change(function () {
             $.get("/IzpitniRok/GetIzpitniRoksForPredmet/" + $(this).val(), function (response) {
                 var izpitniRoks = $.parseJSON(response);
-                var ddlIzpitniRoks = $("izpitniRok");
+                var ddlIzpitniRoks = $("#id");
                 if ($("#predmet option:first-child").text() == "Izberi predmet") {
                     $("#predmet option:first-child").remove();
                 }
                 //pocisti
-                $("#izpitniRok > option").remove();
+                $("#id > option").remove();
 
                 //napolni
                 if (izpitniRoks.length < 1) {
@@ -96,7 +96,9 @@
             $.get("/IzpitniRok/GetProfesorsForPredmet/" + $(this).val(), function (response) {
                 var profesors = $.parseJSON(response);
                 var ddlProfesors = $("#profesor");
-               
+                if ($("#predmet option:first-child").text() == "Izberi predmet") {
+                    $("#predmet option:first-child").remove();
+                }
                 //pocisti
                 $("#profesor > option").remove();
 
@@ -113,7 +115,7 @@
 
     //naponi datum
     $(document).ready(function () {
-        $("#predmet").change(function () {
+        $("#id").change(function () {
             $.get("/IzpitniRok/GetDatumForIzpitniRok/" + $(this).val(), function (response) {
                 var datum = $.parseJSON(response);
                 $("#datum").val(datum);
