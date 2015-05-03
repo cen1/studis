@@ -416,6 +416,83 @@ namespace studis.Controllers
                 return RedirectToAction("NeznanPredmetnik", "VpisniList");
         }
 
+        [Authorize(Roles = "Referent")]
+        public ActionResult IzbiraLetnika(int id)
+        {
+            ViewBag.Id = id;
+            return View();
+        }
+
+        [Authorize(Roles = "Referent")]
+        public ActionResult UrediPredmetnik2(int id)
+        {
+            // klic z vpisno stevilko
+            if (id > 60000000)
+            {
+                try
+                {
+                    var tmp = db.vpis.Where(v => v.vpisnaStevilka == id && v.letnikStudija == 2).ToList();
+                    id = tmp.Last().id;
+                }
+                catch
+                {
+                    TempData["Napaka"] = "Študent nima izpolnjenega vpisnega lista za 3. letnik!";
+                    return RedirectToAction("Napaka");
+                }
+            }
+
+            var list = db.vpis.SingleOrDefault(v => v.id == id);
+
+            // logika za prikaz predmetov za urejanje
+
+            return View();
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Referent")]
+        public ActionResult UrediPredmetnik2(int id)
+        {
+
+            // validacija
+
+            return View();
+        }
+
+        [Authorize(Roles = "Referent")]
+        public ActionResult UrediPredmetnik3(int id)
+        {
+            // klic z vpisno stevilko
+            if (id > 60000000)
+            {
+                try
+                {
+                    var tmp = db.vpis.Where(v => v.vpisnaStevilka == id && v.letnikStudija == 3).ToList();
+                    id = tmp.Last().id;
+                }
+                catch
+                {
+                    TempData["Napaka"] = "Študent nima izpolnjenega vpisnega lista za 3. letnik!";
+                    return RedirectToAction("Napaka");
+                }
+            }
+
+            var list = db.vpis.SingleOrDefault(v => v.id == id);
+
+            // logika za prikaz predmetov za urejanje
+
+            return View();
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Referent")]
+        public ActionResult UrediPredmetnik3(int id)
+        {
+
+            // validacija
+
+            return View();
+        }
+
         public ActionResult PrviPredmetnik(int id)
         {
             //preveri ce vpisni sploh obstaja

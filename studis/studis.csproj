@@ -505,6 +505,9 @@
     <Content Include="Views\VpisniList\TretjiPredmetnikProsti.cshtml" />
     <Content Include="Views\VpisniList\TretjiPredmetnikModuli.cshtml" />
     <Content Include="Views\IzpitniRok\Edit.cshtml" />
+    <Content Include="Views\VpisniList\UrediPredmetnik2.cshtml" />
+    <Content Include="Views\VpisniList\IzbiraLetnika.cshtml" />
+    <Content Include="Views\VpisniList\UrediPredmetnik3.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
