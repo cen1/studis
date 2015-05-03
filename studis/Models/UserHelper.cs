@@ -201,7 +201,7 @@ namespace studis.Models
             }
 
             //preveri ce res obstaja studijsko leto prvega vpisa
-            vpi slpv = db.vpis.Where(a => a.studijskiProgram == vlm.studijskiProgram).Where(b => b.letnikStudija == vlm.letnikStudija).First();
+            vpi slpv = db.vpis.Where(a => a.studijskiProgram == vlm.studijskiProgram).Where(b => b.letnikStudija == vlm.letnikStudija).FirstOrDefault();
             if (slpv != null) {
                 if (vlm.studijskoLetoPrvegaVpisa != slpv.studijskoLeto)
                 {
@@ -240,6 +240,21 @@ namespace studis.Models
             if (v.letnikStudija == 2) r += "DrugiPredmetnik";
             if (v.letnikStudija == 3) r += "TretjiPredmetnik";
             return r;
+        }
+
+        public string DateToString(DateTime datum)
+        {
+            return datum.Day + "." + datum.Month + "." + datum.Year;
+        }
+
+        //dd.MM.yyyy
+        public DateTime StringToDate(string datum)
+        {
+            char[] delimiters = { '.', '/' };
+            string[] stevilke = datum.Split(delimiters);
+            DateTime date = new DateTime(Convert.ToInt32(stevilke[2]), Convert.ToInt32(stevilke[1]), Convert.ToInt32(stevilke[0]));
+
+            return date;
         }
     }
 
