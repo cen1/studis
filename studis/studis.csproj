@@ -189,7 +189,9 @@
     <Compile Include="Models\ip_lock.cs">
       <DependentUpon>Studis.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\IzpitniRok.cs" />
+    <Compile Include="Models\IzpitniRok.cs">
+      <DependentUpon>Studis.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\IzpitniRokModel.cs" />
     <Compile Include="Models\kandidat.cs">
       <DependentUpon>Studis.tt</DependentUpon>
@@ -514,6 +516,7 @@
     <Content Include="Views\IzpitniRok\UspesnoSpremenjen.cshtml" />
     <Content Include="Views\IzpitniRok\UspesnoIzbrisan.cshtml" />
     <Content Include="Views\IzpitniRok\Izbrisi.cshtml" />
+    <Content Include="Views\IzpitniRok\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
