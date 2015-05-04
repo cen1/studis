@@ -42,30 +42,17 @@ namespace studis.Controllers
             //vsi študenti
             var students = db.students.Include(p => p.studentinpredmets).Include(p => p.vpis).ToList();
 
-            //studenti iz povezovalne tabele, ki imajo ta predmet
+            //studenti iz povezovalne tabele, ki imajo ta predmet v iskanem letu
             var povezovalna = from p in db.studentinpredmets select p;
-            povezovalna = povezovalna.Where(p => p.predmetId == id).Distinct();
+            povezovalna = povezovalna.Where(p => p.predmetId == id && (p.vpi.studijskoLeto == leto || leto==0)).Distinct();
 
-            //med vsemi študenti izberi tiste ki imajo ta predmet
             List<student> list = new List<student>();
             foreach(var vpisna in povezovalna)
             {
                 student st = students.Where(s => s.vpisnaStevilka == vpisna.studentId).SingleOrDefault();
-                if (st != null);// && (st.vpis.Last().studijskoLeto == leto || leto == 0))
+                if (st != null)
                 {
-                    if (leto == 0)
-                        list.Add(st);
-                    else
-                    {
-                        foreach (vpi v in st.vpis)
-                        {
-                            if (v.studijskoLeto == leto)
-                            {
-                                list.Add(st);
-                                break;
-                            }
-                        }
-                    }
+                    list.Add(st);
                 }
             }
 
