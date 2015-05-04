@@ -42,14 +42,15 @@
                 @Html.ValidationMessageFor(m => m.id)
             </div>
 
-            <!--Izbira Profesorja-->
+            <!--Izbira Profesorja
             <div class="editor-label">
-                @Html.LabelFor(m => m.profesor)
+                Html.LabelFor(m => m.profesor)
             </div>
             <div class="editor-field">
-                @Html.DropDownListFor(m => m.profesor, (SelectList)ViewBag.Prazen)
-                @Html.ValidationMessageFor(m => m.profesor)
+                Html.DropDownListFor(m => m.profesor, (SelectList)ViewBag.Prazen)
+                Html.ValidationMessageFor(m => m.profesor)
             </div>
+            -->
 
             <!--Izbira datuma-->
             <script>
@@ -96,7 +97,7 @@
             });
         });
     });
-
+    /*
     //napolni profesorje
     $(document).ready(function () {
         $("#predmet").change(function () {
@@ -119,6 +120,7 @@
             });
         });
     });
+    */
 
     //napolni datum
     $(document).ready(function () {
