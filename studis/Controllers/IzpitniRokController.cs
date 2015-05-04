@@ -14,19 +14,21 @@ namespace studis.Controllers
     {
         public studisEntities db = new studisEntities();
 
+        public ActionResult Index()
+        {
+            return View();
+        }
 
         //GET: IzpitniRok/Dodaj
         public ActionResult Dodaj()
         {
-            SelectList temp = new SelectList(db.predmets.OrderBy(a => a.ime), "id", "ime");
+            List<predmet> temp = db.predmets.OrderBy(a => a.ime).ToList();
             
             List<SelectListItem> predmeti = new List<SelectListItem>();
-            foreach(SelectListItem i in temp) {
-                //Debug.WriteLine(i.Value + " " + i.Text);
-                //i.Text = i.Value  + i.Text;
+            foreach(predmet i in temp) {
                 SelectListItem p = new SelectListItem();
-                p.Value = i.Value;
-                p.Text = Convert.ToInt32(i.Value).ToString("000") + " - " + i.Text;
+                p.Value = i.id.ToString();
+                p.Text = Convert.ToInt32(p.Value).ToString("000") + " - " + i.ime + " (" + i.koda + ")";
                 predmeti.Add(p);
             }
             List<SelectListItem> ltemp = new List<SelectListItem>();
@@ -42,15 +44,15 @@ namespace studis.Controllers
         [HttpPost]
         public ActionResult Dodaj(IzpitniRokModel model)
         {
-            IzpitniRok izpitniRok = new IzpitniRok();
+            izpitnirok izpitniRok = new izpitnirok();
             izpitniRok.datum = UserHelper.StringToDate(model.datum);
             izpitniRok.predmet = db.predmets.SingleOrDefault(v => v.id == model.predmet);
-            izpitniRok.profesor = db.profesors.SingleOrDefault(p => p.id == model.profesor);
+            //izpitniRok.profesor = db.profesors.SingleOrDefault(p => p.id == model.profesor);
             try
             {
                 // TODO: Add insert logic here
-                db.IzpitniRoks.Add(izpitniRok);
-
+                db.izpitniroks.Add(izpitniRok);
+                db.SaveChanges();
                 return View("UspesnoDodan");
             }
             catch
@@ -62,16 +64,14 @@ namespace studis.Controllers
         // GET: IzpitniRok/Edit
         public ActionResult Edit()
         {
-            SelectList temp = new SelectList(db.predmets.OrderBy(a => a.ime), "id", "ime");
+            List<predmet> temp = db.predmets.OrderBy(a => a.ime).ToList();
 
             List<SelectListItem> predmeti = new List<SelectListItem>();
-            foreach (SelectListItem i in temp)
+            foreach (predmet i in temp)
             {
-                //Debug.WriteLine(i.Value + " " + i.Text);
-                //i.Text = i.Value  + i.Text;
                 SelectListItem p = new SelectListItem();
-                p.Value = i.Value;
-                p.Text = Convert.ToInt32(i.Value).ToString("000") + " - " + i.Text;
+                p.Value = i.id.ToString();
+                p.Text = Convert.ToInt32(p.Value).ToString("000") + " - " + i.ime + " (" + i.koda + ")";
                 predmeti.Add(p);
             }
             List<SelectListItem> ltemp = new List<SelectListItem>();
@@ -85,23 +85,14 @@ namespace studis.Controllers
         [HttpPost]
         public ActionResult Edit(IzpitniRokModel model)
         {
-            IzpitniRok izpitniRok = new IzpitniRok();
-            izpitniRok.datum = UserHelper.StringToDate(model.datum);
-            izpitniRok.predmet = db.predmets.SingleOrDefault(v => v.id == model.predmet);
-            izpitniRok.profesor = db.profesors.SingleOrDefault(p => p.id == model.profesor);
 
-            if (model.id == 0) //NI IZBRAN NOBEN ROK, USTVARI NOVEGA -> POGOJ ID "0" NE OBSTAJA
-            {
-
-            }
-            else { //ROK JE IZBRAN
-
-            }
-            
             try
             {
                 // TODO: Add update logic here
-                //db.IzpitniRoks.Update
+                var rok = db.izpitniroks.SingleOrDefault(r => r.id == model.id);
+                rok.datum = UserHelper.StringToDate(model.datum);
+                //rok.predmet = db.predmets.SingleOrDefault(v => v.id == model.predmet);
+                db.SaveChanges();
                 return View("UspesnoSpremenjen");
             }
             catch
@@ -113,16 +104,14 @@ namespace studis.Controllers
         // GET: IzpitniRok/Delete/5
         public ActionResult Izbrisi()
         {
-            SelectList temp = new SelectList(db.predmets.OrderBy(a => a.ime), "id", "ime");
+            List<predmet> temp = db.predmets.OrderBy(a => a.ime).ToList();
 
             List<SelectListItem> predmeti = new List<SelectListItem>();
-            foreach (SelectListItem i in temp)
+            foreach (predmet i in temp)
             {
-                //Debug.WriteLine(i.Value + " " + i.Text);
-                //i.Text = i.Value  + i.Text;
                 SelectListItem p = new SelectListItem();
-                p.Value = i.Value;
-                p.Text = Convert.ToInt32(i.Value).ToString("000") + " - " + i.Text;
+                p.Value = i.id.ToString();
+                p.Text = Convert.ToInt32(p.Value).ToString("000") + " - " + i.ime + " (" + i.koda + ")";
                 predmeti.Add(p);
             }
             List<SelectListItem> ltemp = new List<SelectListItem>();
@@ -139,7 +128,8 @@ namespace studis.Controllers
             try
             {
                 // TODO: Add delete logic here
-
+                db.izpitniroks.Remove(db.izpitniroks.SingleOrDefault(r => r.id == id));
+                db.SaveChanges();
                 return View("UspesnoIzbrisan");
             }
             catch
@@ -148,15 +138,16 @@ namespace studis.Controllers
             }
         }
 
-        public string GetProfesorsForPredmet(string predmet)
+        public string GetProfesorsForPredmet(int id)
         {
             
-            int iid = Convert.ToInt32(predmet);
+            int iid = Convert.ToInt32(id);
             List<profesor> profesors;
             try
             {
                 profesors = db.predmets.SingleOrDefault(v => v.id == iid).profesors.ToList();
             } catch {
+                //Debug.WriteLine("GetProfesorsForPredmet/" + id + "prazen seznam!");
                 profesors = new List<profesor>();
             }
             var seznamProfesorjev = new List<SelectListItem>();
@@ -180,31 +171,41 @@ namespace studis.Controllers
             return new JavaScriptSerializer().Serialize(seznamProfesorjev);
         }
 
-        public string GetIzpitniRoksForPredmet(string predmet)
+        public string GetIzpitniRoksForPredmet(int id)
         {
             /*
              * TO DO TO DO TO DO TO DO TO DO TO DO
-             */ 
-            int iid = Convert.ToInt32(predmet);
-            var izpitniRoki= new List<IzpitniRok>();// = db.predmets.SingleOrDefault(v => v.id == iid).izpitniRoks.ToList();
+             */
+            Debug.WriteLine("ID " + id);
+            int iid = Convert.ToInt32(id);
+            Debug.WriteLine("ID " + iid);
+            var pPredmet = db.predmets.SingleOrDefault(p => p.id == iid);
+            var izpitniRoki = pPredmet.izpitniroks.ToList(); //Exception 
             var seznamIzpitniRoki = new List<SelectListItem>();
             int c = 0;
-            foreach (IzpitniRok i in izpitniRoki)
+            foreach (izpitnirok i in izpitniRoki)
             {
                 c++;
-                seznamIzpitniRoki.Add(new SelectListItem() { Value = i.ID.ToString(), Text = (UserHelper.DateToString(i.datum) + " - " + i.profesor.ime + " " + i.profesor.priimek) });
+                string profesorji= "";
+                foreach(profesor p in pPredmet.profesors) {
+                    profesorji += " " + p.ime + " " + p.priimek + ",";
+                }
+                seznamIzpitniRoki.Add(new SelectListItem() { Value = i.id.ToString(), Text = (UserHelper.DateToString(i.datum) + " -" + profesorji) });
             }
             if (c < 1)
             {
-                seznamIzpitniRoki.Add(new SelectListItem() { Value = "0", Text = "Ta predmet nima razpisanih rokov." });
+                seznamIzpitniRoki.Add(new SelectListItem() { Value = "", Text = "Ta predmet nima razpisanih rokov." });
             }
             return new JavaScriptSerializer().Serialize(seznamIzpitniRoki);
         }
 
-        public string GetDatumForIzpitniRok(string id)
+        public string GetDatumForIzpitniRok(int id)
         {
+            /*
+             * TO DO TO DO TO DO TO DO TO DO TO DO
+             */
             int iid = Convert.ToInt32(id);
-            var datum = db.IzpitniRoks.SingleOrDefault(r => r.ID == iid).datum;
+            var datum = db.izpitniroks.SingleOrDefault(r => r.id == iid).datum;
             return UserHelper.DateToString(datum);
         }
 
@@ -215,6 +216,17 @@ namespace studis.Controllers
             Debug.WriteLine("Datum: " + d);
             var result = Validate.veljavenDatum(d);
             if (d < DateTime.Today)
+            {
+                result = false;
+            }
+            return Json(result);
+        }
+
+        public JsonResult PreveriIzpitniRok(int id)
+        {
+            var steviloOcen = db.izpitniroks.SingleOrDefault(r => r.id == id).ocenas.Count;
+            var result = true;
+            if (steviloOcen > 0)
             {
                 result = false;
             }

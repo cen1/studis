@@ -9,6 +9,7 @@ namespace studis.Models
 {
     public class IzpitniRokModel
     {
+        [Remote("PreveriIzpitniRok", "IzpitniRok", HttpMethod = "POST", ErrorMessage = "Za ta izpitni rok so že vnesene ocene, sprembe niso dovoljene.")]
         [Required(ErrorMessage = "Obvezno izbrati.")]
         [Display(Name = "Izpitni rok")]
         public int id { get; set; }
@@ -18,13 +19,16 @@ namespace studis.Models
         [Display(Name = "Datum")]
         public string datum { get; set; }
 
+        
         [Required(ErrorMessage = "Obvezno izbrati.")]
         [Display(Name = "Predmet")]
         public int predmet { get; set; }
-
+        
+        /*
         [Required(ErrorMessage = "Obvezno izbrati.")]
         [Display(Name = "Profesor")]
         public int profesor { get; set; }
+         */
 
     }
 }

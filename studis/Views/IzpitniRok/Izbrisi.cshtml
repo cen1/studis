@@ -49,7 +49,11 @@
     //napolni izpitne roke
     $(document).ready(function () {
         $("#predmet").change(function () {
-            $.get("/IzpitniRok/GetIzpitniRoksForPredmet/" + $(this).val(), function (response) {
+            console.log("Parameter: " + $("#predmet option:selected").val());
+            var url = "/IzpitniRok/GetIzpitniRoksForPredmet/" + $("#predmet option:selected").val();
+            console.log("URL: " + url);
+            $.get(url, function (response) {
+                
                 var izpitniRoks = $.parseJSON(response);
                 var ddlIzpitniRoks = $("#id");
                 if ($("#predmet option:first-child").text() == "Izberi predmet") {

@@ -24,8 +24,7 @@ namespace studis.Models
         {
             throw new UnintentionalCodeFirstException();
         }
-
-        public virtual DbSet<IzpitniRok> IzpitniRoks { get; set; }
+    
         public virtual DbSet<my_aspnet_applications> my_aspnet_applications { get; set; }
         public virtual DbSet<my_aspnet_membership> my_aspnet_membership { get; set; }
         public virtual DbSet<my_aspnet_paths> my_aspnet_paths { get; set; }
@@ -63,5 +62,6 @@ namespace studis.Models
         public virtual DbSet<zeton> zetons { get; set; }
         public virtual DbSet<sifrant_smer> sifrant_smer { get; set; }
         public virtual DbSet<sklep> skleps { get; set; }
+        public virtual DbSet<izpitnirok> izpitniroks { get; set; }
     }
 }

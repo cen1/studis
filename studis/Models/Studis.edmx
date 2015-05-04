@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="studisModel.Store" Provider="MySql.Data.MySqlClient" ProviderManifestToken="5.5" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="studisModel.Store" Provider="MySql.Data.MySqlClient" ProviderManifestToken="5.5" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="ip_lock">
           <Key>
             <PropertyRef Name="id" />
@@ -14,6 +14,22 @@
           <Property Name="locked_at" Type="datetime" Precision="0" Nullable="false" />
           <Property Name="locked_until" Type="datetime" Precision="0" Nullable="false" />
           <Property Name="userId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="izpitnirok">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="datum" Type="date" Nullable="false" />
+          <Property Name="predmetId" Type="uint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="izpitnirokinstudent">
+          <Key>
+            <PropertyRef Name="izpitnirokId" />
+            <PropertyRef Name="studentId" />
+          </Key>
+          <Property Name="izpitnirokId" Type="int" Nullable="false" />
+          <Property Name="studentId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="kandidat">
           <Key>
@@ -101,7 +117,7 @@
           <Property Name="valueindex" Type="longtext" />
           <Property Name="stringdata" Type="longtext" />
           <Property Name="binarydata" Type="longblob" />
-          <Property Name="lastUpdatedDate" Type="timestamp" Precision="0" Nullable="false" />
+          <Property Name="lastUpdatedDate" Type="timestamp" Precision="0" StoreGeneratedPattern="Identity" Nullable="false" />
         </EntityType>
         <EntityType Name="my_aspnet_roles">
           <Key>
@@ -173,6 +189,7 @@
           <Property Name="studentId" Type="int" Nullable="false" />
           <Property Name="ocena" Type="int" Nullable="false" />
           <Property Name="vpisId" Type="int" Nullable="false" />
+          <Property Name="izpitnirokId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="password_recovery">
           <Key>
@@ -428,6 +445,48 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="izpirnirokinstudenti_student_fk">
+          <End Role="student" Type="Self.student" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="izpitnirokinstudent" Type="Self.izpitnirokinstudent" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="student">
+              <PropertyRef Name="vpisnaStevilka" />
+            </Principal>
+            <Dependent Role="izpitnirokinstudent">
+              <PropertyRef Name="studentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="izpitnirok_predmet_fk">
+          <End Role="predmet" Type="Self.predmet" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="izpitnirok" Type="Self.izpitnirok" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="predmet">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="izpitnirok">
+              <PropertyRef Name="predmetId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="izpitnirokinstudenti_izpitnirok_fk">
+          <End Role="izpitnirok" Type="Self.izpitnirok" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="izpitnirokinstudent" Type="Self.izpitnirokinstudent" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="izpitnirok">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="izpitnirokinstudent">
+              <PropertyRef Name="izpitnirokId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="membership_to_users">
           <End Role="my_aspnet_users" Type="Self.my_aspnet_users" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -439,6 +498,20 @@
             </Principal>
             <Dependent Role="my_aspnet_membership">
               <PropertyRef Name="userId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ocena_izpitnirok_fk">
+          <End Role="izpitnirok" Type="Self.izpitnirok" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="ocena" Type="Self.ocena" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="izpitnirok">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="ocena">
+              <PropertyRef Name="izpitnirokId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1122,6 +1195,8 @@
         </Association>
         <EntityContainer Name="studisModelStoreContainer">
           <EntitySet Name="ip_lock" EntityType="Self.ip_lock" Schema="studis" store:Type="Tables" />
+          <EntitySet Name="izpitnirok" EntityType="Self.izpitnirok" Schema="studis" store:Type="Tables" />
+          <EntitySet Name="izpitnirokinstudent" EntityType="Self.izpitnirokinstudent" Schema="studis" store:Type="Tables" />
           <EntitySet Name="kandidat" EntityType="Self.kandidat" Schema="studis" store:Type="Tables" />
           <EntitySet Name="modul" EntityType="Self.modul" Schema="studis" store:Type="Tables" />
           <EntitySet Name="my_aspnet_applications" EntityType="Self.my_aspnet_applications" Schema="studis" store:Type="Tables" />
@@ -1168,9 +1243,25 @@
             <End Role="my_aspnet_users" EntitySet="my_aspnet_users" />
             <End Role="ip_lock" EntitySet="ip_lock" />
           </AssociationSet>
+          <AssociationSet Name="izpirnirokinstudenti_student_fk" Association="Self.izpirnirokinstudenti_student_fk">
+            <End Role="student" EntitySet="student" />
+            <End Role="izpitnirokinstudent" EntitySet="izpitnirokinstudent" />
+          </AssociationSet>
+          <AssociationSet Name="izpitnirok_predmet_fk" Association="Self.izpitnirok_predmet_fk">
+            <End Role="predmet" EntitySet="predmet" />
+            <End Role="izpitnirok" EntitySet="izpitnirok" />
+          </AssociationSet>
+          <AssociationSet Name="izpitnirokinstudenti_izpitnirok_fk" Association="Self.izpitnirokinstudenti_izpitnirok_fk">
+            <End Role="izpitnirok" EntitySet="izpitnirok" />
+            <End Role="izpitnirokinstudent" EntitySet="izpitnirokinstudent" />
+          </AssociationSet>
           <AssociationSet Name="membership_to_users" Association="Self.membership_to_users">
             <End Role="my_aspnet_users" EntitySet="my_aspnet_users" />
             <End Role="my_aspnet_membership" EntitySet="my_aspnet_membership" />
+          </AssociationSet>
+          <AssociationSet Name="ocena_izpitnirok_fk" Association="Self.ocena_izpitnirok_fk">
+            <End Role="izpitnirok" EntitySet="izpitnirok" />
+            <End Role="ocena" EntitySet="ocena" />
           </AssociationSet>
           <AssociationSet Name="ocena_predmet" Association="Self.ocena_predmet">
             <End Role="predmet" EntitySet="predmet" />
@@ -1744,6 +1835,19 @@
             <End Role="student" EntitySet="students" />
             <End Role="sklep" EntitySet="skleps" />
           </AssociationSet>
+          <EntitySet Name="izpitniroks" EntityType="studisModel.izpitnirok" />
+          <AssociationSet Name="izpitnirok_predmet_fk" Association="studisModel.izpitnirok_predmet_fk">
+            <End Role="predmet" EntitySet="predmets" />
+            <End Role="izpitnirok" EntitySet="izpitniroks" />
+          </AssociationSet>
+          <AssociationSet Name="ocena_izpitnirok_fk" Association="studisModel.ocena_izpitnirok_fk">
+            <End Role="izpitnirok" EntitySet="izpitniroks" />
+            <End Role="ocena" EntitySet="ocenas" />
+          </AssociationSet>
+          <AssociationSet Name="izpitnirokinstudent" Association="studisModel.izpitnirokinstudent">
+            <End Role="student" EntitySet="students" />
+            <End Role="izpitnirok" EntitySet="izpitniroks" />
+          </AssociationSet>
           
           </EntityContainer>
         <EntityType Name="ip_lock">
@@ -1969,6 +2073,8 @@
           <NavigationProperty Name="predmet" Relationship="studisModel.ocena_predmet" FromRole="ocena" ToRole="predmet" />
           <NavigationProperty Name="student" Relationship="studisModel.ocena_student" FromRole="ocena" ToRole="student" />
           <NavigationProperty Name="vpi" Relationship="studisModel.ocena_vpis" FromRole="ocena" ToRole="vpi" />
+          <Property Name="izpitnirokId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="izpitnirok" Relationship="studisModel.ocena_izpitnirok_fk" FromRole="ocena" ToRole="izpitnirok" />
         </EntityType>
         <EntityType Name="predmet">
           <Key>
@@ -1994,6 +2100,7 @@
           <NavigationProperty Name="sifrant_klasius" Relationship="studisModel.predmet_s_vrstastudija" FromRole="predmet" ToRole="sifrant_klasius" />
           <NavigationProperty Name="studentinpredmets" Relationship="studisModel.student_predmet_fk" FromRole="predmet" ToRole="studentinpredmet" />
           <NavigationProperty Name="profesors" Relationship="studisModel.profesorinpredmet" FromRole="predmet" ToRole="profesor" />
+          <NavigationProperty Name="izpitniroks" Relationship="studisModel.izpitnirok_predmet_fk" FromRole="predmet" ToRole="izpitnirok" />
         </EntityType>
         <EntityType Name="profesor">
           <Key>
@@ -2048,6 +2155,7 @@
           <NavigationProperty Name="vpis" Relationship="studisModel.vpisnilist_student_fk" FromRole="student" ToRole="vpi" />
           <NavigationProperty Name="zetons" Relationship="studisModel.zeton_student_fk" FromRole="student" ToRole="zeton" />
           <NavigationProperty Name="skleps" Relationship="studisModel.sklep_student" FromRole="student" ToRole="sklep" />
+          <NavigationProperty Name="izpitniroks" Relationship="studisModel.izpitnirokinstudent" FromRole="student" ToRole="izpitnirok" />
         </EntityType>
         <EntityType Name="studentinpredmet">
           <Key>
@@ -2764,6 +2872,49 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="izpitnirok">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="datum" Type="DateTime" Nullable="false" />
+          <Property Name="predmetId" Type="Int64" Nullable="false" />
+          <NavigationProperty Name="predmet" Relationship="studisModel.izpitnirok_predmet_fk" FromRole="izpitnirok" ToRole="predmet" />
+          <NavigationProperty Name="ocenas" Relationship="studisModel.ocena_izpitnirok_fk" FromRole="izpitnirok" ToRole="ocena" />
+          <NavigationProperty Name="students" Relationship="studisModel.izpitnirokinstudent" FromRole="izpitnirok" ToRole="student" />
+        </EntityType>
+        <Association Name="izpitnirok_predmet_fk">
+          <End Type="studisModel.predmet" Role="predmet" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="studisModel.izpitnirok" Role="izpitnirok" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="predmet">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="izpitnirok">
+              <PropertyRef Name="predmetId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ocena_izpitnirok_fk">
+          <End Type="studisModel.izpitnirok" Role="izpitnirok" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="studisModel.ocena" Role="ocena" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="izpitnirok">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="ocena">
+              <PropertyRef Name="izpitnirokId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="izpitnirokinstudent">
+          <End Type="studisModel.student" Role="student" Multiplicity="*" />
+          <End Type="studisModel.izpitnirok" Role="izpitnirok" Multiplicity="*" />
+        </Association>
         
         </Schema>
     </edmx:ConceptualModels>
@@ -3048,6 +3199,7 @@
           <EntitySetMapping Name="ocenas">
             <EntityTypeMapping TypeName="studisModel.ocena">
               <MappingFragment StoreEntitySet="ocena">
+                <ScalarProperty Name="izpitnirokId" ColumnName="izpitnirokId" />
                 <ScalarProperty Name="vpisId" ColumnName="vpisId" />
                 <ScalarProperty Name="ocena1" ColumnName="ocena" />
                 <ScalarProperty Name="studentId" ColumnName="studentId" />
@@ -3203,6 +3355,23 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="izpitniroks">
+            <EntityTypeMapping TypeName="studisModel.izpitnirok">
+              <MappingFragment StoreEntitySet="izpitnirok">
+                <ScalarProperty Name="predmetId" ColumnName="predmetId" />
+                <ScalarProperty Name="datum" ColumnName="datum" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="izpitnirokinstudent" TypeName="studisModel.izpitnirokinstudent" StoreEntitySet="izpitnirokinstudent">
+            <EndProperty Name="izpitnirok">
+              <ScalarProperty Name="id" ColumnName="izpitnirokId" />
+            </EndProperty>
+            <EndProperty Name="student">
+              <ScalarProperty Name="vpisnaStevilka" ColumnName="studentId" />
+            </EndProperty>
+          </AssociationSetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
