@@ -28,7 +28,16 @@ namespace studis.Controllers
             foreach (var v in vpisi)
                 if (uh.jePredmetnikVzpostavljen(v)) vplist.Add(v);
 
-            ViewBag.vpisi = vplist;
+            ViewBag.vpisiN = vplist;
+
+            //potrjeni
+            var vpisi2 = s.vpis.Where(a => a.potrjen == true);
+            List<vpi> vplist2 = new List<vpi>();
+            foreach (var v in vpisi2)
+                if (uh.jePredmetnikVzpostavljen(v)) vplist2.Add(v);
+
+            ViewBag.vpisiP = vplist2;
+            ViewBag.student = s;
 
             return View();
         }

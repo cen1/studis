@@ -117,48 +117,52 @@ namespace studis.Models
             return false;
         }
 
-        public List<string> preveriLogiko(VpisniListModel vlm, student s, my_aspnet_users user)
+        public List<string> preveriLogiko(VpisniListModel vlm, student s, my_aspnet_users user, bool update)
         {
             List<string> napake = new List<string>();
 
-            kandidat k = user.kandidats.First();
+            kandidat k = user.kandidats.FirstOrDefault();
 
             //prvi vpis
-            if (s == null)
+            if (!update)
             {
-                if (k.ime != vlm.ime) napake.Add("Ime ni enako imenu v seznamu kandidatov");
-                if (k.priimek != vlm.priimek) napake.Add("Priimek ni enak imenu v seznamu kandidatov");
-                if (k.studijskiProgram != vlm.studijskiProgram) napake.Add("Študijski program ni enak programu v seznamu kandidatov");
-                if (k.email != vlm.email) napake.Add("Email ni enak tistemu v seznamu kandidatov");
-                if (vlm.letnikStudija != 1) napake.Add("Letnik ni enak 1");
-                if (vlm.vrstaVpisa != 1) napake.Add("izberete lahko le prvi vpis v letnik");
-            }
-            else
-            {
-                //preveri kdaj je bil prvi vpis v ta letnik, ce je pravilen
-                if (vlm.studijskoLetoPrvegaVpisa > DateTime.Now.Year) napake.Add("Prvo leto vpisa je preveliko");
-
-                //preveri da je letnik enak ob ponavljanju ali vecji od zadnjega vpisa
-                int stponavljanj = 0;
-                var vpisi_sp = s.vpis.Where(a => a.studijskiProgram == vlm.studijskiProgram);
-                foreach (var v in vpisi_sp)
+                if (s == null)
                 {
-                    if (vlm.vrstaVpisa == 1)
-                    {
-                        //prvi vpis v letnik
-                        if (vlm.letnikStudija == v.letnikStudija) napake.Add("Izbran je prvi vpis v letnik čeprav ste bili v ta letnik že vpisani");
-                    }
-                    if (vlm.vrstaVpisa == 2) {
-                        //ponavljanje
-                        if (v.letnikStudija > vlm.letnikStudija) napake.Add("Ne morete ponavljati ker ste že bili vpisani v višji letnik");
-                        if (v.letnikStudija == vlm.letnikStudija) stponavljanj++;
-                    }
+                    if (k.ime != vlm.ime) napake.Add("Ime ni enako imenu v seznamu kandidatov");
+                    if (k.priimek != vlm.priimek) napake.Add("Priimek ni enak imenu v seznamu kandidatov");
+                    if (k.studijskiProgram != vlm.studijskiProgram) napake.Add("Študijski program ni enak programu v seznamu kandidatov");
+                    if (k.email != vlm.email) napake.Add("Email ni enak tistemu v seznamu kandidatov");
+                    if (vlm.letnikStudija != 1) napake.Add("Letnik ni enak 1");
+                    if (vlm.vrstaVpisa != 1) napake.Add("izberete lahko le prvi vpis v letnik");
                 }
-                if (stponavljanj > 1) napake.Add("Samo enkrat lahko povaljate isti letnik");
-                if (stponavljanj == 0 && vlm.vrstaVpisa == 2) napake.Add("Ne morete ponavljati letnika, ki ga še niste delali");
+                else
+                {
+                    //preveri kdaj je bil prvi vpis v ta letnik, ce je pravilen
+                    if (vlm.studijskoLetoPrvegaVpisa > DateTime.Now.Year) napake.Add("Prvo leto vpisa je preveliko");
 
-                if (vlm.vrstaVpisa == 7 && (vpisi_sp.Last().letnikStudija != vlm.letnikStudija)) napake.Add("Letnik mora biti enak zadnjemu vpisu");
-                if (vlm.vrstaVpisa == 5 && (vlm.letnikStudija <= vpisi_sp.Last().letnikStudija)) napake.Add("Letnik mora biti večji od zadnjega vpisa");
+                    //preveri da je letnik enak ob ponavljanju ali vecji od zadnjega vpisa
+                    int stponavljanj = 0;
+                    var vpisi_sp = s.vpis.Where(a => a.studijskiProgram == vlm.studijskiProgram);
+                    foreach (var v in vpisi_sp)
+                    {
+                        if (vlm.vrstaVpisa == 1)
+                        {
+                            //prvi vpis v letnik
+                            if (vlm.letnikStudija == v.letnikStudija) napake.Add("Izbran je prvi vpis v letnik čeprav ste bili v ta letnik že vpisani");
+                        }
+                        if (vlm.vrstaVpisa == 2)
+                        {
+                            //ponavljanje
+                            if (v.letnikStudija > vlm.letnikStudija) napake.Add("Ne morete ponavljati ker ste že bili vpisani v višji letnik");
+                            if (v.letnikStudija == vlm.letnikStudija) stponavljanj++;
+                        }
+                    }
+                    if (stponavljanj > 1) napake.Add("Samo enkrat lahko ponavljate isti letnik");
+                    if (stponavljanj == 0 && vlm.vrstaVpisa == 2) napake.Add("Ne morete ponavljati letnika, ki ga še niste delali");
+
+                    if (vlm.vrstaVpisa == 7 && (vpisi_sp.Last().letnikStudija != vlm.letnikStudija)) napake.Add("Letnik mora biti enak zadnjemu vpisu");
+                    if (vlm.vrstaVpisa == 5 && (vlm.letnikStudija <= vpisi_sp.Last().letnikStudija)) napake.Add("Letnik mora biti večji od zadnjega vpisa");
+                }
             }
 
             //preveri da se emso in datum rojstva ujemata
@@ -201,19 +205,23 @@ namespace studis.Models
                 }
             }
 
-            //preveri ce res obstaja studijsko leto prvega vpisa
-            vpi slpv = db.vpis.Where(a => a.studijskiProgram == vlm.studijskiProgram).Where(b => b.letnikStudija == vlm.letnikStudija).FirstOrDefault();
-            if (slpv != null) {
-                if (vlm.studijskoLetoPrvegaVpisa != slpv.studijskoLeto)
-                {
-                    napake.Add("Študijsko leto prvega vpisa je napačno (nimate vpisa iz tistega leta)");
-                }
-            }
-            else
+            if (!update)
             {
-                if (vlm.studijskoLetoPrvegaVpisa != DateTime.Now.Year)
+                //preveri ce res obstaja studijsko leto prvega vpisa
+                vpi slpv = db.vpis.Where(a => a.studijskiProgram == vlm.studijskiProgram).Where(b => b.letnikStudija == vlm.letnikStudija).FirstOrDefault();
+                if (slpv != null)
                 {
-                    napake.Add("Študijsko leto prvega vpisa je lahko le letošnje");
+                    if (vlm.studijskoLetoPrvegaVpisa != slpv.studijskoLeto)
+                    {
+                        napake.Add("Študijsko leto prvega vpisa je napačno (nimate vpisa iz tistega leta)");
+                    }
+                }
+                else
+                {
+                    if (vlm.studijskoLetoPrvegaVpisa != DateTime.Now.Year)
+                    {
+                        napake.Add("Študijsko leto prvega vpisa je lahko le letošnje");
+                    }
                 }
             }
 
@@ -229,7 +237,26 @@ namespace studis.Models
             }
             else
             {
-                //System.Diagnostics.Debug.WriteLine("Vzpostavljen za " + v.id.ToString() + " je true");
+                //preveri kreditne
+                PredmetHelper ph = new PredmetHelper();
+                List<predmet> l = new List<predmet>();
+                foreach (var a in v.studentinpredmets)
+                    l.Add(a.predmet);
+
+                if (ph.preveriKredite(l)) return true;
+                else return false;
+            }
+        }
+
+        public bool jeDelniPredmetnikVzpostavljen(vpi v)
+        {
+            if (v.studentinpredmets.Count() == 0)
+            {
+                //System.Diagnostics.Debug.WriteLine("Vzpostavljen za " + v.id.ToString() + " je false");
+                return false;
+            }
+            else
+            {
                 return true;
             }
         }

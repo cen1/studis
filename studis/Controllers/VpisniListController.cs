@@ -14,6 +14,7 @@ namespace studis.Controllers
         public studisEntities db = new studisEntities();
 
         // GET: VpisniList
+        //GET: VPisniList/id od userja!
         public ActionResult VpisniList(int? x)
         {
             UserHelper uh = new UserHelper();
@@ -21,6 +22,7 @@ namespace studis.Controllers
             student sid = null;
             kandidat kid = null;
 
+            System.Diagnostics.Debug.WriteLine(x);
             if (x == null && User.IsInRole("Študent"))
             {
                 //poglej ce obstaja vnos v tabeli student
@@ -43,6 +45,7 @@ namespace studis.Controllers
             else if (x != null && User.IsInRole("Referent")){
                 //pogledamo ce obstaja študent ali kandidat
                 //gledamo po userId ker sta kandidat id in student vpisnaStevilka hipoteticno lahko enaka
+                
                 var usr = db.my_aspnet_users.Where(a => a.id == x).FirstOrDefault();
                 if (usr != null)
                 {
@@ -185,19 +188,22 @@ namespace studis.Controllers
             }
             else return HttpNotFound();
 
-            if (tsid != null)
+            if (User.IsInRole("Študent"))
             {
-                //poglej ce ima zeton
-                if (!uh.imaZeton(tsid))
+                if (tsid != null)
                 {
-                    return RedirectToAction("NiZetona");
-                }
-                else
-                {
-                    //poglej ce se vsaj en zeton ujema z oddanimi podatki
-                    if (!uh.preveriZeton(tsid, model))
+                    //poglej ce ima zeton
+                    if (!uh.imaZeton(tsid))
                     {
                         return RedirectToAction("NiZetona");
+                    }
+                    else
+                    {
+                        //poglej ce se vsaj en zeton ujema z oddanimi podatki
+                        if (!uh.preveriZeton(tsid, model))
+                        {
+                            return RedirectToAction("NiZetona");
+                        }
                     }
                 }
             }
@@ -214,12 +220,26 @@ namespace studis.Controllers
             model.studijskoLeto = "2015";
 
             //preveri logiko
-            List<string> logic = uh.preveriLogiko(model, tsid, uh.FindByName(User.Identity.Name));
-            if (logic.Count() != 0)
+            if (User.IsInRole("Študent"))
             {
-                foreach (var l in logic)
+                List<string> logic = uh.preveriLogiko(model, tsid, uh.FindByName(User.Identity.Name), false);
+                if (logic.Count() != 0)
                 {
-                    ModelState.AddModelError("", l);
+                    foreach (var l in logic)
+                    {
+                        ModelState.AddModelError("", l);
+                    }
+                }
+            }
+            else if (User.IsInRole("Referent"))
+            {
+                List<string> logic = uh.preveriLogiko(model, tsid, db.my_aspnet_users.Where(a => a.id == x).FirstOrDefault(), false);
+                if (logic.Count() != 0)
+                {
+                    foreach (var l in logic)
+                    {
+                        ModelState.AddModelError("", l);
+                    }
                 }
             }
 
@@ -277,7 +297,10 @@ namespace studis.Controllers
                     v.studijskoLetoPrvegaVpisa = model.studijskoLetoPrvegaVpisa;
                     v.vrstaStudija = model.vrstaStudija;
                     v.vrstaVpisa = model.vrstaVpisa;
-                    v.potrjen = false;
+                    if (User.IsInRole("Študent"))
+                        v.potrjen = false;
+                    else if (User.IsInRole("Referent"))
+                        v.potrjen = true;
                     v.studijskoLeto = DateTime.Now.Year;
 
                     db.vpis.Add(v);
@@ -327,7 +350,10 @@ namespace studis.Controllers
                     v.vrstaStudija = model.vrstaStudija;
                     v.vrstaVpisa = model.vrstaVpisa;
 
-                    v.potrjen = false;
+                    if (User.IsInRole("Študent"))
+                        v.potrjen = false;
+                    else if (User.IsInRole("Referent"))
+                        v.potrjen = true;
                     v.studijskoLeto = DateTime.Now.Year;
 
                     db.students.Add(s);
@@ -365,7 +391,29 @@ namespace studis.Controllers
                 }
                 db.SaveChanges();
                 
+                //ce je referent vzpostavi obvezni del predmetnika in vrzi na success
+                if (User.IsInRole("Referent"))
+                {
+                    PredmetHelper ph = new PredmetHelper();
+                    List<predmet> obv = null;
+                    if (v.letnikStudija == 1) obv = ph.obvezni1().ToList();
+                    if (v.letnikStudija == 2) obv = ph.obvezni2().ToList();
+                    if (v.letnikStudija == 3) obv = ph.obvezni3().ToList();
 
+                    foreach (var o in obv)
+                    {
+                        studentinpredmet sip = new studentinpredmet();
+                        sip.predmetId = o.id;
+                        sip.studentId = v.student.vpisnaStevilka;
+                        sip.vpisId = v.id;
+                        db.studentinpredmets.Add(sip);
+                    }
+                    db.SaveChanges();
+
+                    TempData["id"] = v.id;
+                    return RedirectToAction("VpisniListSuccess", "VpisniList");
+                }
+                //sicer naprej na predmetnik
                 return RedirectToAction("VpisniListPredmetnik", "VpisniList", new { id = v.id });
 
             }
@@ -452,22 +500,207 @@ namespace studis.Controllers
         {
             if (db.vpis.Find(id) == null) return HttpNotFound();
 
-            ViewBag.StudijskiProgrami = new SelectList(db.sifrant_studijskiprogram.OrderBy(a => a.id != 1000468).ThenBy(a => a.naziv), "id", "naziv");
-            ViewBag.Klasius = new SelectList(db.sifrant_klasius.OrderBy(a => a.id != 16204).ThenBy(b => b.id), "id", "naziv");
+            ViewBag.StudijskiProgramiVB = new SelectList(db.sifrant_studijskiprogram.OrderBy(a => a.naziv), "id", "naziv");
+            ViewBag.KlasiusVB = new SelectList(db.sifrant_klasius.OrderBy(a => a.id != 16204).ThenBy(b => b.id), "id", "naziv");
             ViewBag.VrstaVpisaVB = new SelectList(db.sifrant_vrstavpisa, "id", "naziv");
-            ViewBag.NacinStudija = new SelectList(db.sifrant_nacinstudija, "id", "naziv");
-            ViewBag.OblikaStudija = new SelectList(db.sifrant_oblikastudija, "id", "naziv");
-            ViewBag.Spol = new SelectList(db.sifrant_spol.OrderBy(a => a.naziv), "id", "naziv");
-            ViewBag.Obcina = new SelectList(db.sifrant_obcina.OrderBy(a => a.naziv != "Ljubljana").ThenBy(a => a.naziv), "id", "naziv");
-            ViewBag.Drzava = new SelectList(db.sifrant_drzava.OrderBy(a => a.naziv != "Slovenija").ThenBy(a => a.naziv), "id", "naziv");
-            ViewBag.PostnaStevilka = new SelectList(db.sifrant_postnastevilka.OrderBy(a => a.naziv), "id", "naziv");
-            ViewBag.Letnik = new SelectList(db.sifrant_letnik.OrderBy(a => a.naziv != "Prvi").ThenBy(b => b.id), "id", "naziv");
-            ViewBag.StudijskoLetoPrvegaVpisa = new SelectList(db.sifrant_studijskoletoprvegavpisa.OrderByDescending(a => a.id), "id", "naziv");
-            ViewBag.IzbirnaSkupina = new SelectList(db.sifrant_izbirnaskupina, "id", "naziv");
-            ViewBag.Smer = new SelectList(db.sifrant_smer, "id", "naziv");
+            ViewBag.NacinStudijaVB = new SelectList(db.sifrant_nacinstudija, "id", "naziv");
+            ViewBag.OblikaStudijaVB = new SelectList(db.sifrant_oblikastudija, "id", "naziv");
+            ViewBag.SpolVB = new SelectList(db.sifrant_spol.OrderBy(a => a.naziv), "id", "naziv");
+            ViewBag.ObcinaVB = new SelectList(db.sifrant_obcina.OrderBy(a => a.naziv != "Ljubljana").ThenBy(a => a.naziv), "id", "naziv");
+            ViewBag.DrzavaVB = new SelectList(db.sifrant_drzava.OrderBy(a => a.naziv != "Slovenija").ThenBy(a => a.naziv), "id", "naziv");
+            ViewBag.PostnaStevilkaVB = new SelectList(db.sifrant_postnastevilka.OrderBy(a => a.naziv), "id", "naziv");
+            ViewBag.LetnikVB = new SelectList(db.sifrant_letnik.OrderBy(a => a.naziv != "Prvi").ThenBy(b => b.id), "id", "naziv");
+            ViewBag.StudijskoLetoPrvegaVpisaVB = new SelectList(db.sifrant_studijskoletoprvegavpisa.OrderByDescending(a => a.id), "id", "naziv");
+            ViewBag.IzbirnaSkupinaVB = new SelectList(db.sifrant_izbirnaskupina, "id", "naziv");
+            ViewBag.SmerVB = new SelectList(db.sifrant_smer, "id", "naziv");
+
+            var sid = db.vpis.Find(id).student;
+
+            var rdan = Enumerable.Range(sid.datumRojstva.Day, 1).Select(i => new SelectListItem
+            {
+                Value = i.ToString(),
+                Text = i.ToString()
+            });
+            var rmesec = Enumerable.Range(sid.datumRojstva.Month, 1).Select(i => new SelectListItem
+            {
+                Value = i.ToString(),
+                Text = i.ToString()
+            });
+            var rleto = Enumerable.Range(sid.datumRojstva.Year, 1).Select(i => new SelectListItem
+            {
+                Value = i.ToString(),
+                Text = i.ToString()
+            });
+            ViewBag.dr_danVB = rdan;
+            ViewBag.dr_mesecVB = rmesec;
+            ViewBag.dr_letoVB = rleto;
 
             Baza bz = new Baza();
             VpisniListModel model = bz.getVpisniListEdit(id);
+
+            if (sid.naslovZacasni == null)
+                ViewBag.zacasnipodatkiVB = false;
+            else
+                ViewBag.zacasnipodatkiVB = true;
+
+            return View(model);
+        }
+
+        [Authorize(Roles = "Referent")]
+        [HttpPost]
+        public ActionResult VpisniListEdit(VpisniListModel model, int id)
+        {
+            vpi v = db.vpis.Find(id);
+            if (v == null) return HttpNotFound();
+            student sid = v.student;
+
+            UserHelper uh = new UserHelper();
+
+            //sestavi datum rojstva
+            DateTime temp_dr = new DateTime();
+            string dt = model.dr_leto.ToString() + "-" + model.dr_mesec.ToString() + "-" + model.dr_dan.ToString();
+            var tp = DateTime.TryParse(dt, out temp_dr);
+            if (!tp) ModelState.AddModelError("", "Napačen datum rojstva");
+            System.Diagnostics.Debug.WriteLine(dt);
+
+            model.datumRojstva = temp_dr;
+
+            model.studijskoLeto = "2015";
+
+            //preveri logiko
+            List<string> logic = uh.preveriLogiko(model, sid, db.my_aspnet_users.Where(a => a.id == sid.userId).FirstOrDefault(), true);
+            if (logic.Count() != 0)
+            {
+                foreach (var l in logic)
+                {
+                    ModelState.AddModelError("", l);
+                }
+            }
+
+            if (ModelState.IsValid)
+            {
+                //ni prvi vpis
+                v.vpisnaStevilka = sid.vpisnaStevilka;
+
+                //pridobi studenta iz controller konteksta!
+                sid = db.students.Where(a => a.vpisnaStevilka == sid.vpisnaStevilka).First();
+
+                sid.ime = model.ime;
+                sid.priimek = model.priimek;
+                sid.datumRojstva = model.datumRojstva;
+                sid.davcnaStevilka = model.davcnaStevilka;
+
+                sid.drzavaRojstva = model.drzavaRojstva;
+                sid.drzavljanstvo = model.drzavljanstvo;
+                sid.email = model.email;
+                sid.emso = model.emso;
+                sid.krajRojstva = model.krajRojstva;
+                sid.obcinaRojstva = model.obcinaRojstva;
+
+                sid.vrocanje = model.vrocanje;
+                sid.naslov = model.naslov;
+                sid.obcina = model.obcina;
+                sid.postnaStevilka = model.postnaStevilka;
+                sid.drzava = model.drzava;
+
+                sid.vrocanjeZacasni = model.vrocanjeZacasni;
+                sid.naslovZacasni = model.naslovZacasni;
+                sid.obcinaZacasni = model.obcinaZacasni;
+                sid.postnaStevilkaZacasni = model.postnaStevilkaZacasni;
+                sid.drzavaZacasni = model.drzavaZacasni;
+
+                sid.prenosniTelefon = model.prenosniTelefon;
+
+
+                sid.spol = model.spol;
+
+                v.izbirnaSkupina = model.izbirnaSkupina;
+                v.krajIzvajanja = model.krajIzvajanja;
+                v.letnikStudija = model.letnikStudija;
+                v.nacinStudija = model.nacinStudija;
+                v.oblikaStudija = model.oblikaStudija;
+                v.smer = model.smer;
+                v.soglasje1 = model.soglasje1;
+                v.soglasje2 = model.soglasje2;
+                v.studijskiProgram = model.studijskiProgram;
+                v.studijskoLeto = Convert.ToInt32(model.studijskoLeto);
+                v.studijskoLetoPrvegaVpisa = model.studijskoLetoPrvegaVpisa;
+                v.vrstaStudija = model.vrstaStudija;
+                v.vrstaVpisa = model.vrstaVpisa;
+                v.potrjen = false;
+                v.studijskoLeto = DateTime.Now.Year;
+             
+                try
+                {
+                    db.SaveChanges();
+                }
+                catch (System.Data.Entity.Validation.DbEntityValidationException e)
+                {
+                    foreach (var eve in e.EntityValidationErrors)
+                    {
+                        System.Diagnostics.Debug.WriteLine("Entity of type \"{0}\" in state \"{1}\" has the following validation errors:",
+                            eve.Entry.Entity.GetType().Name, eve.Entry.State);
+                        foreach (var ve in eve.ValidationErrors)
+                        {
+                            System.Diagnostics.Debug.WriteLine("- Property: \"{0}\", Error: \"{1}\"",
+                                ve.PropertyName, ve.ErrorMessage);
+                        }
+                    }
+                    throw;
+                }
+
+                TempData["id"] = id;
+                TempData["nazaj"] = sid.vpisnaStevilka;
+                return RedirectToAction("VpisniListSuccess2", "VpisniList", new { id = v.id });
+
+            }
+            else
+            {
+                ModelState.AddModelError("", "Prišlo je do napake.");
+                var errors = ModelState.Select(z => z.Value.Errors)
+                           .Where(y => y.Count > 0)
+                           .ToList();
+                foreach (var e in errors)
+                    foreach (var ee in e)
+                        System.Diagnostics.Debug.WriteLine(ee.ErrorMessage);
+            }
+
+            //repopulate model lists
+            ViewBag.StudijskiProgramiVB = new SelectList(db.sifrant_studijskiprogram.OrderBy(a => a.naziv), "id", "naziv");
+            ViewBag.KlasiusVB = new SelectList(db.sifrant_klasius.OrderBy(a => a.id != 16204).ThenBy(b => b.id), "id", "naziv");
+            ViewBag.VrstaVpisaVB = new SelectList(db.sifrant_vrstavpisa, "id", "naziv");
+            ViewBag.NacinStudijaVB = new SelectList(db.sifrant_nacinstudija, "id", "naziv");
+            ViewBag.OblikaStudijaVB = new SelectList(db.sifrant_oblikastudija, "id", "naziv");
+            ViewBag.SpolVB = new SelectList(db.sifrant_spol.OrderBy(a => a.naziv), "id", "naziv");
+            ViewBag.ObcinaVB = new SelectList(db.sifrant_obcina.OrderBy(a => a.naziv != "Ljubljana").ThenBy(a => a.naziv), "id", "naziv");
+            ViewBag.DrzavaVB = new SelectList(db.sifrant_drzava.OrderBy(a => a.naziv != "Slovenija").ThenBy(a => a.naziv), "id", "naziv");
+            ViewBag.PostnaStevilkaVB = new SelectList(db.sifrant_postnastevilka.OrderBy(a => a.naziv), "id", "naziv");
+            ViewBag.LetnikVB = new SelectList(db.sifrant_letnik.OrderBy(a => a.naziv != "Prvi").ThenBy(b => b.id), "id", "naziv");
+            ViewBag.StudijskoLetoPrvegaVpisaVB = new SelectList(db.sifrant_studijskoletoprvegavpisa.OrderByDescending(a => a.id), "id", "naziv");
+            ViewBag.IzbirnaSkupinaVB = new SelectList(db.sifrant_izbirnaskupina, "id", "naziv");
+            ViewBag.SmerVB = new SelectList(db.sifrant_smer, "id", "naziv");
+
+            var rdan = Enumerable.Range(sid.datumRojstva.Day, 1).Select(i => new SelectListItem
+            {
+                Value = i.ToString(),
+                Text = i.ToString()
+            });
+            var rmesec = Enumerable.Range(sid.datumRojstva.Month, 1).Select(i => new SelectListItem
+            {
+                Value = i.ToString(),
+                Text = i.ToString()
+            });
+            var rleto = Enumerable.Range(sid.datumRojstva.Year, 1).Select(i => new SelectListItem
+            {
+                Value = i.ToString(),
+                Text = i.ToString()
+            });
+            ViewBag.dr_danVB = rdan;
+            ViewBag.dr_mesecVB = rmesec;
+            ViewBag.dr_letoVB = rleto;
+
+            if (model.naslovZacasni != null) ViewBag.zacasnipodatkiVB = true;
+            else ViewBag.zacasnipodatkiVB = false;
 
             return View(model);
         }
@@ -475,6 +708,13 @@ namespace studis.Controllers
         public ActionResult VpisniListSuccess()
         {
             ViewBag.id = TempData["id"];
+            return View();
+        }
+
+        public ActionResult VpisniListSuccess2()
+        {
+            ViewBag.id = TempData["id"];
+            ViewBag.nazaj = TempData["nazaj"];
             return View();
         }
 
@@ -690,7 +930,7 @@ namespace studis.Controllers
             var vl = db.vpis.Find(id);
             if (vl == null) return HttpNotFound();
 
-            //preveri ce je predmetnik ze bil izpolnjen
+            //preveri ce je predmetnik ze bil izpolnjen, vshe 60kt
             UserHelper uh = new UserHelper();
             if (uh.jePredmetnikVzpostavljen(vl)) return HttpNotFound();
 
@@ -711,7 +951,7 @@ namespace studis.Controllers
             var vl = db.vpis.Find(model.vlid);
             if (vl == null) return HttpNotFound();
 
-            //preveri ce je predmetnik ze bil izpolnjen
+            //preveri ce je predmetnik ze bil izpolnjen, ne le delni ampak vseh 60kt
             UserHelper uh = new UserHelper();
             if (uh.jePredmetnikVzpostavljen(vl)) return HttpNotFound();
 
@@ -731,7 +971,14 @@ namespace studis.Controllers
                 db.studentinpredmets.Add(sip);
             }
 
-            db.SaveChanges();
+            try
+            {
+                db.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                return HttpNotFound();
+            }
 
             TempData["id"] = model.vlid;
             return RedirectToAction("VpisniListSuccess");
@@ -743,7 +990,7 @@ namespace studis.Controllers
             var vl = db.vpis.Find(id);
             if (vl == null) return HttpNotFound();
 
-            //preveri ce je predmetnik ze bil izpolnjen
+            //preveri ce je predmetnik ze bil izpolnjen, vseh 60kt
             UserHelper uh = new UserHelper();
             if (uh.jePredmetnikVzpostavljen(vl)) return HttpNotFound();
 
@@ -773,7 +1020,7 @@ namespace studis.Controllers
             var vl = db.vpis.Find(id);
             if (vl == null) return HttpNotFound();
 
-            //preveri ce je predmetnik ze bil izpolnjen
+            //preveri ce je predmetnik ze bil izpolnjen, vseh 60kt
             UserHelper uh = new UserHelper();
             if (uh.jePredmetnikVzpostavljen(vl)) return HttpNotFound();
 
@@ -817,6 +1064,20 @@ namespace studis.Controllers
             }
 
             if (kreditne == 0) {
+                //dodaj obvezne
+                //ce je delni potem so ze noter
+                if (!uh.jeDelniPredmetnikVzpostavljen(vl))
+                {
+                    foreach (var o in ph.obvezni2())
+                    {
+                        studentinpredmet sip = new studentinpredmet();
+                        sip.predmetId = o.id;
+                        sip.studentId = vl.student.vpisnaStevilka;
+                        sip.vpisId = vl.id;
+                        db.studentinpredmets.Add(sip);
+                    }
+                }
+
                 //dodaj izbirne
                 foreach (var p in dodaj_p) {
                     studentinpredmet sip = new studentinpredmet();
@@ -825,17 +1086,16 @@ namespace studis.Controllers
                     sip.vpisId = vl.id;
                     db.studentinpredmets.Add(sip);
                 }
-                //dodaj obvezne
-                foreach (var o in ph.obvezni2())
-                {
-                    studentinpredmet sip = new studentinpredmet();
-                    sip.predmetId = o.id;
-                    sip.studentId = vl.student.vpisnaStevilka;
-                    sip.vpisId = vl.id;
-                    db.studentinpredmets.Add(sip);
-                }
+                
 
-                db.SaveChanges();
+                try
+                {
+                    db.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    return HttpNotFound();
+                }
 
                 TempData["id"] = id;
                 return RedirectToAction("VpisniListSuccess");
@@ -932,6 +1192,19 @@ namespace studis.Controllers
 
             if (kreditne == 0)
             {
+                //dodaj obvezne
+                //ce je delni potem so ze noter
+                if (!uh.jeDelniPredmetnikVzpostavljen(vl))
+                {
+                    foreach (var o in ph.obvezni3())
+                    {
+                        studentinpredmet sip = new studentinpredmet();
+                        sip.predmetId = o.id;
+                        sip.studentId = vl.student.vpisnaStevilka;
+                        sip.vpisId = vl.id;
+                        db.studentinpredmets.Add(sip);
+                    }
+                }
                 //dodaj izbirne
                 foreach (var p in dodaj_p)
                 {
@@ -941,17 +1214,15 @@ namespace studis.Controllers
                     sip.vpisId = vl.id;
                     db.studentinpredmets.Add(sip);
                 }
-                //dodaj obvezne
-                foreach (var o in ph.obvezni3())
-                {
-                    studentinpredmet sip = new studentinpredmet();
-                    sip.predmetId = o.id;
-                    sip.studentId = vl.student.vpisnaStevilka;
-                    sip.vpisId = vl.id;
-                    db.studentinpredmets.Add(sip);
-                }
 
-                db.SaveChanges();
+                try
+                {
+                    db.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    return HttpNotFound();
+                }
 
                 TempData["id"] = id;
                 return RedirectToAction("VpisniListSuccess");
@@ -1060,7 +1331,19 @@ namespace studis.Controllers
             {
                 //preveri da dodaten rpedmet ni v modulih
                 if (ph.preveriIzbirne3(moduli, d)) {
-
+                    //dodaj obvezne
+                    //ce je delni potem so ze noter
+                    if (!uh.jeDelniPredmetnikVzpostavljen(vl))
+                    {
+                        foreach (var o in ph.obvezni3())
+                        {
+                            studentinpredmet sip = new studentinpredmet();
+                            sip.predmetId = o.id;
+                            sip.studentId = vl.student.vpisnaStevilka;
+                            sip.vpisId = vl.id;
+                            db.studentinpredmets.Add(sip);
+                        }
+                    }
                     //dodaj izbirne
                     foreach (var p in dodaj_p)
                     {
@@ -1070,17 +1353,15 @@ namespace studis.Controllers
                         sip.vpisId = vl.id;
                         db.studentinpredmets.Add(sip);
                     }
-                    //dodaj obvezne
-                    foreach (var o in ph.obvezni3())
-                    {
-                        studentinpredmet sip = new studentinpredmet();
-                        sip.predmetId = o.id;
-                        sip.studentId = vl.student.vpisnaStevilka;
-                        sip.vpisId = vl.id;
-                        db.studentinpredmets.Add(sip);
-                    }
 
-                    db.SaveChanges();
+                    try
+                    {
+                        db.SaveChanges();
+                    }
+                    catch (Exception ex)
+                    {
+                        return HttpNotFound();
+                    }
 
                     TempData["id"] = id;
                     return RedirectToAction("VpisniListSuccess");

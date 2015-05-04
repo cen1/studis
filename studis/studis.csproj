@@ -514,6 +514,8 @@
     <Content Include="Views\IzpitniRok\UspesnoDodan.cshtml" />
     <Content Include="Views\IzpitniRok\UspesnoSpremenjen.cshtml" />
     <Content Include="Views\IzpitniRok\UspesnoIzbrisan.cshtml" />
+    <Content Include="Views\VpisniList\VpisniListEdit.cshtml" />
+    <Content Include="Views\VpisniList\VpisniListSuccess2.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

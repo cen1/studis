@@ -59,7 +59,7 @@ namespace studis.Controllers
             }
             if (!students.Any())
                 students = null;
-            return PartialView("_StudentSearchPartial",students);
+            return PartialView("_StudentSearchPartial",students.ToList());
         }
 
         [Authorize(Roles = "Referent")]

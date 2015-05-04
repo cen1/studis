@@ -21,7 +21,11 @@
             }
             @if (User.IsInRole("Referent"))
             {
-                <th>Potrditev vpisnega lista</th>
+                <th>Potrditev/sprememba vpisnega lista</th>
+            }
+            @if (User.IsInRole("Referent"))
+            {
+                <th>Vpiši</th>
             }
         </tr>
 @if (Model != null)
@@ -41,6 +45,10 @@
             @if (User.IsInRole("Referent"))
             {
                 <td>@Html.ActionLink("Seznam Vpisov", "SeznamVpisov", "Potrditev", new { id = item.vpisnaStevilka }, null)</td>
+            }
+            @if (User.IsInRole("Referent"))
+            {
+                <td><a href="~/VpisniList/VpisniList?x=@item.my_aspnet_users.id">Vpiši</a></td>
             }
     </tr>
     }

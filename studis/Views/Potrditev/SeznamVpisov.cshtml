@@ -4,9 +4,11 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Seznam Nepotrjenih Vpisov</h2>
+<p>Študent @ViewBag.student.ime @ViewBag.student.priimek - @ViewBag.student.vpisnaStevilka</p>
 
-@if (ViewBag.vpisi != null)
+<h2>Seznam nepotrjenih vpisov</h2>
+
+@if (ViewBag.vpisiN != null)
 {
     <table>
         <tr>
@@ -15,8 +17,9 @@
             <th>Program</th>
             <th>Vrsta vpisa</th>
             <th>Potrdi</th>
+            <th>Spremeni</th>
         </tr>
-        @foreach (var v in ViewBag.vpisi)
+        @foreach (var v in ViewBag.vpisiN)
         {
             <tr>
                 <td>@v.letnikStudija</td>
@@ -25,6 +28,36 @@
                 <td>@v.sifrant_vrstavpisa.naziv</td>
                 <td>
                     <a href="~/Potrditev/Potrditev/@v.id">Potrdi</a>
+                </td>
+                <td>
+                    <a href="~/VpisniList/VpisniListEdit/@v.id">Spremeni</a>
+                </td>
+            </tr>
+        }
+    </table>
+}
+
+<h2>Seznam potrjenih vpisov</h2>
+
+@if (ViewBag.vpisiP != null)
+{
+    <table>
+        <tr>
+            <th>Letnik</th>
+            <th>Študijsko leto</th>
+            <th>Program</th>
+            <th>Vrsta vpisa</th>
+            <th>Spremeni</th>
+        </tr>
+        @foreach (var v in ViewBag.vpisiP)
+        {
+            <tr>
+                <td>@v.letnikStudija</td>
+                <td>@v.studijskoLeto</td>
+                <td>@v.sifrant_studijskiprogram.naziv</td>
+                <td>@v.sifrant_vrstavpisa.naziv</td>
+                <td>
+                    <a href="~/VpisniList/VpisniListEdit/@v.id">Spremeni</a>
                 </td>
             </tr>
         }
