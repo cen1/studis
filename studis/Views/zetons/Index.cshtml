@@ -4,14 +4,19 @@
     ViewBag.Title = "Žetoni";
 }
 
+<script src="@Url.Content("~/Scripts/filter_zeton.js")" type="text/javascript"></script>
+
 <h2>Seznam žetonov</h2>
     <span style="color:red">
     @if (TempData["warning"] != null) {
         @TempData["warning"]
     }
     </span>
-<table class="table" id="izpis">
-    <tr>
+
+Filtriraj po vpisni številki: <input name="filter" type="text" id="filter" value="" />
+<br />
+<table class="table" id="izpis_zetonov">
+    <tr id="zero">
         <th>
             Vpisna številka
         </th>
@@ -43,7 +48,7 @@
     </tr>
 
 @foreach (var item in Model) {
-    <tr>
+    <tr id="@item.vpisnaStevilka">
         <td>
             @Html.DisplayFor(modelItem => item.student.vpisnaStevilka)
         </td>

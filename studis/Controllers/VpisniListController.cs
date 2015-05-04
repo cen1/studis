@@ -14,23 +14,61 @@ namespace studis.Controllers
         public studisEntities db = new studisEntities();
 
         // GET: VpisniList
-        public ActionResult VpisniList()
+        public ActionResult VpisniList(int? x)
         {
             UserHelper uh = new UserHelper();
-            //poglej ce obstaja vnos v tabeli student
-            var sid = uh.FindByName(User.Identity.Name).students.FirstOrDefault();
-            if (sid != null) {
-                ViewBag.zetoniVB = sid.zetons.Where(a => a.porabljen == false);
-                //poglej ce ima zeton
-                if (!uh.imaZeton(sid))
+
+            student sid = null;
+            kandidat kid = null;
+
+            if (x == null && User.IsInRole("Študent"))
+            {
+                //poglej ce obstaja vnos v tabeli student
+                sid = uh.FindByName(User.Identity.Name).students.FirstOrDefault();
+                if (sid != null)
                 {
-                    return RedirectToAction("NiZetona");
+                    ViewBag.zetoniVB = sid.zetons.Where(a => a.porabljen == false);
+                    //poglej ce ima zeton
+                    if (!uh.imaZeton(sid))
+                    {
+                        return RedirectToAction("NiZetona");
+                    }
+                }
+                else
+                {
+                    kid = uh.FindByName(User.Identity.Name).kandidats.FirstOrDefault();
+                    if (kid == null) return HttpNotFound();
                 }
             }
+            else if (x != null && User.IsInRole("Referent")){
+                //pogledamo ce obstaja študent ali kandidat
+                //gledamo po userId ker sta kandidat id in student vpisnaStevilka hipoteticno lahko enaka
+                var usr = db.my_aspnet_users.Where(a => a.id == x).FirstOrDefault();
+                if (usr != null)
+                {
+                    sid = usr.students.FirstOrDefault();
+                    if (sid == null)
+                    {
+                        //pogledamo se ce obstaja kandidat
+                        kid = usr.kandidats.FirstOrDefault();
+                        if (kid == null) return HttpNotFound();
+                    }
+                }
+                else
+                {
+                    return HttpNotFound();
+                }
+            }
+            else return HttpNotFound();
+
+            if (sid == null && kid == null) return HttpNotFound();
 
             ViewBag.StudijskiProgramiVB = new SelectList(db.sifrant_studijskiprogram.OrderBy(a => a.naziv), "id", "naziv");
             ViewBag.KlasiusVB = new SelectList(db.sifrant_klasius.OrderBy(a => a.id != 16204).ThenBy(b => b.id), "id", "naziv");
-            ViewBag.VrstaVpisaVB = new SelectList(db.sifrant_vrstavpisa.Where(a => a.id != 98), "id", "naziv");
+            if (User.IsInRole("Študent"))
+                ViewBag.VrstaVpisaVB = new SelectList(db.sifrant_vrstavpisa.Where(a => a.id != 98), "id", "naziv");
+            else if (User.IsInRole("Referent"))
+                ViewBag.VrstaVpisaVB = new SelectList(db.sifrant_vrstavpisa, "id", "naziv");
             ViewBag.NacinStudijaVB = new SelectList(db.sifrant_nacinstudija, "id", "naziv");
             ViewBag.OblikaStudijaVB = new SelectList(db.sifrant_oblikastudija, "id", "naziv");
             ViewBag.SpolVB = new SelectList(db.sifrant_spol.OrderBy(a => a.naziv), "id", "naziv");
@@ -85,8 +123,6 @@ namespace studis.Controllers
                 ViewBag.dr_letoVB = rleto;
             }
 
-            
-
             //napolnimo podatke ce se da
             if (sid != null) {
                 int tid = sid.vpis.Last().id;
@@ -100,60 +136,66 @@ namespace studis.Controllers
             }
             else
             {
-                //prvi vpis, napolni iz tabele kandidat
-                VpisniListModel model = Baza.getVpisniListKandidat(uh.FindByName(User.Identity.Name));
-                ViewBag.zacasnipodatkiVB = false;
-                return View(model);
+                if (kid != null)
+                {
+                    //prvi vpis, napolni iz tabele kandidat
+                    VpisniListModel model = Baza.getVpisniListKandidat(kid.my_aspnet_users);
+                    ViewBag.zacasnipodatkiVB = false;
+                    return View(model);
+                }
+                else
+                {
+                    return HttpNotFound();
+                }
             }
         }
 
         public ActionResult NiZetona()
         {
             return View();
-		}
-		
-        [Authorize(Roles = "Referent")]
-        public ActionResult VpisniListEdit(int id)
-        {
-            ViewBag.StudijskiProgrami = new SelectList(db.sifrant_studijskiprogram.OrderBy(a => a.id != 1000468).ThenBy(a => a.naziv), "id", "naziv");
-            ViewBag.Klasius = new SelectList(db.sifrant_klasius.OrderBy(a => a.id != 16204).ThenBy(b => b.id), "id", "naziv");
-            ViewBag.VrstaVpisa = new SelectList(db.sifrant_vrstavpisa, "id", "naziv");
-            ViewBag.NacinStudija = new SelectList(db.sifrant_nacinstudija, "id", "naziv");
-            ViewBag.OblikaStudija = new SelectList(db.sifrant_oblikastudija, "id", "naziv");
-            ViewBag.Spol = new SelectList(db.sifrant_spol.OrderBy(a => a.naziv), "id", "naziv");
-            ViewBag.Obcina = new SelectList(db.sifrant_obcina.OrderBy(a => a.naziv != "Ljubljana").ThenBy(a => a.naziv), "id", "naziv");
-            ViewBag.Drzava = new SelectList(db.sifrant_drzava.OrderBy(a => a.naziv != "Slovenija").ThenBy(a => a.naziv), "id", "naziv");
-            ViewBag.PostnaStevilka = new SelectList(db.sifrant_postnastevilka.OrderBy(a => a.naziv), "id", "naziv");
-            ViewBag.Letnik = new SelectList(db.sifrant_letnik.OrderBy(a => a.naziv != "Prvi").ThenBy(b => b.id), "id", "naziv");
-            ViewBag.StudijskoLetoPrvegaVpisa = new SelectList(db.sifrant_studijskoletoprvegavpisa.OrderByDescending(a => a.id), "id", "naziv");
-            ViewBag.IzbirnaSkupina = new SelectList(db.sifrant_izbirnaskupina, "id", "naziv");
-            ViewBag.Smer = new SelectList(db.sifrant_smer, "id", "naziv");
-
-            Baza bz = new Baza();
-            VpisniListModel model = bz.getVpisniList(id);
-
-            return View(model);
-        }
-        
+		}        
         
         [HttpPost]
-        public ActionResult VpisniList(studis.Models.VpisniListModel model)
+        public ActionResult VpisniList(studis.Models.VpisniListModel model, int? x)
         {
             UserHelper uh = new UserHelper();
 
             //poglej ce obstaja vnos v tabeli student
-            var sid = uh.FindByName(User.Identity.Name).students.FirstOrDefault();
-            if (sid != null)
+            student tsid = null; //zacasen iz (potencialno) uh konteksta
+            student sid = null; //dejanski            
+
+            if (x == null && User.IsInRole("Študent"))
+            {
+                //poglej ce obstaja vnos v tabeli student
+                tsid = uh.FindByName(User.Identity.Name).students.FirstOrDefault();
+            }
+            else if (x != null && User.IsInRole("Referent"))
+            {
+                //pogledamo ce obstaja študent ali kandidat
+                //gledamo po userId ker sta kandidat id in student vpisnaStevilka hipoteticno lahko enaka
+                var usr = db.my_aspnet_users.Where(a => a.id == x).FirstOrDefault();
+                if (usr != null)
+                {
+                    tsid = usr.students.FirstOrDefault();
+                }
+                else
+                {
+                    return HttpNotFound();
+                }
+            }
+            else return HttpNotFound();
+
+            if (tsid != null)
             {
                 //poglej ce ima zeton
-                if (!uh.imaZeton(sid))
+                if (!uh.imaZeton(tsid))
                 {
                     return RedirectToAction("NiZetona");
                 }
                 else
                 {
                     //poglej ce se vsaj en zeton ujema z oddanimi podatki
-                    if (!uh.preveriZeton(sid, model))
+                    if (!uh.preveriZeton(tsid, model))
                     {
                         return RedirectToAction("NiZetona");
                     }
@@ -172,7 +214,7 @@ namespace studis.Controllers
             model.studijskoLeto = "2015";
 
             //preveri logiko
-            List<string> logic = uh.preveriLogiko(model, sid, uh.FindByName(User.Identity.Name));
+            List<string> logic = uh.preveriLogiko(model, tsid, uh.FindByName(User.Identity.Name));
             if (logic.Count() != 0)
             {
                 foreach (var l in logic)
@@ -186,9 +228,12 @@ namespace studis.Controllers
                 vpi v = new vpi();
 
                 //ni prvi vpis
-                if (sid != null) {
+                if (tsid != null) {
                     
-                    v.vpisnaStevilka = sid.vpisnaStevilka;
+                    v.vpisnaStevilka = tsid.vpisnaStevilka;
+
+                    //pridobi studenta iz controller konteksta!
+                    sid = db.students.Where(a => a.vpisnaStevilka == tsid.vpisnaStevilka).First();
 
                     sid.ime = model.ime;
                     sid.priimek = model.priimek;
@@ -239,8 +284,12 @@ namespace studis.Controllers
                 }
                 else { //prvi vpis, loceno je treba naredit vnos za studenta
                     student s = new student();
+
+                    if (User.IsInRole("Študent"))
+                        s.userId = uh.FindByName(User.Identity.Name).id;
+                    else if (User.IsInRole("Referent"))
+                        s.userId = x.Value;
                     
-                    s.userId = uh.FindByName(User.Identity.Name).id;
                     s.datumRojstva = model.datumRojstva;
                     s.davcnaStevilka = model.davcnaStevilka;
                     s.drzava = model.drzava;
@@ -323,7 +372,7 @@ namespace studis.Controllers
             else
             {
                 ModelState.AddModelError("", "Prišlo je do napake.");
-                var errors = ModelState.Select(x => x.Value.Errors)
+                var errors = ModelState.Select(z => z.Value.Errors)
                            .Where(y => y.Count > 0)
                            .ToList();
                 foreach (var e in errors)
@@ -334,7 +383,10 @@ namespace studis.Controllers
             //repopulate model lists
             ViewBag.StudijskiProgramiVB = new SelectList(db.sifrant_studijskiprogram.OrderBy(a => a.naziv), "id", "naziv");
             ViewBag.KlasiusVB = new SelectList(db.sifrant_klasius.OrderBy(a => a.id != 16204).ThenBy(b => b.id), "id", "naziv");
-            ViewBag.VrstaVpisaVB = new SelectList(db.sifrant_vrstavpisa.Where(a => a.id != 98), "id", "naziv");
+            if (User.IsInRole("Študent"))
+                ViewBag.VrstaVpisaVB = new SelectList(db.sifrant_vrstavpisa.Where(a => a.id != 98), "id", "naziv");
+            else if (User.IsInRole("Referent"))
+                ViewBag.VrstaVpisaVB = new SelectList(db.sifrant_vrstavpisa, "id", "naziv");
             ViewBag.NacinStudijaVB = new SelectList(db.sifrant_nacinstudija, "id", "naziv");
             ViewBag.OblikaStudijaVB = new SelectList(db.sifrant_oblikastudija, "id", "naziv");
             ViewBag.SpolVB = new SelectList(db.sifrant_spol.OrderBy(a => a.naziv), "id", "naziv");
@@ -391,6 +443,31 @@ namespace studis.Controllers
 
             if (model.naslovZacasni != null) ViewBag.zacasnipodatkiVB = true;
             else ViewBag.zacasnipodatkiVB = false;
+
+            return View(model);
+        }
+
+        [Authorize(Roles = "Referent")]
+        public ActionResult VpisniListEdit(int id)
+        {
+            if (db.vpis.Find(id) == null) return HttpNotFound();
+
+            ViewBag.StudijskiProgrami = new SelectList(db.sifrant_studijskiprogram.OrderBy(a => a.id != 1000468).ThenBy(a => a.naziv), "id", "naziv");
+            ViewBag.Klasius = new SelectList(db.sifrant_klasius.OrderBy(a => a.id != 16204).ThenBy(b => b.id), "id", "naziv");
+            ViewBag.VrstaVpisaVB = new SelectList(db.sifrant_vrstavpisa, "id", "naziv");
+            ViewBag.NacinStudija = new SelectList(db.sifrant_nacinstudija, "id", "naziv");
+            ViewBag.OblikaStudija = new SelectList(db.sifrant_oblikastudija, "id", "naziv");
+            ViewBag.Spol = new SelectList(db.sifrant_spol.OrderBy(a => a.naziv), "id", "naziv");
+            ViewBag.Obcina = new SelectList(db.sifrant_obcina.OrderBy(a => a.naziv != "Ljubljana").ThenBy(a => a.naziv), "id", "naziv");
+            ViewBag.Drzava = new SelectList(db.sifrant_drzava.OrderBy(a => a.naziv != "Slovenija").ThenBy(a => a.naziv), "id", "naziv");
+            ViewBag.PostnaStevilka = new SelectList(db.sifrant_postnastevilka.OrderBy(a => a.naziv), "id", "naziv");
+            ViewBag.Letnik = new SelectList(db.sifrant_letnik.OrderBy(a => a.naziv != "Prvi").ThenBy(b => b.id), "id", "naziv");
+            ViewBag.StudijskoLetoPrvegaVpisa = new SelectList(db.sifrant_studijskoletoprvegavpisa.OrderByDescending(a => a.id), "id", "naziv");
+            ViewBag.IzbirnaSkupina = new SelectList(db.sifrant_izbirnaskupina, "id", "naziv");
+            ViewBag.Smer = new SelectList(db.sifrant_smer, "id", "naziv");
+
+            Baza bz = new Baza();
+            VpisniListModel model = bz.getVpisniListEdit(id);
 
             return View(model);
         }

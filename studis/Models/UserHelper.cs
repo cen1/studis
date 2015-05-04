@@ -185,7 +185,8 @@ namespace studis.Models
             if (vlm.vrstaStudija != 16204) napake.Add("Izbira klasius/vrsta študija ni podprta");
 
             //blokiraj vpis 98
-            if (vlm.vrstaVpisa == 98) napake.Add("Izbrana vrsta vpisa ni podprta");
+            if (user.my_aspnet_roles.Where(a => a.name == "Študent").FirstOrDefault() != null)
+                if (vlm.vrstaVpisa == 98) napake.Add("Izbrana vrsta vpisa ni podprta");
 
             //preveri vrocanje
             if (vlm.vrocanje && vlm.vrocanjeZacasni) napake.Add("Izberite le en naslov za vročanje");

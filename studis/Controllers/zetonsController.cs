@@ -18,7 +18,7 @@ namespace studis
         // GET: zetons
         public ActionResult Index()
         {
-            var zetons = db.zetons.Include(z => z.sifrant_klasius).Include(z => z.sifrant_letnik).Include(z => z.sifrant_oblikastudija).Include(z => z.sifrant_studijskiprogram).Include(z => z.sifrant_vrstavpisa).Include(z => z.student);
+            var zetons = db.zetons.Include(z => z.sifrant_klasius).Include(z => z.sifrant_letnik).Include(z => z.sifrant_oblikastudija).Include(z => z.sifrant_studijskiprogram).Include(z => z.sifrant_vrstavpisa).Include(z => z.student).Where(z => z.porabljen == false);
             return View(zetons.ToList());
         }
 

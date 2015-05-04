@@ -412,6 +412,7 @@
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\deflate.js" />
     <Content Include="Scripts\FileSaver.js" />
+    <Content Include="Scripts\filter_zeton.js" />
     <Content Include="Scripts\html2canvas.js" />
     <Content Include="Scripts\html2csv.js" />
     <None Include="Scripts\jquery-2.1.1-vsdoc.js" />
