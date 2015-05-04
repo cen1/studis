@@ -85,6 +85,10 @@
                     {
                         <li>@Html.ActionLink("Predmeti", "Predmeti", "Predmet")</li>
                     }
+                    @if (User.IsInRole("Referent") || User.IsInRole("Profesor"))
+                    {
+                        <li>@Html.ActionLink("Izpitni Rok", "Index", "IzpitniRok")</li>
+                    }
                     @if(User.IsInRole("Skrbnik") || User.IsInRole("Referent")) {
                         <li>@Html.ActionLink("Uvoz", "Import", "Import")</li>
                     }

@@ -98,6 +98,10 @@
         <AssociationConnector Association="studisModel.vpis_s_smer" />
         <EntityTypeShape EntityType="studisModel.sklep" Width="1.5" PointX="30.5" PointY="16.875" />
         <AssociationConnector Association="studisModel.sklep_student" />
+        <EntityTypeShape EntityType="studisModel.izpitnirok" Width="1.5" PointX="36.75" PointY="7.25" />
+        <AssociationConnector Association="studisModel.izpitnirok_predmet_fk" />
+        <AssociationConnector Association="studisModel.ocena_izpitnirok_fk" />
+        <AssociationConnector Association="studisModel.izpitnirokinstudent" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

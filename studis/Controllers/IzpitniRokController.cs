@@ -14,19 +14,22 @@ namespace studis.Controllers
     {
         public studisEntities db = new studisEntities();
 
+        public ActionResult Index()
+        {
+            return View();
+        }
 
         //GET: IzpitniRok/Dodaj
         public ActionResult Dodaj()
         {
-            SelectList temp = new SelectList(db.predmets.OrderBy(a => a.ime), "id", "ime");
+            List<predmet> temp = db.predmets.OrderBy(a => a.ime).ToList();
             
             List<SelectListItem> predmeti = new List<SelectListItem>();
-            foreach(SelectListItem i in temp) {
-                //Debug.WriteLine(i.Value + " " + i.Text);
-                //i.Text = i.Value  + i.Text;
+            foreach(predmet i in temp) {
+
                 SelectListItem p = new SelectListItem();
-                p.Value = i.Value;
-                p.Text = Convert.ToInt32(i.Value).ToString("000") + " - " + i.Text;
+                p.Value = i.id.ToString();
+                p.Text = Convert.ToInt32(p.Value).ToString("000") + " - " + i.ime + " (" + i.koda + ")";
                 predmeti.Add(p);
             }
             List<SelectListItem> ltemp = new List<SelectListItem>();
@@ -42,16 +45,16 @@ namespace studis.Controllers
         [HttpPost]
         public ActionResult Dodaj(IzpitniRokModel model)
         {
-            IzpitniRok izpitniRok = new IzpitniRok();
+            izpitnirok izpitniRok = new izpitnirok();
             izpitniRok.datum = UserHelper.StringToDate(model.datum);
             izpitniRok.predmet = db.predmets.SingleOrDefault(v => v.id == model.predmet);
-            izpitniRok.profesor = db.profesors.SingleOrDefault(p => p.id == model.profesor);
+            //izpitniRok.profesor = db.profesors.SingleOrDefault(p => p.id == model.profesor);
             try
             {
                 // TODO: Add insert logic here
-                db.IzpitniRoks.Add(izpitniRok);
-
-                return RedirectToAction("UspesnoDodan");
+                db.izpitniroks.Add(izpitniRok);
+                db.SaveChanges();
+                return View("UspesnoDodan");
             }
             catch
             {
@@ -85,10 +88,10 @@ namespace studis.Controllers
         [HttpPost]
         public ActionResult Edit(IzpitniRokModel model)
         {
-            IzpitniRok izpitniRok = new IzpitniRok();
+            izpitnirok izpitniRok = new izpitnirok();
             izpitniRok.datum = UserHelper.StringToDate(model.datum);
             izpitniRok.predmet = db.predmets.SingleOrDefault(v => v.id == model.predmet);
-            izpitniRok.profesor = db.profesors.SingleOrDefault(p => p.id == model.profesor);
+            //izpitniRok.profesor = db.profesors.SingleOrDefault(p => p.id == model.profesor);
 
             if (model.id == 0) //NI IZBRAN NOBEN ROK, USTVARI NOVEGA -> POGOJ ID "0" NE OBSTAJA
             {
@@ -102,7 +105,7 @@ namespace studis.Controllers
             {
                 // TODO: Add update logic here
                 //db.IzpitniRoks.Update
-                return RedirectToAction("UspesnoSpremenjen");
+                return View("UspesnoSpremenjen");
             }
             catch
             {
@@ -111,20 +114,36 @@ namespace studis.Controllers
         }
 
         // GET: IzpitniRok/Delete/5
-        public ActionResult Delete(int id)
+        public ActionResult Izbrisi()
         {
+            SelectList temp = new SelectList(db.predmets.OrderBy(a => a.ime), "id", "ime");
+
+            List<SelectListItem> predmeti = new List<SelectListItem>();
+            foreach (SelectListItem i in temp)
+            {
+                //Debug.WriteLine(i.Value + " " + i.Text);
+                //i.Text = i.Value  + i.Text;
+                SelectListItem p = new SelectListItem();
+                p.Value = i.Value;
+                p.Text = Convert.ToInt32(i.Value).ToString("000") + " - " + i.Text;
+                predmeti.Add(p);
+            }
+            List<SelectListItem> ltemp = new List<SelectListItem>();
+            ltemp.Add(new SelectListItem() { Value = "", Text = "Izbira" });
+            ViewBag.Prazen = new SelectList(ltemp, "Value", "Text");
+            ViewBag.Predmets = new SelectList(predmeti, "Value", "Text");
             return View();
         }
 
         // POST: IzpitniRok/Delete/5
         [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
+        public ActionResult Izbrisi(int id)
         {
             try
             {
                 // TODO: Add delete logic here
 
-                return RedirectToAction("Index");
+                return View("UspesnoIzbrisan");
             }
             catch
             {
@@ -170,17 +189,22 @@ namespace studis.Controllers
              * TO DO TO DO TO DO TO DO TO DO TO DO
              */ 
             int iid = Convert.ToInt32(predmet);
-            var izpitniRoki= new List<IzpitniRok>();// = db.predmets.SingleOrDefault(v => v.id == iid).izpitniRoks.ToList();
+            var pPredmet = db.predmets.SingleOrDefault(p => p.id == iid);
+            var izpitniRoki = pPredmet.izpitniroks.ToList();
             var seznamIzpitniRoki = new List<SelectListItem>();
             int c = 0;
-            foreach (IzpitniRok i in izpitniRoki)
+            foreach (izpitnirok i in izpitniRoki)
             {
                 c++;
-                seznamIzpitniRoki.Add(new SelectListItem() { Value = i.ID.ToString(), Text = (UserHelper.DateToString(i.datum) + " - " + i.profesor.ime + " " + i.profesor.priimek) });
+                string profesorji= "";
+                foreach(profesor p in pPredmet.profesors) {
+                    profesorji += " " + p.ime + " " + p.priimek + ",";
+                }
+                seznamIzpitniRoki.Add(new SelectListItem() { Value = i.id.ToString(), Text = (UserHelper.DateToString(i.datum) + " -" + profesorji) });
             }
             if (c < 1)
             {
-                seznamIzpitniRoki.Add(new SelectListItem() { Value = "0", Text = "Ta predmet nima razpisanih rokov." });
+                seznamIzpitniRoki.Add(new SelectListItem() { Value = "", Text = "Ta predmet nima razpisanih rokov." });
             }
             return new JavaScriptSerializer().Serialize(seznamIzpitniRoki);
         }
@@ -188,7 +212,7 @@ namespace studis.Controllers
         public string GetDatumForIzpitniRok(string id)
         {
             int iid = Convert.ToInt32(id);
-            var datum = db.IzpitniRoks.SingleOrDefault(r => r.ID == iid).datum;
+            var datum = db.izpitniroks.SingleOrDefault(r => r.id == iid).datum;
             return UserHelper.DateToString(datum);
         }
 
