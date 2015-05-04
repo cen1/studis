@@ -32,16 +32,37 @@
     <p>Izbirni predmeti</p>
     foreach (var modul in ViewBag.moduli)
     {
-        <div style="font-weight: bold">
-            <input type="checkbox" name="modul_@modul.id" value="@modul.id"> @modul.ime
-        </div>
-        foreach (var predmet in modul.predmets)
+        var counter = 0;
+        foreach (var item in ViewBag.Modul)
         {
-            <div>
-                @predmet.ime
-                .. @predmet.kreditne KT<br />
-            </div>
+            if ((counter == 0) && (item.predmet.modulId == modul.id))
+            {
+                <div style="font-weight: bold">
+                    <input type="checkbox" name="modul_@modul.id" value="@modul.id" checked> @modul.ime
+                </div>
+                foreach (var predmet in modul.predmets)
+                {
+                    <div>
+                        @predmet.ime
+                        .. @predmet.kreditne KT<br />
+                    </div>
+                }
+                counter++;
+            }
         }
+        if(counter == 0) {
+            <div style="font-weight: bold">
+                <input type="checkbox" name="modul_@modul.id" value="@modul.id"> @modul.ime
+            </div>
+            foreach (var predmet in modul.predmets)
+            {
+                <div>
+                    @predmet.ime
+                    .. @predmet.kreditne KT<br />
+                </div>
+            }
+        }
+
     }
 
     <div class="editor-label">

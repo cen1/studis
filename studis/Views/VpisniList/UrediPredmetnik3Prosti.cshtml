@@ -37,10 +37,26 @@
         </div>
         foreach (var predmet in modul.predmets)
         {
-            <div>
-                <input type="checkbox" name="prosto_@predmet.id" value="@predmet.id"> @predmet.ime
-                .. @predmet.kreditne KT<br />
-            </div>
+            var counter = 0;
+
+            foreach (var item in ViewBag.Modul)
+            {
+                if (@item.predmetId == @predmet.id)
+                {
+                    <div>
+                        <input type="checkbox" name="prosto_@predmet.id" value="@predmet.id" checked> @predmet.ime
+                        .. @predmet.kreditne KT<br />
+                    </div>
+                    counter++;
+                }
+            }
+            if (counter == 0)
+            {
+                <div>
+                    <input type="checkbox" name="prosto_@predmet.id" value="@predmet.id"> @predmet.ime
+                    .. @predmet.kreditne KT<br />
+                </div>
+            }
         }
     }
 

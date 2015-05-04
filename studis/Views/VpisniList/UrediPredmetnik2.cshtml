@@ -16,6 +16,13 @@
 
 @using (Html.BeginForm())
 {
+    <ul>
+        @foreach (var item in ViewBag.obvezniPredmeti)
+        {
+            <li>@item.ime <span>.. @item.kreditne KT</span></li>
+        }
+    </ul>
+
     <hr />
     <p style="font-weight: bold">Obvezni predmeti skupaj dajo @ViewBag.sumObv kreditnih točk</p>
     <p style="font-weight: bold">Izbrati morate še @ViewBag.sumIzb kreditnih točk iz izbirnih predmetov, vsaj en mora biti strokovno izbirni in vsaj en prosto izbirni.</p>
@@ -25,16 +32,39 @@
     foreach (var item in ViewBag.strokovnoPredmeti)
     {
         <span>
-            <input type="radio" name="strokovni" value="@item.id"> @item.ime .. @item.kreditne KT<br />
+            @if (@item.id == ViewBag.Strokovni)
+            {
+                <input type="radio" name="strokovni" value="@item.id" checked><span>@item.ime .. @item.kreditne KT</span><br />
+            }
+            else
+            {
+                <input type="radio" name="strokovni" value="@item.id"><span>@item.ime .. @item.kreditne KT</span><br />
+            }
+            
         </span>
     }
 
     <p>Prosto izbirni predmet</p>
     foreach (var item in ViewBag.prostoPredmeti)
     {
-        <span>
-            <input type="checkbox" name="prosto_@item.id" value="@item.id"> @item.ime .. @item.kreditne KT<br />
-        </span>
+        var counter = 0;
+        
+        foreach (var item2 in ViewBag.Prosto)
+        {
+            <span>
+                @if (@item2.predmetId == @item.id)
+                {
+                    <input type="checkbox" name="prosto_@item.id" value="@item.id" checked><span>@item.ime .. @item.kreditne KT</span><br />
+                    counter++;
+                }
+            </span>
+        }
+
+        if (@counter == 0)
+        {
+            <input type="checkbox" name="prosto_@item.id" value="@item.id"><span>@item.ime .. @item.kreditne KT</span><br />
+        }
+
     }
     @Html.HiddenFor(m => m.vlid)
     
