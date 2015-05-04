@@ -42,14 +42,15 @@
                 @Html.ValidationMessageFor(m => m.id)
             </div>
 
-            <!--Izbira Profesorja-->
+            <!--Izbira Profesorja
             <div class="editor-label">
-                @Html.LabelFor(m => m.profesor)
+                Html.LabelFor(m => m.profesor)
             </div>
             <div class="editor-field">
-                @Html.DropDownListFor(m => m.profesor, (SelectList)ViewBag.Prazen)
-                @Html.ValidationMessageFor(m => m.profesor)
+                Html.DropDownListFor(m => m.profesor, (SelectList)ViewBag.Prazen)
+                Html.ValidationMessageFor(m => m.profesor)
             </div>
+            -->
 
             <!--Izbira datuma-->
             <script>
@@ -77,7 +78,10 @@
     //napolni izpitne roke
     $(document).ready(function () {
         $("#predmet").change(function () {
-            $.get("/IzpitniRok/GetIzpitniRoksForPredmet/" + $(this).val(), function (response) {
+            console.log("Parameter: " + $("#predmet option:selected").val());
+            var url = "/IzpitniRok/GetIzpitniRoksForPredmet/" + $("#predmet option:selected").val();
+            console.log("URL: " + url);
+            $.get(url, function (response) {
                 var izpitniRoks = $.parseJSON(response);
                 var ddlIzpitniRoks = $("#id");
                 if ($("#predmet option:first-child").text() == "Izberi predmet") {
@@ -96,7 +100,7 @@
             });
         });
     });
-
+    /*
     //napolni profesorje
     $(document).ready(function () {
         $("#predmet").change(function () {
@@ -119,14 +123,33 @@
             });
         });
     });
+    */
 
     //napolni datum
     $(document).ready(function () {
         $("#id").change(function () {
-            $.get("/IzpitniRok/GetDatumForIzpitniRok/" + $(this).val(), function (response) {
+            console.log("Parameter: " + $("#id option:selected").val());
+            var url = "/IzpitniRok/GetDatumForIzpitniRok/" + $("#id option:selected").val();
+            console.log("URL: " + url);
+            $.get(url, function (response) {
                 var datum = response;
+                console.log("DATUM: " + datum);
                 $("#datum").val(datum);
             });
         });
     });
+    /*
+    $(document).ready(function () {
+        $("#id").ready(function () {
+            console.log("Parameter: " + $("#id option:selected").val());
+            var url = "/IzpitniRok/GetDatumForIzpitniRok/" + $("#id option:selected").val();
+            console.log("URL: " + url);
+            $.get(url, function (response) {
+                var datum = response;
+                console.log("DATUM: " + datum);
+                $("#datum").val(datum);
+            });
+        });
+    });
+    */
 </script>

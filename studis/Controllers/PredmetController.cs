@@ -23,8 +23,10 @@ namespace studis.Controllers
             var sList = new SelectList(new[] 
             {
                 new { Value = "0", Text = "Vsa leta" },
+                new { Value = "2013", Text = "2013/2014" },
+                new { Value = "2014", Text = "2014/2015" },
                 new { Value = "2015", Text = "2015/2016" },
-                new { Value = "2016", Text = "2016/2017" },
+                
             },
             "Value", "Text", 1);
             ViewData["sList"] = sList;
@@ -40,20 +42,25 @@ namespace studis.Controllers
             //vsi študenti
             var students = db.students.Include(p => p.studentinpredmets).Include(p => p.vpis).ToList();
 
-            //studenti iz povezovalne tabele, ki imajo ta predmet
+            //studenti iz povezovalne tabele, ki imajo ta predmet v iskanem letu
             var povezovalna = from p in db.studentinpredmets select p;
-            povezovalna = povezovalna.Where(p => p.predmetId == id).Distinct();
+            povezovalna = povezovalna.Where(p => p.predmetId == id && (p.vpi.studijskoLeto == leto || leto==0)).Distinct();
 
-            //med vsemi študenti izberi tiste ki imajo ta predmet
             List<student> list = new List<student>();
             foreach(var vpisna in povezovalna)
             {
                 student st = students.Where(s => s.vpisnaStevilka == vpisna.studentId).SingleOrDefault();
-                if (st != null && (st.vpis.Last().studijskoLeto == leto || leto == 0))
+                if (st != null)
+                {
                     list.Add(st);
+                }
             }
 
-            list = list.OrderBy(o => o.priimek).ToList();
+            if (list.Any())
+                list = list.OrderBy(o => o.priimek).ToList();
+            else
+                list = null;
+
             return View("PredmetStudenti", list);
         }
 

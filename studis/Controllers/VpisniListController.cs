@@ -762,17 +762,17 @@ namespace studis.Controllers
             if (vl == null) return HttpNotFound();
 
             //preveri ce je predmetnik ze bil izpolnjen
-            /*UserHelper uh = new UserHelper();
+            UserHelper uh = new UserHelper();
             if (!uh.jePredmetnikVzpostavljen(vl))
             {
                 return RedirectToAction("DrugiPredmetnik", "VpisniList", new { id = vl.id });
             }
             else 
-            {*/
-                // logika za prikaz predmetov za urejanje
+            {
                 PredmetHelper ph = new PredmetHelper();
 
                 //obvezni plus 1 strokovno izbirni plus 1 prosto izbirni
+                ViewBag.obvezniPredmeti = ph.obvezni2();
                 ViewBag.strokovnoPredmeti = ph.strokovnoizbirni2();
                 ViewBag.prostoPredmeti = ph.prostoizbirni2();
 
@@ -781,21 +781,113 @@ namespace studis.Controllers
                 ViewBag.sumObv = sumObv;
                 ViewBag.sumIzb = 60 - sumObv;
 
-                // označi tiste ki so že izbrani
+                // kateri strokovni predmet ima izbran                                                
+                var sp = db.studentinpredmets.SingleOrDefault(v => v.vpisId == id && (v.predmet.strokovnoizbirni == true));
+                ViewBag.Strokovni = sp.predmetId;
+
+                // katere prosto izbirne predmete ima izbrane
+                ViewBag.Prosto = db.studentinpredmets.Where(v => v.vpisId == id && (v.predmet.prostoizbirni == true)).ToList();
 
                 return View();
-            //}
+            }
         }
 
-        /*[HttpPost]
+        [HttpPost]
         [Authorize(Roles = "Referent")]
         public ActionResult UrediPredmetnik2(DrugiPredmetnikModel model, int id)
         {
+            //preveri ce vpisni sploh obstaja
+            var vl = db.vpis.Find(id);
+            if (vl == null) return HttpNotFound();
 
-            // validacija
+            PredmetHelper ph = new PredmetHelper();
+            int kreditne = 60 - ph.getKreditObv2();
+            List<predmet> dodaj_p = new List<predmet>();
 
-            return View();
-        }*/
+            int num_prosto = 0;
+            int num_strok = 0;
+
+            foreach (string key in Request.Form)
+            {
+                if (key.StartsWith("prosto_"))
+                {
+                    int k = Convert.ToInt32(Request.Form[key]);
+                    predmet p = db.predmets.Where(a => a.id == k).First();
+                    if (p != null)
+                    {
+                        dodaj_p.Add(p);
+                        kreditne -= p.kreditne;
+                        num_prosto++;
+                    }
+                }
+                else if (key == "strokovni")
+                {
+                    int k = Convert.ToInt32(Request.Form[key]);
+                    predmet p = db.predmets.Where(a => a.id == k).First();
+                    if (p != null)
+                    {
+                        dodaj_p.Add(p);
+                        kreditne -= p.kreditne;
+                        num_strok++;
+                    }
+                }
+            }
+
+            if (num_strok == 0 || num_prosto == 0)
+            {
+                // kateri strokovni predmet ima izbran                                                
+                var sp = db.studentinpredmets.SingleOrDefault(v => v.vpisId == id && (v.predmet.strokovnoizbirni == true));
+                ViewBag.Strokovni = sp.predmetId;
+
+                // katere prosto izbirne predmete ima izbrane
+                ViewBag.Prosto = db.studentinpredmets.Where(v => v.vpisId == id && (v.predmet.prostoizbirni == true)).ToList();
+
+                Session["error"] = "Izbrati morate vsaj en strokovno ali prosto izbirni predmet";
+                return RedirectToAction("UrediPredmetnik2", new { id = id });
+            }
+
+            if (kreditne == 0)
+            {
+                // odstrani vse
+                db.studentinpredmets.RemoveRange(db.studentinpredmets.Where(x => x.vpisId == id));
+
+                //dodaj izbirne
+                foreach (var p in dodaj_p)
+                {
+                    studentinpredmet sip = new studentinpredmet();
+                    sip.predmetId = p.id;
+                    sip.studentId = vl.student.vpisnaStevilka;
+                    sip.vpisId = vl.id;
+                    db.studentinpredmets.Add(sip);
+                }
+                //dodaj obvezne
+                foreach (var o in ph.obvezni2())
+                {
+                    studentinpredmet sip = new studentinpredmet();
+                    sip.predmetId = o.id;
+                    sip.studentId = vl.student.vpisnaStevilka;
+                    sip.vpisId = vl.id;
+                    db.studentinpredmets.Add(sip);
+                }
+
+                db.SaveChanges();
+
+                TempData["id"] = id;
+                return RedirectToAction("VpisniListSuccess");
+            }
+            else
+            {
+                // kateri strokovni predmet ima izbran                                                
+                var sp = db.studentinpredmets.SingleOrDefault(v => v.vpisId == id && (v.predmet.strokovnoizbirni == true));
+                ViewBag.Strokovni = sp.predmetId;
+
+                // katere prosto izbirne predmete ima izbrane
+                ViewBag.Prosto = db.studentinpredmets.Where(v => v.vpisId == id && (v.predmet.prostoizbirni == true)).ToList();
+
+                Session["error"] = "Nepravilno število izbranih kreditnih točk";
+                return RedirectToAction("UrediPredmetnik2", new { id = id });
+            }
+        }
 
         [Authorize(Roles = "Referent")]
         public ActionResult UrediPredmetnik3(int id)
@@ -820,7 +912,7 @@ namespace studis.Controllers
 
             //preveri ce je predmetnik ze bil izpolnjen
             UserHelper uh = new UserHelper();
-            /*if (!uh.jePredmetnikVzpostavljen(vl))
+            if (!uh.jePredmetnikVzpostavljen(vl))
             {
                 //če je povprečna ocena 8 ali več si prosto izbira, sicer izbere 2 modula plus en izbirni plus diploma obvezni
                 if (uh.preveriPovprecje(vl.student))
@@ -833,7 +925,7 @@ namespace studis.Controllers
                 }
             }
             else
-            {*/
+            {
                 //če je povprečna ocena 8 ali več si prosto izbira, sicer izbere 2 modula plus en izbirni plus diploma obvezni
                 if (uh.preveriPovprecje(vl.student))
                 {
@@ -843,13 +935,12 @@ namespace studis.Controllers
                 {
                     return RedirectToAction("UrediPredmetnik3Moduli", new { id = id });
                 }
-            //}
+            }
         }
 
         [Authorize(Roles = "Referent")]
         public ActionResult UrediPredmetnik3Prosti(int id)
         {
-
             //preveri ce vpisni sploh obstaja
             var vl = db.vpis.Find(id);
             if (vl == null) return HttpNotFound();
@@ -870,18 +961,78 @@ namespace studis.Controllers
             ViewBag.sumIzb = 60 - sumObv;
 
             // označi tiste ki so že izbrani
+            ViewBag.Modul = db.studentinpredmets.Where(v => v.vpisId == id && v.predmet.modul != null); 
 
             return View();
         }
 
-        /*[HttpPost]
+        [HttpPost]
         [Authorize(Roles = "Referent")]
         public ActionResult UrediPredmetnik3Prosti(TretjiPredmetnikProstiModel model, int id)
         {
+            //preveri ce vpisni sploh obstaja
+            var vl = db.vpis.Find(id);
+            if (vl == null) return HttpNotFound();
 
-            // validacija
+            //preveri ce ima povprecje
+            UserHelper uh = new UserHelper();
+            if (!uh.preveriPovprecje(vl.student)) return HttpNotFound();
 
-            return View();
+            PredmetHelper ph = new PredmetHelper();
+            int kreditne = 60 - ph.getKreditObv3();
+            List<predmet> dodaj_p = new List<predmet>();
+
+            foreach (string key in Request.Form)
+            {
+                if (key.StartsWith("prosto_"))
+                {
+                    int k = Convert.ToInt32(Request.Form[key]);
+                    predmet p = db.predmets.Where(a => a.id == k).First();
+                    if (p != null)
+                    {
+                        dodaj_p.Add(p);
+                        kreditne -= p.kreditne;
+                    }
+                }
+            }
+
+            if (kreditne == 0)
+            {
+                // odstrani vse
+                db.studentinpredmets.RemoveRange(db.studentinpredmets.Where(x => x.vpisId == id));
+
+                //dodaj izbirne
+                foreach (var p in dodaj_p)
+                {
+                    studentinpredmet sip = new studentinpredmet();
+                    sip.predmetId = p.id;
+                    sip.studentId = vl.student.vpisnaStevilka;
+                    sip.vpisId = vl.id;
+                    db.studentinpredmets.Add(sip);
+                }
+                //dodaj obvezne
+                foreach (var o in ph.obvezni3())
+                {
+                    studentinpredmet sip = new studentinpredmet();
+                    sip.predmetId = o.id;
+                    sip.studentId = vl.student.vpisnaStevilka;
+                    sip.vpisId = vl.id;
+                    db.studentinpredmets.Add(sip);
+                }
+
+                db.SaveChanges();
+
+                TempData["id"] = id;
+                return RedirectToAction("VpisniListSuccess");
+            }
+            else
+            {
+                // označi tiste ki so že izbrani
+                ViewBag.Modul = db.studentinpredmets.Where(v => v.vpisId == id && v.predmet.modul != null); 
+
+                Session["error"] = "Nepravilno število izbranih kreditnih točk";
+                return RedirectToAction("UrediPredmetnik3Prosti", new { id = id });
+            }
         }
 
         [Authorize(Roles = "Referent")]
@@ -910,6 +1061,7 @@ namespace studis.Controllers
             ViewBag.sumIzb = 60 - sumObv;
 
             // označi tiste ki so že izbrani
+            ViewBag.Modul = db.studentinpredmets.Where(v => v.vpisId == id && v.predmet.modul != null);
 
             return View();
         }
@@ -918,11 +1070,102 @@ namespace studis.Controllers
         [Authorize(Roles = "Referent")]
         public ActionResult UrediPredmetnik3Moduli(TretjiPredmetnikModuliModel model, int id)
         {
+            //preveri ce vpisni sploh obstaja
+            var vl = db.vpis.Find(id);
+            if (vl == null) return HttpNotFound();
 
-            // validacija
+            //preveri ce je predmetnik ze bil izpolnjen
+            UserHelper uh = new UserHelper();
+            if (uh.jePredmetnikVzpostavljen(vl)) return HttpNotFound();
 
-            return View();
-        }*/
+            PredmetHelper ph = new PredmetHelper();
+            int kreditne = 60 - ph.getKreditObv3();
+            List<predmet> dodaj_p = new List<predmet>();
+            List<modul> moduli = new List<modul>();
+
+            //moduli
+            foreach (string key in Request.Form)
+            {
+                if (key.StartsWith("modul_"))
+                {
+                    int k = Convert.ToInt32(Request.Form[key]);
+                    modul m = db.moduls.Where(a => a.id == k).First();
+                    moduli.Add(m);
+                    if (m != null)
+                    {
+                        dodaj_p.AddRange(m.predmets.ToList());
+                        foreach (var p in m.predmets)
+                            kreditne -= p.kreditne;
+                    }
+                }
+            }
+
+            //dodatni predmet
+            predmet d = db.predmets.Find(model.izbirni);
+            if (ModelState.IsValid)
+            {
+                if (d != null)
+                {
+                    dodaj_p.Add(d);
+                    kreditne -= d.kreditne;
+                }
+                else
+                {
+                    Session["error"] = "Dodatni predmet ne obstaja";
+                    return RedirectToAction("UrediPredmetnik3Moduli", new { id = id });
+                }
+
+            }
+            else
+            {
+                Session["error"] = ModelState.Select(x => x.Value.Errors).Where(y => y.Count > 0).ToList().First().First().ErrorMessage;
+                return RedirectToAction("UrediPredmetnik3Moduli", new { id = id });
+            }
+
+            if (kreditne == 0)
+            {
+                //preveri da dodaten rpedmet ni v modulih
+                if (ph.preveriIzbirne3(moduli, d))
+                {
+                    // odstrani vse
+                    db.studentinpredmets.RemoveRange(db.studentinpredmets.Where(x => x.vpisId == id));
+
+                    //dodaj izbirne
+                    foreach (var p in dodaj_p)
+                    {
+                        studentinpredmet sip = new studentinpredmet();
+                        sip.predmetId = p.id;
+                        sip.studentId = vl.student.vpisnaStevilka;
+                        sip.vpisId = vl.id;
+                        db.studentinpredmets.Add(sip);
+                    }
+                    //dodaj obvezne
+                    foreach (var o in ph.obvezni3())
+                    {
+                        studentinpredmet sip = new studentinpredmet();
+                        sip.predmetId = o.id;
+                        sip.studentId = vl.student.vpisnaStevilka;
+                        sip.vpisId = vl.id;
+                        db.studentinpredmets.Add(sip);
+                    }
+
+                    db.SaveChanges();
+
+                    TempData["id"] = id;
+                    return RedirectToAction("VpisniListSuccess");
+                }
+                else
+                {
+                    Session["error"] = "Dodatni predmet je že del enega izmed modulov";
+                    return RedirectToAction("UrediPredmetnik3Moduli", new { id = id });
+                }
+            }
+            else
+            {
+                Session["error"] = "Nepravilno število izbranih kreditnih točk";
+                return RedirectToAction("UrediPredmetnik3Moduli", new { id = id });
+            }
+        }
 
         public ActionResult PrviPredmetnik(int id)
         {
