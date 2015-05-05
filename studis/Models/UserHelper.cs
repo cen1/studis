@@ -185,6 +185,9 @@ namespace studis.Models
             //preveri letnik in studijski program
             if (vlm.studijskiProgram == 1000468 && vlm.letnikStudija > 3) napake.Add("Za ta program je maksimalen letnik 3");
 
+            //preveri studijski program
+            if (vlm.studijskiProgram != 1000468) napake.Add("Za ta program ne obstaja predmetnik in ni podprt");
+
             //preveri studijski program in klasius
             if (vlm.vrstaStudija != 16204) napake.Add("Izbira klasius/vrsta študija ni podprta");
 
@@ -232,7 +235,7 @@ namespace studis.Models
         {
             if (v.studentinpredmets.Count() == 0)
             {
-                //System.Diagnostics.Debug.WriteLine("Vzpostavljen za " + v.id.ToString() + " je false");
+                System.Diagnostics.Debug.WriteLine("Vzpostavljen za " + v.id.ToString() + " je false cnt 0");
                 return false;
             }
             else
@@ -240,11 +243,26 @@ namespace studis.Models
                 //preveri kreditne
                 PredmetHelper ph = new PredmetHelper();
                 List<predmet> l = new List<predmet>();
-                foreach (var a in v.studentinpredmets)
-                    l.Add(a.predmet);
 
-                if (ph.preveriKredite(l)) return true;
-                else return false;
+                var predmeti = v.studentinpredmets.Where(a => a.vpisId == v.id).ToList();
+                foreach (var a in predmeti)
+                {
+                    l.Add(a.predmet);
+                    System.Diagnostics.Debug.WriteLine(a.predmet.ime);
+                }
+
+                System.Diagnostics.Debug.WriteLine(v.id);
+                System.Diagnostics.Debug.WriteLine(v.studentinpredmets.Count());
+                if (ph.preveriKredite(l))
+                {
+                    System.Diagnostics.Debug.WriteLine("kreditne ok");
+                    return true;
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine("kreditne false");
+                    return false;
+                }
             }
         }
 

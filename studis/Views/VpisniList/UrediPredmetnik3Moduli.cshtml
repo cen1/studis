@@ -6,9 +6,9 @@
 
 <h2>Uredi predmetnik 3. letnika</h2>
 
-@if (Session["error"] != null)
+@if (TempData["error"] != null)
 {
-    <span style="color: red; font-weight: bold">@Session["error"]</span>
+    <span style="color: red; font-weight: bold">@TempData["error"]</span>
 }
 
 
@@ -33,7 +33,7 @@
     foreach (var modul in ViewBag.moduli)
     {
         var counter = 0;
-        foreach (var item in ViewBag.Modul)
+        foreach (var item in ViewBag.Oznaci)
         {
             if ((counter == 0) && (item.predmet.modulId == modul.id))
             {

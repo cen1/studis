@@ -56,7 +56,7 @@ namespace studis.Models
         public virtual sifrant_studijskoletoprvegavpisa sifrant_studijskoletoprvegavpisa { get; set; }
         public virtual sifrant_vrstavpisa sifrant_vrstavpisa { get; set; }
         public virtual student student { get; set; }
-        public virtual ICollection<studentinpredmet> studentinpredmets { get; set; }
         public virtual sifrant_smer sifrant_smer { get; set; }
+        public virtual ICollection<studentinpredmet> studentinpredmets { get; set; }
     }
 }

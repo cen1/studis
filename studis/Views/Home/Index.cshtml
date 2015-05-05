@@ -63,6 +63,7 @@
                 <th>Pdf vpisni list</th>
                 <th>Vzpostavi Predmetnik</th>
             </tr>
+        @{int stevec = 0;}
         @foreach (var v in ViewBag.vpisi)
         {
             <tr>
@@ -73,7 +74,7 @@
             <td>@(v.potrjen ? "Da" : "Ne")</td>
             <td><a href="~/List/Pdf/@v.id">Pdf</a></td>
             <td>
-                @if (!ViewBag.uh.jePredmetnikVzpostavljen(v))
+                @if (!ViewBag.vzpostavljen[stevec])
                 {
                     if (v.letnikStudija == 1)
                     {
@@ -90,6 +91,7 @@
                 }
              </td>
              </tr>
+            stevec++;
         }
         </table>
     }

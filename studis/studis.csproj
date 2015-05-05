@@ -190,7 +190,7 @@
     <Compile Include="Models\ip_lock.cs">
       <DependentUpon>Studis.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\IzpitniRok.cs">
+    <Compile Include="Models\izpitnirok.cs">
       <DependentUpon>Studis.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\IzpitniRokModel.cs" />

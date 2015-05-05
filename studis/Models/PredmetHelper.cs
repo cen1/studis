@@ -63,6 +63,7 @@ namespace studis.Models
             foreach (var p in predmeti)
                 sum+=p.kreditne;
 
+            System.Diagnostics.Debug.WriteLine(sum.ToString());
             if (sum != 60) return false;
             else return true;
         }

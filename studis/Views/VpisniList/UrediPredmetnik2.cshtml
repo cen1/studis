@@ -6,9 +6,9 @@
 
 <h2>Uredi predmetnik 2. letnika</h2>
 
-@if (Session["error"] != null)
+@if (TempData["error"] != null)
 {
-    <span style="color: red; font-weight: bold">@Session["error"]</span>
+    <span style="color: red; font-weight: bold">@TempData["error"]</span>
 }
 
 

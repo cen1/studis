@@ -9,7 +9,7 @@
 <br />
 <p>Študent: @ViewBag.student.ime @ViewBag.student.priimek - @ViewBag.student.vpisnaStevilka</p>
 
-@if (ViewBag.vpisni != null)
+@if (@ViewBag.Stevilo > 0)
 {
     <table>
         <thead>
@@ -21,7 +21,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var v in ViewBag.vpisni)
+            @foreach (var v in @ViewBag.vpisni)
             {
                 <tr>
                     <td>@v.letnikStudija</td>

@@ -6,9 +6,9 @@
 
 <h2>Predmetnik za 3 letnik</h2>
 
-@if (Session["error"] != null)
+@if (TempData["error"] != null)
 {
-    <span style="color: red; font-weight: bold">@Session["error"]</span>
+    <span style="color: red; font-weight: bold">@TempData["error"]</span>
 }
 
 
