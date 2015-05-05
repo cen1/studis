@@ -96,18 +96,16 @@
         <EntityTypeShape EntityType="studisModel.ocena" Width="1.5" PointX="39" PointY="6.875" />
         <AssociationConnector Association="studisModel.ocena_student" />
         <AssociationConnector Association="studisModel.ocena_vpis" />
-        <EntityTypeShape EntityType="studisModel.izpitnirokinstudent" Width="1.5" PointX="35.375" PointY="16.375" />
-        <EntityTypeShape EntityType="studisModel.izvajanje" Width="1.5" PointX="37" PointY="8.625" />
-        <AssociationConnector Association="studisModel.izpirnirokinstudenti_student_fk" />
+        <EntityTypeShape EntityType="studisModel.izpitnirok" Width="1.5" PointX="42.5" PointY="12.375" />
+        <EntityTypeShape EntityType="studisModel.izvajanje" Width="1.5" PointX="40.25" PointY="11.75" />
+        <AssociationConnector Association="studisModel.izpitnirok_izvajanje_fk" />
+        <AssociationConnector Association="studisModel.ocena_izpitnirok_fk" />
         <AssociationConnector Association="studisModel.izvajanje_i1_fk" />
         <AssociationConnector Association="studisModel.izvajanje_i2_fk" />
         <AssociationConnector Association="studisModel.izvajanje_i3_fk" />
         <AssociationConnector Association="studisModel.izvajanje_predmet_fk" />
         <AssociationConnector Association="studisModel.ocena_izvajanje" />
-        <EntityTypeShape EntityType="studisModel.izpitnirok" Width="1.5" PointX="39.25" PointY="3.25" />
-        <AssociationConnector Association="studisModel.izpitnirok_izvajanje_fk" />
-        <AssociationConnector Association="studisModel.ocena_izpitnirok_fk" />
-      </Diagram>
+        </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
 </edmx:Edmx>

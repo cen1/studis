@@ -21,7 +21,6 @@ namespace studis.Models
             this.skleps = new HashSet<sklep>();
             this.studentinpredmets = new HashSet<studentinpredmet>();
             this.ocenas = new HashSet<ocena>();
-            this.izpitnirokinstudents = new HashSet<izpitnirokinstudent>();
         }
     
         public int vpisnaStevilka { get; set; }
@@ -65,6 +64,5 @@ namespace studis.Models
         public virtual ICollection<sklep> skleps { get; set; }
         public virtual ICollection<studentinpredmet> studentinpredmets { get; set; }
         public virtual ICollection<ocena> ocenas { get; set; }
-        public virtual ICollection<izpitnirokinstudent> izpitnirokinstudents { get; set; }
     }
 }
