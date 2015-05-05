@@ -1622,6 +1622,12 @@ namespace studis.Controllers
 
         }
 
+        public ActionResult Napaka()
+        {
+            ViewBag.Message = TempData["Napaka"];
+            return View();
+        }
+
         public JsonResult PreveriEmso(string emso)
         {
             var result = Validate.isEmso(emso);
