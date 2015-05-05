@@ -1245,20 +1245,37 @@ namespace studis.Controllers
         {
             //preveri ce vpisni sploh obstaja
             var vl = db.vpis.Find(id);
-            if (vl == null) return HttpNotFound();
+            if (vl == null)
+            {
+                System.Diagnostics.Debug.WriteLine("vpisni list ne obstaja");
+                return HttpNotFound();
+            }
 
             //preveri ce je predmetnik ze bil izpolnjen, vseh 60kt
             UserHelper uh = new UserHelper();
-            if (uh.jePredmetnikVzpostavljen(vl)) return HttpNotFound();
+            if (uh.jePredmetnikVzpostavljen(vl))
+            {
+                System.Diagnostics.Debug.WriteLine("predmetnik je ze vzpostavljen");
+                return HttpNotFound();
+            }
 
             // preveri ce je trenutni user referent
             my_aspnet_users usr = uh.FindByName(User.Identity.Name);
+<<<<<<< HEAD
             if (usr.name != "referent")
             {
                 //preveri ce trenutni user sploh lahko dostopa do tega predmetnika
                 if (vl.student.userId != usr.id || vl.letnikStudija != 2) return HttpNotFound();
             }
             
+=======
+            if (vl.student.userId != usr.id || vl.letnikStudija != 2)
+            {
+                System.Diagnostics.Debug.WriteLine("nimate dostopa");
+                return HttpNotFound();
+            }
+
+>>>>>>> 9ce1d8555bfd24ceec27188b0e42d7c3ef78a0c2
             PredmetHelper ph = new PredmetHelper();
             int kreditne = 60 - ph.getKreditObv2();
             List<predmet> dodaj_p = new List<predmet>();
@@ -1319,14 +1336,15 @@ namespace studis.Controllers
                 }
                 
 
-                try
-                {
+                //try
+                //{
                     db.SaveChanges();
-                }
+                /*}
                 catch (Exception ex)
                 {
+                    System.Diagnostics.Debug.WriteLine("napaka "+ex.Message);
                     return HttpNotFound();
-                }
+                }*/
 
                 TempData["id"] = id;
                 return RedirectToAction("VpisniListSuccess");
