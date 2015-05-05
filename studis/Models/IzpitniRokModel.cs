@@ -24,11 +24,11 @@ namespace studis.Models
         [Display(Name = "Predmet")]
         public int predmet { get; set; }
         
-        /*
+        
         [Required(ErrorMessage = "Obvezno izbrati.")]
-        [Display(Name = "Profesor")]
-        public int profesor { get; set; }
-         */
+        [Display(Name = "Izvajanje")]
+        public int izvajanje { get; set; }
+        
 
     }
 }
