@@ -520,7 +520,6 @@
     <Content Include="Views\VpisniList\VpisniListSuccess2.cshtml" />
     <Content Include="Views\IzpitniRok\Izbrisi.cshtml" />
     <Content Include="Views\IzpitniRok\Index.cshtml" />
-    <Content Include="Views\VpisniList\Napaka.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

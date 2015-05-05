@@ -6,8 +6,45 @@
 
 <h2>Izbira letnika za urejanje</h2>
 
-<fieldset>
-    <br />
-    <p>@Html.ActionLink("Drugi letnik", "UrediPredmetnik2", "VpisniList", new { id = ViewBag.Id }, null)</p>
-    <p>@Html.ActionLink("Tretji letnik", "UrediPredmetnik3", "VpisniList", new { id = ViewBag.Id }, null)</p>
-</fieldset>
+<br />
+<p>Študent: @ViewBag.student.ime @ViewBag.student.priimek - @ViewBag.student.vpisnaStevilka</p>
+
+@if (ViewBag.vpisni != null)
+{
+    <table>
+        <thead>
+            <tr>
+                <th>Letnik</th>
+                <th>Študijsko leto</th>
+                <th>Program</th>
+                <th>Uredi</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var v in ViewBag.vpisni)
+            {
+                <tr>
+                    <td>@v.letnikStudija</td>
+                    <td>@v.studijskoLeto</td>
+                    <td>@v.sifrant_studijskiprogram.naziv</td>
+                    @if (v.letnikStudija == 2)
+                    {
+                        <td>
+                            <a href="~/VpisniList/UrediPredmetnik2/@v.id">Uredi</a>
+                        </td>
+                    }
+                    else if (v.letnikStudija == 3)
+                    {
+                        <td>
+                            <a href="~/VpisniList/UrediPredmetnik3/@v.id">Uredi</a>
+                        </td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p style="color:red;">Študent nima izpolnjenega vpisnega lista za 2. ali 3. letnik!</p>
+}

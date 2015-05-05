@@ -736,28 +736,26 @@ namespace studis.Controllers
         [Authorize(Roles = "Referent")]
         public ActionResult IzbiraLetnika(int id)
         {
-            ViewBag.Id = id;
+            var s = db.students.Find(id);
+            if (s == null) return HttpNotFound();
+
+            // dodaj samo tiste, ki imajo vpisni list za 2 ali 3 letnik
+            var vpisi = s.vpis.Where(a => a.letnikStudija == 2 || a.letnikStudija == 3);
+            List<vpi> vplist = new List<vpi>();
+            foreach (var v in vpisi)
+            {
+                vplist.Add(v);
+            }
+                
+            ViewBag.vpisni = vplist;
+            ViewBag.student = s;
+
             return View();
         }
 
         [Authorize(Roles = "Referent")]
         public ActionResult UrediPredmetnik2(int id)
-        {
-            // klic z vpisno stevilko
-            if (id > 60000000)
-            {
-                try
-                {
-                    var tmp = db.vpis.Where(v => v.vpisnaStevilka == id && v.letnikStudija == 2).ToList();
-                    id = tmp.Last().id;
-                }
-                catch
-                {
-                    TempData["Napaka"] = "Študent nima izpolnjenega vpisnega lista za 2. letnik!";
-                    return RedirectToAction("Napaka");
-                }
-            }
-            
+        {   
             var vl = db.vpis.Find(id);
             if (vl == null) return HttpNotFound();
 
@@ -892,21 +890,6 @@ namespace studis.Controllers
         [Authorize(Roles = "Referent")]
         public ActionResult UrediPredmetnik3(int id)
         {
-            // klic z vpisno stevilko
-            if (id > 60000000)
-            {
-                try
-                {
-                    var tmp = db.vpis.Where(v => v.vpisnaStevilka == id && v.letnikStudija == 3).ToList();
-                    id = tmp.Last().id;
-                }
-                catch
-                {
-                    TempData["Napaka"] = "Študent nima izpolnjenega vpisnega lista za 3. letnik!";
-                    return RedirectToAction("Napaka");
-                }
-            }
-
             var vl = db.vpis.Find(id);
             if (vl == null) return HttpNotFound();
 
@@ -1620,12 +1603,6 @@ namespace studis.Controllers
                 return RedirectToAction("TretjiPredmetnikModuli", new { id = id });
             }
 
-        }
-
-        public ActionResult Napaka()
-        {
-            ViewBag.Message = TempData["Napaka"];
-            return View();
         }
 
         public JsonResult PreveriEmso(string emso)
