@@ -376,6 +376,7 @@
           <Key>
             <PropertyRef Name="studentId" />
             <PropertyRef Name="predmetId" />
+            <PropertyRef Name="vpisId" />
           </Key>
           <Property Name="studentId" Type="int" Nullable="false" />
           <Property Name="predmetId" Type="uint" Nullable="false" />
@@ -1649,7 +1650,6 @@
           <EntitySet Name="predmets" EntityType="studisModel.predmet" />
           <EntitySet Name="profesors" EntityType="studisModel.profesor" />
           <EntitySet Name="students" EntityType="studisModel.student" />
-          <EntitySet Name="studentinpredmets" EntityType="studisModel.studentinpredmet" />
           <EntitySet Name="vpis" EntityType="studisModel.vpi" />
           <AssociationSet Name="predmet_modul_fk" Association="studisModel.predmet_modul_fk">
             <End Role="modul" EntitySet="moduls" />
@@ -1682,10 +1682,6 @@
           <AssociationSet Name="predmet_s_vrstastudija" Association="studisModel.predmet_s_vrstastudija">
             <End Role="sifrant_klasius" EntitySet="sifrant_klasius" />
             <End Role="predmet" EntitySet="predmets" />
-          </AssociationSet>
-          <AssociationSet Name="student_predmet_fk" Association="studisModel.student_predmet_fk">
-            <End Role="predmet" EntitySet="predmets" />
-            <End Role="studentinpredmet" EntitySet="studentinpredmets" />
           </AssociationSet>
           <AssociationSet Name="student_s_drzava" Association="studisModel.student_s_drzava">
             <End Role="sifrant_drzava" EntitySet="sifrant_drzava" />
@@ -1779,17 +1775,9 @@
             <End Role="sifrant_vrstavpisa" EntitySet="sifrant_vrstavpisa" />
             <End Role="vpi" EntitySet="vpis" />
           </AssociationSet>
-          <AssociationSet Name="predmet_student_fk" Association="studisModel.predmet_student_fk">
-            <End Role="student" EntitySet="students" />
-            <End Role="studentinpredmet" EntitySet="studentinpredmets" />
-          </AssociationSet>
           <AssociationSet Name="vpisnilist_student_fk" Association="studisModel.vpisnilist_student_fk">
             <End Role="student" EntitySet="students" />
             <End Role="vpi" EntitySet="vpis" />
-          </AssociationSet>
-          <AssociationSet Name="studentinpredmet_vpis" Association="studisModel.studentinpredmet_vpis">
-            <End Role="vpi" EntitySet="vpis" />
-            <End Role="studentinpredmet" EntitySet="studentinpredmets" />
           </AssociationSet>
           <AssociationSet Name="profesorinpredmet" Association="studisModel.profesorinpredmet">
             <End Role="profesor" EntitySet="profesors" />
@@ -1848,7 +1836,19 @@
             <End Role="student" EntitySet="students" />
             <End Role="izpitnirok" EntitySet="izpitniroks" />
           </AssociationSet>
-          
+          <EntitySet Name="studentinpredmets" EntityType="studisModel.studentinpredmet" />
+          <AssociationSet Name="student_predmet_fk" Association="studisModel.student_predmet_fk">
+            <End Role="predmet" EntitySet="predmets" />
+            <End Role="studentinpredmet" EntitySet="studentinpredmets" />
+          </AssociationSet>
+          <AssociationSet Name="predmet_student_fk" Association="studisModel.predmet_student_fk">
+            <End Role="student" EntitySet="students" />
+            <End Role="studentinpredmet" EntitySet="studentinpredmets" />
+          </AssociationSet>
+          <AssociationSet Name="studentinpredmet_vpis" Association="studisModel.studentinpredmet_vpis">
+            <End Role="vpi" EntitySet="vpis" />
+            <End Role="studentinpredmet" EntitySet="studentinpredmets" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="ip_lock">
           <Key>
@@ -2098,9 +2098,9 @@
           <NavigationProperty Name="sifrant_letnik" Relationship="studisModel.predmet_s_letnik" FromRole="predmet" ToRole="sifrant_letnik" />
           <NavigationProperty Name="sifrant_studijskiprogram" Relationship="studisModel.predmet_s_studijskiprogram" FromRole="predmet" ToRole="sifrant_studijskiprogram" />
           <NavigationProperty Name="sifrant_klasius" Relationship="studisModel.predmet_s_vrstastudija" FromRole="predmet" ToRole="sifrant_klasius" />
-          <NavigationProperty Name="studentinpredmets" Relationship="studisModel.student_predmet_fk" FromRole="predmet" ToRole="studentinpredmet" />
           <NavigationProperty Name="profesors" Relationship="studisModel.profesorinpredmet" FromRole="predmet" ToRole="profesor" />
           <NavigationProperty Name="izpitniroks" Relationship="studisModel.izpitnirok_predmet_fk" FromRole="predmet" ToRole="izpitnirok" />
+          <NavigationProperty Name="studentinpredmets" Relationship="studisModel.student_predmet_fk" FromRole="predmet" ToRole="studentinpredmet" />
         </EntityType>
         <EntityType Name="profesor">
           <Key>
@@ -2151,23 +2151,11 @@
           <NavigationProperty Name="sifrant_postnastevilka" Relationship="studisModel.student_s_postnastevilka" FromRole="student" ToRole="sifrant_postnastevilka" />
           <NavigationProperty Name="sifrant_postnastevilka1" Relationship="studisModel.student_s_postnastevilka_z" FromRole="student" ToRole="sifrant_postnastevilka" />
           <NavigationProperty Name="sifrant_spol" Relationship="studisModel.student_s_spol" FromRole="student" ToRole="sifrant_spol" />
-          <NavigationProperty Name="studentinpredmets" Relationship="studisModel.predmet_student_fk" FromRole="student" ToRole="studentinpredmet" />
           <NavigationProperty Name="vpis" Relationship="studisModel.vpisnilist_student_fk" FromRole="student" ToRole="vpi" />
           <NavigationProperty Name="zetons" Relationship="studisModel.zeton_student_fk" FromRole="student" ToRole="zeton" />
           <NavigationProperty Name="skleps" Relationship="studisModel.sklep_student" FromRole="student" ToRole="sklep" />
           <NavigationProperty Name="izpitniroks" Relationship="studisModel.izpitnirokinstudent" FromRole="student" ToRole="izpitnirok" />
-        </EntityType>
-        <EntityType Name="studentinpredmet">
-          <Key>
-            <PropertyRef Name="studentId" />
-            <PropertyRef Name="predmetId" />
-          </Key>
-          <Property Name="studentId" Type="Int32" Nullable="false" />
-          <Property Name="predmetId" Type="Int64" Nullable="false" />
-          <Property Name="vpisId" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="predmet" Relationship="studisModel.student_predmet_fk" FromRole="studentinpredmet" ToRole="predmet" />
-          <NavigationProperty Name="student" Relationship="studisModel.predmet_student_fk" FromRole="studentinpredmet" ToRole="student" />
-          <NavigationProperty Name="vpi" Relationship="studisModel.studentinpredmet_vpis" FromRole="studentinpredmet" ToRole="vpi" />
+          <NavigationProperty Name="studentinpredmets" Relationship="studisModel.predmet_student_fk" FromRole="student" ToRole="studentinpredmet" />
         </EntityType>
         <EntityType Name="vpi">
           <Key>
@@ -2208,8 +2196,8 @@
           <NavigationProperty Name="sifrant_studijskoletoprvegavpisa" Relationship="studisModel.vpis_s_studijskoletoprvegavpisa" FromRole="vpi" ToRole="sifrant_studijskoletoprvegavpisa" />
           <NavigationProperty Name="sifrant_vrstavpisa" Relationship="studisModel.vpis_s_vrstavpisa" FromRole="vpi" ToRole="sifrant_vrstavpisa" />
           <NavigationProperty Name="student" Relationship="studisModel.vpisnilist_student_fk" FromRole="vpi" ToRole="student" />
-          <NavigationProperty Name="studentinpredmets" Relationship="studisModel.studentinpredmet_vpis" FromRole="vpi" ToRole="studentinpredmet" />
           <NavigationProperty Name="sifrant_smer" Relationship="studisModel.vpis_s_smer" FromRole="vpi" ToRole="sifrant_smer" />
+          <NavigationProperty Name="studentinpredmets" Relationship="studisModel.studentinpredmet_vpis" FromRole="vpi" ToRole="studentinpredmet" />
         </EntityType>
         <Association Name="predmet_modul_fk">
           <End Type="studisModel.modul" Role="modul" Multiplicity="0..1">
@@ -2318,20 +2306,6 @@
             </Principal>
             <Dependent Role="predmet">
               <PropertyRef Name="vrstaStudija" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="student_predmet_fk">
-          <End Type="studisModel.predmet" Role="predmet" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="studisModel.studentinpredmet" Role="studentinpredmet" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="predmet">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="studentinpredmet">
-              <PropertyRef Name="predmetId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2655,18 +2629,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="predmet_student_fk">
-          <End Type="studisModel.student" Role="student" Multiplicity="1" />
-          <End Type="studisModel.studentinpredmet" Role="studentinpredmet" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="student">
-              <PropertyRef Name="vpisnaStevilka" />
-            </Principal>
-            <Dependent Role="studentinpredmet">
-              <PropertyRef Name="studentId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="vpisnilist_student_fk">
           <End Type="studisModel.student" Role="student" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -2678,20 +2640,6 @@
             </Principal>
             <Dependent Role="vpi">
               <PropertyRef Name="vpisnaStevilka" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="studentinpredmet_vpis">
-          <End Type="studisModel.vpi" Role="vpi" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="studisModel.studentinpredmet" Role="studentinpredmet" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="vpi">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="studentinpredmet">
-              <PropertyRef Name="vpisId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2915,7 +2863,59 @@
           <End Type="studisModel.student" Role="student" Multiplicity="*" />
           <End Type="studisModel.izpitnirok" Role="izpitnirok" Multiplicity="*" />
         </Association>
-        
+        <EntityType Name="studentinpredmet">
+          <Key>
+            <PropertyRef Name="studentId" />
+            <PropertyRef Name="predmetId" />
+            <PropertyRef Name="vpisId" />
+          </Key>
+          <Property Name="studentId" Type="Int32" Nullable="false" />
+          <Property Name="predmetId" Type="Int64" Nullable="false" />
+          <Property Name="vpisId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="predmet" Relationship="studisModel.student_predmet_fk" FromRole="studentinpredmet" ToRole="predmet" />
+          <NavigationProperty Name="student" Relationship="studisModel.predmet_student_fk" FromRole="studentinpredmet" ToRole="student" />
+          <NavigationProperty Name="vpi" Relationship="studisModel.studentinpredmet_vpis" FromRole="studentinpredmet" ToRole="vpi" />
+        </EntityType>
+        <Association Name="student_predmet_fk">
+          <End Type="studisModel.predmet" Role="predmet" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="studisModel.studentinpredmet" Role="studentinpredmet" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="predmet">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="studentinpredmet">
+              <PropertyRef Name="predmetId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="predmet_student_fk">
+          <End Type="studisModel.student" Role="student" Multiplicity="1" />
+          <End Type="studisModel.studentinpredmet" Role="studentinpredmet" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="student">
+              <PropertyRef Name="vpisnaStevilka" />
+            </Principal>
+            <Dependent Role="studentinpredmet">
+              <PropertyRef Name="studentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="studentinpredmet_vpis">
+          <End Type="studisModel.vpi" Role="vpi" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="studisModel.studentinpredmet" Role="studentinpredmet" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="vpi">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="studentinpredmet">
+              <PropertyRef Name="vpisId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -3266,15 +3266,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="studentinpredmets">
-            <EntityTypeMapping TypeName="studisModel.studentinpredmet">
-              <MappingFragment StoreEntitySet="studentinpredmet">
-                <ScalarProperty Name="vpisId" ColumnName="vpisId" />
-                <ScalarProperty Name="predmetId" ColumnName="predmetId" />
-                <ScalarProperty Name="studentId" ColumnName="studentId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="vpis">
             <EntityTypeMapping TypeName="studisModel.vpi">
               <MappingFragment StoreEntitySet="vpis">
@@ -3372,7 +3363,16 @@
               <ScalarProperty Name="vpisnaStevilka" ColumnName="studentId" />
             </EndProperty>
           </AssociationSetMapping>
-        </EntityContainerMapping>
+          <EntitySetMapping Name="studentinpredmets">
+            <EntityTypeMapping TypeName="studisModel.studentinpredmet">
+              <MappingFragment StoreEntitySet="studentinpredmet">
+                <ScalarProperty Name="vpisId" ColumnName="vpisId" />
+                <ScalarProperty Name="predmetId" ColumnName="predmetId" />
+                <ScalarProperty Name="studentId" ColumnName="studentId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
   </edmx:Runtime>

@@ -841,7 +841,7 @@ namespace studis.Controllers
                 // katere prosto izbirne predmete ima izbrane
                 ViewBag.Prosto = db.studentinpredmets.Where(v => v.vpisId == id && (v.predmet.prostoizbirni == true)).ToList();
 
-                Session["error"] = "Izbrati morate vsaj en strokovno ali prosto izbirni predmet";
+                TempData["error"] = "Izbrati morate vsaj en strokovno ali prosto izbirni predmet";
                 return RedirectToAction("UrediPredmetnik2", new { id = id });
             }
 
@@ -883,7 +883,7 @@ namespace studis.Controllers
                 // katere prosto izbirne predmete ima izbrane
                 ViewBag.Prosto = db.studentinpredmets.Where(v => v.vpisId == id && (v.predmet.prostoizbirni == true)).ToList();
 
-                Session["error"] = "Nepravilno število izbranih kreditnih točk";
+                TempData["error"] = "Nepravilno število izbranih kreditnih točk";
                 return RedirectToAction("UrediPredmetnik2", new { id = id });
             }
         }
@@ -1014,7 +1014,7 @@ namespace studis.Controllers
                 // označi tiste ki so že izbrani
                 ViewBag.Modul = db.studentinpredmets.Where(v => v.vpisId == id && v.predmet.modul != null); 
 
-                Session["error"] = "Nepravilno število izbranih kreditnih točk";
+                TempData["error"] = "Nepravilno število izbranih kreditnih točk";
                 return RedirectToAction("UrediPredmetnik3Prosti", new { id = id });
             }
         }
@@ -1095,14 +1095,14 @@ namespace studis.Controllers
                 }
                 else
                 {
-                    Session["error"] = "Dodatni predmet ne obstaja";
+                    TempData["error"] = "Dodatni predmet ne obstaja";
                     return RedirectToAction("UrediPredmetnik3Moduli", new { id = id });
                 }
 
             }
             else
             {
-                Session["error"] = ModelState.Select(x => x.Value.Errors).Where(y => y.Count > 0).ToList().First().First().ErrorMessage;
+                TempData["error"] = ModelState.Select(x => x.Value.Errors).Where(y => y.Count > 0).ToList().First().First().ErrorMessage;
                 return RedirectToAction("UrediPredmetnik3Moduli", new { id = id });
             }
 
@@ -1140,13 +1140,13 @@ namespace studis.Controllers
                 }
                 else
                 {
-                    Session["error"] = "Dodatni predmet je že del enega izmed modulov";
+                    TempData["error"] = "Dodatni predmet je že del enega izmed modulov";
                     return RedirectToAction("UrediPredmetnik3Moduli", new { id = id });
                 }
             }
             else
             {
-                Session["error"] = "Nepravilno število izbranih kreditnih točk";
+                TempData["error"] = "Nepravilno število izbranih kreditnih točk";
                 return RedirectToAction("UrediPredmetnik3Moduli", new { id = id });
             }
         }
@@ -1215,15 +1215,27 @@ namespace studis.Controllers
         {
             //preveri ce vpisni sploh obstaja
             var vl = db.vpis.Find(id);
-            if (vl == null) return HttpNotFound();
+            if (vl == null)
+            {
+                System.Diagnostics.Debug.WriteLine("vpisni list ne obstaja");
+                return HttpNotFound();
+            }
 
             //preveri ce je predmetnik ze bil izpolnjen, vseh 60kt
             UserHelper uh = new UserHelper();
-            if (uh.jePredmetnikVzpostavljen(vl)) return HttpNotFound();
+            if (uh.jePredmetnikVzpostavljen(vl))
+            {
+                System.Diagnostics.Debug.WriteLine("predmetnik je ze vzpostavljen");
+                return HttpNotFound();
+            }
 
             //preveri ce trenutni user sploh lahko dostopa do tega predmetnika
             my_aspnet_users usr = uh.FindByName(User.Identity.Name);
-            if (vl.student.userId != usr.id || vl.letnikStudija != 2) return HttpNotFound();
+            if (vl.student.userId != usr.id || vl.letnikStudija != 2)
+            {
+                System.Diagnostics.Debug.WriteLine("nimate dostopa");
+                return HttpNotFound();
+            }
 
             PredmetHelper ph = new PredmetHelper();
 
@@ -1298,7 +1310,7 @@ namespace studis.Controllers
 
             if (num_strok == 0 || num_prosto == 0)
             {
-                Session["error"] = "Izbrati morate vsaj en strokovno ali prosto izbirni predmet";
+                TempData["error"] = "Izbrati morate vsaj en strokovno ali prosto izbirni predmet";
                 return RedirectToAction("DrugiPredmetnik", new { id = id });
             }
 
@@ -1327,21 +1339,21 @@ namespace studis.Controllers
                 }
                 
 
-                //try
-                //{
+                try
+                {
                     db.SaveChanges();
-                /*}
+                }
                 catch (Exception ex)
                 {
                     System.Diagnostics.Debug.WriteLine("napaka "+ex.Message);
                     return HttpNotFound();
-                }*/
+                }
 
                 TempData["id"] = id;
                 return RedirectToAction("VpisniListSuccess");
             }
             else {
-                Session["error"] = "Nepravilno število izbranih kreditnih točk";
+                TempData["error"] = "Nepravilno število izbranih kreditnih točk";
                 return RedirectToAction("DrugiPredmetnik", new { id = id } );
             }
 
@@ -1469,7 +1481,7 @@ namespace studis.Controllers
             }
             else
             {
-                Session["error"] = "Nepravilno število izbranih kreditnih točk";
+                TempData["error"] = "Nepravilno število izbranih kreditnih točk";
                 return RedirectToAction("TretjiPredmetnikProsti", new { id = id });
             }
 
@@ -1556,14 +1568,14 @@ namespace studis.Controllers
                 }
                 else
                 {
-                    Session["error"] = "Dodatni predmet ne obstaja";
+                    TempData["error"] = "Dodatni predmet ne obstaja";
                     return RedirectToAction("TretjiPredmetnikModuli", new { id = id });
                 }
 
             }
             else
             {
-                Session["error"] = ModelState.Select(x => x.Value.Errors).Where(y => y.Count > 0).ToList().First().First().ErrorMessage;
+                TempData["error"] = ModelState.Select(x => x.Value.Errors).Where(y => y.Count > 0).ToList().First().First().ErrorMessage;
                 return RedirectToAction("TretjiPredmetnikModuli", new { id = id });
             }
 
@@ -1607,13 +1619,13 @@ namespace studis.Controllers
                     return RedirectToAction("VpisniListSuccess");
                 }
                 else {
-                    Session["error"] = "Dodatni predmet je že del enega izmed modulov";
+                    TempData["error"] = "Dodatni predmet je že del enega izmed modulov";
                 return RedirectToAction("TretjiPredmetnikModuli", new { id = id });
                 }
             }
             else
             {
-                Session["error"] = "Nepravilno število izbranih kreditnih točk";
+                TempData["error"] = "Nepravilno število izbranih kreditnih točk";
                 return RedirectToAction("TretjiPredmetnikModuli", new { id = id });
             }
 

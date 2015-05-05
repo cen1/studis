@@ -17,11 +17,11 @@ namespace studis.Models
         public student()
         {
             this.ocenas = new HashSet<ocena>();
-            this.studentinpredmets = new HashSet<studentinpredmet>();
             this.vpis = new HashSet<vpi>();
             this.zetons = new HashSet<zeton>();
             this.skleps = new HashSet<sklep>();
             this.izpitniroks = new HashSet<izpitnirok>();
+            this.studentinpredmets = new HashSet<studentinpredmet>();
         }
     
         public int vpisnaStevilka { get; set; }
@@ -61,10 +61,10 @@ namespace studis.Models
         public virtual sifrant_postnastevilka sifrant_postnastevilka { get; set; }
         public virtual sifrant_postnastevilka sifrant_postnastevilka1 { get; set; }
         public virtual sifrant_spol sifrant_spol { get; set; }
-        public virtual ICollection<studentinpredmet> studentinpredmets { get; set; }
         public virtual ICollection<vpi> vpis { get; set; }
         public virtual ICollection<zeton> zetons { get; set; }
         public virtual ICollection<sklep> skleps { get; set; }
         public virtual ICollection<izpitnirok> izpitniroks { get; set; }
+        public virtual ICollection<studentinpredmet> studentinpredmets { get; set; }
     }
 }

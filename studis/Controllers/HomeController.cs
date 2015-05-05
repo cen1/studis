@@ -28,10 +28,24 @@ namespace studis.Controllers
                     ViewBag.vpisnast = usr.students.First().vpisnaStevilka;
                     ViewBag.zetoni = usr.students.First().zetons.Where(a => a.porabljen == false);
                     ViewBag.vpisi = usr.students.First().vpis;
-                    ViewBag.uh = new UserHelper();
+
+                    List<bool> vzp_predmetnik = new List<bool>();
+   
+                    foreach (var v in ViewBag.vpisi)
+                    {
+                        if (uh.jePredmetnikVzpostavljen(v))
+                        {
+                            vzp_predmetnik.Add(true);
+                        }
+                        else
+                        {
+                            vzp_predmetnik.Add(false);
+                        }
+                    }
+                    ViewBag.vzpostavljen = vzp_predmetnik;
                 }
             }
-
+            
             return View();
    
         }
