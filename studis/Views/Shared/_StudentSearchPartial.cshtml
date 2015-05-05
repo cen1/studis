@@ -27,6 +27,10 @@
             {
                 <th>Vpiši</th>
             }
+            @if (User.IsInRole("Referent"))
+            {
+                <th>Uredi predmetnik</th>
+            }
         </tr>
 @if (Model != null)
 {
@@ -49,6 +53,10 @@
             @if (User.IsInRole("Referent"))
             {
                 <td><a href="~/VpisniList/VpisniList?x=@item.my_aspnet_users.id">Vpiši</a></td>
+            }
+            @if (User.IsInRole("Referent"))
+            {
+                <td>@Html.ActionLink("Uredi", "IzbiraLetnika", "VpisniList", new { id = item.vpisnaStevilka }, null)</td>
             }
     </tr>
     }
