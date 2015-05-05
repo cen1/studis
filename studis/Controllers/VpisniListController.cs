@@ -746,7 +746,8 @@ namespace studis.Controllers
             {
                 vplist.Add(v);
             }
-                
+
+            ViewBag.Stevilo = vplist.Count();
             ViewBag.vpisni = vplist;
             ViewBag.student = s;
 
