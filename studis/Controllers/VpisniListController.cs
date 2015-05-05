@@ -1045,7 +1045,7 @@ namespace studis.Controllers
             ViewBag.sumIzb = 60 - sumObv;
 
             // označi tiste ki so že izbrani
-            ViewBag.Modul = db.studentinpredmets.Where(v => v.vpisId == id && v.predmet.modul != null);
+            ViewBag.Oznaci = db.studentinpredmets.Where(v => v.vpisId == id && v.predmet.modul != null).ToList();
 
             return View();
         }
@@ -1251,10 +1251,14 @@ namespace studis.Controllers
             UserHelper uh = new UserHelper();
             if (uh.jePredmetnikVzpostavljen(vl)) return HttpNotFound();
 
-            //preveri ce trenutni user sploh lahko dostopa do tega predmetnika
+            // preveri ce je trenutni user referent
             my_aspnet_users usr = uh.FindByName(User.Identity.Name);
-            if (vl.student.userId != usr.id || vl.letnikStudija != 2) return HttpNotFound();
-
+            if (usr.name != "referent")
+            {
+                //preveri ce trenutni user sploh lahko dostopa do tega predmetnika
+                if (vl.student.userId != usr.id || vl.letnikStudija != 2) return HttpNotFound();
+            }
+            
             PredmetHelper ph = new PredmetHelper();
             int kreditne = 60 - ph.getKreditObv2();
             List<predmet> dodaj_p = new List<predmet>();
@@ -1392,9 +1396,13 @@ namespace studis.Controllers
             UserHelper uh = new UserHelper();
             if (uh.jePredmetnikVzpostavljen(vl)) return HttpNotFound();
 
-            //preveri ce trenutni user sploh lahko dostopa do tega predmetnika
+            //preveri ce je trenutni user referent
             my_aspnet_users usr = uh.FindByName(User.Identity.Name);
-            if (vl.student.userId != usr.id || vl.letnikStudija != 3) return HttpNotFound();
+            if (usr.name != "referent")
+            {
+                //preveri ce trenutni user sploh lahko dostopa do tega predmetnika
+                if (vl.student.userId != usr.id || vl.letnikStudija != 3) return HttpNotFound();
+            }
 
             //preveri ce ima povprecje
             if (!uh.preveriPovprecje(vl.student)) return HttpNotFound();
@@ -1506,9 +1514,14 @@ namespace studis.Controllers
             UserHelper uh = new UserHelper();
             if (uh.jePredmetnikVzpostavljen(vl)) return HttpNotFound();
 
-            //preveri ce trenutni user sploh lahko dostopa do tega predmetnika
+            
+           // preveri ce je trenutni user referent
             my_aspnet_users usr = uh.FindByName(User.Identity.Name);
-            if (vl.student.userId != usr.id || vl.letnikStudija != 3) return HttpNotFound();
+            if (usr.name != "referent")
+            {
+                //preveri ce trenutni user sploh lahko dostopa do tega predmetnika
+                if (vl.student.userId != usr.id || vl.letnikStudija != 3) return HttpNotFound();
+            }
 
             PredmetHelper ph = new PredmetHelper();
             int kreditne = 60 - ph.getKreditObv3();
