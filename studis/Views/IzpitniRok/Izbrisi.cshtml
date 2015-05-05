@@ -29,6 +29,15 @@
                 @Html.ValidationMessageFor(m => m.predmet)
             </div>
 
+            <!--Izbira izvajanja -->
+            <div class="editor-label">
+                @Html.LabelFor(m => m.izvajanje)
+            </div>
+            <div class="editor-field">
+                @Html.DropDownListFor(m => m.izvajanje, (SelectList)ViewBag.Prazen)
+                @Html.ValidationMessageFor(m => m.izvajanje)
+            </div>
+
             <!--Izbira IzpitnegaRoka-->
             <div class="editor-label">
                 @Html.LabelFor(m => m.id)

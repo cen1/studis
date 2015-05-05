@@ -46,7 +46,7 @@ namespace studis.Controllers
         {
             izpitnirok izpitniRok = new izpitnirok();
             izpitniRok.datum = UserHelper.StringToDate(model.datum);
-            izpitniRok.predmet = db.predmets.SingleOrDefault(v => v.id == model.predmet);
+            izpitniRok.izvajanje = db.izvajanjes.SingleOrDefault(i => i.id == model.izvajanje);//db.predmets.SingleOrDefault(v => v.id == model.predmet);
             //izpitniRok.profesor = db.profesors.SingleOrDefault(p => p.id == model.profesor);
             try
             {
@@ -90,6 +90,7 @@ namespace studis.Controllers
             {
                 // TODO: Add update logic here
                 var rok = db.izpitniroks.SingleOrDefault(r => r.id == model.id);
+               
                 rok.datum = UserHelper.StringToDate(model.datum);
                 //rok.predmet = db.predmets.SingleOrDefault(v => v.id == model.predmet);
                 db.SaveChanges();
@@ -220,18 +221,13 @@ namespace studis.Controllers
             int iid = Convert.ToInt32(id);
             Debug.WriteLine("ID " + iid);
             var izvajanje = db.izvajanjes.SingleOrDefault(i => i.id == iid);//db.predmets.SingleOrDefault(p => p.id == iid);
-            var izpitniRoki = iz//pPredmet.izpitniroks.ToList(); //Exception 
+            var izpitniRoki = izvajanje.izpitniroks;//pPredmet.izpitniroks.ToList(); //Exception 
             var seznamIzpitniRoki = new List<SelectListItem>();
             int c = 0;
             foreach (izpitnirok i in izpitniRoki)
             {
                 c++;
-                string profesorji = "";
-                foreach (profesor p in pPredmet.izvaja)
-                {
-                    profesorji += " " + p.ime + " " + p.priimek + ",";
-                }
-                seznamIzpitniRoki.Add(new SelectListItem() { Value = i.id.ToString(), Text = (UserHelper.DateToString(i.datum) + " -" + profesorji) });
+                seznamIzpitniRoki.Add(new SelectListItem() { Value = i.id.ToString(), Text = UserHelper.DateToString(i.datum) });
             }
             if (c < 1)
             {
