@@ -22,7 +22,6 @@ namespace studis.Controllers
 
             var sList = new SelectList(new[] 
             {
-                new { Value = "0", Text = "Vsa leta" },
                 new { Value = "2013", Text = "2013/2014" },
                 new { Value = "2014", Text = "2014/2015" },
                 new { Value = "2015", Text = "2015/2016" },
