@@ -175,6 +175,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ImportController.cs" />
     <Compile Include="Controllers\IzpitniRokController.cs" />
+    <Compile Include="Controllers\KandidatController.cs" />
     <Compile Include="Controllers\ListController.cs" />
     <Compile Include="Controllers\PotrditevController.cs" />
     <Compile Include="Controllers\PredmetController.cs" />
@@ -414,6 +415,7 @@
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\deflate.js" />
     <Content Include="Scripts\FileSaver.js" />
+    <Content Include="Scripts\filter_kandidat.js" />
     <Content Include="Scripts\filter_zeton.js" />
     <Content Include="Scripts\html2canvas.js" />
     <Content Include="Scripts\html2csv.js" />
@@ -520,6 +522,7 @@
     <Content Include="Views\VpisniList\VpisniListSuccess2.cshtml" />
     <Content Include="Views\IzpitniRok\Izbrisi.cshtml" />
     <Content Include="Views\IzpitniRok\Index.cshtml" />
+    <Content Include="Views\Kandidat\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

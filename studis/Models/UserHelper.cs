@@ -197,7 +197,7 @@ namespace studis.Models
             if (!vlm.vrocanje && !vlm.vrocanjeZacasni) napake.Add("Izberite vsaj en naslov za vročanje");
 
             //preveri da so izpolnjeni vsi ali noben podatek o zacasnem
-            if (vlm.naslovZacasni != null || vlm.obcinaZacasni != null || vlm.postnaStevilkaZacasni != null || vlm.drzavaZacasni != null || vlm.vrocanjeZacasni != null)
+            if (vlm.naslovZacasni != null || vlm.obcinaZacasni != null || vlm.postnaStevilkaZacasni != null || vlm.drzavaZacasni != null || vlm.vrocanjeZacasni == true)
             {
                 if (vlm.naslovZacasni == null || vlm.obcinaZacasni == null || vlm.postnaStevilkaZacasni == null || vlm.drzavaZacasni == null)
                 {

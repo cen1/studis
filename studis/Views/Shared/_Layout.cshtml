@@ -81,6 +81,10 @@
                     {
                         <li>@Html.ActionLink("Študenti", "Students", "Student")</li>
                     }
+                    @if (User.IsInRole("Referent"))
+                    {
+                        <li>@Html.ActionLink("Kandidati", "Index", "Kandidat")</li>
+                    }
                     @if (User.IsInRole("Referent") || User.IsInRole("Profesor"))
                     {
                         <li>@Html.ActionLink("Predmeti", "Predmeti", "Predmet")</li>

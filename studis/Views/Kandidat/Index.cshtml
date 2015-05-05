@@ -1,0 +1,31 @@
+﻿
+@{
+    ViewBag.Title = "Seznam Kandidatov";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="@Url.Content("~/Scripts/filter_kandidat.js")" type="text/javascript"></script>
+
+
+<h2>Seznam kandidatov</h2>
+
+Filtriraj po imenu: <input name="filter" type="text" id="filter" value="" />
+<br /><br />
+
+<table id="tabela_kandidat">
+    <tr id="zero">
+        <th>Ime</th>
+        <th>Priimek</th>
+        <th>Email</th>
+        <th>Vpiši</th>
+    </tr>
+    @foreach (var k in ViewBag.kandidati)
+    {
+        <tr id="@k.ime">
+            <td>@k.ime</td>
+            <td>@k.priimek</td>
+            <td>@k.email</td>
+            <td><a href="~/VpisniList/VpisniList?x=@k.my_aspnet_users.id">Vpiši</a></td>
+        </tr>
+    }
+
+</table>
