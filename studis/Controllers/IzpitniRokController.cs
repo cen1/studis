@@ -138,6 +138,7 @@ namespace studis.Controllers
             }
         }
 
+        /*
         public string GetProfesorsForPredmet(int id)
         {
             
@@ -167,11 +168,12 @@ namespace studis.Controllers
             for(int i = 0; i< 5; i++) {
                 seznam.Add(new SelectListItem() { Value = i.ToString(), Text = rand.Next(i, 100).ToString() });
             }
-            */
+            
             return new JavaScriptSerializer().Serialize(seznamProfesorjev);
-        }
+        } 
+        */
 
-        public string GetIzpitniRoksForPredmet(int id)
+        public string GetIzvajanjaForPredmet(int id)
         {
             /*
              * TO DO TO DO TO DO TO DO TO DO TO DO
@@ -180,14 +182,53 @@ namespace studis.Controllers
             int iid = Convert.ToInt32(id);
             Debug.WriteLine("ID " + iid);
             var pPredmet = db.predmets.SingleOrDefault(p => p.id == iid);
-            var izpitniRoki = pPredmet.izpitniroks.ToList(); //Exception 
+            var izvajanja = pPredmet.izvajanjes.ToList();//izpitniroks.ToList(); //Exception 
+            var seznamIzvajanja = new List<SelectListItem>();
+            int c = 0;
+            foreach(izvajanje i in izvajanja)
+            {
+                c++;
+                string profesorji= "";
+                var profesor1 = i.profesor;//db.profesors.SingleOrDefault( p => p.id == i.izvajalec1Id);
+                profesorji += profesor1.ime + " " + profesor1.priimek;
+                if (i.izvajalec2Id != null)
+                {
+                    var profesor2 = i.profesor1;// db.profesors.SingleOrDefault(p => p.id == i.izvajalec2Id);
+                    profesorji += ", " + profesor2.ime + " " + profesor2.priimek;
+                }
+                if (i.izvajalec3Id != null)
+                {
+                    var profesor3 = i.profesor2;//db.profesors.SingleOrDefault(p => p.id == i.izvajalec3Id);
+                    profesorji += ", " + profesor3.ime + " " + profesor3.priimek;
+                }
+
+                seznamIzvajanja.Add(new SelectListItem() { Value = i.id.ToString(), Text = profesorji });
+            }
+            if (c < 1)
+            {
+                seznamIzvajanja.Add(new SelectListItem() { Value = "", Text = "Ta predmet se ne izvaja." });
+            }
+            return new JavaScriptSerializer().Serialize(seznamIzvajanja);
+        }
+
+        public string GetIzpitniRoksForIzvajanja(int id)
+        {
+            /*
+             * TO DO TO DO TO DO TO DO TO DO TO DO
+             */
+            Debug.WriteLine("ID " + id);
+            int iid = Convert.ToInt32(id);
+            Debug.WriteLine("ID " + iid);
+            var izvajanje = db.izvajanjes.SingleOrDefault(i => i.id == iid);//db.predmets.SingleOrDefault(p => p.id == iid);
+            var izpitniRoki = iz//pPredmet.izpitniroks.ToList(); //Exception 
             var seznamIzpitniRoki = new List<SelectListItem>();
             int c = 0;
             foreach (izpitnirok i in izpitniRoki)
             {
                 c++;
-                string profesorji= "";
-                foreach(profesor p in pPredmet.profesors) {
+                string profesorji = "";
+                foreach (profesor p in pPredmet.izvaja)
+                {
                     profesorji += " " + p.ime + " " + p.priimek + ",";
                 }
                 seznamIzpitniRoki.Add(new SelectListItem() { Value = i.id.ToString(), Text = (UserHelper.DateToString(i.datum) + " -" + profesorji) });
