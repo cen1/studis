@@ -185,6 +185,9 @@ namespace studis.Models
             //preveri letnik in studijski program
             if (vlm.studijskiProgram == 1000468 && vlm.letnikStudija > 3) napake.Add("Za ta program je maksimalen letnik 3");
 
+            //preveri studijski program
+            if (vlm.studijskiProgram != 1000468) napake.Add("Za ta program ne obstaja predmetnik in ni podprt");
+
             //preveri studijski program in klasius
             if (vlm.vrstaStudija != 16204) napake.Add("Izbira klasius/vrsta študija ni podprta");
 
