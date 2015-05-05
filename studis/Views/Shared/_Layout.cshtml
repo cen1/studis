@@ -116,7 +116,20 @@
        <div id="footer">
            @if (Request.IsAuthenticated)
            {
-               <span>Dobrodošel/a <strong>@User.Identity.Name</strong>!</span>
+               <span>Dobrodošel/a <strong>@User.Identity.Name</strong>! (Vloge:
+                @{var last = Roles.GetRolesForUser().Last()}
+                @foreach (var r in Roles.GetRolesForUser())
+                {
+                    if (last.Equals(r)) {
+                        @r
+                    }
+                    else {
+                        @r
+                        ,&nbsp;
+                    }
+                }
+                    
+               </span>
            }
       </div>    
     </div>      

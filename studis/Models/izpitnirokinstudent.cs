@@ -12,18 +12,11 @@ namespace studis.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class ocena
+    public partial class izpitnirokinstudent
     {
-        public int id { get; set; }
-        public long izvajanjeId { get; set; }
-        public int studentId { get; set; }
-        public int ocena1 { get; set; }
-        public int vpisId { get; set; }
         public int izpitnirokId { get; set; }
+        public int studentId { get; set; }
     
         public virtual student student { get; set; }
-        public virtual vpi vpi { get; set; }
-        public virtual izvajanje izvajanje { get; set; }
-        public virtual izpitnirok izpitnirok { get; set; }
     }
 }

@@ -16,16 +16,14 @@ namespace studis.Models
     {
         public izpitnirok()
         {
-            this.students = new HashSet<student>();
             this.ocenas = new HashSet<ocena>();
         }
     
         public int id { get; set; }
         public System.DateTime datum { get; set; }
-        public long predmetId { get; set; }
+        public long izvajanjeId { get; set; }
     
-        public virtual predmet predmet { get; set; }
-        public virtual ICollection<student> students { get; set; }
+        public virtual izvajanje izvajanje { get; set; }
         public virtual ICollection<ocena> ocenas { get; set; }
     }
 }
