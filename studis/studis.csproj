@@ -194,6 +194,9 @@
       <DependentUpon>Studis.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\IzpitniRokModel.cs" />
+    <Compile Include="Models\izvajanje.cs">
+      <DependentUpon>Studis.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\kandidat.cs">
       <DependentUpon>Studis.tt</DependentUpon>
     </Compile>

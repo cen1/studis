@@ -16,10 +16,9 @@ namespace studis.Models
     {
         public predmet()
         {
-            this.ocenas = new HashSet<ocena>();
-            this.profesors = new HashSet<profesor>();
             this.izpitniroks = new HashSet<izpitnirok>();
             this.studentinpredmets = new HashSet<studentinpredmet>();
+            this.izvajanjes = new HashSet<izvajanje>();
         }
     
         public long id { get; set; }
@@ -37,12 +36,11 @@ namespace studis.Models
         public int vrstaStudija { get; set; }
     
         public virtual modul modul { get; set; }
-        public virtual ICollection<ocena> ocenas { get; set; }
         public virtual sifrant_letnik sifrant_letnik { get; set; }
         public virtual sifrant_studijskiprogram sifrant_studijskiprogram { get; set; }
         public virtual sifrant_klasius sifrant_klasius { get; set; }
-        public virtual ICollection<profesor> profesors { get; set; }
         public virtual ICollection<izpitnirok> izpitniroks { get; set; }
         public virtual ICollection<studentinpredmet> studentinpredmets { get; set; }
+        public virtual ICollection<izvajanje> izvajanjes { get; set; }
     }
 }

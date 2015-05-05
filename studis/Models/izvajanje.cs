@@ -12,20 +12,23 @@ namespace studis.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class izpitnirok
+    public partial class izvajanje
     {
-        public izpitnirok()
+        public izvajanje()
         {
-            this.students = new HashSet<student>();
             this.ocenas = new HashSet<ocena>();
         }
     
-        public int id { get; set; }
-        public System.DateTime datum { get; set; }
+        public long id { get; set; }
         public long predmetId { get; set; }
+        public long izvajalec1Id { get; set; }
+        public Nullable<long> izvajalec2Id { get; set; }
+        public Nullable<long> izvajalec3Id { get; set; }
     
+        public virtual profesor profesor { get; set; }
+        public virtual profesor profesor1 { get; set; }
+        public virtual profesor profesor2 { get; set; }
         public virtual predmet predmet { get; set; }
-        public virtual ICollection<student> students { get; set; }
         public virtual ICollection<ocena> ocenas { get; set; }
     }
 }

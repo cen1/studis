@@ -52,7 +52,6 @@ namespace studis.Models
         public virtual DbSet<sifrant_studijskoletoprvegavpisa> sifrant_studijskoletoprvegavpisa { get; set; }
         public virtual DbSet<sifrant_vrstavpisa> sifrant_vrstavpisa { get; set; }
         public virtual DbSet<modul> moduls { get; set; }
-        public virtual DbSet<ocena> ocenas { get; set; }
         public virtual DbSet<predmet> predmets { get; set; }
         public virtual DbSet<profesor> profesors { get; set; }
         public virtual DbSet<student> students { get; set; }
@@ -63,5 +62,7 @@ namespace studis.Models
         public virtual DbSet<sklep> skleps { get; set; }
         public virtual DbSet<izpitnirok> izpitniroks { get; set; }
         public virtual DbSet<studentinpredmet> studentinpredmets { get; set; }
+        public virtual DbSet<izvajanje> izvajanjes { get; set; }
+        public virtual DbSet<ocena> ocenas { get; set; }
     }
 }

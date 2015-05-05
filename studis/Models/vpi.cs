@@ -16,8 +16,8 @@ namespace studis.Models
     {
         public vpi()
         {
-            this.ocenas = new HashSet<ocena>();
             this.studentinpredmets = new HashSet<studentinpredmet>();
+            this.ocenas = new HashSet<ocena>();
         }
     
         public int id { get; set; }
@@ -41,7 +41,6 @@ namespace studis.Models
         public bool potrjen { get; set; }
         public int vpisnaStevilka { get; set; }
     
-        public virtual ICollection<ocena> ocenas { get; set; }
         public virtual sifrant_izbirnaskupina sifrant_izbirnaskupina { get; set; }
         public virtual sifrant_izbirnaskupina sifrant_izbirnaskupina1 { get; set; }
         public virtual sifrant_klasius sifrant_klasius { get; set; }
@@ -58,5 +57,6 @@ namespace studis.Models
         public virtual student student { get; set; }
         public virtual sifrant_smer sifrant_smer { get; set; }
         public virtual ICollection<studentinpredmet> studentinpredmets { get; set; }
+        public virtual ICollection<ocena> ocenas { get; set; }
     }
 }

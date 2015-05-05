@@ -16,12 +16,12 @@ namespace studis.Models
     {
         public student()
         {
-            this.ocenas = new HashSet<ocena>();
             this.vpis = new HashSet<vpi>();
             this.zetons = new HashSet<zeton>();
             this.skleps = new HashSet<sklep>();
             this.izpitniroks = new HashSet<izpitnirok>();
             this.studentinpredmets = new HashSet<studentinpredmet>();
+            this.ocenas = new HashSet<ocena>();
         }
     
         public int vpisnaStevilka { get; set; }
@@ -50,7 +50,6 @@ namespace studis.Models
         public int userId { get; set; }
     
         public virtual my_aspnet_users my_aspnet_users { get; set; }
-        public virtual ICollection<ocena> ocenas { get; set; }
         public virtual sifrant_drzava sifrant_drzava { get; set; }
         public virtual sifrant_drzava sifrant_drzava1 { get; set; }
         public virtual sifrant_drzava sifrant_drzava2 { get; set; }
@@ -66,5 +65,6 @@ namespace studis.Models
         public virtual ICollection<sklep> skleps { get; set; }
         public virtual ICollection<izpitnirok> izpitniroks { get; set; }
         public virtual ICollection<studentinpredmet> studentinpredmets { get; set; }
+        public virtual ICollection<ocena> ocenas { get; set; }
     }
 }

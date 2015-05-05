@@ -16,13 +16,17 @@ namespace studis.Models
     {
         public profesor()
         {
-            this.predmets = new HashSet<predmet>();
+            this.izvajanjes = new HashSet<izvajanje>();
+            this.izvajanjes1 = new HashSet<izvajanje>();
+            this.izvajanjes2 = new HashSet<izvajanje>();
         }
     
         public long id { get; set; }
         public string ime { get; set; }
         public string priimek { get; set; }
     
-        public virtual ICollection<predmet> predmets { get; set; }
+        public virtual ICollection<izvajanje> izvajanjes { get; set; }
+        public virtual ICollection<izvajanje> izvajanjes1 { get; set; }
+        public virtual ICollection<izvajanje> izvajanjes2 { get; set; }
     }
 }

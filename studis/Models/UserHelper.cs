@@ -216,7 +216,7 @@ namespace studis.Models
                 {
                     if (vlm.studijskoLetoPrvegaVpisa != slpv.studijskoLeto)
                     {
-                        napake.Add("Študijsko leto prvega vpisa je napačno (nimate vpisa iz tistega leta)");
+                        //napake.Add("Študijsko leto prvega vpisa je napačno (nimate vpisa iz tistega leta)");
                     }
                 }
                 else
