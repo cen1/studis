@@ -419,7 +419,6 @@ namespace studis.Controllers
             }
             else
             {
-                ModelState.AddModelError("", "Prišlo je do napake.");
                 var errors = ModelState.Select(z => z.Value.Errors)
                            .Where(y => y.Count > 0)
                            .ToList();
