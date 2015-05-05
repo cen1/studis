@@ -116,8 +116,8 @@
        <div id="footer">
            @if (Request.IsAuthenticated)
            {
-               <span>Dobrodošel/a <strong>@User.Identity.Name</strong>! (Vloge:
-                @{var last = Roles.GetRolesForUser().Last()}
+               <span>Dobrodošel/a <strong>@User.Identity.Name</strong>! (
+                @{var last = Roles.GetRolesForUser().Last();}
                 @foreach (var r in Roles.GetRolesForUser())
                 {
                     if (last.Equals(r)) {
@@ -125,11 +125,11 @@
                     }
                     else {
                         @r
-                        ,&nbsp;
+                        <span>, </span>
                     }
                 }
                     
-               </span>
+               )</span>
            }
       </div>    
     </div>      
