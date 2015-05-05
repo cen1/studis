@@ -1261,21 +1261,16 @@ namespace studis.Controllers
 
             // preveri ce je trenutni user referent
             my_aspnet_users usr = uh.FindByName(User.Identity.Name);
-<<<<<<< HEAD
             if (usr.name != "referent")
             {
                 //preveri ce trenutni user sploh lahko dostopa do tega predmetnika
-                if (vl.student.userId != usr.id || vl.letnikStudija != 2) return HttpNotFound();
+                if (vl.student.userId != usr.id || vl.letnikStudija != 2) 
+                {
+                    System.Diagnostics.Debug.WriteLine("nimate dostopa");
+                    return HttpNotFound();
+                }
             }
             
-=======
-            if (vl.student.userId != usr.id || vl.letnikStudija != 2)
-            {
-                System.Diagnostics.Debug.WriteLine("nimate dostopa");
-                return HttpNotFound();
-            }
-
->>>>>>> 9ce1d8555bfd24ceec27188b0e42d7c3ef78a0c2
             PredmetHelper ph = new PredmetHelper();
             int kreditne = 60 - ph.getKreditObv2();
             List<predmet> dodaj_p = new List<predmet>();
