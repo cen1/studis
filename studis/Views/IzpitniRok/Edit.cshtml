@@ -65,9 +65,12 @@
                 @Html.TextBoxFor(m => m.datum)
                 @Html.ValidationMessageFor(m => m.datum)
             </div>
+            <p id="warning" style="color:orange;">
+                
+            </p>
 
             <p>
-                <input type="submit" value="Spremeni">
+                <input id="submit" type="submit" value="Spremeni">
             </p>
         </fieldset>
     </div>
@@ -92,7 +95,7 @@
                 if (izvajanja.length < 1) {
                     //ddlIzvajanja.append('<option value="">Ni izvajalcev.</option>');
                 } else {
-                    ddlIzvajanja.append('<option value="">Izberi</option>');
+                    //ddlIzvajanja.append('<option value="">Izberi</option>');
                 }
                 for (i = 0; i < izvajanja.length; i++) {
                     ddlIzvajanja.append('<option value="' + izvajanja[i].Value + '">' + izvajanja[i].Text + '</option>');
@@ -120,7 +123,7 @@
                 if (izpitniRoks.length < 1) {
                     //ddlIzpitniRoks.append('<option value="">"Ta predmet nima razpisanih rokov."</option>');
                 } else {
-                    ddlIzpitniroks.append('<option value="">Izberi</option>');
+                    //ddlIzpitniroks.append('<option value="">Izberi</option>');
                 }
                 for (i = 0; i < izpitniRoks.length; i++) {
                     ddlIzpitniRoks.append('<option value="' + izpitniRoks[i].Value + '">' + izpitniRoks[i].Text + '</option>');
@@ -156,4 +159,19 @@
         });
     });
     */
+    //on submit
+    $(document).ready(function () {
+        $("#id").change(function () {
+            if ($("#id").val() != "") {
+                var url = "/IzpitniRok/PreveriPrijave/" + $("#id").val();
+                console.log("URL: " + url);
+                $.get(url, function (response) {
+                    var st = response;
+                    $("#warning").text("Stevilo prijav: " + st);
+                });
+            } else {
+                $("#warning").text("");
+            }
+        });
+    });
 </script>

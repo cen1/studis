@@ -209,6 +209,10 @@ namespace studis.Controllers
             {
                 seznamIzvajanja.Add(new SelectListItem() { Value = "", Text = "Ni izvajalcev." });
             }
+            else
+            {
+                seznamIzvajanja.Insert(0, new SelectListItem() { Value = "", Text = "Izberi" });
+            }
             return new JavaScriptSerializer().Serialize(seznamIzvajanja);
         }
 
@@ -232,6 +236,10 @@ namespace studis.Controllers
             if (c < 1)
             {
                 seznamIzpitniRoki.Add(new SelectListItem() { Value = "", Text = "Ta predmet nima razpisanih rokov." });
+            }
+            else
+            {
+                seznamIzpitniRoki.Insert(0, new SelectListItem() { Value = "", Text = "Izberi" });
             }
             return new JavaScriptSerializer().Serialize(seznamIzpitniRoki);
         }
@@ -269,5 +277,14 @@ namespace studis.Controllers
             }
             return Json(result);
         }
+
+        
+        public string PreveriPrijave(int id)
+        {
+            int st = 0;
+            //var steviloPrijav = db.izpitniroks.SingleOrDefault(r => r.id == id).prijavas.Count;
+            return st.ToString(); ;
+        }
+        
     }
 }
