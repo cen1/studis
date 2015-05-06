@@ -31,10 +31,10 @@ namespace studis.Controllers
                 p.Text = Convert.ToInt32(p.Value).ToString("000") + " - " + i.ime + " (" + i.koda + ")";
                 predmeti.Add(p);
             }
+            ViewBag.Predmets = new SelectList(predmeti, "Value", "Text");
             List<SelectListItem> ltemp = new List<SelectListItem>();
             ltemp.Add(new SelectListItem() { Value="", Text="Izbira izvajalcev" });
             ViewBag.Prazen = new SelectList(ltemp, "Value", "Text");
-            ViewBag.Predmets = new SelectList(predmeti, "Value", "Text");
             //new SelectList(db.sifrant_studijskiprogram.OrderBy(a => a.naziv), "id", "naziv");
             //IzpitniRokModel model= new IzpitniRokModel();
             return View();
