@@ -35,7 +35,7 @@
         var counter = 0;
         foreach (var item in ViewBag.Oznaci)
         {
-            if ((counter == 0) && (item.predmet.modulId == modul.id))
+            if ((counter == 0) && (item.predmet.modulId == modul.id) && (modul.id != ViewBag.NeOznaci))
             {
                 <div style="font-weight: bold">
                     <input type="checkbox" name="modul_@modul.id" value="@modul.id" checked> @modul.ime
