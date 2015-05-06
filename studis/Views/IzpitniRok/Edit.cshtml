@@ -90,7 +90,7 @@
 
                 //napolni
                 if (izvajanja.length < 1) {
-                    ddlIzvajanja.append('<option value="">Ni izvajalcev.</option>');
+                    //ddlIzvajanja.append('<option value="">Ni izvajalcev.</option>');
                 } else {
                     ddlIzvajanja.append('<option value="">Izberi</option>');
                 }
@@ -118,7 +118,9 @@
 
                 //napolni
                 if (izpitniRoks.length < 1) {
-                    ddlIzpitniRoks.append('<option value="">"Ta predmet nima razpisanih rokov."</option>');
+                    //ddlIzpitniRoks.append('<option value="">"Ta predmet nima razpisanih rokov."</option>');
+                } else {
+                    ddlIzpitniroks.append('<option value="">Izberi</option>');
                 }
                 for (i = 0; i < izpitniRoks.length; i++) {
                     ddlIzpitniRoks.append('<option value="' + izpitniRoks[i].Value + '">' + izpitniRoks[i].Text + '</option>');
