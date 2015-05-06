@@ -207,7 +207,7 @@ namespace studis.Controllers
             }
             if (c < 1)
             {
-                seznamIzvajanja.Add(new SelectListItem() { Value = "", Text = "Ta predmet se ne izvaja." });
+                //seznamIzvajanja.Add(new SelectListItem() { Value = "", Text = "Ni izvajalcev." });
             }
             return new JavaScriptSerializer().Serialize(seznamIzvajanja);
         }
@@ -231,7 +231,7 @@ namespace studis.Controllers
             }
             if (c < 1)
             {
-                seznamIzpitniRoki.Add(new SelectListItem() { Value = "", Text = "Ta predmet nima razpisanih rokov." });
+                //seznamIzpitniRoki.Add(new SelectListItem() { Value = "", Text = "Ta predmet nima razpisanih rokov." });
             }
             return new JavaScriptSerializer().Serialize(seznamIzpitniRoki);
         }

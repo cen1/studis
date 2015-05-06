@@ -55,17 +55,42 @@
 }
 
 <script language="javascript" type="text/javascript">
-    //napolni izpitne roke
+    //napolni izvajanja
     $(document).ready(function () {
         $("#predmet").change(function () {
+            var url = "/IzpitniRok/GetIzvajanjaForPredmet/" + $(this).val();
+            $.get(url, function (response) {
+                var izvajanja = $.parseJSON(response);
+                var ddlIzvajanja = $("#izvajanje");
+                if ($("#predmet option:first-child").text() == "Izberi predmet") {
+                    $("#predmet option:first-child").remove();
+                }
+                //pocisti
+                $("#izvajanje > option").remove();
+
+                //napolni
+                if (izvajanja.length < 1) {
+                    ddlIzvajanja.append('<option value="">Ni izvajalcev.</option>');
+                } else {
+                    ddlIzvajanja.append('<option value="">Izberi</option>');
+                }
+                for (i = 0; i < izvajanja.length; i++) {
+                    ddlIzvajanja.append('<option value="' + izvajanja[i].Value + '">' + izvajanja[i].Text + '</option>');
+                }
+            });
+        });
+    });
+
+    //napolni izpitne roke
+    $(document).ready(function () {
+        $("#izvajanje").change(function () {
             console.log("Parameter: " + $("#predmet option:selected").val());
-            var url = "/IzpitniRok/GetIzpitniRoksForPredmet/" + $("#predmet option:selected").val();
+            var url = "/IzpitniRok/GetIzpitniRoksForIzvajanja/" + $("#izvajanje option:selected").val();
             console.log("URL: " + url);
             $.get(url, function (response) {
-                
                 var izpitniRoks = $.parseJSON(response);
                 var ddlIzpitniRoks = $("#id");
-                if ($("#predmet option:first-child").text() == "Izberi predmet") {
+                if ($("#predmet option:first-child").text() == "Izberi") {
                     $("#predmet option:first-child").remove();
                 }
                 //pocisti
@@ -73,7 +98,7 @@
 
                 //napolni
                 if (izpitniRoks.length < 1) {
-                    ddlIzpitniRoks.append('<option value="">Ni razpisanih rokov.</option>');
+                    ddlIzpitniRoks.append('<option value="">"Ta predmet nima razpisanih rokov."</option>');
                 }
                 for (i = 0; i < izpitniRoks.length; i++) {
                     ddlIzpitniRoks.append('<option value="' + izpitniRoks[i].Value + '">' + izpitniRoks[i].Text + '</option>');
