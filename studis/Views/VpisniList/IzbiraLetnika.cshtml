@@ -14,19 +14,22 @@
     <table>
         <thead>
             <tr>
-                <th>Letnik</th>
                 <th>Študijsko leto</th>
                 <th>Program</th>
+                <th>Letnik</th>
+                <th>Vrsta vpisa</th>
                 <th>Uredi</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var v in @ViewBag.vpisni)
             {
+                var letnik = v.studijskoLeto + 1;
                 <tr>
-                    <td>@v.letnikStudija</td>
-                    <td>@v.studijskoLeto</td>
+                    <td>@v.studijskoLeto/@letnik</td>
                     <td>@v.sifrant_studijskiprogram.naziv</td>
+                    <td>@v.letnikStudija</td>
+                    <td>@v.sifrant_vrstavpisa.naziv</td>
                     @if (v.letnikStudija == 2)
                     {
                         <td>

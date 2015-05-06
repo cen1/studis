@@ -1044,8 +1044,12 @@ namespace studis.Controllers
             ViewBag.sumIzb = 60 - sumObv;
 
             // označi tiste ki so že izbrani
-            ViewBag.Oznaci = db.studentinpredmets.Where(v => v.vpisId == id && v.predmet.modul != null).ToList();
+            var izbrani = db.studentinpredmets.Where(v => v.vpisId == id && v.predmet.modul != null).ToList();
+            ViewBag.Oznaci = izbrani;
 
+            var prost = izbrani.Select(v => v.predmet.modulId).Distinct().ToList();
+            ViewBag.Izbirni = Convert.ToInt32(prost.First());
+            
             return View();
         }
 
