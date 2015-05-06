@@ -233,17 +233,33 @@
             <td colspan="3">@ViewBag.StudijskiProgram</td>
         </tr>
         <tr>
-            <th>Koda</th>
+            <th>Učitelj</th>
             <th>Učna enota</th>
             <th>Število KT</th>
         </tr>
         @foreach (var data in @ViewBag.Predmeti)
         {
-            <tr>
-                <td>@data.predmet.koda</td>
-                <td>@data.predmet.ime</td>
-                <td>@data.predmet.kreditne</td>
-            </tr>
+            foreach (var item in @ViewBag.Profesorji)
+            {
+                if (@data.predmet.id == @item.predmetId) {
+                    <tr>
+                        <td style="width: 25%;">
+                            @item.profesor.ime @item.profesor.priimek
+                            @if (@item.izvajalec2Id != null)
+                            {
+                                <span>, <br />item.profesor1.ime item.profesor1.priimek</span>
+                            } 
+                            @if (@item.izvajalec3Id != null)
+                            {
+                                <span>, <br />item.profesor2.ime item.profesor2.priimek</span>
+                            }
+                        </td>
+                        <td style="width: 60%;">@data.predmet.ime</td>
+                        <td style="width: 15%;">@data.predmet.kreditne</td>
+                    </tr>
+                }
+            }
+
         }
     </tbody>
 </table>

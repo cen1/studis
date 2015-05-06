@@ -174,6 +174,7 @@ namespace studis.Controllers
                 var predmeti = list.studentinpredmets.Where(v => v.vpisId == id);
 
                 ViewBag.Predmeti = predmeti;
+                ViewBag.Profesorji = db.izvajanjes.Select(v => v).ToList(); // .Where(v => v.letoIzvajanja == list.studijskoLeto)
             
                 return new PdfActionResult(model);
             }
