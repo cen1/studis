@@ -32,7 +32,7 @@ namespace studis.Controllers
                 predmeti.Add(p);
             }
             List<SelectListItem> ltemp = new List<SelectListItem>();
-            ltemp.Add(new SelectListItem() { Value="", Text="Izbira profesorja" });
+            ltemp.Add(new SelectListItem() { Value="", Text="Izbira izvajalcev" });
             ViewBag.Prazen = new SelectList(ltemp, "Value", "Text");
             ViewBag.Predmets = new SelectList(predmeti, "Value", "Text");
             //new SelectList(db.sifrant_studijskiprogram.OrderBy(a => a.naziv), "id", "naziv");

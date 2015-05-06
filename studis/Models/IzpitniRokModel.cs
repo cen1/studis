@@ -26,7 +26,7 @@ namespace studis.Models
         
         
         [Required(ErrorMessage = "Obvezno izbrati.")]
-        [Display(Name = "Izvajanje")]
+        [Display(Name = "Izvaja")]
         public int izvajanje { get; set; }
         
 
