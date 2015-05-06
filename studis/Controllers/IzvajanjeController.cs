@@ -48,26 +48,6 @@ namespace studis.Controllers
         [HttpPost]
         public ActionResult Dodaj(IzvajanjeModel model)
         {
-            try
-            {
-                izvajanje izvajanje = new izvajanje();
-                izvajanje.predmet = db.predmets.SingleOrDefault(p => p.id == model.predmet);
-                izvajanje.profesor = db.profesors.SingleOrDefault(p => p.id == model.profesor1);
-                if (model.profesor2 != 0 && model.profesor2 != null)
-                    izvajanje.profesor1 = db.profesors.SingleOrDefault(p => p.id == model.profesor2);
-                if (model.profesor3 != 0 && model.profesor3 != null)
-                    izvajanje.profesor2 = db.profesors.SingleOrDefault(p => p.id == model.profesor3);
-                Debug.WriteLine("Dodano izvajanje1");
-                db.izvajanjes.Add(izvajanje);
-                db.SaveChanges();
-                Debug.WriteLine("Dodano izvajanje2");
-            }
-            catch
-            {
-                return View("Error");
-            }
-
-
             List<predmet> listPredmetov = db.predmets.OrderBy(a => a.ime).ToList();
 
             List<SelectListItem> predmeti = new List<SelectListItem>();
@@ -92,7 +72,30 @@ namespace studis.Controllers
                 profesorji.Add(p);
             }
             ViewBag.Profesors = new SelectList(profesorji, "Value", "Text");
-            return View();
+
+            izvajanje izvajanje = new izvajanje();
+            izvajanje.predmetId = model.predmet;
+                
+            izvajanje.izvajalec1Id = model.profesor1;
+            if (model.profesor2 != 0)
+                izvajanje.izvajalec2Id = model.profesor2;
+            if (model.profesor3 != 0)
+                izvajanje.izvajalec3Id = model.profesor3;
+
+            System.Diagnostics.Debug.WriteLine(model.predmet.ToString() + "-" + model.profesor1.ToString() + "-" + model.profesor2.ToString());
+            db.izvajanjes.Add(izvajanje);
+
+            try
+            {
+                db.SaveChanges();
+            }
+            catch
+            {
+                return View("Error");
+            }
+
+            TempData["ok"] = "Shranjeno";
+            return RedirectToAction("Dodaj");
         }
     }
 }
