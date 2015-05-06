@@ -269,7 +269,16 @@ namespace studis.Controllers
 
         public JsonResult PreveriIzpitniRok(int id)
         {
-            var steviloOcen = db.izpitniroks.SingleOrDefault(r => r.id == id).ocenas.Count;
+            Debug.WriteLine("PreveriIzpitniRok(" + id + ")");
+            int steviloOcen = 0;
+            try
+            {
+                steviloOcen = db.izpitniroks.SingleOrDefault(r => r.id == id).ocenas.Count;
+            }
+            catch (Exception e)
+            {
+                steviloOcen = 0;
+            }
             var result = true;
             if (steviloOcen > 0)
             {
