@@ -282,7 +282,11 @@ namespace studis.Controllers
         public string PreveriPrijave(int id)
         {
             int st = 0;
-            //var steviloPrijav = db.izpitniroks.SingleOrDefault(r => r.id == id).prijavas.Count;
+            try
+            {
+                st = db.izpitniroks.SingleOrDefault(r => r.id == id).students.Count;
+            }
+            catch (Exception e) { st = 0; }
             return st.ToString(); ;
         }
         
