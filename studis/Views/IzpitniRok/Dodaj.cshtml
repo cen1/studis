@@ -64,27 +64,28 @@
 }
 
 <script language="javascript" type="text/javascript">
-    /*
+    
     $(document).ready(function () {
         $("#predmet").change(function () {
-            $.get("/IzpitniRok/GetProfesorsForPredmet/" + $(this).val(), function (response) {
-                var profesors = $.parseJSON(response);
-                var ddlProfesors = $("#profesor");
+            var url = "/IzpitniRok/GetIzvajanjaForPredmet/" + $(this).val();
+            $.get(url, function (response) {
+                var izvajanja = $.parseJSON(response);
+                var ddlIzvajanja = $("#izvajanje");
                 if ($("#predmet option:first-child").text() == "Izberi predmet") {
                     $("#predmet option:first-child").remove();
                 }
                 //pocisti
-                $("#profesor > option").remove();
+                $("#izvajanje > option").remove();
 
                 //napolni
-                if (profesors.length < 1) {
-                    ddlProfesors.append('<option value="">Ni nosilcev predmeta.</option>');
+                if (izvajanja.length < 1) {
+                    ddlIzvajanja.append('<option value="">Ni izvajalcev.</option>');
                 }
-                for (i = 0; i < profesors.length; i++) {
-                    ddlProfesors.append('<option value="' + profesors[i].Value + '">' + profesors[i].Text + '</option>');
+                for (i = 0; i < izvajanja.length; i++) {
+                    ddlIzvajanja.append('<option value="' + izvajanja[i].Value + '">' + izvajanja[i].Text + '</option>');
                 }
             });
         });
     });
-    */
+    
 </script>
