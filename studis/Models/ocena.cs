@@ -15,15 +15,13 @@ namespace studis.Models
     public partial class ocena
     {
         public int id { get; set; }
-        public long izvajanjeId { get; set; }
         public int studentId { get; set; }
         public int ocena1 { get; set; }
         public int vpisId { get; set; }
         public int izpitnirokId { get; set; }
     
+        public virtual izpitnirok izpitnirok { get; set; }
         public virtual student student { get; set; }
         public virtual vpi vpi { get; set; }
-        public virtual izvajanje izvajanje { get; set; }
-        public virtual izpitnirok izpitnirok { get; set; }
     }
 }
