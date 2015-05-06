@@ -84,7 +84,7 @@
     //napolni izpitne roke
     $(document).ready(function () {
         $("#izvajanje").change(function () {
-            console.log("Parameter: " + $("#predmet option:selected").val());
+            console.log("Parameter: " + $(this).val());
             var url = "/IzpitniRok/GetIzpitniRoksForIzvajanja/" + $("#izvajanje option:selected").val();
             console.log("URL: " + url);
             $.get(url, function (response) {
