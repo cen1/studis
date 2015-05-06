@@ -175,6 +175,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ImportController.cs" />
     <Compile Include="Controllers\IzpitniRokController.cs" />
+    <Compile Include="Controllers\IzvajanjeController.cs" />
     <Compile Include="Controllers\KandidatController.cs" />
     <Compile Include="Controllers\ListController.cs" />
     <Compile Include="Controllers\PotrditevController.cs" />
@@ -197,6 +198,7 @@
     <Compile Include="Models\izvajanje.cs">
       <DependentUpon>Studis.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\IzvajanjeModel.cs" />
     <Compile Include="Models\kandidat.cs">
       <DependentUpon>Studis.tt</DependentUpon>
     </Compile>
@@ -526,6 +528,9 @@
     <Content Include="Views\IzpitniRok\Izbrisi.cshtml" />
     <Content Include="Views\IzpitniRok\Index.cshtml" />
     <Content Include="Views\Kandidat\Index.cshtml" />
+    <Content Include="Views\Izvajanje.cshtml" />
+    <Content Include="Views\Izvajanje\Dodaj.cshtml" />
+    <Content Include="Views\Izvajanje\Error.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

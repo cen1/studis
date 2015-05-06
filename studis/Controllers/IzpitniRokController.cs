@@ -31,10 +31,10 @@ namespace studis.Controllers
                 p.Text = Convert.ToInt32(p.Value).ToString("000") + " - " + i.ime + " (" + i.koda + ")";
                 predmeti.Add(p);
             }
+            ViewBag.Predmets = new SelectList(predmeti, "Value", "Text");
             List<SelectListItem> ltemp = new List<SelectListItem>();
             ltemp.Add(new SelectListItem() { Value="", Text="Izbira izvajalcev" });
             ViewBag.Prazen = new SelectList(ltemp, "Value", "Text");
-            ViewBag.Predmets = new SelectList(predmeti, "Value", "Text");
             //new SelectList(db.sifrant_studijskiprogram.OrderBy(a => a.naziv), "id", "naziv");
             //IzpitniRokModel model= new IzpitniRokModel();
             return View();
@@ -192,12 +192,12 @@ namespace studis.Controllers
                 string profesorji= "";
                 var profesor1 = i.profesor;//db.profesors.SingleOrDefault( p => p.id == i.izvajalec1Id);
                 profesorji += profesor1.ime + " " + profesor1.priimek;
-                if (i.izvajalec2Id != null)
+                if (i.profesor1 != null)
                 {
                     var profesor2 = i.profesor1;// db.profesors.SingleOrDefault(p => p.id == i.izvajalec2Id);
                     profesorji += ", " + profesor2.ime + " " + profesor2.priimek;
                 }
-                if (i.izvajalec3Id != null)
+                if (i.profesor2 != null)
                 {
                     var profesor3 = i.profesor2;//db.profesors.SingleOrDefault(p => p.id == i.izvajalec3Id);
                     profesorji += ", " + profesor3.ime + " " + profesor3.priimek;
@@ -207,7 +207,7 @@ namespace studis.Controllers
             }
             if (c < 1)
             {
-                //seznamIzvajanja.Add(new SelectListItem() { Value = "", Text = "Ni izvajalcev." });
+                seznamIzvajanja.Add(new SelectListItem() { Value = "", Text = "Ni izvajalcev." });
             }
             return new JavaScriptSerializer().Serialize(seznamIzvajanja);
         }
@@ -231,7 +231,7 @@ namespace studis.Controllers
             }
             if (c < 1)
             {
-                //seznamIzpitniRoki.Add(new SelectListItem() { Value = "", Text = "Ta predmet nima razpisanih rokov." });
+                seznamIzpitniRoki.Add(new SelectListItem() { Value = "", Text = "Ta predmet nima razpisanih rokov." });
             }
             return new JavaScriptSerializer().Serialize(seznamIzpitniRoki);
         }

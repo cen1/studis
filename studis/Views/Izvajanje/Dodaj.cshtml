@@ -1,0 +1,57 @@
+﻿
+@{
+    ViewBag.Title = "Dodaj";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@model studis.Models.IzvajanjeModel
+
+<h2>Dodaj izvajanje</h2>
+
+@using (Html.BeginForm())
+{
+    <div>
+        <fieldset>
+            <!--Izbira Predmeta-->
+            <div class="editor-label">
+                @Html.LabelFor(m => m.predmet)
+            </div>
+            <div class="editor-field">
+                @Html.DropDownListFor(m => m.predmet, (SelectList)ViewBag.Predmets)
+                @Html.ValidationMessageFor(m => m.predmet)
+            </div>
+
+            <!--Izbira profesor1 -->
+            <div class="editor-label">
+                @Html.LabelFor(m => m.profesor1)
+            </div>
+            <div class="editor-field">
+                @Html.DropDownListFor(m => m.profesor1, (SelectList)ViewBag.Profesors)
+                @Html.ValidationMessageFor(m => m.profesor1)
+            </div>
+
+            <!--Izbira profesor2 -->
+            <div class="editor-label">
+                @Html.LabelFor(m => m.profesor2)
+            </div>
+            <div class="editor-field">
+                @Html.DropDownListFor(m => m.profesor2, (SelectList)ViewBag.Profesors, "Izberi - opcijsko")
+                @Html.ValidationMessageFor(m => m.profesor2)
+            </div>
+
+            <!--Izbira profesor3-->
+            <div class="editor-label">
+                @Html.LabelFor(m => m.profesor3)
+            </div>
+            <div class="editor-field">
+                @Html.DropDownListFor(m => m.profesor3, (SelectList)ViewBag.Profesors, "Izberi - opcijsko")
+                @Html.ValidationMessageFor(m => m.profesor3)
+            </div>
+
+
+            <p>
+                <input type="submit" value="Dodaj">
+            </p>
+        </fieldset>
+    </div>
+}
