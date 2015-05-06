@@ -67,7 +67,7 @@ namespace studis.Controllers
                 return View("Error");
             }
 
-
+            /*
             List<predmet> listPredmetov = db.predmets.OrderBy(a => a.ime).ToList();
 
             List<SelectListItem> predmeti = new List<SelectListItem>();
@@ -92,7 +92,9 @@ namespace studis.Controllers
                 profesorji.Add(p);
             }
             ViewBag.Profesors = new SelectList(profesorji, "Value", "Text");
-            return View();
+             */
+            
+            return RedirectToAction("Dodaj");
         }
     }
 }

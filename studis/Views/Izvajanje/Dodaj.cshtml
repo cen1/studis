@@ -3,7 +3,7 @@
     ViewBag.Title = "Dodaj";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 @model studis.Models.IzvajanjeModel
 
 <h2>Dodaj izvajanje</h2>
@@ -50,8 +50,16 @@
 
 
             <p>
-                <input type="submit" value="Dodaj">
+                <input id="submit" type="submit" value="Dodaj">
             </p>
         </fieldset>
     </div>
 }
+<script>
+    //on submit
+    $(document).ready(function () {
+        $("#submit").click(function () {
+            alert("Dodajanje v bazo.");
+        });
+    });
+</script>
