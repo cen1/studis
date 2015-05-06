@@ -1,6 +1,7 @@
 ﻿using studis.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -72,33 +73,29 @@ namespace studis.Controllers
             }
             ViewBag.Profesors = new SelectList(profesorji, "Value", "Text");
 
-            foreach (predmet i in listPredmetov)
-            {
-                SelectListItem p = new SelectListItem();
-                int stIzvajanj = i.izvajanjes.Count;
-                p.Value = i.id.ToString();
-                p.Text = Convert.ToInt32(p.Value).ToString("000") + " - " + i.ime + " (" + i.koda + ") - " + stIzvajanj;
-                predmeti.Add(p);
-            }
-            ViewBag.Predmets = new SelectList(predmeti, "Value", "Text");
+            izvajanje izvajanje = new izvajanje();
+            izvajanje.predmetId = model.predmet;
+                
+            izvajanje.izvajalec1Id = model.profesor1;
+            if (model.profesor2 != 0)
+                izvajanje.izvajalec2Id = model.profesor2;
+            if (model.profesor3 != 0)
+                izvajanje.izvajalec3Id = model.profesor3;
+
+            System.Diagnostics.Debug.WriteLine(model.predmet.ToString() + "-" + model.profesor1.ToString() + "-" + model.profesor2.ToString());
+            db.izvajanjes.Add(izvajanje);
 
             try
             {
-                izvajanje izvajanje = new izvajanje();
-                izvajanje.predmet = db.predmets.SingleOrDefault(p => p.id == model.predmet);
-                izvajanje.profesor = db.profesors.SingleOrDefault(p => p.id == model.profesor1);
-                if (model.profesor2 != 0 && model.profesor2 != null)
-                    izvajanje.profesor1 = db.profesors.SingleOrDefault(p => p.id == model.profesor2);
-                if (model.profesor3 != 0 && model.profesor3 != null)
-                    izvajanje.profesor2 = db.profesors.SingleOrDefault(p => p.id == model.profesor3);
-                System.Diagnostics.Debug.WriteLine("Dodano izvajanje");
                 db.SaveChanges();
             }
             catch
             {
                 return View("Error");
             }
-            return View();
+
+            TempData["ok"] = "Shranjeno";
+            return RedirectToAction("Dodaj");
         }
     }
 }

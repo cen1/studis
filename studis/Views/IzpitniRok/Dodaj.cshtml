@@ -80,6 +80,8 @@
                 //napolni
                 if (izvajanja.length < 1) {
                     //ddlIzvajanja.append('<option value="">Ni izvajalcev.</option>');
+                } else {
+                    ddlIzvajanja.append('<option value="">Izberi</option>');
                 }
                 for (i = 0; i < izvajanja.length; i++) {
                     ddlIzvajanja.append('<option value="' + izvajanja[i].Value + '">' + izvajanja[i].Text + '</option>');

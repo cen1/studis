@@ -1098,6 +1098,13 @@ namespace studis.Controllers
                 }
                 else
                 {
+                    // označi tiste ki so že izbrani
+                    var izbrani = db.studentinpredmets.Where(v => v.vpisId == id && v.predmet.modul != null).ToList();
+                    ViewBag.Oznaci = izbrani;
+
+                    var prost = izbrani.Select(v => v.predmet.modulId).Distinct().ToList();
+                    ViewBag.Izbirni = Convert.ToInt32(prost.First());
+
                     TempData["error"] = "Dodatni predmet ne obstaja";
                     return RedirectToAction("UrediPredmetnik3Moduli", new { id = id });
                 }
@@ -1105,6 +1112,13 @@ namespace studis.Controllers
             }
             else
             {
+                // označi tiste ki so že izbrani
+                var izbrani = db.studentinpredmets.Where(v => v.vpisId == id && v.predmet.modul != null).ToList();
+                ViewBag.Oznaci = izbrani;
+
+                var prost = izbrani.Select(v => v.predmet.modulId).Distinct().ToList();
+                ViewBag.Izbirni = Convert.ToInt32(prost.First());
+
                 TempData["error"] = ModelState.Select(x => x.Value.Errors).Where(y => y.Count > 0).ToList().First().First().ErrorMessage;
                 return RedirectToAction("UrediPredmetnik3Moduli", new { id = id });
             }
@@ -1143,12 +1157,26 @@ namespace studis.Controllers
                 }
                 else
                 {
+                    // označi tiste ki so že izbrani
+                    var izbrani = db.studentinpredmets.Where(v => v.vpisId == id && v.predmet.modul != null).ToList();
+                    ViewBag.Oznaci = izbrani;
+
+                    var prost = izbrani.Select(v => v.predmet.modulId).Distinct().ToList();
+                    ViewBag.Izbirni = Convert.ToInt32(prost.First());
+
                     TempData["error"] = "Dodatni predmet je že del enega izmed modulov";
                     return RedirectToAction("UrediPredmetnik3Moduli", new { id = id });
                 }
             }
             else
             {
+                // označi tiste ki so že izbrani
+                var izbrani = db.studentinpredmets.Where(v => v.vpisId == id && v.predmet.modul != null).ToList();
+                ViewBag.Oznaci = izbrani;
+
+                var prost = izbrani.Select(v => v.predmet.modulId).Distinct().ToList();
+                ViewBag.Izbirni = Convert.ToInt32(prost.First());
+
                 TempData["error"] = "Nepravilno število izbranih kreditnih točk";
                 return RedirectToAction("UrediPredmetnik3Moduli", new { id = id });
             }
