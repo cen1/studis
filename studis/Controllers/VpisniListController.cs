@@ -1034,7 +1034,6 @@ namespace studis.Controllers
 
             //dva modula plus en izbirni
             ViewBag.obvezniPredmeti = ph.obvezni3();
-            ViewBag.izbirniPredmeti = new SelectList(ph.izbirni3(), "id", "ime");
             ViewBag.moduli = db.moduls.ToList();
             ViewBag.vlid = id;
 
@@ -1043,12 +1042,18 @@ namespace studis.Controllers
             ViewBag.sumObv = sumObv;
             ViewBag.sumIzb = 60 - sumObv;
 
-            // označi tiste ki so že izbrani
+            // oznaci tiste ki so že izbrani
             var izbrani = db.studentinpredmets.Where(v => v.vpisId == id && v.predmet.modul != null).ToList();
             ViewBag.Oznaci = izbrani;
 
+            // ne oznaci tistega modula, ki ima izbirni predmet
             var prost = izbrani.Select(v => v.predmet.modulId).Distinct().ToList();
-            ViewBag.Izbirni = Convert.ToInt32(prost.First());
+            var stevilo = Convert.ToInt32(prost.First());
+            ViewBag.NeOznaci = stevilo;
+
+            var i = izbrani.Where(v => v.predmet.modulId == stevilo).Select(v => v.predmet.id).ToList().First();
+            var items = ph.izbirni3();
+            ViewBag.izbirniPredmeti = new SelectList(items, "id", "ime", items.Where(x => x.id == i).ToList().First().id);
             
             return View();
         }
@@ -1060,10 +1065,6 @@ namespace studis.Controllers
             //preveri ce vpisni sploh obstaja
             var vl = db.vpis.Find(id);
             if (vl == null) return HttpNotFound();
-
-            //preveri ce je predmetnik ze bil izpolnjen
-            UserHelper uh = new UserHelper();
-            if (uh.jePredmetnikVzpostavljen(vl)) return HttpNotFound();
 
             PredmetHelper ph = new PredmetHelper();
             int kreditne = 60 - ph.getKreditObv3();
@@ -1098,12 +1099,13 @@ namespace studis.Controllers
                 }
                 else
                 {
-                    // označi tiste ki so že izbrani
+                    // oznaci tiste ki so že izbrani
                     var izbrani = db.studentinpredmets.Where(v => v.vpisId == id && v.predmet.modul != null).ToList();
                     ViewBag.Oznaci = izbrani;
 
+                    // ne oznaci tistega modula, ki ima izbirni predmet
                     var prost = izbrani.Select(v => v.predmet.modulId).Distinct().ToList();
-                    ViewBag.Izbirni = Convert.ToInt32(prost.First());
+                    ViewBag.NeOznaci = Convert.ToInt32(prost.First());
 
                     TempData["error"] = "Dodatni predmet ne obstaja";
                     return RedirectToAction("UrediPredmetnik3Moduli", new { id = id });
@@ -1112,12 +1114,13 @@ namespace studis.Controllers
             }
             else
             {
-                // označi tiste ki so že izbrani
+                // oznaci tiste ki so že izbrani
                 var izbrani = db.studentinpredmets.Where(v => v.vpisId == id && v.predmet.modul != null).ToList();
                 ViewBag.Oznaci = izbrani;
 
+                // ne oznaci tistega modula, ki ima izbirni predmet
                 var prost = izbrani.Select(v => v.predmet.modulId).Distinct().ToList();
-                ViewBag.Izbirni = Convert.ToInt32(prost.First());
+                ViewBag.NeOznaci = Convert.ToInt32(prost.First());
 
                 TempData["error"] = ModelState.Select(x => x.Value.Errors).Where(y => y.Count > 0).ToList().First().First().ErrorMessage;
                 return RedirectToAction("UrediPredmetnik3Moduli", new { id = id });
@@ -1157,12 +1160,13 @@ namespace studis.Controllers
                 }
                 else
                 {
-                    // označi tiste ki so že izbrani
+                    // oznaci tiste ki so že izbrani
                     var izbrani = db.studentinpredmets.Where(v => v.vpisId == id && v.predmet.modul != null).ToList();
                     ViewBag.Oznaci = izbrani;
 
+                    // ne oznaci tistega modula, ki ima izbirni predmet
                     var prost = izbrani.Select(v => v.predmet.modulId).Distinct().ToList();
-                    ViewBag.Izbirni = Convert.ToInt32(prost.First());
+                    ViewBag.NeOznaci = Convert.ToInt32(prost.First());
 
                     TempData["error"] = "Dodatni predmet je že del enega izmed modulov";
                     return RedirectToAction("UrediPredmetnik3Moduli", new { id = id });
@@ -1170,12 +1174,13 @@ namespace studis.Controllers
             }
             else
             {
-                // označi tiste ki so že izbrani
+                // oznaci tiste ki so že izbrani
                 var izbrani = db.studentinpredmets.Where(v => v.vpisId == id && v.predmet.modul != null).ToList();
                 ViewBag.Oznaci = izbrani;
 
+                // ne oznaci tistega modula, ki ima izbirni predmet
                 var prost = izbrani.Select(v => v.predmet.modulId).Distinct().ToList();
-                ViewBag.Izbirni = Convert.ToInt32(prost.First());
+                ViewBag.NeOznaci = Convert.ToInt32(prost.First());
 
                 TempData["error"] = "Nepravilno število izbranih kreditnih točk";
                 return RedirectToAction("UrediPredmetnik3Moduli", new { id = id });
