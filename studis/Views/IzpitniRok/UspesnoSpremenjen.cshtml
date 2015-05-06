@@ -6,3 +6,19 @@
 
 <h2>Izpitni rok je bil uspešno spremenjen</h2>
 
+<ul>
+
+    @if (User.IsInRole("Referent"))
+    {
+        <li>@Html.ActionLink("Dodaj", "Dodaj", "IzpitniRok")</li>
+    }
+    @if (User.IsInRole("Referent"))
+    {
+        <li>@Html.ActionLink("Spremeni", "Edit", "IzpitniRok")</li>
+    }
+    @if (User.IsInRole("Referent") || User.IsInRole("Profesor"))
+    {
+        <li>@Html.ActionLink("Izbriši", "Izbrisi", "IzpitniRok")</li>
+    }
+
+</ul>
