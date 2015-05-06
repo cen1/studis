@@ -62,7 +62,7 @@ namespace studis.Models
         public virtual DbSet<sklep> skleps { get; set; }
         public virtual DbSet<studentinpredmet> studentinpredmets { get; set; }
         public virtual DbSet<ocena> ocenas { get; set; }
-        public virtual DbSet<izpitnirok> izpitniroks { get; set; }
         public virtual DbSet<izvajanje> izvajanjes { get; set; }
+        public virtual DbSet<izpitnirok> izpitniroks { get; set; }
     }
 }

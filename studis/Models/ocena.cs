@@ -23,7 +23,7 @@ namespace studis.Models
     
         public virtual student student { get; set; }
         public virtual vpi vpi { get; set; }
-        public virtual izpitnirok izpitnirok { get; set; }
         public virtual izvajanje izvajanje { get; set; }
+        public virtual izpitnirok izpitnirok { get; set; }
     }
 }

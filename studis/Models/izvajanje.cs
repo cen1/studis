@@ -16,8 +16,8 @@ namespace studis.Models
     {
         public izvajanje()
         {
-            this.izpitniroks = new HashSet<izpitnirok>();
             this.ocenas = new HashSet<ocena>();
+            this.izpitniroks = new HashSet<izpitnirok>();
         }
     
         public long id { get; set; }
@@ -26,11 +26,11 @@ namespace studis.Models
         public Nullable<long> izvajalec2Id { get; set; }
         public Nullable<long> izvajalec3Id { get; set; }
     
-        public virtual ICollection<izpitnirok> izpitniroks { get; set; }
         public virtual profesor profesor { get; set; }
         public virtual profesor profesor1 { get; set; }
         public virtual profesor profesor2 { get; set; }
         public virtual predmet predmet { get; set; }
         public virtual ICollection<ocena> ocenas { get; set; }
+        public virtual ICollection<izpitnirok> izpitniroks { get; set; }
     }
 }
