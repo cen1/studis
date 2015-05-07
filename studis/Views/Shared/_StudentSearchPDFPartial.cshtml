@@ -14,7 +14,7 @@
             <th>Vpisna Številka</th>
             <th>Ime</th>
             <th>Priimek</th>
-            <th>Izvoz</th>
+            <th>Izpis</th>
         </tr>
         @if (Model != null)
         {
@@ -25,7 +25,7 @@
                     <td>@Html.DisplayFor(modelItem => item.vpisnaStevilka)</td>
                     <td>@Html.DisplayFor(modelItem => item.ime)</td>
                     <td>@Html.DisplayFor(modelItem => item.priimek)</td>
-                    <td>@Html.ActionLink("Izvoz", "Pdf", "List", new { id = item.vpisnaStevilka }, null)</td>
+                    <td>@Html.ActionLink("Izpis", "Pdf", "List", new { id = item.vpisnaStevilka }, null)</td>
                 </tr>
             }
         }
