@@ -13,6 +13,8 @@
 
 <h2>Dodaj izpitni rok</h2>
 
+@Html.ValidationSummary(true, "Popravite napake in poskusite ponovno.")
+
 @using (Html.BeginForm())
 {
     <div>
@@ -37,23 +39,26 @@
                
 
             <!--Izbira datuma-->
-            <script>
-                $(function () {
-                    $("#datum").datepicker({dateFormat: 'dd.mm.yy'});
-                });
-            </script>
             <div class="editor-label">
-                @Html.LabelFor(m => m.datum)
+                Datum
             </div>
             <div class="editor-field">
-                @Html.TextBoxFor(m => m.datum)
-                @Html.ValidationMessageFor(m => m.datum)
+                @Html.DropDownListFor(m => m.dan, (IEnumerable<SelectListItem>)ViewBag.danVB)
+                @Html.DropDownListFor(m => m.mesec, (IEnumerable<SelectListItem>)ViewBag.mesecVB)
+                @Html.DropDownListFor(m => m.leto, (IEnumerable<SelectListItem>)ViewBag.letoVB)
             </div>
-
+            <div class="editor-label">
+                Ura
+            </div>
+            <div class="editor-field">
+                @Html.DropDownListFor(m => m.ura, (IEnumerable<SelectListItem>)ViewBag.uraVB)
+                @Html.DropDownListFor(m => m.min, (IEnumerable<SelectListItem>)ViewBag.minVB)
+                
+            </div>
             <p>
                 <input id="submit" type="submit" value="Dodaj">
             </p>
-        </fieldset>
+</fieldset>
     </div>
 }
 

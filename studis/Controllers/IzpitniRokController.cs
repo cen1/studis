@@ -37,6 +37,38 @@ namespace studis.Controllers
             ViewBag.Prazen = new SelectList(ltemp, "Value", "Text");
             //new SelectList(db.sifrant_studijskiprogram.OrderBy(a => a.naziv), "id", "naziv");
             //IzpitniRokModel model= new IzpitniRokModel();
+
+            var rdan = Enumerable.Range(1, 31).Select(i => new SelectListItem
+            {
+                Value = i.ToString(),
+                Text = i.ToString()
+            });
+            var rmesec = Enumerable.Range(1, 12).Select(i => new SelectListItem
+            {
+                Value = i.ToString(),
+                Text = i.ToString()
+            });
+            var rleto = Enumerable.Range(DateTime.Now.Year, 2).Select(i => new SelectListItem
+            {
+                Value = i.ToString(),
+                Text = i.ToString()
+            });
+            var rura = Enumerable.Range(6,23).Select(i => new SelectListItem
+            {
+                Value = i.ToString(),
+                Text = i.ToString()
+            });
+            var rmin = Enumerable.Range(0, 59).Select(i => new SelectListItem
+            {
+                Value = i.ToString(),
+                Text = i.ToString()
+            });
+            ViewBag.danVB = rdan;
+            ViewBag.mesecVB = rmesec;
+            ViewBag.letoVB = rleto;
+            ViewBag.uraVB = rura;
+            ViewBag.minVB = rmin;
+
             return View();
         }
 
@@ -44,19 +76,68 @@ namespace studis.Controllers
         [HttpPost]
         public ActionResult Dodaj(IzpitniRokModel model)
         {
-            izpitnirok izpitniRok = new izpitnirok();
-            izpitniRok.datum = UserHelper.StringToDate(model.datum);
-            izpitniRok.izvajanje = db.izvajanjes.SingleOrDefault(i => i.id == model.izvajanje);//db.predmets.SingleOrDefault(v => v.id == model.predmet);
-            //izpitniRok.profesor = db.profesors.SingleOrDefault(p => p.id == model.profesor);
-            try
+            //preveri datum
+            DateTime cas = new DateTime();
+            string dt = model.leto.ToString() + "-" + model.mesec.ToString() + "-" + model.dan.ToString()+" "+model.ura.ToString()+":"+model.min.ToString()+":00";
+            var tp = DateTime.TryParse(dt, out cas);
+            if (!tp) ModelState.AddModelError("", "Napačen datum in čas");
+
+            if (cas.Year < DateTime.Now.Year || cas.Month < DateTime.Now.Month || cas.Day <= DateTime.Now.Day)
             {
-                // TODO: Add insert logic here
-                db.izpitniroks.Add(izpitniRok);
-                db.SaveChanges();
-                return View("UspesnoDodan");
+                ModelState.AddModelError("", "Napačen datum in čas");
             }
-            catch
+
+            if (ModelState.IsValid)
             {
+                izpitnirok izpitniRok = new izpitnirok();
+                izpitniRok.datum = cas;
+                izpitniRok.izvajanje = db.izvajanjes.SingleOrDefault(i => i.id == model.izvajanje);//db.predmets.SingleOrDefault(v => v.id == model.predmet);
+                //izpitniRok.profesor = db.profesors.SingleOrDefault(p => p.id == model.profesor);
+                try
+                {
+                    // TODO: Add insert logic here
+                    db.izpitniroks.Add(izpitniRok);
+                    db.SaveChanges();
+                    return View("UspesnoDodan");
+                }
+                catch
+                {
+                    return View();
+                }
+            }
+            else
+            {
+                var rdan = Enumerable.Range(1, 31).Select(i => new SelectListItem
+                {
+                    Value = i.ToString(),
+                    Text = i.ToString()
+                });
+                var rmesec = Enumerable.Range(1, 12).Select(i => new SelectListItem
+                {
+                    Value = i.ToString(),
+                    Text = i.ToString()
+                });
+                var rleto = Enumerable.Range(DateTime.Now.Year, 2).Select(i => new SelectListItem
+                {
+                    Value = i.ToString(),
+                    Text = i.ToString()
+                });
+                var rura = Enumerable.Range(6, 23).Select(i => new SelectListItem
+                {
+                    Value = i.ToString(),
+                    Text = i.ToString()
+                });
+                var rmin = Enumerable.Range(0, 59).Select(i => new SelectListItem
+                {
+                    Value = i.ToString(),
+                    Text = i.ToString()
+                });
+                ViewBag.danVB = rdan;
+                ViewBag.mesecVB = rmesec;
+                ViewBag.letoVB = rleto;
+                ViewBag.uraVB = rura;
+                ViewBag.minVB = rmin;
+
                 return View();
             }
         }
@@ -85,19 +166,61 @@ namespace studis.Controllers
         [HttpPost]
         public ActionResult Edit(IzpitniRokModel model)
         {
+            DateTime cas = new DateTime();
+            string dt = model.leto.ToString() + "-" + model.mesec.ToString() + "-" + model.dan.ToString()+" "+model.ura.ToString()+":"+model.min.ToString()+":00";
+            var tp = DateTime.TryParse(dt, out cas);
+            if (!tp) ModelState.AddModelError("", "Napačen datum in čas");
 
-            try
+            if (ModelState.IsValid)
             {
-                // TODO: Add update logic here
-                var rok = db.izpitniroks.SingleOrDefault(r => r.id == model.id);
-               
-                rok.datum = UserHelper.StringToDate(model.datum);
-                //rok.predmet = db.predmets.SingleOrDefault(v => v.id == model.predmet);
-                db.SaveChanges();
-                return View("UspesnoSpremenjen");
+                try
+                {
+                    // TODO: Add update logic here
+                    var rok = db.izpitniroks.SingleOrDefault(r => r.id == model.id);
+
+                    rok.datum = cas;
+                    //rok.predmet = db.predmets.SingleOrDefault(v => v.id == model.predmet);
+                    db.SaveChanges();
+                    return View("UspesnoSpremenjen");
+                }
+                catch
+                {
+                    return View();
+                }
             }
-            catch
+            else
             {
+                var rdan = Enumerable.Range(1, 31).Select(i => new SelectListItem
+                {
+                    Value = i.ToString(),
+                    Text = i.ToString()
+                });
+                var rmesec = Enumerable.Range(1, 12).Select(i => new SelectListItem
+                {
+                    Value = i.ToString(),
+                    Text = i.ToString()
+                });
+                var rleto = Enumerable.Range(DateTime.Now.Year, 2).Select(i => new SelectListItem
+                {
+                    Value = i.ToString(),
+                    Text = i.ToString()
+                });
+                var rura = Enumerable.Range(6, 23).Select(i => new SelectListItem
+                {
+                    Value = i.ToString(),
+                    Text = i.ToString()
+                });
+                var rmin = Enumerable.Range(0, 59).Select(i => new SelectListItem
+                {
+                    Value = i.ToString(),
+                    Text = i.ToString()
+                });
+                ViewBag.danVB = rdan;
+                ViewBag.mesecVB = rmesec;
+                ViewBag.letoVB = rleto;
+                ViewBag.uraVB = rura;
+                ViewBag.minVB = rmin;
+
                 return View();
             }
         }
@@ -252,19 +375,6 @@ namespace studis.Controllers
             int iid = Convert.ToInt32(id);
             var datum = db.izpitniroks.SingleOrDefault(r => r.id == iid).datum;
             return UserHelper.DateToString(datum);
-        }
-
-        public JsonResult PreveriDatum(string datum)
-        {
-            Debug.WriteLine("datum: " + datum);
-            DateTime d = UserHelper.StringToDate(datum);
-            Debug.WriteLine("Datum: " + d);
-            var result = Validate.veljavenDatum(d);
-            if (d < DateTime.Today)
-            {
-                result = false;
-            }
-            return Json(result);
         }
 
         public JsonResult PreveriIzpitniRok(int id)

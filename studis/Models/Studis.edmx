@@ -20,7 +20,7 @@
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="datum" Type="date" Nullable="false" />
+          <Property Name="datum" Type="datetime" Precision="0" Nullable="false" />
           <Property Name="izvajanjeId" Type="uint" Nullable="false" />
         </EntityType>
         <EntityType Name="izpitnirokinstudent">

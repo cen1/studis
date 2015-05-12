@@ -14,11 +14,20 @@ namespace studis.Models
         [Display(Name = "Izpitni rok")]
         public int id { get; set; }
 
-        [Remote("PreveriDatum", "IzpitniRok", HttpMethod = "POST", ErrorMessage = "Datum ne sme biti v preteklosti.")]
         [Required(ErrorMessage = "Obvezno izpolniti.")]
-        [Display(Name = "Datum")]
-        public string datum { get; set; }
+        public int dan { get; set; }
 
+        [Required(ErrorMessage = "Obvezno izpolniti.")]
+        public int mesec { get; set; }
+
+        [Required(ErrorMessage = "Obvezno izpolniti.")]
+        public int leto { get; set; }
+
+        [Required(ErrorMessage = "Obvezno izpolniti.")]
+        public int ura { get; set; }
+
+        [Required(ErrorMessage = "Obvezno izpolniti.")]
+        public int min { get; set; }
         
         [Required(ErrorMessage = "Obvezno izbrati.")]
         [Display(Name = "Predmet")]
