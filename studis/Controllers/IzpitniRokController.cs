@@ -38,6 +38,20 @@ namespace studis.Controllers
             ViewBag.Prazen = new SelectList(ltemp, "Value", "Text");
             //new SelectList(db.sifrant_studijskiprogram.OrderBy(a => a.naziv), "id", "naziv");
             //IzpitniRokModel model= new IzpitniRokModel();
+
+            var uraSeznam = Enumerable.Range(0, 24).Select(i => new SelectListItem
+               {
+                   Value = i.ToString("00"),
+                   Text = i.ToString("00")
+               });
+            var minuntaSeznam = Enumerable.Range(0, 60).Select(i => new SelectListItem
+                {
+                    Value = i.ToString("00"),
+                    Text = i.ToString("00")
+                });
+            ViewBag.ura = uraSeznam;
+            ViewBag.minuta = minuntaSeznam;
+
             return View();
         }
 
@@ -49,6 +63,7 @@ namespace studis.Controllers
             izpitniRok.datum = UserHelper.StringToDate(model.datum);
             izpitniRok.izvajanje = db.izvajanjes.SingleOrDefault(i => i.id == model.izvajanje);//db.predmets.SingleOrDefault(v => v.id == model.predmet);
             //izpitniRok.profesor = db.profesors.SingleOrDefault(p => p.id == model.profesor);
+            
             try
             {
                 // TODO: Add insert logic here

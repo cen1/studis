@@ -51,6 +51,15 @@
                 @Html.ValidationMessageFor(m => m.datum)
             </div>
 
+            <!--Izbira ure-->
+            <div class="editor-label">
+                @Html.LabelFor(m => m.ura)
+            </div>
+            <div class="editor-field">
+                @Html.DropDownListFor(m => m.ura, (IEnumerable<SelectListItem>)ViewBag.ura, "--")
+                @Html.DropDownListFor(m => m.minuta, (IEnumerable<SelectListItem>)ViewBag.minuta, "--")
+            </div>
+
             <p>
                 <input id="submit" type="submit" value="Dodaj">
             </p>
