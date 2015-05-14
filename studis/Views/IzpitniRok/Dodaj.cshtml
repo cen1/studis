@@ -2,18 +2,17 @@
     ViewBag.Title = "IzpitniRok";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
-<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
-<script src="@Url.Content("~/Scripts/mvcfoolproof.unobtrusive.js")" type="text/javascript"></script>
+
+
+
 
 @model studis.Models.IzpitniRokModel
 
 <h2>Dodaj izpitni rok</h2>
-
-@Html.ValidationSummary(true, "Popravite napake in poskusite ponovno.")
 
 @using (Html.BeginForm())
 {
@@ -36,34 +35,31 @@
                 @Html.DropDownListFor(m => m.izvajanje, (SelectList)ViewBag.Prazen)
                 @Html.ValidationMessageFor(m => m.izvajanje)
             </div>
-               
+
 
             <!--Izbira datuma-->
+            <script>
+                $(function () {
+                    $("#datum").datepicker({ dateFormat: 'dd.mm.yy' });
+                });
+            </script>
             <div class="editor-label">
-                Datum
+                @Html.LabelFor(m => m.datum)
             </div>
             <div class="editor-field">
-                @Html.DropDownListFor(m => m.dan, (IEnumerable<SelectListItem>)ViewBag.danVB)
-                @Html.DropDownListFor(m => m.mesec, (IEnumerable<SelectListItem>)ViewBag.mesecVB)
-                @Html.DropDownListFor(m => m.leto, (IEnumerable<SelectListItem>)ViewBag.letoVB)
+                @Html.TextBoxFor(m => m.datum)
+                @Html.ValidationMessageFor(m => m.datum)
             </div>
-            <div class="editor-label">
-                Ura
-            </div>
-            <div class="editor-field">
-                @Html.DropDownListFor(m => m.ura, (IEnumerable<SelectListItem>)ViewBag.uraVB)
-                @Html.DropDownListFor(m => m.min, (IEnumerable<SelectListItem>)ViewBag.minVB)
-                
-            </div>
+
             <p>
                 <input id="submit" type="submit" value="Dodaj">
             </p>
-</fieldset>
+        </fieldset>
     </div>
 }
 
 <script language="javascript" type="text/javascript">
-    
+
     $(document).ready(function () {
         $("#predmet").change(function () {
             var url = "/IzpitniRok/GetIzvajanjaForPredmet/" + $(this).val();
@@ -88,5 +84,5 @@
             });
         });
     });
-    
+
 </script>
