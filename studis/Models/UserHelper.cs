@@ -302,6 +302,19 @@ namespace studis.Models
 
             return date;
         }
+
+        public static int[] TimeToInts(DateTime cas)
+        {
+            int[] uramin = new int[2];
+            uramin[0] = cas.Hour;
+            uramin[1] = cas.Minute;
+            return uramin;
+        }
+
+        public static DateTime IntsToTime(int ura, int min)
+        {
+            return new DateTime(0, 0, 0, ura, min, 0);
+        }
     }
 
 }
