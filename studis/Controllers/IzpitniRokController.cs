@@ -23,9 +23,10 @@ namespace studis.Controllers
         public ActionResult Dodaj()
         {
             List<predmet> temp = db.predmets.OrderBy(a => a.ime).ToList();
-            
+
             List<SelectListItem> predmeti = new List<SelectListItem>();
-            foreach(predmet i in temp) {
+            foreach (predmet i in temp)
+            {
                 SelectListItem p = new SelectListItem();
                 p.Value = i.id.ToString();
                 p.Text = Convert.ToInt32(p.Value).ToString("000") + " - " + i.ime + " (" + i.koda + ")";
@@ -33,7 +34,7 @@ namespace studis.Controllers
             }
             ViewBag.Predmets = new SelectList(predmeti, "Value", "Text");
             List<SelectListItem> ltemp = new List<SelectListItem>();
-            ltemp.Add(new SelectListItem() { Value="", Text="Izbira izvajalcev" });
+            ltemp.Add(new SelectListItem() { Value = "", Text = "Izbira izvajalcev" });
             ViewBag.Prazen = new SelectList(ltemp, "Value", "Text");
             //new SelectList(db.sifrant_studijskiprogram.OrderBy(a => a.naziv), "id", "naziv");
             //IzpitniRokModel model= new IzpitniRokModel();
@@ -90,7 +91,7 @@ namespace studis.Controllers
             {
                 // TODO: Add update logic here
                 var rok = db.izpitniroks.SingleOrDefault(r => r.id == model.id);
-               
+
                 rok.datum = UserHelper.StringToDate(model.datum);
                 //rok.predmet = db.predmets.SingleOrDefault(v => v.id == model.predmet);
                 db.SaveChanges();
@@ -186,10 +187,10 @@ namespace studis.Controllers
             var izvajanja = pPredmet.izvajanjes.ToList();//izpitniroks.ToList(); //Exception 
             var seznamIzvajanja = new List<SelectListItem>();
             int c = 0;
-            foreach(izvajanje i in izvajanja)
+            foreach (izvajanje i in izvajanja)
             {
                 c++;
-                string profesorji= "";
+                string profesorji = "";
                 var profesor1 = i.profesor;//db.profesors.SingleOrDefault( p => p.id == i.izvajalec1Id);
                 profesorji += profesor1.ime + " " + profesor1.priimek;
                 if (i.profesor1 != null)
@@ -287,7 +288,7 @@ namespace studis.Controllers
             return Json(result);
         }
 
-        
+
         public string PreveriPrijave(int id)
         {
             int st = 0;
@@ -298,6 +299,6 @@ namespace studis.Controllers
             catch (Exception e) { st = 0; }
             return st.ToString(); ;
         }
-        
+
     }
 }

@@ -19,16 +19,16 @@ namespace studis.Models
         [Display(Name = "Datum")]
         public string datum { get; set; }
 
-        
+
         [Required(ErrorMessage = "Obvezno izbrati.")]
         [Display(Name = "Predmet")]
         public int predmet { get; set; }
-        
-        
+
+
         [Required(ErrorMessage = "Obvezno izbrati.")]
         [Display(Name = "Izvaja")]
         public int izvajanje { get; set; }
-        
+
 
     }
 }

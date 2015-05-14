@@ -8,11 +8,6 @@
 
 <h2>Dodaj izvajanje</h2>
 
-@if (TempData["ok"] != null)
-{
-    <div>@TempData["ok"]</div>
-}
-
 @using (Html.BeginForm())
 {
     <div>
@@ -60,11 +55,3 @@
         </fieldset>
     </div>
 }
-<script>
-    //on submit
-    $(document).ready(function () {
-        $("#submit").click(function () {
-            alert("Dodajanje v bazo.");
-        });
-    });
-</script>

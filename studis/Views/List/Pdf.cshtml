@@ -239,9 +239,10 @@
         </tr>
         @foreach (var data in @ViewBag.Predmeti)
         {
+            var counter = 0;
             foreach (var item in @ViewBag.Profesorji)
             {
-                if (@data.predmet.id == @item.predmetId) {
+                if (@data.predmet.id == @item.predmetId && counter == 0) {
                     <tr>
                         <td style="width: 25%;">
                             @item.profesor.ime @item.profesor.priimek
@@ -257,7 +258,16 @@
                         <td style="width: 60%;">@data.predmet.ime</td>
                         <td style="width: 15%;">@data.predmet.kreditne</td>
                     </tr>
+                            counter++;
                 }
+            }
+            if (counter == 0)
+            {
+                <tr>
+                    <td style="width: 25%;"></td>
+                    <td style="width: 60%;">@data.predmet.ime</td>
+                    <td style="width: 15%;">@data.predmet.kreditne</td>
+                </tr>
             }
 
         }

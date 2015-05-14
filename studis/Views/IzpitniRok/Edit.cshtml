@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     ViewBag.Title = "Spreminjaje izpitnega roka";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -49,8 +48,8 @@
 
             <!--Izbira datuma-->
             <script>
-                $(function() {
-                    $("#datum").datepicker({dateFormat: 'dd.mm.yy'});
+                $(function () {
+                    $("#datum").datepicker({ dateFormat: 'dd.mm.yy' });
                 });
             </script>
             <div class="editor-label">
@@ -61,7 +60,7 @@
                 @Html.ValidationMessageFor(m => m.datum)
             </div>
             <p id="warning" style="color:orange;">
-                
+
             </p>
 
             <p>
