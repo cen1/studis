@@ -20,8 +20,10 @@
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="datum" Type="datetime" Precision="0" Nullable="false" />
+          <Property Name="datum" Type="date" Nullable="false" />
+          <Property Name="ura" Type="datetime" Precision="0" />
           <Property Name="izvajanjeId" Type="uint" Nullable="false" />
+          <Property Name="prostorId" Type="int" />
         </EntityType>
         <EntityType Name="izpitnirokinstudent">
           <Key>
@@ -2995,6 +2997,8 @@
           <NavigationProperty Name="izvajanje" Relationship="studisModel.izpitnirok_izvajanje_fk" FromRole="izpitnirok" ToRole="izvajanje" />
           <NavigationProperty Name="students" Relationship="studisModel.izpitnirokinstudent" FromRole="izpitnirok" ToRole="student" />
           <NavigationProperty Name="ocenas" Relationship="studisModel.ocena_izpitnirok_fk" FromRole="izpitnirok" ToRole="ocena" />
+          <Property Name="ura" Type="DateTime" />
+          <Property Name="prostorId" Type="Int32" />
         </EntityType>
         <Association Name="izpitnirok_izvajanje_fk">
           <End Type="studisModel.izvajanje" Role="izvajanje" Multiplicity="1">
@@ -3500,6 +3504,8 @@
           <EntitySetMapping Name="izpitniroks">
             <EntityTypeMapping TypeName="studisModel.izpitnirok">
               <MappingFragment StoreEntitySet="izpitnirok">
+                <ScalarProperty Name="prostorId" ColumnName="prostorId" />
+                <ScalarProperty Name="ura" ColumnName="ura" />
                 <ScalarProperty Name="izvajanjeId" ColumnName="izvajanjeId" />
                 <ScalarProperty Name="datum" ColumnName="datum" />
                 <ScalarProperty Name="id" ColumnName="id" />

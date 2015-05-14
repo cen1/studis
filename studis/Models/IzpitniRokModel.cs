@@ -29,6 +29,12 @@ namespace studis.Models
         [Display(Name = "Izvaja")]
         public int izvajanje { get; set; }
 
+        [Display(Name = "Čas izpita")]
+        public int ura { get; set; }
 
+        public int minuta { get; set; }
+
+        [Display(Name = "Prostor")]
+        public int ucilnca { get; set; }
     }
 }

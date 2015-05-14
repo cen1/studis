@@ -23,6 +23,8 @@ namespace studis.Models
         public int id { get; set; }
         public System.DateTime datum { get; set; }
         public long izvajanjeId { get; set; }
+        public Nullable<System.DateTime> ura { get; set; }
+        public Nullable<int> prostorId { get; set; }
     
         public virtual izvajanje izvajanje { get; set; }
         public virtual ICollection<student> students { get; set; }
