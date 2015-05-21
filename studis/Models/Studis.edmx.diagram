@@ -107,6 +107,7 @@
         <AssociationConnector Association="studisModel.ocena_vpis" />
         <EntityTypeShape EntityType="studisModel.sifrant_prostor" Width="1.5" PointX="0.75" PointY="10.5" />
         <AssociationConnector Association="studisModel.izpitnirok_prostor_fk" />
+        <AssociationConnector Association="studisModel.izvajanje_studijskoleto_fk" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

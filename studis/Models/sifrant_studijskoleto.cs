@@ -17,11 +17,13 @@ namespace studis.Models
         public sifrant_studijskoleto()
         {
             this.vpis = new HashSet<vpi>();
+            this.izvajanjes = new HashSet<izvajanje>();
         }
     
         public int id { get; set; }
         public string naziv { get; set; }
     
         public virtual ICollection<vpi> vpis { get; set; }
+        public virtual ICollection<izvajanje> izvajanjes { get; set; }
     }
 }

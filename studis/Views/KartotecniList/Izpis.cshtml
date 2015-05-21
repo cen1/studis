@@ -1,0 +1,114 @@
+﻿@model studis.Models.sifrant_studijskiprogram
+
+@{
+    ViewBag.Title = "Kartotečni list";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Kartotečni list</h2>
+
+<!--- selektor za vsa/zadnje polaganje; selektor za študijski program -->
+@using (Html.BeginForm("Izpis", "KartotecniList", FormMethod.Post, null))
+{
+    @Html.DropDownList("polaganja", new SelectList(new[] { "Zadnje polaganje", "Vsa polaganja" })) @Html.DropDownListFor(m => m.naziv, (SelectList)ViewBag.Program) <input type="submit" value="Izpiši" />
+}
+    
+<br />
+<br />
+<br />
+
+<div id="izpis">
+    <!--- foreach {leto študija} -->
+
+            <!-- GLAVA -->
+            <table>
+                <tbody>
+                    <tr>
+                        <th>Študijsko leto</th>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th>Študijski program</th>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th>Letnik</th>
+                        <td></td>    
+                    </tr>
+                    <tr>
+                        <th>Modul 1</th>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th>Modul 2</th>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th>Vrsta vpisa</th>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th>Način študija</th>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <br />
+
+            <!-- IZPIS -->
+            <table>
+                <thead>
+                    <tr>
+                        <th>Šifra</th>
+                        <th>Predmet</th>
+                        <th>Ocenil</th>
+                        <th>Letnik</th>
+                        <th>Datum</th>
+                        <th>Polaganje</th>
+                        <th>Polaganje v tem letu</th>
+                        <th>KT</th>
+                        <th>Ocena</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr> 
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <br />
+            
+        <!--- NOGA -->
+        <h2>Povprečne ocene po študijskih letih</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Študijsko leto</th>
+                    <th>Število opravljenih izpitov</th>
+                    <th>Kreditne točke</th>
+                    <th>Skupno povprečje</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>    
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+</div>
+
