@@ -1,4 +1,5 @@
-﻿
+﻿@model studis.Models.sifrant_studijskiprogram
+
 @{
     ViewBag.Title = "Kartotečni list";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -9,7 +10,7 @@
 <!--- selektor za vsa/zadnje polaganje; selektor za študijski program -->
 @using (Html.BeginForm("Izpis", "KartotecniList", FormMethod.Post, null))
 {
-    @Html.DropDownList("Selektor", new SelectList(new[] { "Zadnje polaganje", "Vsa polaganja" })) @Html.DropDownList("Selektor2", new SelectList(new[] { "BUNI", "VSP" }))    <input type="submit" value="Izpiši" />
+    @Html.DropDownList("polaganja", new SelectList(new[] { "Zadnje polaganje", "Vsa polaganja" })) @Html.DropDownListFor(m => m.naziv, (SelectList)ViewBag.Program) <input type="submit" value="Izpiši" />
 }
     
 <br />
