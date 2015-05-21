@@ -35,6 +35,6 @@ namespace studis.Models
         public int minuta { get; set; }
 
         [Display(Name = "Prostor")]
-        public int ucilnca { get; set; }
+        public int prostor { get; set; }
     }
 }

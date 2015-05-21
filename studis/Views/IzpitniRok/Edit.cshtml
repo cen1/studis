@@ -59,6 +59,24 @@
                 @Html.TextBoxFor(m => m.datum)
                 @Html.ValidationMessageFor(m => m.datum)
             </div>
+
+            <!--Izbira ure-->
+            <div class="editor-label">
+                @Html.LabelFor(m => m.ura)
+            </div>
+            <div class="editor-field">
+                @Html.DropDownListFor(m => m.ura, (IEnumerable<SelectListItem>)ViewBag.ura, "--")
+                @Html.DropDownListFor(m => m.minuta, (IEnumerable<SelectListItem>)ViewBag.minuta, "--")
+            </div>
+
+            <!--Izbira prostora-->
+            <div class="editor-label">
+                @Html.LabelFor(m => m.prostor)
+            </div>
+            <div class="editor-field">
+                @Html.DropDownListFor(m => m.prostor, (IEnumerable<SelectListItem>)ViewBag.prostor, "")
+            </div>
+
             <p id="warning" style="color:orange;">
 
             </p>
@@ -143,6 +161,42 @@
             });
         });
     });
+
+    //napolni cas
+    $(document).ready(function () {
+        $("#id").change(function () {
+            console.log("Parameter: " + $("#id option:selected").val());
+            var url1 = "/IzpitniRok/GetUraForIzpitniRok/" + $("#id option:selected").val();
+            console.log("URL: " + url1);
+            $.get(url1, function (response) {
+                var ura = response;
+                console.log("URA " + ura);
+                $("#ura").val(ura);
+            });
+            var url2 = "/IzpitniRok/GetMinutaForIzpitniRok/" + $("#id option:selected").val();
+            console.log("URL: " + url2);
+            $.get(url2, function (response) {
+                var minuta = response;
+                console.log("MINUTA " + minuta);
+                $("#minuta").val(minuta);
+            });
+        });
+    });
+
+    //napolni prostor
+    $(document).ready(function () {
+        $("#id").change(function () {
+            console.log("Parameter: " + $("#id option:selected").val());
+            var url = "/IzpitniRok/GetProstorForIzpitniRok/" + $("#id option:selected").val();
+            console.log("URL: " + url);
+            $.get(url, function (response) {
+                var prostor = response;
+                console.log("PROSTOR: " + prostor);
+                $("#prostor").val(prostor);
+            });
+        });
+    });
+
     /*
     $(document).ready(function () {
         $("#id").ready(function () {

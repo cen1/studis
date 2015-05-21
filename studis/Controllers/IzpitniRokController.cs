@@ -41,16 +41,24 @@ namespace studis.Controllers
 
             var uraSeznam = Enumerable.Range(0, 24).Select(i => new SelectListItem
                {
-                   Value = i.ToString("00"),
+                   Value = i.ToString(),
                    Text = i.ToString("00")
                });
             var minuntaSeznam = Enumerable.Range(0, 60).Select(i => new SelectListItem
                 {
-                    Value = i.ToString("00"),
+                    Value = i.ToString(),
                     Text = i.ToString("00")
                 });
             ViewBag.ura = uraSeznam;
             ViewBag.minuta = minuntaSeznam;
+
+            var prostorSeznam = Enumerable.Range(1, 22).Select(i => new SelectListItem
+            {
+                Value = i.ToString(),
+                Text = "P" + i.ToString("00")
+            });
+
+            ViewBag.prostor = prostorSeznam;
 
             return View();
         }
@@ -63,7 +71,10 @@ namespace studis.Controllers
             izpitniRok.datum = UserHelper.StringToDate(model.datum);
             izpitniRok.izvajanje = db.izvajanjes.SingleOrDefault(i => i.id == model.izvajanje);//db.predmets.SingleOrDefault(v => v.id == model.predmet);
             //izpitniRok.profesor = db.profesors.SingleOrDefault(p => p.id == model.profesor);
-            
+            if(model.ura != 0)
+                izpitniRok.ura = UserHelper.IntsToTime(model.ura, model.minuta);
+            if(model.prostor != 0)
+                izpitniRok.prostorId = model.prostor;
             try
             {
                 // TODO: Add insert logic here
@@ -73,7 +84,7 @@ namespace studis.Controllers
             }
             catch
             {
-                return View();
+                return Dodaj();
             }
         }
 
@@ -94,6 +105,28 @@ namespace studis.Controllers
             ltemp.Add(new SelectListItem() { Value = "", Text = "Izbira" });
             ViewBag.Prazen = new SelectList(ltemp, "Value", "Text");
             ViewBag.Predmets = new SelectList(predmeti, "Value", "Text");
+
+            var uraSeznam = Enumerable.Range(0, 24).Select(i => new SelectListItem
+            {
+                Value = i.ToString(),
+                Text = i.ToString("00")
+            });
+            var minuntaSeznam = Enumerable.Range(0, 60).Select(i => new SelectListItem
+            {
+                Value = i.ToString(),
+                Text = i.ToString("00")
+            });
+            ViewBag.ura = uraSeznam;
+            ViewBag.minuta = minuntaSeznam;
+
+            var prostorSeznam = Enumerable.Range(1, 22).Select(i => new SelectListItem
+            {
+                Value = i.ToString(),
+                Text = "P" + i.ToString("00")
+            });
+
+            ViewBag.prostor = prostorSeznam;
+
             return View();
         }
 
@@ -109,12 +142,29 @@ namespace studis.Controllers
 
                 rok.datum = UserHelper.StringToDate(model.datum);
                 //rok.predmet = db.predmets.SingleOrDefault(v => v.id == model.predmet);
+                if (model.ura != 0)
+                {
+                    rok.ura = UserHelper.IntsToTime(model.ura, model.minuta);
+                }
+                else
+                {
+                    rok.ura = null;
+                }
+                if (model.prostor != 0)
+                {
+                    rok.prostorId = model.prostor;
+                }
+                else
+                {
+                    rok.prostorId = null;
+                }
+                Debug.WriteLine("Prostor " + model.prostor);
                 db.SaveChanges();
                 return View("UspesnoSpremenjen");
             }
             catch
             {
-                return View();
+                return Edit();
             }
         }
 
@@ -151,7 +201,7 @@ namespace studis.Controllers
             }
             catch
             {
-                return View();
+                return Izbrisi();
             }
         }
 
@@ -234,9 +284,7 @@ namespace studis.Controllers
 
         public string GetIzpitniRoksForIzvajanja(int id)
         {
-            /*
-             * TO DO TO DO TO DO TO DO TO DO TO DO
-             */
+
             Debug.WriteLine("ID " + id);
             int iid = Convert.ToInt32(id);
             Debug.WriteLine("ID " + iid);
@@ -247,7 +295,17 @@ namespace studis.Controllers
             foreach (izpitnirok i in izpitniRoki)
             {
                 c++;
-                seznamIzpitniRoki.Add(new SelectListItem() { Value = i.id.ToString(), Text = UserHelper.DateToString(i.datum) });
+                string prostor = "";
+                if (i.sifrant_prostor != null)
+                {
+                    prostor= i.sifrant_prostor.naziv;
+                }
+                string ura = "";
+                if (i.ura != null)
+                {
+                    ura = UserHelper.TimeToString((DateTime)i.ura);
+                }
+                seznamIzpitniRoki.Add(new SelectListItem() { Value = i.id.ToString(), Text = UserHelper.DateToString(i.datum) + " " + ura + " " + prostor});
             }
             if (c < 1)
             {
@@ -262,12 +320,54 @@ namespace studis.Controllers
 
         public string GetDatumForIzpitniRok(int id)
         {
-            /*
-             * TO DO TO DO TO DO TO DO TO DO TO DO
-             */
+
             int iid = Convert.ToInt32(id);
             var datum = db.izpitniroks.SingleOrDefault(r => r.id == iid).datum;
             return UserHelper.DateToString(datum);
+        }
+
+        public string GetUraForIzpitniRok(int id)
+        {
+            int iid = Convert.ToInt32(id);
+            var cas = db.izpitniroks.SingleOrDefault(r => r.id == iid).ura;
+            if (cas != null)
+            {
+                int[] t = UserHelper.TimeToInts((DateTime)cas);
+                return t[0].ToString();
+            }
+            else
+            {
+                return "";
+            }
+        }
+
+        public string GetMinutaForIzpitniRok(int id)
+        {
+            int iid = Convert.ToInt32(id);
+            var cas = db.izpitniroks.SingleOrDefault(r => r.id == iid).ura;
+            if (cas != null)
+            {
+                int[] t = UserHelper.TimeToInts((DateTime)cas);
+                return t[1].ToString();
+            }
+            else
+            {
+                return "";
+            }
+        }
+
+        public string GetProstorForIzpitniRok(int id)
+        {
+            int iid = Convert.ToInt32(id);
+            var prostor = db.izpitniroks.SingleOrDefault(r => r.id == iid).prostorId;
+            if (prostor != 0)
+            {
+                return prostor.ToString();
+            }
+            else
+            {
+                return "";
+            }
         }
 
         public JsonResult PreveriDatum(string datum)
