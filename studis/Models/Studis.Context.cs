@@ -64,5 +64,6 @@ namespace studis.Models
         public virtual DbSet<izvajanje> izvajanjes { get; set; }
         public virtual DbSet<izpitnirok> izpitniroks { get; set; }
         public virtual DbSet<ocena> ocenas { get; set; }
+        public virtual DbSet<sifrant_prostor> sifrant_prostor { get; set; }
     }
 }

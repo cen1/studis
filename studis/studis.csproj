@@ -279,6 +279,9 @@
     <Compile Include="Models\sifrant_postnastevilka.cs">
       <DependentUpon>Studis.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\sifrant_prostor.cs">
+      <DependentUpon>Studis.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\sifrant_smer.cs">
       <DependentUpon>Studis.tt</DependentUpon>
     </Compile>

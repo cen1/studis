@@ -29,5 +29,6 @@ namespace studis.Models
         public virtual izvajanje izvajanje { get; set; }
         public virtual ICollection<student> students { get; set; }
         public virtual ICollection<ocena> ocenas { get; set; }
+        public virtual sifrant_prostor sifrant_prostor { get; set; }
     }
 }

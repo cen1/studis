@@ -313,7 +313,15 @@ namespace studis.Models
 
         public static DateTime IntsToTime(int ura, int min)
         {
-            return new DateTime(0, 0, 0, ura, min, 0);
+            return new DateTime(1, 1, 1, ura, min, 0);
+        }
+
+        public static string TimeToString(DateTime cas)
+        {
+            if (cas.Hour != 0)
+                return cas.Hour.ToString("00") + ":" + cas.Minute.ToString("00");
+            else
+                return "";
         }
     }
 

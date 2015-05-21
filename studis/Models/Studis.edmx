@@ -293,6 +293,13 @@
           <Property Name="id" Type="int" Nullable="false" />
           <Property Name="naziv" Type="varchar" MaxLength="255" Nullable="false" />
         </EntityType>
+        <EntityType Name="sifrant_prostor">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="naziv" Type="varchar" MaxLength="255" Nullable="false" />
+        </EntityType>
         <EntityType Name="sifrant_smer">
           <Key>
             <PropertyRef Name="id" />
@@ -474,6 +481,20 @@
             </Principal>
             <Dependent Role="izpitnirok">
               <PropertyRef Name="izvajanjeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="izpitnirok_prostor_fk">
+          <End Role="sifrant_prostor" Type="Self.sifrant_prostor" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="izpitnirok" Type="Self.izpitnirok" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="sifrant_prostor">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="izpitnirok">
+              <PropertyRef Name="prostorId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1298,6 +1319,7 @@
           <EntitySet Name="sifrant_obcina" EntityType="Self.sifrant_obcina" Schema="studis" store:Type="Tables" />
           <EntitySet Name="sifrant_oblikastudija" EntityType="Self.sifrant_oblikastudija" Schema="studis" store:Type="Tables" />
           <EntitySet Name="sifrant_postnastevilka" EntityType="Self.sifrant_postnastevilka" Schema="studis" store:Type="Tables" />
+          <EntitySet Name="sifrant_prostor" EntityType="Self.sifrant_prostor" Schema="studis" store:Type="Tables" />
           <EntitySet Name="sifrant_smer" EntityType="Self.sifrant_smer" Schema="studis" store:Type="Tables" />
           <EntitySet Name="sifrant_spol" EntityType="Self.sifrant_spol" Schema="studis" store:Type="Tables" />
           <EntitySet Name="sifrant_studijskiprogram" EntityType="Self.sifrant_studijskiprogram" Schema="studis" store:Type="Tables" />
@@ -1323,6 +1345,10 @@
           </AssociationSet>
           <AssociationSet Name="izpitnirok_izvajanje_fk" Association="Self.izpitnirok_izvajanje_fk">
             <End Role="izvajanje" EntitySet="izvajanje" />
+            <End Role="izpitnirok" EntitySet="izpitnirok" />
+          </AssociationSet>
+          <AssociationSet Name="izpitnirok_prostor_fk" Association="Self.izpitnirok_prostor_fk">
+            <End Role="sifrant_prostor" EntitySet="sifrant_prostor" />
             <End Role="izpitnirok" EntitySet="izpitnirok" />
           </AssociationSet>
           <AssociationSet Name="izpitnirokinstudenti_izpitnirok_fk" Association="Self.izpitnirokinstudenti_izpitnirok_fk">
@@ -1950,6 +1976,11 @@
           <AssociationSet Name="ocena_vpis" Association="studisModel.ocena_vpis">
             <End Role="vpi" EntitySet="vpis" />
             <End Role="ocena" EntitySet="ocenas" />
+          </AssociationSet>
+          <EntitySet Name="sifrant_prostor" EntityType="studisModel.sifrant_prostor" />
+          <AssociationSet Name="izpitnirok_prostor_fk" Association="studisModel.izpitnirok_prostor_fk">
+            <End Role="sifrant_prostor" EntitySet="sifrant_prostor" />
+            <End Role="izpitnirok" EntitySet="izpitniroks" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="ip_lock">
@@ -2999,6 +3030,7 @@
           <NavigationProperty Name="ocenas" Relationship="studisModel.ocena_izpitnirok_fk" FromRole="izpitnirok" ToRole="ocena" />
           <Property Name="ura" Type="DateTime" />
           <Property Name="prostorId" Type="Int32" />
+          <NavigationProperty Name="sifrant_prostor" Relationship="studisModel.izpitnirok_prostor_fk" FromRole="izpitnirok" ToRole="sifrant_prostor" />
         </EntityType>
         <Association Name="izpitnirok_izvajanje_fk">
           <End Type="studisModel.izvajanje" Role="izvajanje" Multiplicity="1">
@@ -3068,6 +3100,28 @@
             </Principal>
             <Dependent Role="ocena">
               <PropertyRef Name="vpisId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="sifrant_prostor">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="naziv" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="izpitniroks" Relationship="studisModel.izpitnirok_prostor_fk" FromRole="sifrant_prostor" ToRole="izpitnirok" />
+        </EntityType>
+        <Association Name="izpitnirok_prostor_fk">
+          <End Type="studisModel.sifrant_prostor" Role="sifrant_prostor" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="studisModel.izpitnirok" Role="izpitnirok" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="sifrant_prostor">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="izpitnirok">
+              <PropertyRef Name="prostorId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -3527,6 +3581,14 @@
                 <ScalarProperty Name="vpisId" ColumnName="vpisId" />
                 <ScalarProperty Name="ocena1" ColumnName="ocena" />
                 <ScalarProperty Name="studentId" ColumnName="studentId" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sifrant_prostor">
+            <EntityTypeMapping TypeName="studisModel.sifrant_prostor">
+              <MappingFragment StoreEntitySet="sifrant_prostor">
+                <ScalarProperty Name="naziv" ColumnName="naziv" />
                 <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>

@@ -60,6 +60,14 @@
                 @Html.DropDownListFor(m => m.minuta, (IEnumerable<SelectListItem>)ViewBag.minuta, "--")
             </div>
 
+            <!--Izbira prostora-->
+            <div class="editor-label">
+                @Html.LabelFor(m => m.prostor)
+            </div>
+            <div class="editor-field">
+                @Html.DropDownListFor(m => m.prostor, (IEnumerable<SelectListItem>)ViewBag.prostor, "")
+            </div>
+
             <p>
                 <input id="submit" type="submit" value="Dodaj">
             </p>
