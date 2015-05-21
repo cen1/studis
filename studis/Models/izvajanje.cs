@@ -24,11 +24,13 @@ namespace studis.Models
         public long izvajalec1Id { get; set; }
         public Nullable<long> izvajalec2Id { get; set; }
         public Nullable<long> izvajalec3Id { get; set; }
+        public int studijskoletoId { get; set; }
     
         public virtual profesor profesor { get; set; }
         public virtual profesor profesor1 { get; set; }
         public virtual profesor profesor2 { get; set; }
         public virtual predmet predmet { get; set; }
         public virtual ICollection<izpitnirok> izpitniroks { get; set; }
+        public virtual sifrant_studijskoleto sifrant_studijskoleto { get; set; }
     }
 }
