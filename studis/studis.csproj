@@ -175,6 +175,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ImportController.cs" />
     <Compile Include="Controllers\IzpitniRokController.cs" />
+    <Compile Include="Controllers\IzpitniRokPrijavaController.cs" />
     <Compile Include="Controllers\IzvajanjeController.cs" />
     <Compile Include="Controllers\KandidatController.cs" />
     <Compile Include="Controllers\KartotecniListController.cs" />
@@ -535,6 +536,9 @@
     <Content Include="Views\Izvajanje.cshtml" />
     <Content Include="Views\Izvajanje\Dodaj.cshtml" />
     <Content Include="Views\Izvajanje\Error.cshtml" />
+    <Content Include="Views\IzpitniRokPrijava\Index.cshtml" />
+    <Content Include="Views\IzpitniRokPrijava\Prijavi.cshtml" />
+    <Content Include="Views\IzpitniRokPrijava\Odjavi.cshtml" />
     <Content Include="Views\KartotecniList\Izpis.cshtml" />
     <Content Include="Views\KartotecniList\Napaka.cshtml" />
   </ItemGroup>
