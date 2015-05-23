@@ -85,7 +85,7 @@ namespace studis.Controllers
                 }
                 ViewBag.Izvajanja = izvajanja;
 
-                // pridobi izpitne roke in vrni izpitni roke, ki so bili (zadnji) opravljani
+                // pridobi in vrni izpitne roke, ki so bili (zadnji) opravljani
                 List<izpitnirok> roki = new List<izpitnirok>();
                 {
                     foreach (var izv in izvajanja)
@@ -112,7 +112,7 @@ namespace studis.Controllers
                 {
                     foreach (var v in vpisi)
                     {
-                        foreach (var p in v.prijavanaizpits.ToList())
+                        foreach (var p in v.prijavanaizpits.Where(p => p.stanje == 2).ToList())
                         {
                             prijave.Add(p);
                         }       
@@ -128,12 +128,51 @@ namespace studis.Controllers
             else
             {
                 // pridobi vse vpisne liste za študenta, kjer je študijski program = selected
+                var vpisi = db.vpis.Where(v => v.vpisnaStevilka == vpisna && v.studijskiProgram == model.id).ToList();
+                ViewBag.Vpisi = vpisi;
 
                 // pridobi izvajanja
+                List<izvajanje> izvajanja = new List<izvajanje>();
+                {
+                    foreach (var vpis in vpisi)
+                    {
+                        foreach (var izv in vpis.izvajanjes.ToList())
+                        {
+                            izvajanja.Add(izv);
+                        }
 
-                // pridobi vse izpitne roke, ki so bili opravljani
+                    }
+                }
+                ViewBag.Izvajanja = izvajanja;
+
+                // pridobi in vrni vse izpitni roke, ki so bili opravljani
+                List<izpitnirok> roki = new List<izpitnirok>();
+                {
+                    foreach (var izv in izvajanja)
+                    {
+                        foreach (var r in izv.izpitniroks.ToList())
+                        {
+                            if (r.prijavanaizpits.Where(p => p.stanje == 2).ToList() != null)
+                            {
+                                roki.Add(r);
+                            }
+                        }
+                    }
+                }
+                ViewBag.Roki = roki;
 
                 // pridobi opravljanja izpitov
+                List<prijavanaizpit> prijave = new List<prijavanaizpit>();
+                {
+                    foreach (var v in vpisi)
+                    {
+                        foreach (var p in v.prijavanaizpits.Where(p => p.stanje == 2).ToList())
+                        {
+                            prijave.Add(p);
+                        }
+                    }
+                }
+                ViewBag.Prijave = prijave;
 
                 // vsa opravljanja
                 ViewBag.Izbira = 1;
