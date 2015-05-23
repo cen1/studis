@@ -244,6 +244,7 @@ namespace studis.Controllers
 
         public ActionResult SeznamPrijavljenihKandidatov(izpitnirok rok)
         {
+            //podatki o izpitnem roku
             sifrant_prostor predavalnica = db.sifrant_prostor.Where(s => s.id == rok.prostorId).SingleOrDefault();
             izvajanje izv = db.izvajanjes.Where(s => s.id == rok.izvajanjeId).SingleOrDefault();
 
@@ -254,6 +255,7 @@ namespace studis.Controllers
             ViewBag.imePredmeta = izv.predmet.ime;
 
 
+            //pridobi prijavljene študente
             var prijave = db.prijavanaizpits.Where( p => p.izpitnirokId == rok.id).ToList();
 
             List<student> list = new List<student>();
@@ -268,15 +270,30 @@ namespace studis.Controllers
                 if (st != null)
                 {
                     list.Add(st);
-                    leta.Add(vpiss.sifrant_studijskoleto.naziv);
-                    int polaganja = sh.polaganjaVsa(st.vpisnaStevilka,(int) izv.predmetId, vpiss.studijskiProgram);
-                    vsaPolaganja.Add(polaganja);
                 }
             }
 
             if (list.Any())
             {
+                //uredi seznam študentov
                 list = list.OrderBy(o => o.priimek).ToList();
+
+                //naredi seznam let poslušanja predmeta v enakem vrstnem redu kot so študenti za izpis
+                for(int i=0; i < list.Count; i++)
+                {
+                    foreach (vpi vpisan in list[i].vpis)
+                    {
+                        foreach (prijavanaizpit prijava in prijave)
+                        {
+                            if (vpisan.id == prijava.vpisId)
+                            {
+                                leta.Add(vpisan.sifrant_studijskoleto.naziv);
+                                int polaganja = sh.polaganjaVsa(list[i].vpisnaStevilka, (int)izv.predmetId, vpisan.studijskiProgram);
+                                vsaPolaganja.Add(polaganja);
+                            }
+                        }
+                    }
+                }
                 ViewBag.years = leta;
                 ViewBag.vsaPolaganja = vsaPolaganja;
             }
