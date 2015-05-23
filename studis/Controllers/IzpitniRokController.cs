@@ -244,17 +244,46 @@ namespace studis.Controllers
 
         public ActionResult SeznamPrijavljenihKandidatov(izpitnirok rok)
         {
-            //izpitnirok tmp = rok;
             sifrant_prostor predavalnica = db.sifrant_prostor.Where(s => s.id == rok.prostorId).SingleOrDefault();
             izvajanje izv = db.izvajanjes.Where(s => s.id == rok.izvajanjeId).SingleOrDefault();
 
             ViewBag.prostor = predavalnica.naziv;
-            ViewBag.datum = GetDatumForIzpitniRok(rok.id);//rok.datum;
-            ViewBag.ura = UserHelper.TimeToString((DateTime)rok.ura);//GetUraForIzpitniRok(rok.id)+":"+GetMinutaForIzpitniRok(rok.id);//rok.ura;
+            ViewBag.datum = GetDatumForIzpitniRok(rok.id);
+            ViewBag.ura = UserHelper.TimeToString((DateTime)rok.ura);
             ViewBag.sifraPredmeta = izv.predmetId;
             ViewBag.imePredmeta = izv.predmet.ime;
 
-            return View();
+
+            var prijave = db.prijavanaizpits.Where( p => p.izpitnirokId == rok.id).ToList();
+
+            List<student> list = new List<student>();
+            List<string> leta = new List<string>();
+            List<int> vsaPolaganja = new List<int>();
+            StudentHelper sh = new StudentHelper();
+            foreach(prijavanaizpit prijava in prijave)
+            {
+                vpi vpiss = db.vpis.Where(v => v.id == prijava.vpisId).SingleOrDefault();
+                student st = db.students.Where(s => s.vpisnaStevilka == vpiss.vpisnaStevilka).SingleOrDefault();
+               
+                if (st != null)
+                {
+                    list.Add(st);
+                    leta.Add(vpiss.sifrant_studijskoleto.naziv);
+                    int polaganja = sh.polaganjaVsa(st.vpisnaStevilka,(int) izv.predmetId, vpiss.studijskiProgram);
+                    vsaPolaganja.Add(polaganja);
+                }
+            }
+
+            if (list.Any())
+            {
+                list = list.OrderBy(o => o.priimek).ToList();
+                ViewBag.years = leta;
+                ViewBag.vsaPolaganja = vsaPolaganja;
+            }
+            else
+                list = null;
+
+            return View(list);
         }
 
 
@@ -462,10 +491,10 @@ namespace studis.Controllers
             int st = 0;
             try
             {
-                st = db.izpitniroks.SingleOrDefault(r => r.id == id).students.Count;
+                st = db.izpitniroks.SingleOrDefault(r => r.id == id).prijavanaizpits.Count();
             }
-            catch (Exception e) { st = 0; }
-            return st.ToString(); ;
+            catch (Exception e) { st = -1; }
+            return st.ToString();
         }
 
     }

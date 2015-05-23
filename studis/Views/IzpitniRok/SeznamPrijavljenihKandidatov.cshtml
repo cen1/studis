@@ -5,9 +5,9 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Izpitni rok</h2>
+<h2>Seznam prijavljenih kandidatov za izbrani izpitni rok</h2>
 
-<table class="table">
+<table id="izpis" class="table">
     <tr>
         <th>Šifra predmeta</th>
         <th>Ime predmeta</th>
@@ -24,11 +24,6 @@
         <td>@ViewBag.ura</td>
         <td>@ViewBag.prostor</td>
     </tr>
-</table>
-
-<h2>Seznam prijavljenih kandidatov</h2>
-
-<table class="table">
     <tr>
         <th>
             Zaporedna številka
@@ -37,10 +32,10 @@
             Vpisna številka
         </th>
         <th>
-            Ime
+            Priimek
         </th>
         <th>
-            Priimek
+            Ime
         </th>
         <th>
             Študijsko leto
@@ -62,16 +57,16 @@
             @Html.DisplayFor(modelItem => item.vpisnaStevilka)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.ime)
-        </td>
-        <td>
             @Html.DisplayFor(modelItem => item.priimek)
         </td>
         <td>
-            štud. leto
+            @Html.DisplayFor(modelItem => item.ime)
         </td>
         <td>
-            polaganje
+            @ViewBag.years[zap-1]
+        </td>
+        <td>
+            @ViewBag.vsaPolaganja[zap - 1]
         </td>
     </tr>
     }

@@ -11,6 +11,11 @@ namespace studis.Models
 
         private studisEntities db;
 
+        public StudentHelper()
+        {
+            db = new studisEntities();
+        }
+
         public int polaganjaLetos(int vpisId, int izvajanjeId)
         {
             int sum = 0;
