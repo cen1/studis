@@ -849,16 +849,12 @@ namespace studis.Controllers
                 //dodaj izbirne
                 foreach (var p in dodaj_p)
                 {
-                    vl.izvajanjes.Add(p.izvajanjes.First());
+                    //referent mora imet na izbiro katero izvajanje...
                 }
                 //dodaj obvezne
                 foreach (var o in ph.obvezni2())
                 {
-                    studentinpredmet sip = new studentinpredmet();
-                    sip.predmetId = o.id;
-                    sip.studentId = vl.student.vpisnaStevilka;
-                    sip.vpisId = vl.id;
-                    db.studentinpredmets.Add(sip);
+                    //referent mora imet izbiro katero izvajanje
                 }
 
                 db.SaveChanges();
@@ -869,11 +865,11 @@ namespace studis.Controllers
             else
             {
                 // kateri strokovni predmet ima izbran                                                
-                var sp = db.studentinpredmets.SingleOrDefault(v => v.vpisId == id && (v.predmet.strokovnoizbirni == true));
-                ViewBag.Strokovni = sp.predmetId;
+                //var sp = db.studentinpredmets.SingleOrDefault(v => v.vpisId == id && (v.predmet.strokovnoizbirni == true));
+                //ViewBag.Strokovni = sp.predmetId;
 
                 // katere prosto izbirne predmete ima izbrane
-                ViewBag.Prosto = db.studentinpredmets.Where(v => v.vpisId == id && (v.predmet.prostoizbirni == true)).ToList();
+                //ViewBag.Prosto = db.studentinpredmets.Where(v => v.vpisId == id && (v.predmet.prostoizbirni == true)).ToList();
 
                 TempData["error"] = "Nepravilno število izbranih kreditnih točk";
                 return RedirectToAction("UrediPredmetnik2", new { id = id });
@@ -937,7 +933,7 @@ namespace studis.Controllers
             ViewBag.sumIzb = 60 - sumObv;
 
             // označi tiste ki so že izbrani
-            ViewBag.Modul = db.studentinpredmets.Where(v => v.vpisId == id && v.predmet.modul != null); 
+            //ViewBag.Modul = db.studentinpredmets.Where(v => v.vpisId == id && v.predmet.modul != null); 
 
             return View();
         }
@@ -975,25 +971,17 @@ namespace studis.Controllers
             if (kreditne == 0)
             {
                 // odstrani vse
-                db.studentinpredmets.RemoveRange(db.studentinpredmets.Where(x => x.vpisId == id));
+                //db.studentinpredmets.RemoveRange(db.studentinpredmets.Where(x => x.vpisId == id));
 
                 //dodaj izbirne
                 foreach (var p in dodaj_p)
                 {
-                    studentinpredmet sip = new studentinpredmet();
-                    sip.predmetId = p.id;
-                    sip.studentId = vl.student.vpisnaStevilka;
-                    sip.vpisId = vl.id;
-                    db.studentinpredmets.Add(sip);
+                    //
                 }
                 //dodaj obvezne
                 foreach (var o in ph.obvezni3())
                 {
-                    studentinpredmet sip = new studentinpredmet();
-                    sip.predmetId = o.id;
-                    sip.studentId = vl.student.vpisnaStevilka;
-                    sip.vpisId = vl.id;
-                    db.studentinpredmets.Add(sip);
+                    //
                 }
 
                 db.SaveChanges();
@@ -1004,7 +992,7 @@ namespace studis.Controllers
             else
             {
                 // označi tiste ki so že izbrani
-                ViewBag.Modul = db.studentinpredmets.Where(v => v.vpisId == id && v.predmet.modul != null); 
+                //ViewBag.Modul = db.studentinpredmets.Where(v => v.vpisId == id && v.predmet.modul != null); 
 
                 TempData["error"] = "Nepravilno število izbranih kreditnih točk";
                 return RedirectToAction("UrediPredmetnik3Prosti", new { id = id });
@@ -1036,17 +1024,17 @@ namespace studis.Controllers
             ViewBag.sumIzb = 60 - sumObv;
 
             // oznaci tiste ki so že izbrani
-            var izbrani = db.studentinpredmets.Where(v => v.vpisId == id && v.predmet.modul != null).ToList();
-            ViewBag.Oznaci = izbrani;
+            //var izbrani = db.studentinpredmets.Where(v => v.vpisId == id && v.predmet.modul != null).ToList();
+            //ViewBag.Oznaci = izbrani;
 
             // ne oznaci tistega modula, ki ima izbirni predmet
-            var prost = izbrani.Select(v => v.predmet.modulId).Distinct().ToList();
-            var stevilo = Convert.ToInt32(prost.First());
-            ViewBag.NeOznaci = stevilo;
+            //var prost = izbrani.Select(v => v.predmet.modulId).Distinct().ToList();
+            //var stevilo = Convert.ToInt32(prost.First());
+            //ViewBag.NeOznaci = stevilo;
 
-            var i = izbrani.Where(v => v.predmet.modulId == stevilo).Select(v => v.predmet.id).ToList().First();
-            var items = ph.izbirni3();
-            ViewBag.izbirniPredmeti = new SelectList(items, "id", "ime", items.Where(x => x.id == i).ToList().First().id);
+            //var i = izbrani.Where(v => v.predmet.modulId == stevilo).Select(v => v.predmet.id).ToList().First();
+            //var items = ph.izbirni3();
+            //ViewBag.izbirniPredmeti = new SelectList(items, "id", "ime", items.Where(x => x.id == i).ToList().First().id);
             
             return View();
         }
@@ -1093,14 +1081,14 @@ namespace studis.Controllers
                 else
                 {
                     // oznaci tiste ki so že izbrani
-                    var izbrani = db.studentinpredmets.Where(v => v.vpisId == id && v.predmet.modul != null).ToList();
+                    /*var izbrani = db.studentinpredmets.Where(v => v.vpisId == id && v.predmet.modul != null).ToList();
                     ViewBag.Oznaci = izbrani;
 
                     // ne oznaci tistega modula, ki ima izbirni predmet
                     var prost = izbrani.Select(v => v.predmet.modulId).Distinct().ToList();
                     ViewBag.NeOznaci = Convert.ToInt32(prost.First());
 
-                    TempData["error"] = "Dodatni predmet ne obstaja";
+                    TempData["error"] = "Dodatni predmet ne obstaja";*/
                     return RedirectToAction("UrediPredmetnik3Moduli", new { id = id });
                 }
 
@@ -1108,14 +1096,14 @@ namespace studis.Controllers
             else
             {
                 // oznaci tiste ki so že izbrani
-                var izbrani = db.studentinpredmets.Where(v => v.vpisId == id && v.predmet.modul != null).ToList();
+                /*var izbrani = db.studentinpredmets.Where(v => v.vpisId == id && v.predmet.modul != null).ToList();
                 ViewBag.Oznaci = izbrani;
 
                 // ne oznaci tistega modula, ki ima izbirni predmet
                 var prost = izbrani.Select(v => v.predmet.modulId).Distinct().ToList();
                 ViewBag.NeOznaci = Convert.ToInt32(prost.First());
 
-                TempData["error"] = ModelState.Select(x => x.Value.Errors).Where(y => y.Count > 0).ToList().First().First().ErrorMessage;
+                TempData["error"] = ModelState.Select(x => x.Value.Errors).Where(y => y.Count > 0).ToList().First().First().ErrorMessage;*/
                 return RedirectToAction("UrediPredmetnik3Moduli", new { id = id });
             }
 
@@ -1125,25 +1113,17 @@ namespace studis.Controllers
                 if (ph.preveriIzbirne3(moduli, d))
                 {
                     // odstrani vse
-                    db.studentinpredmets.RemoveRange(db.studentinpredmets.Where(x => x.vpisId == id));
+                    //db.studentinpredmets.RemoveRange(db.studentinpredmets.Where(x => x.vpisId == id));
 
                     //dodaj izbirne
                     foreach (var p in dodaj_p)
                     {
-                        studentinpredmet sip = new studentinpredmet();
-                        sip.predmetId = p.id;
-                        sip.studentId = vl.student.vpisnaStevilka;
-                        sip.vpisId = vl.id;
-                        db.studentinpredmets.Add(sip);
+                        //
                     }
                     //dodaj obvezne
                     foreach (var o in ph.obvezni3())
                     {
-                        studentinpredmet sip = new studentinpredmet();
-                        sip.predmetId = o.id;
-                        sip.studentId = vl.student.vpisnaStevilka;
-                        sip.vpisId = vl.id;
-                        db.studentinpredmets.Add(sip);
+                        //
                     }
 
                     db.SaveChanges();
@@ -1154,28 +1134,28 @@ namespace studis.Controllers
                 else
                 {
                     // oznaci tiste ki so že izbrani
-                    var izbrani = db.studentinpredmets.Where(v => v.vpisId == id && v.predmet.modul != null).ToList();
+                    /*var izbrani = db.studentinpredmets.Where(v => v.vpisId == id && v.predmet.modul != null).ToList();
                     ViewBag.Oznaci = izbrani;
 
                     // ne oznaci tistega modula, ki ima izbirni predmet
                     var prost = izbrani.Select(v => v.predmet.modulId).Distinct().ToList();
                     ViewBag.NeOznaci = Convert.ToInt32(prost.First());
 
-                    TempData["error"] = "Dodatni predmet je že del enega izmed modulov";
+                    TempData["error"] = "Dodatni predmet je že del enega izmed modulov";*/
                     return RedirectToAction("UrediPredmetnik3Moduli", new { id = id });
                 }
             }
             else
             {
                 // oznaci tiste ki so že izbrani
-                var izbrani = db.studentinpredmets.Where(v => v.vpisId == id && v.predmet.modul != null).ToList();
+                /*var izbrani = db.studentinpredmets.Where(v => v.vpisId == id && v.predmet.modul != null).ToList();
                 ViewBag.Oznaci = izbrani;
 
                 // ne oznaci tistega modula, ki ima izbirni predmet
                 var prost = izbrani.Select(v => v.predmet.modulId).Distinct().ToList();
                 ViewBag.NeOznaci = Convert.ToInt32(prost.First());
 
-                TempData["error"] = "Nepravilno število izbranih kreditnih točk";
+                TempData["error"] = "Nepravilno število izbranih kreditnih točk";*/
                 return RedirectToAction("UrediPredmetnik3Moduli", new { id = id });
             }
         }
@@ -1220,11 +1200,7 @@ namespace studis.Controllers
             //shrani predmetnik
             foreach (var p in ph.obvezni1())
             {
-                studentinpredmet sip = new studentinpredmet();
-                sip.predmetId = p.id;
-                sip.studentId = vl.vpisnaStevilka;
-                sip.vpisId = vl.id;
-                db.studentinpredmets.Add(sip);
+                //
             }
 
             try
@@ -1354,21 +1330,13 @@ namespace studis.Controllers
                 {
                     foreach (var o in ph.obvezni2())
                     {
-                        studentinpredmet sip = new studentinpredmet();
-                        sip.predmetId = o.id;
-                        sip.studentId = vl.student.vpisnaStevilka;
-                        sip.vpisId = vl.id;
-                        db.studentinpredmets.Add(sip);
+                        //
                     }
                 }
 
                 //dodaj izbirne
                 foreach (var p in dodaj_p) {
-                    studentinpredmet sip = new studentinpredmet();
-                    sip.predmetId = p.id;
-                    sip.studentId = vl.student.vpisnaStevilka;
-                    sip.vpisId = vl.id;
-                    db.studentinpredmets.Add(sip);
+                    //
                 }
                 
 
@@ -1487,21 +1455,13 @@ namespace studis.Controllers
                 {
                     foreach (var o in ph.obvezni3())
                     {
-                        studentinpredmet sip = new studentinpredmet();
-                        sip.predmetId = o.id;
-                        sip.studentId = vl.student.vpisnaStevilka;
-                        sip.vpisId = vl.id;
-                        db.studentinpredmets.Add(sip);
+                        //
                     }
                 }
                 //dodaj izbirne
                 foreach (var p in dodaj_p)
                 {
-                    studentinpredmet sip = new studentinpredmet();
-                    sip.predmetId = p.id;
-                    sip.studentId = vl.student.vpisnaStevilka;
-                    sip.vpisId = vl.id;
-                    db.studentinpredmets.Add(sip);
+                    //
                 }
 
                 try
@@ -1631,21 +1591,13 @@ namespace studis.Controllers
                     {
                         foreach (var o in ph.obvezni3())
                         {
-                            studentinpredmet sip = new studentinpredmet();
-                            sip.predmetId = o.id;
-                            sip.studentId = vl.student.vpisnaStevilka;
-                            sip.vpisId = vl.id;
-                            db.studentinpredmets.Add(sip);
+                            //
                         }
                     }
                     //dodaj izbirne
                     foreach (var p in dodaj_p)
                     {
-                        studentinpredmet sip = new studentinpredmet();
-                        sip.predmetId = p.id;
-                        sip.studentId = vl.student.vpisnaStevilka;
-                        sip.vpisId = vl.id;
-                        db.studentinpredmets.Add(sip);
+                        //
                     }
 
                     try

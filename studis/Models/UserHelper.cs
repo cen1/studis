@@ -233,7 +233,7 @@ namespace studis.Models
 
         public bool jePredmetnikVzpostavljen(vpi v)
         {
-            if (v.studentinpredmets.Count() == 0)
+            if (v.izvajanjes.Count() == 0)
             {
                 System.Diagnostics.Debug.WriteLine("Vzpostavljen za " + v.id.ToString() + " je false cnt 0");
                 return false;
@@ -244,23 +244,18 @@ namespace studis.Models
                 PredmetHelper ph = new PredmetHelper();
                 List<predmet> l = new List<predmet>();
 
-                var predmeti = v.studentinpredmets.Where(a => a.vpisId == v.id).ToList();
-                foreach (var a in predmeti)
+                var izv = v.izvajanjes.ToList();
+                foreach (var a in izv)
                 {
                     l.Add(a.predmet);
-                    System.Diagnostics.Debug.WriteLine(a.predmet.ime);
                 }
 
-                System.Diagnostics.Debug.WriteLine(v.id);
-                System.Diagnostics.Debug.WriteLine(v.studentinpredmets.Count());
                 if (ph.preveriKredite(l))
                 {
-                    System.Diagnostics.Debug.WriteLine("kreditne ok");
                     return true;
                 }
                 else
                 {
-                    System.Diagnostics.Debug.WriteLine("kreditne false");
                     return false;
                 }
             }
@@ -268,9 +263,8 @@ namespace studis.Models
 
         public bool jeDelniPredmetnikVzpostavljen(vpi v)
         {
-            if (v.studentinpredmets.Count() == 0)
+            if (v.izvajanjes.Count() == 0)
             {
-                //System.Diagnostics.Debug.WriteLine("Vzpostavljen za " + v.id.ToString() + " je false");
                 return false;
             }
             else
