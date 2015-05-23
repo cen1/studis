@@ -205,6 +205,40 @@ namespace studis.Controllers
             }
         }
 
+        // GET: IzpitniRok/Seznam/5
+        public ActionResult Seznam()
+        {
+            List<predmet> temp = db.predmets.OrderBy(a => a.ime).ToList();
+
+            List<SelectListItem> predmeti = new List<SelectListItem>();
+            foreach (predmet i in temp)
+            {
+                SelectListItem p = new SelectListItem();
+                p.Value = i.id.ToString();
+                p.Text = Convert.ToInt32(p.Value).ToString("000") + " - " + i.ime + " (" + i.koda + ")";
+                predmeti.Add(p);
+            }
+            List<SelectListItem> ltemp = new List<SelectListItem>();
+            ltemp.Add(new SelectListItem() { Value = "", Text = "Izbira" });
+            ViewBag.Prazen = new SelectList(ltemp, "Value", "Text");
+            ViewBag.Predmets = new SelectList(predmeti, "Value", "Text");
+            return View();
+        }
+
+        // POST: IzpitniRok/Seznam/5
+        [HttpPost]
+        public ActionResult Seznam(int id)
+        {
+            try
+            {
+                return View("SeznamPrijavljenihKandidatov");
+            }
+            catch
+            {
+                return Seznam();
+            }
+        }
+
         /*
         public string GetProfesorsForPredmet(int id)
         {

@@ -1,0 +1,55 @@
+﻿@model IEnumerable<studis.Models.student>
+
+@{
+    ViewBag.Title = "SeznamPrijavljenihKandidatov";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Seznam Prijavljenih Kandidatov</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            Zaporedna številka
+        </th>
+        <th>
+            Vpisna številka
+        </th>
+        <th>
+            Ime
+        </th>
+        <th>
+            Priimek
+        </th>
+        <th>
+            Študijsko leto
+        </th>
+        <th>
+            Zap. št. polaganja
+        </th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            Zaporedna št
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.vpisnaStevilka)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ime)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.priimek)
+        </td>
+        <td>
+            štud. leto
+        </td>
+        <td>
+            polaganje
+        </td>
+    </tr>
+}
+
+</table>
