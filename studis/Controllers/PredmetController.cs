@@ -44,9 +44,9 @@ namespace studis.Controllers
             //studenti iz povezovalne tabele, ki imajo ta predmet v iskanem letu
             var povezovalna = from p in db.studentinpredmets select p; 
             povezovalna = povezovalna.Where(p => p.predmetId == id && (p.vpi.studijskoLeto == leto || leto==0)).Distinct();
-            */
+            
             List<student> list = new List<student>();
-            /*foreach(var vpisna in povezovalna)
+            foreach(var vpisna in povezovalna)
             {
                 student st = students.Where(s => s.vpisnaStevilka == vpisna.studentId).SingleOrDefault();
                 if (st != null)
@@ -55,6 +55,22 @@ namespace studis.Controllers
                 }
             }
             */
+
+
+            //izpis glede na izvajanja namesto predmetov..NEEDS TO BE TESTED
+            var izvajanja = db.izvajanjes.Where(izv => izv.predmetId == id && izv.studijskoletoId == leto);
+            List<student> list = new List<student>();
+            /*foreach (var izvajanje in izvajanja)
+            {
+                vpisinizvajanje vpizv = db.vpisinizvajanje.Where(vi => vi.izvajanjeId == izvajanje.id).SingleOrDefault();
+                vpi vpis = db.vpis.Where(v => v.id == vpizv.vpisId).SingleOrDefault();
+                student st = students.Where(s => s.vpisnaStevilka == vpis.vpisnaStevilka).SingleOrDefault();
+                if (st != null)
+                {
+                    list.Add(st);
+                }
+            }*/
+
             if (list.Any())
                 list = list.OrderBy(o => o.priimek).ToList();
             else
