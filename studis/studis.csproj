@@ -312,6 +312,7 @@
     <Compile Include="Models\student.cs">
       <DependentUpon>Studis.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\StudentHelper.cs" />
     <Compile Include="Models\Studis.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
