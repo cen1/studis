@@ -5,7 +5,28 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Seznam Prijavljenih Kandidatov</h2>
+<h2>Izpitni rok</h2>
+
+<table class="table">
+    <tr>
+        <th>Šifra predmeta</th>
+        <th>Ime predmeta</th>
+        <th>Izpraševalci??</th>
+        <th>Datum izvajanja</th>
+        <th>Ura izvajanja</th>
+        <th>Prostor</th>
+    </tr>
+    <tr>
+        <td>@ViewBag.sifraPredmeta</td>
+        <td>@ViewBag.imePredmeta</td>
+        <td>Izpraševalci??</td>
+        <td>@ViewBag.datum</td>
+        <td>@ViewBag.ura</td>
+        <td>@ViewBag.prostor</td>
+    </tr>
+</table>
+
+<h2>Seznam prijavljenih kandidatov</h2>
 
 <table class="table">
     <tr>
@@ -28,11 +49,14 @@
             Zap. št. polaganja
         </th>
     </tr>
-
-@foreach (var item in Model) {
+@if(Model!=null)
+{
+    int zap=0;
+    foreach (var item in Model) {
+        zap = zap + 1;
     <tr>
         <td>
-            Zaporedna št
+            @zap
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.vpisnaStevilka)
@@ -50,6 +74,6 @@
             polaganje
         </td>
     </tr>
+    }
 }
-
 </table>

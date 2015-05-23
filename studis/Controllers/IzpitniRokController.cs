@@ -227,17 +227,36 @@ namespace studis.Controllers
 
         // POST: IzpitniRok/Seznam/5
         [HttpPost]
-        public ActionResult Seznam(int id)
+        public ActionResult Seznam(string id)
         {
             try
             {
-                return View("SeznamPrijavljenihKandidatov");
+                int idRoka = Convert.ToInt32(id);
+                izpitnirok rok = db.izpitniroks.Where(i => i.id == idRoka).SingleOrDefault();
+
+                return RedirectToAction("SeznamPrijavljenihKandidatov", rok);
             }
             catch
             {
                 return Seznam();
             }
         }
+
+        public ActionResult SeznamPrijavljenihKandidatov(izpitnirok rok)
+        {
+            //izpitnirok tmp = rok;
+            sifrant_prostor predavalnica = db.sifrant_prostor.Where(s => s.id == rok.prostorId).SingleOrDefault();
+            izvajanje izv = db.izvajanjes.Where(s => s.id == rok.izvajanjeId).SingleOrDefault();
+
+            ViewBag.prostor = predavalnica.naziv;
+            ViewBag.datum = GetDatumForIzpitniRok(rok.id);//rok.datum;
+            ViewBag.ura = UserHelper.TimeToString((DateTime)rok.ura);//GetUraForIzpitniRok(rok.id)+":"+GetMinutaForIzpitniRok(rok.id);//rok.ura;
+            ViewBag.sifraPredmeta = izv.predmetId;
+            ViewBag.imePredmeta = izv.predmet.ime;
+
+            return View();
+        }
+
 
         /*
         public string GetProfesorsForPredmet(int id)

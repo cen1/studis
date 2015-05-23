@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
 
 @model studis.Models.IzpitniRokModel
-<h2>Izbriši izpitni rok</h2>
+<h2>Izberi izpitni rok</h2>
 
 @using (Html.BeginForm())
 {
@@ -40,6 +40,10 @@
                 @Html.DropDownListFor(m => m.id, (SelectList)ViewBag.Prazen)
                 @Html.ValidationMessageFor(m => m.id)
             </div>
+
+            <p id="warning" style="color:orange;">
+
+            </p>
 
             <p>
                 <input id="submit" type="submit" value="Prikaži seznam">
