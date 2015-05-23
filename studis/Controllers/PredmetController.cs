@@ -36,11 +36,15 @@ namespace studis.Controllers
         [HttpPost]
         public ActionResult Predmeti(long id, string Value)
         {
+            //izbrano štud.leto
             int leto = Convert.ToInt32(Value);
             
+            //pridobi vsa izvajanja za določen predmet
             var izvajanja = db.izvajanjes.Where(izv => izv.predmetId == id && izv.studijskoletoId == leto).ToList();
 
+            //najdi vse študente ki ustrezajo kriterijem
             List<student> list = new List<student>();
+            List<string> vrstaVpisa = new List<string>();
             foreach (var izvajanje in izvajanja)
             {
                 foreach(vpi vpis in izvajanje.vpis)
@@ -52,11 +56,21 @@ namespace studis.Controllers
                     }
                 }
             }
-            
+
+            //uredi seznam študentov
             if (list.Any())
                 list = list.OrderBy(o => o.priimek).ToList();
             else
                 list = null;
+
+            //naredi seznam "vrst vpisov", v enakem vrstnem redu kot so študenti
+            foreach (var student in list)
+            {
+                vpi vpis = student.vpis.Where(v => v.studijskoLeto == leto).SingleOrDefault();
+                string temp = vpis.sifrant_vrstavpisa.naziv;
+                vrstaVpisa.Add(temp);
+            }
+            ViewBag.vrstaVpisa = vrstaVpisa;
 
             return View("PredmetStudenti", list);
         }
