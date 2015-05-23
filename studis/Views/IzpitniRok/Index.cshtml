@@ -20,7 +20,10 @@
     {
         <li>@Html.ActionLink("Izbriši", "Izbrisi", "IzpitniRok")</li>
     }
-    
+    @if (User.IsInRole("Referent") || User.IsInRole("Profesor"))
+    {
+    <li>@Html.ActionLink("Seznam prijavljenih kandidatov", "Seznam", "IzpitniRok")</li>
+    }
 </ul>
 
 

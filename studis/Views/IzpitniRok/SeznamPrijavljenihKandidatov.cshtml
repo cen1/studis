@@ -1,0 +1,79 @@
+﻿@model IEnumerable<studis.Models.student>
+
+@{
+    ViewBag.Title = "SeznamPrijavljenihKandidatov";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Izpitni rok</h2>
+
+<table class="table">
+    <tr>
+        <th>Šifra predmeta</th>
+        <th>Ime predmeta</th>
+        <th>Izpraševalci??</th>
+        <th>Datum izvajanja</th>
+        <th>Ura izvajanja</th>
+        <th>Prostor</th>
+    </tr>
+    <tr>
+        <td>@ViewBag.sifraPredmeta</td>
+        <td>@ViewBag.imePredmeta</td>
+        <td>Izpraševalci??</td>
+        <td>@ViewBag.datum</td>
+        <td>@ViewBag.ura</td>
+        <td>@ViewBag.prostor</td>
+    </tr>
+</table>
+
+<h2>Seznam prijavljenih kandidatov</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            Zaporedna številka
+        </th>
+        <th>
+            Vpisna številka
+        </th>
+        <th>
+            Ime
+        </th>
+        <th>
+            Priimek
+        </th>
+        <th>
+            Študijsko leto
+        </th>
+        <th>
+            Zap. št. polaganja
+        </th>
+    </tr>
+@if(Model!=null)
+{
+    int zap=0;
+    foreach (var item in Model) {
+        zap = zap + 1;
+    <tr>
+        <td>
+            @zap
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.vpisnaStevilka)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ime)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.priimek)
+        </td>
+        <td>
+            štud. leto
+        </td>
+        <td>
+            polaganje
+        </td>
+    </tr>
+    }
+}
+</table>
