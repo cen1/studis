@@ -8,7 +8,7 @@
 <h2>Kartotečni list</h2>
 
 <!--- selektor za vsa/zadnje polaganje; selektor za študijski program -->
-@using (Html.BeginForm("Izpis", "KartotecniList", FormMethod.Post, null))
+@using (Html.BeginForm("Izpis", "KartotecniList", new { id = ViewBag.Vpisna }, FormMethod.Post, null))
 {
     @Html.DropDownList("polaganja", new SelectList(new[] { "Zadnje polaganje", "Vsa polaganja" })) @Html.DropDownListFor(m => m.naziv, (SelectList)ViewBag.Program) <input type="submit" value="Izpiši" />
 }
@@ -16,99 +16,168 @@
 <br />
 <br />
 <br />
+@{
+if(@ViewBag.Izbira != null) 
+{
+    if(@ViewBag.Izbira == 0)
+    {
+        <div id="izpis">
+            <!--- foreach {leto študija} -->
+            @foreach (var v in @ViewBag.Vpisi)
+            {
+                var tocke = 0;
+                var stOcen = 0;
+                var sestevek = 0;
+                var opravil = 0;
 
-<div id="izpis">
-    <!--- foreach {leto študija} -->
+                <!-- GLAVA -->
+                <table>
+                    <tbody>
+                        <tr>
+                            <th>Študijsko leto</th>
+                            <td>@v.sifrant_studijskoleto.naziv</td>
+                        </tr>
+                        <tr>
+                            <th>Študijski program</th>
+                            <td>@v.sifrant_studijskiprogram.naziv</td>
+                        </tr>
+                        <tr>
+                            <th>Letnik</th>
+                            <td>@v.letnikStudija</td>
+                        </tr>
+                        @if(@v.letnikStudija == 2 && @v.studijskiProgram == 1000468)
+                        {
+                            <tr>
+                                <th>Modul 1</th>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th>Modul 2</th>
+                                <td></td>
+                            </tr>
+                        }
+                        <tr>
+                            <th>Vrsta vpisa</th>
+                            <td>@v.sifrant_vrstavpisa.naziv</td>
+                        </tr>
+                        <tr>
+                            <th>Način študija</th>
+                            <td>@v.sifrant_nacinstudija.naziv</td>
+                        </tr>
+                    </tbody>
+                </table>
 
-            <!-- GLAVA -->
-            <table>
-                <tbody>
-                    <tr>
-                        <th>Študijsko leto</th>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <th>Študijski program</th>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <th>Letnik</th>
-                        <td></td>    
-                    </tr>
-                    <tr>
-                        <th>Modul 1</th>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <th>Modul 2</th>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <th>Vrsta vpisa</th>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <th>Način študija</th>
-                        <td></td>
-                    </tr>
-                </tbody>
-            </table>
+                <br />
 
-            <br />
+                <!-- IZPIS -->
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Šifra</th>
+                            <th>Predmet</th>
+                            <th>Ocenil</th>
+                            <th>Letnik</th>
+                            <th>Datum</th>
+                            <th>Polaganje</th>
+                            <th>Polaganje v tem letu</th>
+                            <th>KT</th>
+                            <th>Ocena</th>
+                        </tr>
+                    </thead>
 
-            <!-- IZPIS -->
-            <table>
-                <thead>
-                    <tr>
-                        <th>Šifra</th>
-                        <th>Predmet</th>
-                        <th>Ocenil</th>
-                        <th>Letnik</th>
-                        <th>Datum</th>
-                        <th>Polaganje</th>
-                        <th>Polaganje v tem letu</th>
-                        <th>KT</th>
-                        <th>Ocena</th>
-                    </tr>
-                </thead>
+                    @foreach (var i in @ViewBag.Izvajanja)
+                    {
+                        var pisal = 0;
+                        @foreach (var r in @ViewBag.Roki)
+                        {
+                            @foreach (var p in @ViewBag.Prijave)
+                            {
+                                if (i.studijskoletoId == v.studijskoLeto && i.izpitnirok.Contains(r) && p.vpisId == v.id && r.id == p.izpitnirokId)
+                                {
+                                    pisal++;
+                                    <tbody>
+                                        <tr>
+                                            <td>@i.predmet.koda</td>
+                                            <td>@i.predmet.ime</td>
+                                            <td>@i.profesor.ime @i.profesor.priimek</td>
+                                            <td>@i.predmet.letnik</td>
+                                            <td><!-- r.prijavanaizpit.datumPrijave --></td>
+                                            <td>polaganja skupaj</td>
+                                            <td>polaganja letos</td>
+                                            <td>@i.predmet.kreditne</td>
+                                            <td>@p.ocena.ocena</td>
+                                        </tr>
+                                    </tbody>
+                                    tocke += @i.predmet.kreditne;
 
-                <tbody>
-                    <tr> 
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                </tbody>
-            </table>
+                                    if (ocena != null)
+                                    {
+                                        stOcen += ocena;
+                                        sestevek++;
 
-            <br />
-            
-        <!--- NOGA -->
-        <h2>Povprečne ocene po študijskih letih</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Študijsko leto</th>
-                    <th>Število opravljenih izpitov</th>
-                    <th>Kreditne točke</th>
-                    <th>Skupno povprečje</th>
-                </tr>
-            </thead>
+                                        if (ocena > 5)
+                                        {
+                                            opravil++;
+                                        }
 
-            <tbody>
-                <tr>    
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-            </tbody>
-        </table>
-</div>
+                                    }
+                                }
+                            }
+                            
+                        }
+                        @if (pisal == 0)
+                        {
+                            <tbody>
+                                <tr>
+                                    <td>@i.predmet.koda</td>
+                                    <td>@i.predmet.ime</td>
+                                    <td>@i.profesor.ime @i.profesor.priimek</td>
+                                    <td>@i.predmet.letnik</td>
+                                    <td>/</td>
+                                    <td>polaganja skupno</td>
+                                    <td>/</td>
+                                    <td>@i.predmet.kreditne</td>
+                                    <td>/</td>
+                                </tr>
+                            </tbody>
+                        }
+                    }
+                </table>
+
+                <br />
+
+                <!--- NOGA -->
+                <h2>Povprečne ocene po študijskih letih</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Študijsko leto</th>
+                            <th>Število opravljenih izpitov</th>
+                            <th>Kreditne točke</th>
+                            <th>Skupno povprečje</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr>
+                            <td>@v.sifrant_studijskoleto.naziv</td>
+                            <td>@opravil</td>
+                            <td>@tocke</td>
+                            <td>(@sestevek / @stOcen);</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <br />
+                <br />
+        }
+        </div>
+    }
+    
+    @if(@ViewBag.Izbira == 1)
+    {
+        <!-- kot zgoraj + za vsa polaganja -->
+    }
+}
+}
 
