@@ -168,9 +168,9 @@ namespace studis.Controllers
                 ViewBag.VrocanjeZacasni = "NE";
             }
 
-            var predmeti = list.studentinpredmets.Where(v => v.vpisId == id);
+            var izvajanja = list.izvajanjes;
 
-            ViewBag.Predmeti = predmeti;
+            ViewBag.Izvajanja = izvajanja;
             ViewBag.id = id;
 
             return View(model);
