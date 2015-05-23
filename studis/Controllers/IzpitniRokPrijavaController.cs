@@ -15,15 +15,15 @@ namespace studis.Controllers
         }
 
 
-        // GET: IzpitniRokPrijava/Delete/5
-        public ActionResult Prijavi()
+        // GET: IzpitniRokPrijava/Prijavi
+       public ActionResult Prijavi()
         {
             return View();
         }
 
-        // POST: IzpitniRokPrijava/Delete/5
+        // POST: IzpitniRokPrijava/Prijavi
         [HttpPost]
-        public ActionResult Prijavi(int id, FormCollection collection)
+        public ActionResult Prijavi()
         {
             try
             {
