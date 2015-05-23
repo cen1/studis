@@ -17,6 +17,7 @@ namespace studis.Models
         public izvajanje()
         {
             this.izpitniroks = new HashSet<izpitnirok>();
+            this.vpis = new HashSet<vpi>();
         }
     
         public long id { get; set; }
@@ -32,5 +33,6 @@ namespace studis.Models
         public virtual predmet predmet { get; set; }
         public virtual ICollection<izpitnirok> izpitniroks { get; set; }
         public virtual sifrant_studijskoleto sifrant_studijskoleto { get; set; }
+        public virtual ICollection<vpi> vpis { get; set; }
     }
 }

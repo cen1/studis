@@ -53,9 +53,9 @@ namespace studis.Controllers
                 izvajanje izvajanje = new izvajanje();
                 izvajanje.predmet = db.predmets.SingleOrDefault(p => p.id == model.predmet);
                 izvajanje.profesor = db.profesors.SingleOrDefault(p => p.id == model.profesor1);
-                if (model.profesor2 != 0 && model.profesor2 != null)
+                if (model.profesor2 != 0)
                     izvajanje.profesor1 = db.profesors.SingleOrDefault(p => p.id == model.profesor2);
-                if (model.profesor3 != 0 && model.profesor3 != null)
+                if (model.profesor3 != 0)
                     izvajanje.profesor2 = db.profesors.SingleOrDefault(p => p.id == model.profesor3);
                 Debug.WriteLine("Dodano izvajanje1");
                 izvajanje.studijskoletoId = DateTime.Now.Year;

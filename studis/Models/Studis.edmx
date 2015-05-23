@@ -25,14 +25,6 @@
           <Property Name="izvajanjeId" Type="uint" Nullable="false" />
           <Property Name="prostorId" Type="int" />
         </EntityType>
-        <EntityType Name="izpitnirokinstudent">
-          <Key>
-            <PropertyRef Name="izpitnirokId" />
-            <PropertyRef Name="vpisnaStevilka" />
-          </Key>
-          <Property Name="izpitnirokId" Type="int" Nullable="false" />
-          <Property Name="vpisnaStevilka" Type="int" Nullable="false" />
-        </EntityType>
         <EntityType Name="izvajanje">
           <Key>
             <PropertyRef Name="id" />
@@ -198,10 +190,8 @@
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="int" Nullable="false" />
-          <Property Name="studentId" Type="int" Nullable="false" />
           <Property Name="ocena" Type="int" Nullable="false" />
-          <Property Name="vpisId" Type="int" Nullable="false" />
-          <Property Name="izpitnirokId" Type="int" Nullable="false" />
+          <Property Name="prijavaId" Type="uint" Nullable="false" />
         </EntityType>
         <EntityType Name="password_recovery">
           <Key>
@@ -229,6 +219,15 @@
           <Property Name="strokovnoizbirni" Type="bool" />
           <Property Name="studijskiProgram" Type="int" Nullable="false" />
           <Property Name="vrstaStudija" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="prijavanaizpit">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="uint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="vpisId" Type="int" Nullable="false" />
+          <Property Name="izpitnirokId" Type="int" Nullable="false" />
+          <Property Name="stanje" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="profesor">
           <Key>
@@ -383,15 +382,13 @@
           <Property Name="drzavaZacasni" Type="int" />
           <Property Name="userId" Type="int" Nullable="false" />
         </EntityType>
-        <EntityType Name="studentinpredmet">
+        <EntityType Name="tocke">
           <Key>
-            <PropertyRef Name="studentId" />
-            <PropertyRef Name="predmetId" />
-            <PropertyRef Name="vpisId" />
+            <PropertyRef Name="id" />
           </Key>
-          <Property Name="studentId" Type="int" Nullable="false" />
-          <Property Name="predmetId" Type="uint" Nullable="false" />
-          <Property Name="vpisId" Type="int" Nullable="false" />
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="tocke" Type="int" Nullable="false" />
+          <Property Name="prijavaId" Type="uint" Nullable="false" />
         </EntityType>
         <EntityType Name="vpis">
           <Key>
@@ -417,6 +414,14 @@
           <Property Name="soglasje2" Type="bool" />
           <Property Name="potrjen" Type="bool" Nullable="false" />
           <Property Name="vpisnaStevilka" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="vpisinizvajanje">
+          <Key>
+            <PropertyRef Name="vpisId" />
+            <PropertyRef Name="izvajanjeId" />
+          </Key>
+          <Property Name="vpisId" Type="int" Nullable="false" />
+          <Property Name="izvajanjeId" Type="uint" Nullable="false" />
         </EntityType>
         <EntityType Name="zeton">
           <Key>
@@ -457,20 +462,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="izpirnirokinstudenti_student_fk">
-          <End Role="student" Type="Self.student" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="izpitnirokinstudent" Type="Self.izpitnirokinstudent" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="student">
-              <PropertyRef Name="vpisnaStevilka" />
-            </Principal>
-            <Dependent Role="izpitnirokinstudent">
-              <PropertyRef Name="vpisnaStevilka" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="izpitnirok_izvajanje_fk">
           <End Role="izvajanje" Type="Self.izvajanje" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -496,20 +487,6 @@
             </Principal>
             <Dependent Role="izpitnirok">
               <PropertyRef Name="prostorId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="izpitnirokinstudenti_izpitnirok_fk">
-          <End Role="izpitnirok" Type="Self.izpitnirok" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="izpitnirokinstudent" Type="Self.izpitnirokinstudent" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="izpitnirok">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="izpitnirokinstudent">
-              <PropertyRef Name="izpitnirokId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -597,43 +574,17 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="ocena_izpitnirok_fk">
-          <End Role="izpitnirok" Type="Self.izpitnirok" Multiplicity="1">
+        <Association Name="ocena_prijava_fk">
+          <End Role="prijavanaizpit" Type="Self.prijavanaizpit" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
           <End Role="ocena" Type="Self.ocena" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="izpitnirok">
+            <Principal Role="prijavanaizpit">
               <PropertyRef Name="id" />
             </Principal>
             <Dependent Role="ocena">
-              <PropertyRef Name="izpitnirokId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="ocena_student">
-          <End Role="student" Type="Self.student" Multiplicity="1" />
-          <End Role="ocena" Type="Self.ocena" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="student">
-              <PropertyRef Name="vpisnaStevilka" />
-            </Principal>
-            <Dependent Role="ocena">
-              <PropertyRef Name="studentId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="ocena_vpis">
-          <End Role="vpis" Type="Self.vpis" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="ocena" Type="Self.ocena" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="vpis">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="ocena">
-              <PropertyRef Name="vpisId" />
+              <PropertyRef Name="prijavaId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -707,15 +658,31 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="predmet_student_fk">
-          <End Role="student" Type="Self.student" Multiplicity="1" />
-          <End Role="studentinpredmet" Type="Self.studentinpredmet" Multiplicity="*" />
+        <Association Name="prijava_izpitnirok_fk">
+          <End Role="izpitnirok" Type="Self.izpitnirok" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="prijavanaizpit" Type="Self.prijavanaizpit" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="student">
-              <PropertyRef Name="vpisnaStevilka" />
+            <Principal Role="izpitnirok">
+              <PropertyRef Name="id" />
             </Principal>
-            <Dependent Role="studentinpredmet">
-              <PropertyRef Name="studentId" />
+            <Dependent Role="prijavanaizpit">
+              <PropertyRef Name="izpitnirokId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="prijava_vpis_fk">
+          <End Role="vpis" Type="Self.vpis" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="prijavanaizpit" Type="Self.prijavanaizpit" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="vpis">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="prijavanaizpit">
+              <PropertyRef Name="vpisId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -728,20 +695,6 @@
             </Principal>
             <Dependent Role="sklep">
               <PropertyRef Name="vpisnaSt" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="student_predmet_fk">
-          <End Role="predmet" Type="Self.predmet" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="studentinpredmet" Type="Self.studentinpredmet" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="predmet">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="studentinpredmet">
-              <PropertyRef Name="predmetId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -885,17 +838,17 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="studentinpredmet_vpis">
-          <End Role="vpis" Type="Self.vpis" Multiplicity="1">
+        <Association Name="tocke_prijava_fk">
+          <End Role="prijavanaizpit" Type="Self.prijavanaizpit" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
-          <End Role="studentinpredmet" Type="Self.studentinpredmet" Multiplicity="*" />
+          <End Role="tocke" Type="Self.tocke" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="vpis">
+            <Principal Role="prijavanaizpit">
               <PropertyRef Name="id" />
             </Principal>
-            <Dependent Role="studentinpredmet">
-              <PropertyRef Name="vpisId" />
+            <Dependent Role="tocke">
+              <PropertyRef Name="prijavaId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1149,6 +1102,34 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="vpisinizvajanje_izvajanje_fk">
+          <End Role="izvajanje" Type="Self.izvajanje" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="vpisinizvajanje" Type="Self.vpisinizvajanje" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="izvajanje">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="vpisinizvajanje">
+              <PropertyRef Name="izvajanjeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="vpisinizvajanje_vpis_fk">
+          <End Role="vpis" Type="Self.vpis" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="vpisinizvajanje" Type="Self.vpisinizvajanje" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="vpis">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="vpisinizvajanje">
+              <PropertyRef Name="vpisId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="vpisnilist_student_fk">
           <End Role="student" Type="Self.student" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -1250,7 +1231,6 @@
         <EntityContainer Name="studisModelStoreContainer">
           <EntitySet Name="ip_lock" EntityType="Self.ip_lock" Schema="studis" store:Type="Tables" />
           <EntitySet Name="izpitnirok" EntityType="Self.izpitnirok" Schema="studis" store:Type="Tables" />
-          <EntitySet Name="izpitnirokinstudent" EntityType="Self.izpitnirokinstudent" Schema="studis" store:Type="Tables" />
           <EntitySet Name="izvajanje" EntityType="Self.izvajanje" Schema="studis" store:Type="Tables" />
           <EntitySet Name="kandidat" EntityType="Self.kandidat" Schema="studis" store:Type="Tables" />
           <EntitySet Name="modul" EntityType="Self.modul" Schema="studis" store:Type="Tables" />
@@ -1269,6 +1249,7 @@
           <EntitySet Name="ocena" EntityType="Self.ocena" Schema="studis" store:Type="Tables" />
           <EntitySet Name="password_recovery" EntityType="Self.password_recovery" Schema="studis" store:Type="Tables" />
           <EntitySet Name="predmet" EntityType="Self.predmet" Schema="studis" store:Type="Tables" />
+          <EntitySet Name="prijavanaizpit" EntityType="Self.prijavanaizpit" Schema="studis" store:Type="Tables" />
           <EntitySet Name="profesor" EntityType="Self.profesor" Schema="studis" store:Type="Tables" />
           <EntitySet Name="sifrant_drzava" EntityType="Self.sifrant_drzava" Schema="studis" store:Type="Tables" />
           <EntitySet Name="sifrant_izbirnaskupina" EntityType="Self.sifrant_izbirnaskupina" Schema="studis" store:Type="Tables" />
@@ -1287,8 +1268,9 @@
           <EntitySet Name="sifrant_vrstavpisa" EntityType="Self.sifrant_vrstavpisa" Schema="studis" store:Type="Tables" />
           <EntitySet Name="sklep" EntityType="Self.sklep" Schema="studis" store:Type="Tables" />
           <EntitySet Name="student" EntityType="Self.student" Schema="studis" store:Type="Tables" />
-          <EntitySet Name="studentinpredmet" EntityType="Self.studentinpredmet" Schema="studis" store:Type="Tables" />
+          <EntitySet Name="tocke" EntityType="Self.tocke" Schema="studis" store:Type="Tables" />
           <EntitySet Name="vpis" EntityType="Self.vpis" Schema="studis" store:Type="Tables" />
+          <EntitySet Name="vpisinizvajanje" EntityType="Self.vpisinizvajanje" Schema="studis" store:Type="Tables" />
           <EntitySet Name="zeton" EntityType="Self.zeton" Schema="studis" store:Type="Tables" />
           <AssociationSet Name="fk_userId" Association="Self.fk_userId">
             <End Role="my_aspnet_users" EntitySet="my_aspnet_users" />
@@ -1298,10 +1280,6 @@
             <End Role="my_aspnet_users" EntitySet="my_aspnet_users" />
             <End Role="ip_lock" EntitySet="ip_lock" />
           </AssociationSet>
-          <AssociationSet Name="izpirnirokinstudenti_student_fk" Association="Self.izpirnirokinstudenti_student_fk">
-            <End Role="student" EntitySet="student" />
-            <End Role="izpitnirokinstudent" EntitySet="izpitnirokinstudent" />
-          </AssociationSet>
           <AssociationSet Name="izpitnirok_izvajanje_fk" Association="Self.izpitnirok_izvajanje_fk">
             <End Role="izvajanje" EntitySet="izvajanje" />
             <End Role="izpitnirok" EntitySet="izpitnirok" />
@@ -1309,10 +1287,6 @@
           <AssociationSet Name="izpitnirok_prostor_fk" Association="Self.izpitnirok_prostor_fk">
             <End Role="sifrant_prostor" EntitySet="sifrant_prostor" />
             <End Role="izpitnirok" EntitySet="izpitnirok" />
-          </AssociationSet>
-          <AssociationSet Name="izpitnirokinstudenti_izpitnirok_fk" Association="Self.izpitnirokinstudenti_izpitnirok_fk">
-            <End Role="izpitnirok" EntitySet="izpitnirok" />
-            <End Role="izpitnirokinstudent" EntitySet="izpitnirokinstudent" />
           </AssociationSet>
           <AssociationSet Name="izvajanje_i1_fk2" Association="Self.izvajanje_i1_fk2">
             <End Role="profesor" EntitySet="profesor" />
@@ -1338,16 +1312,8 @@
             <End Role="my_aspnet_users" EntitySet="my_aspnet_users" />
             <End Role="my_aspnet_membership" EntitySet="my_aspnet_membership" />
           </AssociationSet>
-          <AssociationSet Name="ocena_izpitnirok_fk" Association="Self.ocena_izpitnirok_fk">
-            <End Role="izpitnirok" EntitySet="izpitnirok" />
-            <End Role="ocena" EntitySet="ocena" />
-          </AssociationSet>
-          <AssociationSet Name="ocena_student" Association="Self.ocena_student">
-            <End Role="student" EntitySet="student" />
-            <End Role="ocena" EntitySet="ocena" />
-          </AssociationSet>
-          <AssociationSet Name="ocena_vpis" Association="Self.ocena_vpis">
-            <End Role="vpis" EntitySet="vpis" />
+          <AssociationSet Name="ocena_prijava_fk" Association="Self.ocena_prijava_fk">
+            <End Role="prijavanaizpit" EntitySet="prijavanaizpit" />
             <End Role="ocena" EntitySet="ocena" />
           </AssociationSet>
           <AssociationSet Name="pr_to_user_fk" Association="Self.pr_to_user_fk">
@@ -1370,17 +1336,17 @@
             <End Role="sifrant_klasius" EntitySet="sifrant_klasius" />
             <End Role="predmet" EntitySet="predmet" />
           </AssociationSet>
-          <AssociationSet Name="predmet_student_fk" Association="Self.predmet_student_fk">
-            <End Role="student" EntitySet="student" />
-            <End Role="studentinpredmet" EntitySet="studentinpredmet" />
+          <AssociationSet Name="prijava_izpitnirok_fk" Association="Self.prijava_izpitnirok_fk">
+            <End Role="izpitnirok" EntitySet="izpitnirok" />
+            <End Role="prijavanaizpit" EntitySet="prijavanaizpit" />
+          </AssociationSet>
+          <AssociationSet Name="prijava_vpis_fk" Association="Self.prijava_vpis_fk">
+            <End Role="vpis" EntitySet="vpis" />
+            <End Role="prijavanaizpit" EntitySet="prijavanaizpit" />
           </AssociationSet>
           <AssociationSet Name="sklep_student" Association="Self.sklep_student">
             <End Role="student" EntitySet="student" />
             <End Role="sklep" EntitySet="sklep" />
-          </AssociationSet>
-          <AssociationSet Name="student_predmet_fk" Association="Self.student_predmet_fk">
-            <End Role="predmet" EntitySet="predmet" />
-            <End Role="studentinpredmet" EntitySet="studentinpredmet" />
           </AssociationSet>
           <AssociationSet Name="student_s_drzava" Association="Self.student_s_drzava">
             <End Role="sifrant_drzava" EntitySet="sifrant_drzava" />
@@ -1422,9 +1388,9 @@
             <End Role="sifrant_spol" EntitySet="sifrant_spol" />
             <End Role="student" EntitySet="student" />
           </AssociationSet>
-          <AssociationSet Name="studentinpredmet_vpis" Association="Self.studentinpredmet_vpis">
-            <End Role="vpis" EntitySet="vpis" />
-            <End Role="studentinpredmet" EntitySet="studentinpredmet" />
+          <AssociationSet Name="tocke_prijava_fk" Association="Self.tocke_prijava_fk">
+            <End Role="prijavanaizpit" EntitySet="prijavanaizpit" />
+            <End Role="tocke" EntitySet="tocke" />
           </AssociationSet>
           <AssociationSet Name="userID_student_users" Association="Self.userID_student_users">
             <End Role="my_aspnet_users" EntitySet="my_aspnet_users" />
@@ -1497,6 +1463,14 @@
           <AssociationSet Name="vpis_s_vrstavpisa" Association="Self.vpis_s_vrstavpisa">
             <End Role="sifrant_vrstavpisa" EntitySet="sifrant_vrstavpisa" />
             <End Role="vpis" EntitySet="vpis" />
+          </AssociationSet>
+          <AssociationSet Name="vpisinizvajanje_izvajanje_fk" Association="Self.vpisinizvajanje_izvajanje_fk">
+            <End Role="izvajanje" EntitySet="izvajanje" />
+            <End Role="vpisinizvajanje" EntitySet="vpisinizvajanje" />
+          </AssociationSet>
+          <AssociationSet Name="vpisinizvajanje_vpis_fk" Association="Self.vpisinizvajanje_vpis_fk">
+            <End Role="vpis" EntitySet="vpis" />
+            <End Role="vpisinizvajanje" EntitySet="vpisinizvajanje" />
           </AssociationSet>
           <AssociationSet Name="vpisnilist_student_fk" Association="Self.vpisnilist_student_fk">
             <End Role="student" EntitySet="student" />
@@ -1872,19 +1846,6 @@
             <End Role="student" EntitySet="students" />
             <End Role="sklep" EntitySet="skleps" />
           </AssociationSet>
-          <EntitySet Name="studentinpredmets" EntityType="studisModel.studentinpredmet" />
-          <AssociationSet Name="student_predmet_fk" Association="studisModel.student_predmet_fk">
-            <End Role="predmet" EntitySet="predmets" />
-            <End Role="studentinpredmet" EntitySet="studentinpredmets" />
-          </AssociationSet>
-          <AssociationSet Name="predmet_student_fk" Association="studisModel.predmet_student_fk">
-            <End Role="student" EntitySet="students" />
-            <End Role="studentinpredmet" EntitySet="studentinpredmets" />
-          </AssociationSet>
-          <AssociationSet Name="studentinpredmet_vpis" Association="studisModel.studentinpredmet_vpis">
-            <End Role="vpi" EntitySet="vpis" />
-            <End Role="studentinpredmet" EntitySet="studentinpredmets" />
-          </AssociationSet>
           <EntitySet Name="izvajanjes" EntityType="studisModel.izvajanje" />
           <AssociationSet Name="izvajanje_i1_fk" Association="studisModel.izvajanje_i1_fk">
             <End Role="profesor" EntitySet="profesors" />
@@ -1907,23 +1868,7 @@
             <End Role="izvajanje" EntitySet="izvajanjes" />
             <End Role="izpitnirok" EntitySet="izpitniroks" />
           </AssociationSet>
-          <AssociationSet Name="izpitnirokinstudent" Association="studisModel.izpitnirokinstudent">
-            <End Role="student" EntitySet="students" />
-            <End Role="izpitnirok" EntitySet="izpitniroks" />
-          </AssociationSet>
           <EntitySet Name="ocenas" EntityType="studisModel.ocena" />
-          <AssociationSet Name="ocena_izpitnirok_fk" Association="studisModel.ocena_izpitnirok_fk">
-            <End Role="izpitnirok" EntitySet="izpitniroks" />
-            <End Role="ocena" EntitySet="ocenas" />
-          </AssociationSet>
-          <AssociationSet Name="ocena_student" Association="studisModel.ocena_student">
-            <End Role="student" EntitySet="students" />
-            <End Role="ocena" EntitySet="ocenas" />
-          </AssociationSet>
-          <AssociationSet Name="ocena_vpis" Association="studisModel.ocena_vpis">
-            <End Role="vpi" EntitySet="vpis" />
-            <End Role="ocena" EntitySet="ocenas" />
-          </AssociationSet>
           <EntitySet Name="sifrant_prostor" EntityType="studisModel.sifrant_prostor" />
           <AssociationSet Name="izpitnirok_prostor_fk" Association="studisModel.izpitnirok_prostor_fk">
             <End Role="sifrant_prostor" EntitySet="sifrant_prostor" />
@@ -1932,6 +1877,28 @@
           <AssociationSet Name="izvajanje_studijskoleto_fk" Association="studisModel.izvajanje_studijskoleto_fk">
             <End Role="sifrant_studijskoleto" EntitySet="sifrant_studijskoleto" />
             <End Role="izvajanje" EntitySet="izvajanjes" />
+          </AssociationSet>
+          <EntitySet Name="prijavanaizpits" EntityType="studisModel.prijavanaizpit" />
+          <EntitySet Name="tockes" EntityType="studisModel.tocke" />
+          <AssociationSet Name="prijava_izpitnirok_fk" Association="studisModel.prijava_izpitnirok_fk">
+            <End Role="izpitnirok" EntitySet="izpitniroks" />
+            <End Role="prijavanaizpit" EntitySet="prijavanaizpits" />
+          </AssociationSet>
+          <AssociationSet Name="ocena_prijava_fk" Association="studisModel.ocena_prijava_fk">
+            <End Role="prijavanaizpit" EntitySet="prijavanaizpits" />
+            <End Role="ocena" EntitySet="ocenas" />
+          </AssociationSet>
+          <AssociationSet Name="prijava_vpis_fk" Association="studisModel.prijava_vpis_fk">
+            <End Role="vpi" EntitySet="vpis" />
+            <End Role="prijavanaizpit" EntitySet="prijavanaizpits" />
+          </AssociationSet>
+          <AssociationSet Name="tocke_prijava_fk" Association="studisModel.tocke_prijava_fk">
+            <End Role="prijavanaizpit" EntitySet="prijavanaizpits" />
+            <End Role="tocke" EntitySet="tockes" />
+          </AssociationSet>
+          <AssociationSet Name="vpisinizvajanje" Association="studisModel.vpisinizvajanje">
+            <End Role="izvajanje" EntitySet="izvajanjes" />
+            <End Role="vpi" EntitySet="vpis" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="ip_lock">
@@ -2167,7 +2134,6 @@
           <NavigationProperty Name="sifrant_letnik" Relationship="studisModel.predmet_s_letnik" FromRole="predmet" ToRole="sifrant_letnik" />
           <NavigationProperty Name="sifrant_studijskiprogram" Relationship="studisModel.predmet_s_studijskiprogram" FromRole="predmet" ToRole="sifrant_studijskiprogram" />
           <NavigationProperty Name="sifrant_klasius" Relationship="studisModel.predmet_s_vrstastudija" FromRole="predmet" ToRole="sifrant_klasius" />
-          <NavigationProperty Name="studentinpredmets" Relationship="studisModel.student_predmet_fk" FromRole="predmet" ToRole="studentinpredmet" />
           <NavigationProperty Name="izvajanjes" Relationship="studisModel.izvajanje_predmet_fk" FromRole="predmet" ToRole="izvajanje" />
         </EntityType>
         <EntityType Name="profesor">
@@ -2223,9 +2189,6 @@
           <NavigationProperty Name="vpis" Relationship="studisModel.vpisnilist_student_fk" FromRole="student" ToRole="vpi" />
           <NavigationProperty Name="zetons" Relationship="studisModel.zeton_student_fk" FromRole="student" ToRole="zeton" />
           <NavigationProperty Name="skleps" Relationship="studisModel.sklep_student" FromRole="student" ToRole="sklep" />
-          <NavigationProperty Name="studentinpredmets" Relationship="studisModel.predmet_student_fk" FromRole="student" ToRole="studentinpredmet" />
-          <NavigationProperty Name="izpitniroks" Relationship="studisModel.izpitnirokinstudent" FromRole="student" ToRole="izpitnirok" />
-          <NavigationProperty Name="ocenas" Relationship="studisModel.ocena_student" FromRole="student" ToRole="ocena" />
         </EntityType>
         <EntityType Name="vpi">
           <Key>
@@ -2266,8 +2229,8 @@
           <NavigationProperty Name="sifrant_vrstavpisa" Relationship="studisModel.vpis_s_vrstavpisa" FromRole="vpi" ToRole="sifrant_vrstavpisa" />
           <NavigationProperty Name="student" Relationship="studisModel.vpisnilist_student_fk" FromRole="vpi" ToRole="student" />
           <NavigationProperty Name="sifrant_smer" Relationship="studisModel.vpis_s_smer" FromRole="vpi" ToRole="sifrant_smer" />
-          <NavigationProperty Name="studentinpredmets" Relationship="studisModel.studentinpredmet_vpis" FromRole="vpi" ToRole="studentinpredmet" />
-          <NavigationProperty Name="ocenas" Relationship="studisModel.ocena_vpis" FromRole="vpi" ToRole="ocena" />
+          <NavigationProperty Name="prijavanaizpits" Relationship="studisModel.prijava_vpis_fk" FromRole="vpi" ToRole="prijavanaizpit" />
+          <NavigationProperty Name="izvajanjes" Relationship="studisModel.vpisinizvajanje" FromRole="vpi" ToRole="izvajanje" />
         </EntityType>
         <Association Name="predmet_modul_fk">
           <End Type="studisModel.modul" Role="modul" Multiplicity="0..1">
@@ -2846,59 +2809,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="studentinpredmet">
-          <Key>
-            <PropertyRef Name="studentId" />
-            <PropertyRef Name="predmetId" />
-            <PropertyRef Name="vpisId" />
-          </Key>
-          <Property Name="studentId" Type="Int32" Nullable="false" />
-          <Property Name="predmetId" Type="Int64" Nullable="false" />
-          <Property Name="vpisId" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="predmet" Relationship="studisModel.student_predmet_fk" FromRole="studentinpredmet" ToRole="predmet" />
-          <NavigationProperty Name="student" Relationship="studisModel.predmet_student_fk" FromRole="studentinpredmet" ToRole="student" />
-          <NavigationProperty Name="vpi" Relationship="studisModel.studentinpredmet_vpis" FromRole="studentinpredmet" ToRole="vpi" />
-        </EntityType>
-        <Association Name="student_predmet_fk">
-          <End Type="studisModel.predmet" Role="predmet" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="studisModel.studentinpredmet" Role="studentinpredmet" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="predmet">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="studentinpredmet">
-              <PropertyRef Name="predmetId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="predmet_student_fk">
-          <End Type="studisModel.student" Role="student" Multiplicity="1" />
-          <End Type="studisModel.studentinpredmet" Role="studentinpredmet" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="student">
-              <PropertyRef Name="vpisnaStevilka" />
-            </Principal>
-            <Dependent Role="studentinpredmet">
-              <PropertyRef Name="studentId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="studentinpredmet_vpis">
-          <End Type="studisModel.vpi" Role="vpi" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="studisModel.studentinpredmet" Role="studentinpredmet" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="vpi">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="studentinpredmet">
-              <PropertyRef Name="vpisId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="izvajanje">
           <Key>
             <PropertyRef Name="id" />
@@ -2915,6 +2825,7 @@
           <NavigationProperty Name="izpitniroks" Relationship="studisModel.izpitnirok_izvajanje_fk" FromRole="izvajanje" ToRole="izpitnirok" />
           <Property Name="studijskoletoId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="sifrant_studijskoleto" Relationship="studisModel.izvajanje_studijskoleto_fk" FromRole="izvajanje" ToRole="sifrant_studijskoleto" />
+          <NavigationProperty Name="vpis" Relationship="studisModel.vpisinizvajanje" FromRole="izvajanje" ToRole="vpi" />
         </EntityType>
         <Association Name="izvajanje_i1_fk">
           <End Type="studisModel.profesor" Role="profesor" Multiplicity="1">
@@ -2980,11 +2891,10 @@
           <Property Name="datum" Type="DateTime" Nullable="false" />
           <Property Name="izvajanjeId" Type="Int64" Nullable="false" />
           <NavigationProperty Name="izvajanje" Relationship="studisModel.izpitnirok_izvajanje_fk" FromRole="izpitnirok" ToRole="izvajanje" />
-          <NavigationProperty Name="students" Relationship="studisModel.izpitnirokinstudent" FromRole="izpitnirok" ToRole="student" />
-          <NavigationProperty Name="ocenas" Relationship="studisModel.ocena_izpitnirok_fk" FromRole="izpitnirok" ToRole="ocena" />
           <Property Name="ura" Type="DateTime" />
           <Property Name="prostorId" Type="Int32" />
           <NavigationProperty Name="sifrant_prostor" Relationship="studisModel.izpitnirok_prostor_fk" FromRole="izpitnirok" ToRole="sifrant_prostor" />
+          <NavigationProperty Name="prijavanaizpits" Relationship="studisModel.prijava_izpitnirok_fk" FromRole="izpitnirok" ToRole="prijavanaizpit" />
         </EntityType>
         <Association Name="izpitnirok_izvajanje_fk">
           <End Type="studisModel.izvajanje" Role="izvajanje" Multiplicity="1">
@@ -3000,63 +2910,15 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="izpitnirokinstudent">
-          <End Type="studisModel.student" Role="student" Multiplicity="*" />
-          <End Type="studisModel.izpitnirok" Role="izpitnirok" Multiplicity="*" />
-        </Association>
         <EntityType Name="ocena">
           <Key>
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="Int32" Nullable="false" />
-          <Property Name="studentId" Type="Int32" Nullable="false" />
           <Property Name="ocena1" Type="Int32" Nullable="false" />
-          <Property Name="vpisId" Type="Int32" Nullable="false" />
-          <Property Name="izpitnirokId" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="izpitnirok" Relationship="studisModel.ocena_izpitnirok_fk" FromRole="ocena" ToRole="izpitnirok" />
-          <NavigationProperty Name="student" Relationship="studisModel.ocena_student" FromRole="ocena" ToRole="student" />
-          <NavigationProperty Name="vpi" Relationship="studisModel.ocena_vpis" FromRole="ocena" ToRole="vpi" />
+          <Property Name="prijavaId" Type="Int64" Nullable="false" />
+          <NavigationProperty Name="prijavanaizpit" Relationship="studisModel.ocena_prijava_fk" FromRole="ocena" ToRole="prijavanaizpit" />
         </EntityType>
-        <Association Name="ocena_izpitnirok_fk">
-          <End Type="studisModel.izpitnirok" Role="izpitnirok" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="studisModel.ocena" Role="ocena" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="izpitnirok">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="ocena">
-              <PropertyRef Name="izpitnirokId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="ocena_student">
-          <End Type="studisModel.student" Role="student" Multiplicity="1" />
-          <End Type="studisModel.ocena" Role="ocena" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="student">
-              <PropertyRef Name="vpisnaStevilka" />
-            </Principal>
-            <Dependent Role="ocena">
-              <PropertyRef Name="studentId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="ocena_vpis">
-          <End Type="studisModel.vpi" Role="vpi" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="studisModel.ocena" Role="ocena" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="vpi">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="ocena">
-              <PropertyRef Name="vpisId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="sifrant_prostor">
           <Key>
             <PropertyRef Name="id" />
@@ -3092,6 +2954,88 @@
               <PropertyRef Name="studijskoletoId" />
             </Dependent>
           </ReferentialConstraint>
+        </Association>
+        <EntityType Name="prijavanaizpit">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="vpisId" Type="Int32" Nullable="false" />
+          <Property Name="izpitnirokId" Type="Int32" Nullable="false" />
+          <Property Name="stanje" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="izpitnirok" Relationship="studisModel.prijava_izpitnirok_fk" FromRole="prijavanaizpit" ToRole="izpitnirok" />
+          <NavigationProperty Name="ocenas" Relationship="studisModel.ocena_prijava_fk" FromRole="prijavanaizpit" ToRole="ocena" />
+          <NavigationProperty Name="vpi" Relationship="studisModel.prijava_vpis_fk" FromRole="prijavanaizpit" ToRole="vpi" />
+          <NavigationProperty Name="tockes" Relationship="studisModel.tocke_prijava_fk" FromRole="prijavanaizpit" ToRole="tocke" />
+        </EntityType>
+        <EntityType Name="tocke">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="tocke1" Type="Int32" Nullable="false" />
+          <Property Name="prijavaId" Type="Int64" Nullable="false" />
+          <NavigationProperty Name="prijavanaizpit" Relationship="studisModel.tocke_prijava_fk" FromRole="tocke" ToRole="prijavanaizpit" />
+        </EntityType>
+        <Association Name="prijava_izpitnirok_fk">
+          <End Type="studisModel.izpitnirok" Role="izpitnirok" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="studisModel.prijavanaizpit" Role="prijavanaizpit" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="izpitnirok">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="prijavanaizpit">
+              <PropertyRef Name="izpitnirokId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ocena_prijava_fk">
+          <End Type="studisModel.prijavanaizpit" Role="prijavanaizpit" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="studisModel.ocena" Role="ocena" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="prijavanaizpit">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="ocena">
+              <PropertyRef Name="prijavaId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="prijava_vpis_fk">
+          <End Type="studisModel.vpi" Role="vpi" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="studisModel.prijavanaizpit" Role="prijavanaizpit" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="vpi">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="prijavanaizpit">
+              <PropertyRef Name="vpisId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="tocke_prijava_fk">
+          <End Type="studisModel.prijavanaizpit" Role="prijavanaizpit" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="studisModel.tocke" Role="tocke" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="prijavanaizpit">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="tocke">
+              <PropertyRef Name="prijavaId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="vpisinizvajanje">
+          <End Type="studisModel.izvajanje" Role="izvajanje" Multiplicity="*" />
+          <End Type="studisModel.vpi" Role="vpi" Multiplicity="*" />
         </Association>
         </Schema>
     </edmx:ConceptualModels>
@@ -3503,15 +3447,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="studentinpredmets">
-            <EntityTypeMapping TypeName="studisModel.studentinpredmet">
-              <MappingFragment StoreEntitySet="studentinpredmet">
-                <ScalarProperty Name="vpisId" ColumnName="vpisId" />
-                <ScalarProperty Name="predmetId" ColumnName="predmetId" />
-                <ScalarProperty Name="studentId" ColumnName="studentId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="izvajanjes">
             <EntityTypeMapping TypeName="studisModel.izvajanje">
               <MappingFragment StoreEntitySet="izvajanje">
@@ -3535,21 +3470,11 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <AssociationSetMapping Name="izpitnirokinstudent" TypeName="studisModel.izpitnirokinstudent" StoreEntitySet="izpitnirokinstudent">
-            <EndProperty Name="izpitnirok">
-              <ScalarProperty Name="id" ColumnName="izpitnirokId" />
-            </EndProperty>
-            <EndProperty Name="student">
-              <ScalarProperty Name="vpisnaStevilka" ColumnName="vpisnaStevilka" />
-            </EndProperty>
-          </AssociationSetMapping>
           <EntitySetMapping Name="ocenas">
             <EntityTypeMapping TypeName="studisModel.ocena">
               <MappingFragment StoreEntitySet="ocena">
-                <ScalarProperty Name="izpitnirokId" ColumnName="izpitnirokId" />
-                <ScalarProperty Name="vpisId" ColumnName="vpisId" />
+                <ScalarProperty Name="prijavaId" ColumnName="prijavaId" />
                 <ScalarProperty Name="ocena1" ColumnName="ocena" />
-                <ScalarProperty Name="studentId" ColumnName="studentId" />
                 <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -3562,6 +3487,33 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="prijavanaizpits">
+            <EntityTypeMapping TypeName="studisModel.prijavanaizpit">
+              <MappingFragment StoreEntitySet="prijavanaizpit">
+                <ScalarProperty Name="stanje" ColumnName="stanje" />
+                <ScalarProperty Name="izpitnirokId" ColumnName="izpitnirokId" />
+                <ScalarProperty Name="vpisId" ColumnName="vpisId" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tockes">
+            <EntityTypeMapping TypeName="studisModel.tocke">
+              <MappingFragment StoreEntitySet="tocke">
+                <ScalarProperty Name="prijavaId" ColumnName="prijavaId" />
+                <ScalarProperty Name="tocke1" ColumnName="tocke" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="vpisinizvajanje" TypeName="studisModel.vpisinizvajanje" StoreEntitySet="vpisinizvajanje">
+            <EndProperty Name="vpi">
+              <ScalarProperty Name="id" ColumnName="vpisId" />
+            </EndProperty>
+            <EndProperty Name="izvajanje">
+              <ScalarProperty Name="id" ColumnName="izvajanjeId" />
+            </EndProperty>
+          </AssociationSetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

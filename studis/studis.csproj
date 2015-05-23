@@ -250,6 +250,9 @@
       <DependentUpon>Studis.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\PredmetHelper.cs" />
+    <Compile Include="Models\prijavanaizpit.cs">
+      <DependentUpon>Studis.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\profesor.cs">
       <DependentUpon>Studis.tt</DependentUpon>
     </Compile>
@@ -308,9 +311,6 @@
     <Compile Include="Models\student.cs">
       <DependentUpon>Studis.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\studentinpredmet.cs">
-      <DependentUpon>Studis.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\Studis.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -325,6 +325,9 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Studis.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tocke.cs">
+      <DependentUpon>Studis.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\TretjiPredmetnikModuliModel.cs" />
     <Compile Include="Models\TretjiPredmetnikProstiModel.cs" />
