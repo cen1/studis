@@ -402,11 +402,7 @@ namespace studis.Controllers
 
                     foreach (var o in obv)
                     {
-                        studentinpredmet sip = new studentinpredmet();
-                        sip.predmetId = o.id;
-                        sip.studentId = v.student.vpisnaStevilka;
-                        sip.vpisId = v.id;
-                        db.studentinpredmets.Add(sip);
+                        v.izvajanjes.Add(db.izvajanjes.Where(a => a.predmetId == o.id).First());
                     }
                     db.SaveChanges();
 
@@ -779,12 +775,12 @@ namespace studis.Controllers
                 ViewBag.sumObv = sumObv;
                 ViewBag.sumIzb = 60 - sumObv;
 
-                // kateri strokovni predmet ima izbran                                                
-                var sp = db.studentinpredmets.SingleOrDefault(v => v.vpisId == id && (v.predmet.strokovnoizbirni == true));
+                // kateri strokovni predmet ima izbran                                               
+                var sp = vl.izvajanjes.Where(v => v.predmet.strokovnoizbirni == true).First();
                 ViewBag.Strokovni = sp.predmetId;
 
                 // katere prosto izbirne predmete ima izbrane
-                ViewBag.Prosto = db.studentinpredmets.Where(v => v.vpisId == id && (v.predmet.prostoizbirni == true)).ToList();
+                ViewBag.Prosto = vl.izvajanjes.Where(v => v.predmet.prostoizbirni == true).ToList();
 
                 return View();
             }
@@ -834,11 +830,11 @@ namespace studis.Controllers
             if (num_strok == 0 || num_prosto == 0)
             {
                 // kateri strokovni predmet ima izbran                                                
-                var sp = db.studentinpredmets.SingleOrDefault(v => v.vpisId == id && (v.predmet.strokovnoizbirni == true));
+                var sp = vl.izvajanjes.Where(v => v.predmet.strokovnoizbirni == true).First();
                 ViewBag.Strokovni = sp.predmetId;
 
                 // katere prosto izbirne predmete ima izbrane
-                ViewBag.Prosto = db.studentinpredmets.Where(v => v.vpisId == id && (v.predmet.prostoizbirni == true)).ToList();
+                ViewBag.Prosto = vl.izvajanjes.Where(v => v.predmet.prostoizbirni == true).ToList();
 
                 TempData["error"] = "Izbrati morate vsaj en strokovno ali prosto izbirni predmet";
                 return RedirectToAction("UrediPredmetnik2", new { id = id });
@@ -847,16 +843,13 @@ namespace studis.Controllers
             if (kreditne == 0)
             {
                 // odstrani vse
-                db.studentinpredmets.RemoveRange(db.studentinpredmets.Where(x => x.vpisId == id));
+                foreach (var i in vl.izvajanjes)
+                    vl.izvajanjes.Remove(i);
 
                 //dodaj izbirne
                 foreach (var p in dodaj_p)
                 {
-                    studentinpredmet sip = new studentinpredmet();
-                    sip.predmetId = p.id;
-                    sip.studentId = vl.student.vpisnaStevilka;
-                    sip.vpisId = vl.id;
-                    db.studentinpredmets.Add(sip);
+                    vl.izvajanjes.Add(p.izvajanjes.First());
                 }
                 //dodaj obvezne
                 foreach (var o in ph.obvezni2())
