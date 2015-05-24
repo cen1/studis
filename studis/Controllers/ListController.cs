@@ -171,10 +171,7 @@ namespace studis.Controllers
                     ViewBag.VrocanjeZacasni = "NE";
                 }
 
-                var izvajanja = list.izvajanjes; //sprememba iz predmetov v izvajanja!!
-
-                ViewBag.Izvajanja = izvajanja;
-                ViewBag.Profesorji = db.izvajanjes.Select(v => v).ToList(); // .Where(v => v.letoIzvajanja == list.studijskoLeto)
+                ViewBag.Izvajanja = list.izvajanjes;
             
                 return new PdfActionResult(model);
             }

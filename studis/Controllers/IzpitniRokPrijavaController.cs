@@ -22,7 +22,7 @@ namespace studis.Controllers
         }
 
         // POST: IzpitniRokPrijava/Prijavi
-        [HttpPost]
+        /*[HttpPost]
         public ActionResult Prijavi()
         {
             try
@@ -35,7 +35,7 @@ namespace studis.Controllers
             {
                 return View();
             }
-        }
+        }*/
 
 
 

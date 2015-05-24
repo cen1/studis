@@ -22,7 +22,6 @@ namespace studis.Controllers
             student sid = null;
             kandidat kid = null;
 
-            System.Diagnostics.Debug.WriteLine(x);
             if (x == null && User.IsInRole("Študent"))
             {
                 //poglej ce obstaja vnos v tabeli student
@@ -39,13 +38,18 @@ namespace studis.Controllers
                 else
                 {
                     kid = uh.FindByName(User.Identity.Name).kandidats.FirstOrDefault();
-                    if (kid == null) return HttpNotFound();
+                    if (kid == null)
+                    {
+                        System.Diagnostics.Debug.WriteLine("Kandidat null");
+                        return HttpNotFound();
+                    }
                 }
             }
-            else if (x != null && User.IsInRole("Referent")){
+            else if (x != null && User.IsInRole("Referent"))
+            {
                 //pogledamo ce obstaja študent ali kandidat
                 //gledamo po userId ker sta kandidat id in student vpisnaStevilka hipoteticno lahko enaka
-                
+
                 var usr = db.my_aspnet_users.Where(a => a.id == x).FirstOrDefault();
                 if (usr != null)
                 {
@@ -54,7 +58,11 @@ namespace studis.Controllers
                     {
                         //pogledamo se ce obstaja kandidat
                         kid = usr.kandidats.FirstOrDefault();
-                        if (kid == null) return HttpNotFound();
+                        if (kid == null)
+                        {
+                            System.Diagnostics.Debug.WriteLine("Kandidat null");
+                            return HttpNotFound();
+                        }
                     }
                 }
                 else
@@ -62,9 +70,17 @@ namespace studis.Controllers
                     return HttpNotFound();
                 }
             }
-            else return HttpNotFound();
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("Fatal error, unauthorized");
+                return HttpNotFound();
+            }
 
-            if (sid == null && kid == null) return HttpNotFound();
+            if (sid == null && kid == null)
+            {
+                System.Diagnostics.Debug.WriteLine("Ne obstaja student ali kandidat");
+                return HttpNotFound();
+            }
 
             ViewBag.StudijskiProgramiVB = new SelectList(db.sifrant_studijskiprogram.OrderBy(a => a.naziv), "id", "naziv");
             ViewBag.KlasiusVB = new SelectList(db.sifrant_klasius.OrderBy(a => a.id != 16204).ThenBy(b => b.id), "id", "naziv");
@@ -76,6 +92,7 @@ namespace studis.Controllers
             ViewBag.OblikaStudijaVB = new SelectList(db.sifrant_oblikastudija, "id", "naziv");
             ViewBag.SpolVB = new SelectList(db.sifrant_spol.OrderBy(a => a.naziv), "id", "naziv");
             ViewBag.ObcinaVB = new SelectList(db.sifrant_obcina.OrderBy(a => a.naziv != "Ljubljana").ThenBy(a => a.naziv), "id", "naziv");
+            ViewBag.KrajIzvajanjaVB = new SelectList(db.sifrant_obcina.Where(a => a.naziv == "Ljubljana" || a.naziv == "Postojna"), "id", "naziv");
             ViewBag.DrzavaVB = new SelectList(db.sifrant_drzava.OrderBy(a => a.naziv != "Slovenija").ThenBy(a => a.naziv), "id", "naziv");
             ViewBag.PostnaStevilkaVB = new SelectList(db.sifrant_postnastevilka.OrderBy(a => a.naziv), "id", "naziv");
             ViewBag.LetnikVB = new SelectList(db.sifrant_letnik.OrderBy(a => a.naziv != "Prvi").ThenBy(b => b.id), "id", "naziv");
@@ -148,6 +165,7 @@ namespace studis.Controllers
                 }
                 else
                 {
+                    System.Diagnostics.Debug.WriteLine("Fatal error, ne obstaja kandidat ali student");
                     return HttpNotFound();
                 }
             }
@@ -434,6 +452,7 @@ namespace studis.Controllers
             ViewBag.OblikaStudijaVB = new SelectList(db.sifrant_oblikastudija, "id", "naziv");
             ViewBag.SpolVB = new SelectList(db.sifrant_spol.OrderBy(a => a.naziv), "id", "naziv");
             ViewBag.ObcinaVB = new SelectList(db.sifrant_obcina.OrderBy(a => a.naziv != "Ljubljana").ThenBy(a => a.naziv), "id", "naziv");
+            ViewBag.KrajIzvajanjaVB = new SelectList(db.sifrant_obcina.Where(a => a.naziv == "Ljubljana" || a.naziv == "Postojna"), "id", "naziv");
             ViewBag.DrzavaVB = new SelectList(db.sifrant_drzava.OrderBy(a => a.naziv != "Slovenija").ThenBy(a => a.naziv), "id", "naziv");
             ViewBag.PostnaStevilkaVB = new SelectList(db.sifrant_postnastevilka.OrderBy(a => a.naziv), "id", "naziv");
             ViewBag.LetnikVB = new SelectList(db.sifrant_letnik.OrderBy(a => a.naziv != "Prvi").ThenBy(b => b.id), "id", "naziv");
@@ -502,6 +521,7 @@ namespace studis.Controllers
             ViewBag.OblikaStudijaVB = new SelectList(db.sifrant_oblikastudija, "id", "naziv");
             ViewBag.SpolVB = new SelectList(db.sifrant_spol.OrderBy(a => a.naziv), "id", "naziv");
             ViewBag.ObcinaVB = new SelectList(db.sifrant_obcina.OrderBy(a => a.naziv != "Ljubljana").ThenBy(a => a.naziv), "id", "naziv");
+            ViewBag.KrajIzvajanjaVB = new SelectList(db.sifrant_obcina.Where(a => a.naziv == "Ljubljana" || a.naziv == "Postojna"), "id", "naziv");
             ViewBag.DrzavaVB = new SelectList(db.sifrant_drzava.OrderBy(a => a.naziv != "Slovenija").ThenBy(a => a.naziv), "id", "naziv");
             ViewBag.PostnaStevilkaVB = new SelectList(db.sifrant_postnastevilka.OrderBy(a => a.naziv), "id", "naziv");
             ViewBag.LetnikVB = new SelectList(db.sifrant_letnik.OrderBy(a => a.naziv != "Prvi").ThenBy(b => b.id), "id", "naziv");
@@ -668,6 +688,7 @@ namespace studis.Controllers
             ViewBag.OblikaStudijaVB = new SelectList(db.sifrant_oblikastudija, "id", "naziv");
             ViewBag.SpolVB = new SelectList(db.sifrant_spol.OrderBy(a => a.naziv), "id", "naziv");
             ViewBag.ObcinaVB = new SelectList(db.sifrant_obcina.OrderBy(a => a.naziv != "Ljubljana").ThenBy(a => a.naziv), "id", "naziv");
+            ViewBag.KrajIzvajanjaVB = new SelectList(db.sifrant_obcina.Where(a => a.naziv == "Ljubljana" || a.naziv == "Postojna"), "id", "naziv");
             ViewBag.DrzavaVB = new SelectList(db.sifrant_drzava.OrderBy(a => a.naziv != "Slovenija").ThenBy(a => a.naziv), "id", "naziv");
             ViewBag.PostnaStevilkaVB = new SelectList(db.sifrant_postnastevilka.OrderBy(a => a.naziv), "id", "naziv");
             ViewBag.LetnikVB = new SelectList(db.sifrant_letnik.OrderBy(a => a.naziv != "Prvi").ThenBy(b => b.id), "id", "naziv");
@@ -1196,11 +1217,14 @@ namespace studis.Controllers
             if (vl.student.userId != usr.id) return HttpNotFound();
 
             PredmetHelper ph = new PredmetHelper();
+            StudentHelper sh = new StudentHelper();
 
             //shrani predmetnik
             foreach (var p in ph.obvezni1())
             {
-                //
+                //vstavimo po defaultu prvo izvajanje za naslednje leto
+                izvajanje i = db.izvajanjes.Where(a => a.predmetId == p.id).Where(b => b.studijskoletoId == DateTime.Now.Year).First();
+                vl.izvajanjes.Add(i);
             }
 
             try
@@ -1209,6 +1233,7 @@ namespace studis.Controllers
             }
             catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine(ex.Message);
                 return HttpNotFound();
             }
 
@@ -1529,7 +1554,7 @@ namespace studis.Controllers
             if (uh.jePredmetnikVzpostavljen(vl)) return HttpNotFound();
 
             
-           // preveri ce je trenutni user referent
+           //preveri ce je trenutni user referent
             my_aspnet_users usr = uh.FindByName(User.Identity.Name);
             if (usr.name != "referent")
             {

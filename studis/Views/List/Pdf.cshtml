@@ -237,39 +237,23 @@
             <th>Učna enota</th>
             <th>Število KT</th>
         </tr>
-        @foreach (var data in @ViewBag.Predmeti)
+        @foreach (var data in @ViewBag.Izvajanja)
         {
-            var counter = 0;
-            foreach (var item in @ViewBag.Profesorji)
-            {
-                if (@data.predmet.id == @item.predmetId && counter == 0) {
-                    <tr>
-                        <td style="width: 25%;">
-                            @item.profesor.ime @item.profesor.priimek
-                            @if (@item.izvajalec2Id != null)
-                            {
-                                <span>, <br />item.profesor1.ime item.profesor1.priimek</span>
-                            } 
-                            @if (@item.izvajalec3Id != null)
-                            {
-                                <span>, <br />item.profesor2.ime item.profesor2.priimek</span>
-                            }
-                        </td>
-                        <td style="width: 60%;">@data.predmet.ime</td>
-                        <td style="width: 15%;">@data.predmet.kreditne</td>
-                    </tr>
-                            counter++;
-                }
-            }
-            if (counter == 0)
-            {
-                <tr>
-                    <td style="width: 25%;"></td>
-                    <td style="width: 60%;">@data.predmet.ime</td>
-                    <td style="width: 15%;">@data.predmet.kreditne</td>
-                </tr>
-            }
-
+            <tr>
+                <td style="width: 25%;">
+                    @data.profesor.ime @data.profesor.priimek
+                    @if (@data.izvajalec2Id != null)
+                    {
+                        <span>, <br />data.profesor1.ime data.profesor1.priimek</span>
+                    } 
+                    @if (@data.izvajalec3Id != null)
+                    {
+                        <span>, <br />data.profesor2.ime data.profesor2.priimek</span>
+                    }
+                </td>
+                <td style="width: 60%;">@data.predmet.ime</td>
+                <td style="width: 15%;">@data.predmet.kreditne</td>
+            </tr>
         }
     </tbody>
 </table>
