@@ -79,6 +79,7 @@ namespace studis.Models
             vpisniList.priimek = k.priimek;
             vpisniList.email = k.email;
             vpisniList.studijskiProgram = k.studijskiProgram;
+            vpisniList.letnikStudija = 1;
 
             return vpisniList;
         }
