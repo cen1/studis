@@ -31,6 +31,10 @@
             {
                 <th>Uredi predmetnik</th>
             }
+            @if (User.IsInRole("Referent"))
+            {
+                <th>Kartotečni list</th>
+            }
         </tr>
 @if (Model != null)
 {
@@ -57,6 +61,10 @@
             @if (User.IsInRole("Referent"))
             {
                 <td>@Html.ActionLink("Uredi", "IzbiraLetnika", "VpisniList", new { id = item.vpisnaStevilka }, null)</td>
+            }
+            @if (User.IsInRole("Referent"))
+            {
+                <td>@Html.ActionLink("Izpiši", "Izpis", "KartotecniList", new { id = item.vpisnaStevilka }, null)</td>
             }
     </tr>
     }

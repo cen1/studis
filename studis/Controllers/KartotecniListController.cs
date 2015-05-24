@@ -15,19 +15,19 @@ namespace studis.Controllers
 
         // GET: KartotecniList
         [Authorize(Roles = "Referent, Študent")]
-        public ActionResult Izpis(int? vpisna)
+        public ActionResult Izpis(int? id)
         {
             // akcija za referenta
-            if (vpisna != null && User.IsInRole("Referent"))
+            if (id != null && User.IsInRole("Referent"))
             {
                 try
                 {
                     // vrni študentove študijske programe
-                    var tmp = db.vpis.Where(v => v.vpisnaStevilka == vpisna).Select(v => v.studijskiProgram).ToList();
+                    var tmp = db.vpis.Where(v => v.vpisnaStevilka == id).Select(v => v.studijskiProgram);
                     var seznam = tmp.Distinct();
                     var items = db.sifrant_studijskiprogram.Where(p => seznam.Contains(p.id));
                     ViewBag.Program = new SelectList(items, "id", "naziv");
-                    ViewBag.Vpisna = vpisna;
+                    ViewBag.Vpisna = id;
                 }
                 catch
                 {
@@ -44,7 +44,7 @@ namespace studis.Controllers
                 try
                 {
                     // vrni študentove študijske programe
-                    var tmp = db.vpis.Where(v => v.vpisnaStevilka == student.vpisnaStevilka).Select(v => v.studijskiProgram).ToList();
+                    var tmp = db.vpis.Where(v => v.vpisnaStevilka == student.vpisnaStevilka).Select(v => v.studijskiProgram);
                     var seznam = tmp.Distinct();
                     var items = db.sifrant_studijskiprogram.Where(p => seznam.Contains(p.id));
                     ViewBag.Program = new SelectList(items, "id", "naziv");
@@ -62,8 +62,14 @@ namespace studis.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Referent, Študent")]
-        public ActionResult Izpis(sifrant_studijskiprogram model, int vpisna, string polaganja)
+        public ActionResult Izpis(int vpisna, string polaganja, sifrant_studijskiprogram model)
         {
+            var tmp = db.vpis.Where(v => v.vpisnaStevilka == vpisna).Select(v => v.studijskiProgram);
+            var seznam = tmp.Distinct();
+            var items = db.sifrant_studijskiprogram.Where(p => seznam.Contains(p.id));
+            ViewBag.Program = new SelectList(items, "id", "naziv");
+            ViewBag.Vpisna = vpisna;
+
             // samo zadnje polaganje
             if (polaganja == "Zadnje polaganje")
             {
@@ -122,6 +128,40 @@ namespace studis.Controllers
 
                 // zadnje opravljanje
                 ViewBag.Izbira = 0;
+
+                // vrni modula, ko je študent v 3. letniku BUNI
+                if (model.id == 1000468)
+                {
+                    try
+                    {
+                        var vm = db.vpis.Where(v => v.vpisnaStevilka == vpisna && v.studijskiProgram == model.id && v.letnikStudija == 3).FirstOrDefault();
+
+                        List<int> moduli = new List<int>();
+                        {
+                            foreach (var i in vm.izvajanjes)
+                            {
+                                if (i.predmet.modul != null)
+                                {
+                                    moduli.Add(Convert.ToInt32(i.predmet.modul.id));
+                                }
+                            }
+                        }
+                        var unique = moduli.Distinct();
+
+                        List<string> final = new List<string>();
+                        {
+                            foreach (var u in unique)
+                            {
+                                if (moduli.Count(item => item == Convert.ToInt32(u)) > 1)
+                                {
+                                    final.Add(vm.izvajanjes.Where(i => i.predmet.modulId == u).Select(i => i.predmet.modul.ime).First());
+                                }
+                            }
+                        }
+                        ViewBag.Moduli = final;
+                    }
+                    catch { }
+                }
             } 
 
             // vsa polaganja
@@ -176,6 +216,40 @@ namespace studis.Controllers
 
                 // vsa opravljanja
                 ViewBag.Izbira = 1;
+
+                // vrni modula, ko je študent v 3. letniku BUNI
+                if (model.id == 1000468)
+                {
+                    try
+                    {
+                        var vm = db.vpis.Where(v => v.vpisnaStevilka == vpisna && v.studijskiProgram == model.id && v.letnikStudija == 3).FirstOrDefault();
+
+                        List<int> moduli = new List<int>();
+                        {
+                            foreach (var i in vm.izvajanjes)
+                            {
+                                if (i.predmet.modul != null)
+                                {
+                                    moduli.Add(Convert.ToInt32(i.predmet.modul.id));
+                                }
+                            }
+                        }
+                        var unique = moduli.Distinct();
+
+                        List<string> final = new List<string>();
+                        {
+                            foreach (var u in unique)
+                            {
+                                if (moduli.Count(item => item == Convert.ToInt32(u)) > 1)
+                                {
+                                    final.Add(vm.izvajanjes.Where(i => i.predmet.modulId == u).Select(i => i.predmet.modul.ime).First());
+                                }
+                            }
+                        }
+                        ViewBag.Moduli = final;
+                    }
+                    catch { }
+                }
             }
 
             return View();
