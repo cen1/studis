@@ -10,6 +10,7 @@ namespace studis.Models
     public class UserHelper
     {
         private studisEntities db;
+        private static studisEntities baza;
 
         public UserHelper()
         {
@@ -19,6 +20,16 @@ namespace studis.Models
         public my_aspnet_users FindByName(String name)
         {
             return db.my_aspnet_users.Where(a => a.applicationId == 1).Where(b => b.name == name).FirstOrDefault();
+        }
+
+        public static student GetStudentByUserName(String name)
+        {
+            return baza.my_aspnet_users.Where(a => a.applicationId == 1).Where(b => b.name == name).FirstOrDefault().students.FirstOrDefault();
+        }
+
+        public static student GetStudentByVpisna(int vpisna)
+        {
+            return baza.students.FirstOrDefault(a => a.vpisnaStevilka == vpisna);
         }
 
         public my_aspnet_membership FindByEmail(String email)
@@ -210,16 +221,26 @@ namespace studis.Models
 
             if (!update)
             {
-                //preveri ce res obstaja studijsko leto prvega vpisa
-                vpi slpv = db.vpis.Where(a => a.studijskiProgram == vlm.studijskiProgram).Where(b => b.letnikStudija == vlm.letnikStudija).FirstOrDefault();
-                if (slpv != null)
+                //preveri ce res obstaja studijsko leto prvega vpisa oziroma če je trenutno če je prvi vpis
+                if (s != null)
                 {
-                    if (vlm.studijskoLetoPrvegaVpisa != slpv.studijskoLeto)
+                    var starvpis = s.vpis.Where(a => a.studijskiProgram == vlm.studijskiProgram).Where(b => b.letnikStudija == vlm.letnikStudija).FirstOrDefault();
+                    if (starvpis != null) //obstaja vpis v ta letnik
                     {
-                        //napake.Add("Študijsko leto prvega vpisa je napačno (nimate vpisa iz tistega leta)");
+                        if (vlm.studijskoLetoPrvegaVpisa != starvpis.studijskoLeto)
+                        {
+                            napake.Add("Študijsko leto prvega vpisa je napačno (nimate vpisa iz tistega leta)");
+                        }
+                    }
+                    else //prvi vpis v letnik
+                    {
+                        if (vlm.studijskoLetoPrvegaVpisa != DateTime.Now.Year)
+                        {
+                            napake.Add("Študijsko leto prvega vpisa je lahko le letošnje");
+                        }
                     }
                 }
-                else
+                else //kandidat
                 {
                     if (vlm.studijskoLetoPrvegaVpisa != DateTime.Now.Year)
                     {
