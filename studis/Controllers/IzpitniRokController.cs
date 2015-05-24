@@ -248,6 +248,13 @@ namespace studis.Controllers
             sifrant_prostor predavalnica = db.sifrant_prostor.Where(s => s.id == rok.prostorId).SingleOrDefault();
             izvajanje izv = db.izvajanjes.Where(s => s.id == rok.izvajanjeId).SingleOrDefault();
 
+            string izvajalci = izv.profesor.priimek + " " + izv.profesor.ime;
+            if (izv.izvajalec2Id != null)
+                izvajalci = izvajalci + ", " + izv.profesor1.priimek + " " + izv.profesor1.ime;
+            if (izv.izvajalec3Id != null)
+                izvajalci = izvajalci + ", " + izv.profesor2.priimek + " " + izv.profesor2.ime;
+
+            ViewBag.izvajalci = izvajalci;
             ViewBag.prostor = predavalnica.naziv;
             ViewBag.datum = GetDatumForIzpitniRok(rok.id);
             ViewBag.ura = UserHelper.TimeToString((DateTime)rok.ura);
@@ -368,6 +375,7 @@ namespace studis.Controllers
                     profesorji += ", " + profesor3.ime + " " + profesor3.priimek;
                 }
 
+                profesorji = profesorji + " (" + i.sifrant_studijskoleto.naziv + ")";
                 seznamIzvajanja.Add(new SelectListItem() { Value = i.id.ToString(), Text = profesorji });
             }
             if (c < 1)

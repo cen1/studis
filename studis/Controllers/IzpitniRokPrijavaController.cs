@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using studis.Models;
 
 namespace studis.Controllers
 {
@@ -22,8 +23,8 @@ namespace studis.Controllers
         }
 
         // POST: IzpitniRokPrijava/Prijavi
-        /*[HttpPost]
-        public ActionResult Prijavi()
+        [HttpPost]
+        public ActionResult Prijavi(PrijavaNaIzpitModel model)
         {
             try
             {
@@ -35,7 +36,7 @@ namespace studis.Controllers
             {
                 return View();
             }
-        }*/
+        }
 
 
 
@@ -47,7 +48,7 @@ namespace studis.Controllers
 
         // POST: IzpitniRokPrijava/Delete/5
         [HttpPost]
-        public ActionResult Odjavi(int id, FormCollection collection)
+        public ActionResult Odjavi(PrijavaNaIzpitModel model)
         {
             try
             {
