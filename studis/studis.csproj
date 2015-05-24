@@ -254,6 +254,7 @@
     <Compile Include="Models\prijavanaizpit.cs">
       <DependentUpon>Studis.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\PrijavaNaIzpitModel.cs" />
     <Compile Include="Models\profesor.cs">
       <DependentUpon>Studis.tt</DependentUpon>
     </Compile>
