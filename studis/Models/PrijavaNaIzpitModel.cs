@@ -8,7 +8,7 @@ namespace studis.Models
 {
     public class PrijavaNaIzpitModel
     {
-        [Display(Name = "Predmet")]
+        [Display(Name = "Student")]
         public int student { get; set; }
 
         [Required(ErrorMessage = "Obvezno izbrati.")]

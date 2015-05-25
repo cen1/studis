@@ -21,7 +21,7 @@ namespace studis.Controllers
 
 
         // GET: IzpitniRokPrijava/Prijavi
-       public ActionResult Prijavi()
+       public ActionResult Prijavi()//SPREJMI VPISNO ind id, za boljso izbiro studenta
         {
             List<SelectListItem> ltemp = new List<SelectListItem>();
             ltemp.Add(new SelectListItem() { Value = "", Text = "Izberi" });
@@ -34,7 +34,17 @@ namespace studis.Controllers
             {
                 ViewBag.Izvajanja = new SelectList(ltemp, "Value", "Text");
             }
-            ViewBag.Studenti = new SelectList(db.students.ToList(), "vpisnaStevilka", "ime");
+            List<student> temp = db.students.OrderBy(a => a.priimek).ToList();
+
+            List<SelectListItem> studenti = new List<SelectListItem>();
+            foreach (student i in temp)
+            {
+                SelectListItem p = new SelectListItem();
+                p.Value = i.vpisnaStevilka.ToString();
+                p.Text = Convert.ToInt32(p.Value).ToString() + " - " + i.ime + " " + i.priimek;
+                studenti.Add(p);
+            }
+            ViewBag.Studenti = new SelectList(studenti, "Value", "Text");
 
             return View();
         }
