@@ -4,6 +4,7 @@
 @{
     ViewBag.Title = "Kartotečni list";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    StudentHelper sh = new StudentHelper();
 }
 
 <h2>Kartotečni list</h2>
@@ -12,7 +13,6 @@
 @using (Html.BeginForm("Izpis", "KartotecniList", new { vpisna = ViewBag.Vpisna }, FormMethod.Post, null))
 {
     @Html.DropDownList("polaganja", new SelectList(new[] { "Zadnje polaganje", "Vsa polaganja" })) 
-    <br />
     @Html.DropDownListFor(m => m.id, (SelectList)ViewBag.Program)
     <br />
     <br />
@@ -36,6 +36,7 @@
                 var sestevek = 0;
                 var opravil = 0;
                 var povprecje = 0;
+                int temp;
 
                 <!-- GLAVA -->
                 
@@ -114,17 +115,19 @@
                                                 @i.profesor.ime @i.profesor.priimek
                                                 @if (@i.izvajalec2Id != null)
                                                 {
-                                                    <span>, i.profesor1.ime i.profesor1.priimek</span>
+                                                    <span>, @i.profesor1.ime @i.profesor1.priimek</span>
                                                 }
                                                 @if (@i.izvajalec3Id != null)
                                                 {
-                                                    <span>, i.profesor2.ime i.profesor2.priimek</span>
+                                                    <span>, @i.profesor2.ime @i.profesor2.priimek</span>
                                                 }
                                             </td>
                                             <td>@i.predmet.letnik</td>
                                             <td><!-- r.prijavanaizpit.datumPrijave --></td>
-                                            <td>@{ StudentHelper.polaganjaVsa(@v.vpisnaStevilka, @i.predmetId, @v.studijskiProgram); }</td>
-                                            <td>@{ StudentHelper.polaganjaLetos(@v.id, @i.id); }</td>
+                                            @{ temp = sh.polaganjaVsa(@v.vpisnaStevilka, Convert.ToInt32(@i.predmetId), @v.studijskiProgram); }
+                                            <td>@temp</td>
+                                            @{ temp = sh.polaganjaLetos(@v.id, @i.id); }
+                                            <td>@temp</td>
                                             <td>@i.predmet.kreditne</td>
                                             <td>@p.ocena.ocena</td>
                                         </tr>
@@ -143,7 +146,7 @@
                                 }            
                             }
                             if (pisal == 0 && i.studijskoletoId == v.studijskoLeto)
-                            {
+                            {   
                                 <tr>
                                     <td>@i.predmet.koda</td>
                                     <td>@i.predmet.ime</td>
@@ -151,16 +154,17 @@
                                         @i.profesor.ime @i.profesor.priimek
                                         @if (@i.izvajalec2Id != null)
                                         {
-                                            <span>, i.profesor1.ime i.profesor1.priimek</span>
+                                            <span>, @i.profesor1.ime @i.profesor1.priimek</span>
                                         }
                                         @if (@i.izvajalec3Id != null)
                                         {
-                                            <span>, i.profesor2.ime i.profesor2.priimek</span>
+                                            <span>, @i.profesor2.ime @i.profesor2.priimek</span>
                                         }
                                     </td>
                                     <td>@i.predmet.letnik</td>
                                     <td>/</td>
-                                    <td>@{ StudentHelper.polaganjaVsa(@v.vpisnaStevilka, @i.predmetId, @v.studijskiProgram); }</td>
+                                    @{ temp = sh.polaganjaVsa(@v.vpisnaStevilka, Convert.ToInt32(@i.predmetId), @v.studijskiProgram); }
+                                    <td>@temp</td>
                                     <td>0</td>
                                     <td>@i.predmet.kreditne</td>
                                     <td>/</td>
@@ -218,6 +222,7 @@
                 var sestevek = 0;
                 var opravil = 0;
                 var povprecje = 0;
+                int temp;
 
                 <!-- GLAVA -->
                 <h2>@v.sifrant_studijskoleto.naziv</h2>
@@ -297,17 +302,19 @@
                                                 @i.profesor.ime @i.profesor.priimek
                                                 @if (@i.izvajalec2Id != null)
                                                 {
-                                                    <span>, i.profesor1.ime i.profesor1.priimek</span>
+                                                    <span>, @i.profesor1.ime @i.profesor1.priimek</span>
                                                 }
                                                 @if (@i.izvajalec3Id != null)
                                                 {
-                                                    <span>, i.profesor2.ime i.profesor2.priimek</span>
+                                                    <span>, @i.profesor2.ime @i.profesor2.priimek</span>
                                                 }
                                             </td>
                                             <td>@i.predmet.letnik</td>
                                             <td><!-- r.prijavanaizpit.datumPrijave --></td>
-                                            <td>@{ StudentHelper.polaganjaVsa(@v.vpisnaStevilka, @i.predmetId, @v.studijskiProgram); }</td>
-                                            <td>@{ StudentHelper.polaganjaLetos(@v.id, @i.id); }</td>
+                                            @{ temp = sh.polaganjaVsa(@v.vpisnaStevilka, Convert.ToInt32(@i.predmetId), @v.studijskiProgram); }
+                                            <td>@temp</td>
+                                            @{ temp = sh.polaganjaLetos(@v.id, @i.id); }
+                                            <td>@temp</td>
                                             <td>@i.predmet.kreditne</td>
                                             <td>@p.ocena.ocena</td>
                                         </tr>
@@ -325,16 +332,17 @@
                                             @i.profesor.ime @i.profesor.priimek
                                             @if (@i.izvajalec2Id != null)
                                             {
-                                                <span>, i.profesor1.ime i.profesor1.priimek</span>
+                                                <span>, @i.profesor1.ime @i.profesor1.priimek</span>
                                             }
                                             @if (@i.izvajalec3Id != null)
                                             {
-                                                <span>, i.profesor2.ime i.profesor2.priimek</span>
+                                                <span>, @i.profesor2.ime @i.profesor2.priimek</span>
                                             }
                                         </td>
                                         <td>@i.predmet.letnik</td>
                                         <td>/</td>
-                                        <td>@{ StudentHelper.polaganjaVsa(@v.vpisnaStevilka, @i.predmetId, @v.studijskiProgram); }</td>
+                                        @{ temp = sh.polaganjaVsa(@v.vpisnaStevilka, Convert.ToInt32(@i.predmetId), @v.studijskiProgram); }
+                                        <td>@temp</td>
                                         <td>0</td>
                                         <td>@i.predmet.kreditne</td>
                                         <td>/</td>
