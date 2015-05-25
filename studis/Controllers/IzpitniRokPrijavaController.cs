@@ -184,5 +184,23 @@ namespace studis.Controllers
             }
             return new JavaScriptSerializer().Serialize(seznamIzpitniRoki);
         }
+
+        //PREVERJANJA
+        /*
+        -preveri cas min 23 ur pred dnem izpita
+        -max 3 polaganja letos
+        -max 6 polaganj vse skupaj (ponavljanje resetira)
+        -preveri ce prijva pri tem predmetu(izvajanju) ze obstaja
+        -preveri prijavo na rok na katerga je ze prijavljen
+        -preveri ce je izpit ze opravljen
+        -preveri da je od prijave minilo x dni
+        -preveri ce za prejsnjo prijavo ze obstaja ocena
+        -preveri ce mora student placati izpit (4+ redni, 1+ izredni)
+        */
+
+        public JsonResult preveri(int vpisna, int izpitniRok)
+        {
+            return null;
+        }
     }
 }
