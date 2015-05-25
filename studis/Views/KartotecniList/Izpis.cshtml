@@ -1,4 +1,5 @@
 ﻿@model studis.Models.sifrant_studijskiprogram
+@using studis.Models
 
 @{
     ViewBag.Title = "Kartotečni list";
@@ -122,8 +123,8 @@
                                             </td>
                                             <td>@i.predmet.letnik</td>
                                             <td><!-- r.prijavanaizpit.datumPrijave --></td>
-                                            <td>polaganja skupaj</td>
-                                            <td>polaganja letos</td>
+                                            <td>@{ StudentHelper.polaganjaVsa(@v.vpisnaStevilka, @i.predmetId, @v.studijskiProgram); }</td>
+                                            <td>@{ StudentHelper.polaganjaLetos(@v.id, @i.id); }</td>
                                             <td>@i.predmet.kreditne</td>
                                             <td>@p.ocena.ocena</td>
                                         </tr>
@@ -159,8 +160,8 @@
                                     </td>
                                     <td>@i.predmet.letnik</td>
                                     <td>/</td>
-                                    <td>polaganja skupno</td>
-                                    <td>polaganja letos</td>
+                                    <td>@{ StudentHelper.polaganjaVsa(@v.vpisnaStevilka, @i.predmetId, @v.studijskiProgram); }</td>
+                                    <td>0</td>
                                     <td>@i.predmet.kreditne</td>
                                     <td>/</td>
                                 </tr>
@@ -305,8 +306,8 @@
                                             </td>
                                             <td>@i.predmet.letnik</td>
                                             <td><!-- r.prijavanaizpit.datumPrijave --></td>
-                                            <td>polaganja skupaj</td>
-                                            <td>polaganja letos</td>
+                                            <td>@{ StudentHelper.polaganjaVsa(@v.vpisnaStevilka, @i.predmetId, @v.studijskiProgram); }</td>
+                                            <td>@{ StudentHelper.polaganjaLetos(@v.id, @i.id); }</td>
                                             <td>@i.predmet.kreditne</td>
                                             <td>@p.ocena.ocena</td>
                                         </tr>
@@ -333,8 +334,8 @@
                                         </td>
                                         <td>@i.predmet.letnik</td>
                                         <td>/</td>
-                                        <td>polaganja skupno</td>
-                                        <td>polaganja letos</td>
+                                        <td>@{ StudentHelper.polaganjaVsa(@v.vpisnaStevilka, @i.predmetId, @v.studijskiProgram); }</td>
+                                        <td>0</td>
                                         <td>@i.predmet.kreditne</td>
                                         <td>/</td>
                                     </tr>
