@@ -4,6 +4,7 @@ using studis.Models;
 using System.Security.Cryptography;
 using System.Net.Mail;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace studis.Models
 {
@@ -29,6 +30,7 @@ namespace studis.Models
 
         public static student GetStudentByVpisna(int vpisna)
         {
+            Debug.WriteLine("Vpisna: " + vpisna);
             return baza.students.FirstOrDefault(a => a.vpisnaStevilka == vpisna);
         }
 

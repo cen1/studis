@@ -22,10 +22,7 @@
                     @Html.LabelFor(m => m.student)
                 </div>
                 <div class="editor-field">
-                    @if (User.IsInRole("Student"))
-                    {
-                        @Html.DropDownListFor(m => m.student, (SelectList)ViewBag.Studenti, "Izberi študenta")
-                    }
+                    @Html.DropDownListFor(m => m.student, (SelectList)ViewBag.Studenti, "Izberi študenta")
                     @Html.ValidationMessageFor(m => m.student)
                 </div>
             }
@@ -66,3 +63,63 @@
         </fieldset>
     </div>
 }
+
+<script language="javascript" type="text/javascript">
+    //napolni izvajanja
+    $(document).ready(function () {
+        $("#student").change(function () {
+            var url = "/IzpitniRokPrijava/GetIzvajanjaForStudent/" + $(this).val();
+            $.get(url, function (response) {
+                var izvajanja = $.parseJSON(response);
+                var ddlIzvajanja = $("#izvajanje");
+                if ($("#student predmet option:first-child").text() == "Izberi") {
+                    $("#student option:first-child").remove();
+                }
+                //pocisti
+                $("#izvajanje > option").remove();
+
+                //pocisti2
+                $("#izpitniRok > option").remove();
+                $("#izpitniRok").append('<option value="">Izberi</option>');
+
+                //napolni
+                if (izvajanja.length < 1) {
+                    //ddlIzvajanja.append('<option value="">Ni izvajalcev.</option>');
+                } else {
+                    //ddlIzvajanja.append('<option value="">Izberi</option>');
+                }
+                for (i = 0; i < izvajanja.length; i++) {
+                    ddlIzvajanja.append('<option value="' + izvajanja[i].Value + '">' + izvajanja[i].Text + '</option>');
+                }
+            });
+        });
+    });
+
+    //napolni izpitne roke
+    $(document).ready(function () {
+        $("#izvajanje").change(function () {
+            console.log("Parameter: " + $(this).val());
+            var url = "/IzpitniRokPrijava/GetIzpitniRoksForIzvajanja/" + $(this).val();
+            console.log("URL: " + url);
+            $.get(url, function (response) {
+                var izpitniRoks = $.parseJSON(response);
+                var ddlIzpitniRoks = $("#izpitniRok");
+                if ($("#izvajanje option:first-child").text() == "Izberi") {
+                    $("#izvajanje option:first-child").remove();
+                }
+                //pocisti
+                $("#izpitniRok > option").remove();
+
+                //napolni
+                if (izpitniRoks.length < 1) {
+                    //ddlIzpitniRoks.append('<option value="">"Ta predmet nima razpisanih rokov."</option>');
+                } else {
+                    //ddlIzpitniroks.append('<option value="">Izberi</option>');
+                }
+                for (i = 0; i < izpitniRoks.length; i++) {
+                    ddlIzpitniRoks.append('<option value="' + izpitniRoks[i].Value + '">' + izpitniRoks[i].Text + '</option>');
+                }
+            });
+        });
+    });
+</script>
