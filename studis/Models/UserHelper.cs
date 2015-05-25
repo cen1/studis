@@ -11,7 +11,7 @@ namespace studis.Models
     public class UserHelper
     {
         private studisEntities db;
-        private static studisEntities baza;
+        private static studisEntities baza = new studisEntities();
 
         public UserHelper()
         {
