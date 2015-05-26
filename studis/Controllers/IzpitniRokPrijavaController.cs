@@ -197,9 +197,13 @@ namespace studis.Controllers
         -preveri ce za prejsnjo prijavo ze obstaja ocena
         -preveri ce mora student placati izpit (4+ redni, 1+ izredni)
         */
-
-        public JsonResult preveri(int vpisna, int izpitniRok)
+        [HttpPost]
+        public JsonResult Preveri(string vpisna, string izpitniRok)
         {
+            
+            int ivpisna= Convert.ToInt32(vpisna);
+            int iizpitniRok= Convert.ToInt32(izpitniRok);
+            Debug.WriteLine("Vpisna: " + vpisna + ", IzpitniRokId: " + izpitniRok);
             return null;
         }
     }
