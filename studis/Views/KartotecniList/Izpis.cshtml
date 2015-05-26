@@ -104,7 +104,7 @@
                             {
                                 foreach (var p in @ViewBag.Prijave)
                                 {
-                                    if (i.studijskoletoId == v.studijskoLeto && i.izpitnirok.Contains(r) && p.vpisId == v.id && r.id == p.izpitnirokId)
+                                    if (i.studijskoletoId == v.studijskoLeto && i.izpitniroks.Contains(r) && p.vpisId == v.id && r.id == p.izpitnirokId)
                                     {
                                         pisal++;
                                     
@@ -119,14 +119,14 @@
                                                 }
                                                 @if (@i.izvajalec3Id != null)
                                                 {
-                                                    <span>, @i.profesor2.ime @i.profesor2.priimek</span>
+                                                    <span>, @i.profesor2.ime @i.profesor2.priimek</span>    
                                                 }
                                             </td>
                                             <td>@i.predmet.letnik</td>
-                                            <td><!-- r.prijavanaizpit.datumPrijave --></td>
+                                            <td>@p.datumPrijave</td>
                                             @{ temp = sh.polaganjaVsa(@v.vpisnaStevilka, Convert.ToInt32(@i.predmetId), @v.studijskiProgram); }
                                             <td>@temp</td>
-                                            @{ temp = sh.polaganjaLetos(@v.id, @i.id); }
+                                            @{ temp = sh.polaganjaLetos(Convert.ToInt32(@v.id), Convert.ToInt32(@i.id)); }
                                             <td>@temp</td>
                                             <td>@i.predmet.kreditne</td>
                                             <td>@p.ocena.ocena</td>
@@ -291,7 +291,7 @@
                             {
                                 foreach (var p in @ViewBag.Prijave)
                                 {
-                                    if (i.studijskoletoId == v.studijskoLeto && i.izpitnirok.Contains(r) && p.vpisId == v.id && r.id == p.izpitnirokId)
+                                    if (i.studijskoletoId == v.studijskoLeto && i.izpitniroks.Contains(r) && p.vpisId == v.id && r.id == p.izpitnirokId)
                                     {
                                         pisal++;
                                         
@@ -313,7 +313,7 @@
                                             <td><!-- r.prijavanaizpit.datumPrijave --></td>
                                             @{ temp = sh.polaganjaVsa(@v.vpisnaStevilka, Convert.ToInt32(@i.predmetId), @v.studijskiProgram); }
                                             <td>@temp</td>
-                                            @{ temp = sh.polaganjaLetos(@v.id, @i.id); }
+                                            @{ temp = sh.polaganjaLetos(Convert.ToInt32(@v.id), Convert.ToInt32(@i.id)); }
                                             <td>@temp</td>
                                             <td>@i.predmet.kreditne</td>
                                             <td>@p.ocena.ocena</td>
