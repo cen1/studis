@@ -86,8 +86,26 @@ namespace studis.Models
             if (d.Month < 10) return d.Year - 1;
             else return d.Year;
         }
+
+        public int pridobiOceno(int prijavaId)
+        {
+            var ocena = db.ocenas.Where(o => o.prijavaId == prijavaId).FirstOrDefault();
+
+            if (ocena != null)
+            {
+                return ocena.ocena1;
+            }
+            else
+            {
+                return 0;
+            }       
+        }
+
+        public System.DateTime pridobiDatum(int prijavaId)
+        {
+            var datum = db.ocenas.Where(o => o.prijavaId == prijavaId).FirstOrDefault();
+
+            return datum.datum;
+        }
     }
-
-    
-
 }
