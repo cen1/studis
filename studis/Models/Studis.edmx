@@ -232,6 +232,7 @@
           <Property Name="datumPrijave" Type="datetime" Precision="0" Nullable="false" />
           <Property Name="datumOdjave" Type="datetime" Precision="0" />
           <Property Name="odjavilId" Type="int" />
+          <Property Name="prijavilId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="profesor">
           <Key>
@@ -688,6 +689,20 @@
             </Principal>
             <Dependent Role="prijavanaizpit">
               <PropertyRef Name="odjavilId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="prijava_prijavil_fk">
+          <End Role="my_aspnet_users" Type="Self.my_aspnet_users" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="prijavanaizpit" Type="Self.prijavanaizpit" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="my_aspnet_users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="prijavanaizpit">
+              <PropertyRef Name="prijavilId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1363,6 +1378,10 @@
             <End Role="my_aspnet_users" EntitySet="my_aspnet_users" />
             <End Role="prijavanaizpit" EntitySet="prijavanaizpit" />
           </AssociationSet>
+          <AssociationSet Name="prijava_prijavil_fk" Association="Self.prijava_prijavil_fk">
+            <End Role="my_aspnet_users" EntitySet="my_aspnet_users" />
+            <End Role="prijavanaizpit" EntitySet="prijavanaizpit" />
+          </AssociationSet>
           <AssociationSet Name="prijava_vpis_fk" Association="Self.prijava_vpis_fk">
             <End Role="vpis" EntitySet="vpis" />
             <End Role="prijavanaizpit" EntitySet="prijavanaizpit" />
@@ -1661,6 +1680,7 @@
           <NavigationProperty Name="students" Relationship="studisModel.userID_student_users" FromRole="my_aspnet_users" ToRole="student" />
           <NavigationProperty Name="kandidats" Relationship="studisModel.fk_userId" FromRole="my_aspnet_users" ToRole="kandidat" />
           <NavigationProperty Name="prijavanaizpits" Relationship="studisModel.prijava_odjavil_fk" FromRole="my_aspnet_users" ToRole="prijavanaizpit" />
+          <NavigationProperty Name="prijavanaizpits1" Relationship="studisModel.prijava_prijavil_fk" FromRole="my_aspnet_users" ToRole="prijavanaizpit" />
         </EntityType>
         <EntityContainer Name="studisEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="my_aspnet_applications" EntityType="Self.my_aspnet_applications" />
@@ -1925,6 +1945,10 @@
             <End Role="vpi" EntitySet="vpis" />
           </AssociationSet>
           <AssociationSet Name="prijava_odjavil_fk" Association="studisModel.prijava_odjavil_fk">
+            <End Role="my_aspnet_users" EntitySet="my_aspnet_users" />
+            <End Role="prijavanaizpit" EntitySet="prijavanaizpits" />
+          </AssociationSet>
+          <AssociationSet Name="prijava_prijavil_fk" Association="studisModel.prijava_prijavil_fk">
             <End Role="my_aspnet_users" EntitySet="my_aspnet_users" />
             <End Role="prijavanaizpit" EntitySet="prijavanaizpits" />
           </AssociationSet>
@@ -3000,6 +3024,8 @@
           <Property Name="datumOdjave" Type="DateTime" />
           <Property Name="odjavilId" Type="Int32" />
           <NavigationProperty Name="my_aspnet_users" Relationship="studisModel.prijava_odjavil_fk" FromRole="prijavanaizpit" ToRole="my_aspnet_users" />
+          <Property Name="prijavilId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="my_aspnet_users1" Relationship="studisModel.prijava_prijavil_fk" FromRole="prijavanaizpit" ToRole="my_aspnet_users" />
         </EntityType>
         <EntityType Name="tocke">
           <Key>
@@ -3082,6 +3108,20 @@
             </Principal>
             <Dependent Role="prijavanaizpit">
               <PropertyRef Name="odjavilId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="prijava_prijavil_fk">
+          <End Type="studisModel.my_aspnet_users" Role="my_aspnet_users" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="studisModel.prijavanaizpit" Role="prijavanaizpit" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="my_aspnet_users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="prijavanaizpit">
+              <PropertyRef Name="prijavilId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -3539,6 +3579,7 @@
           <EntitySetMapping Name="prijavanaizpits">
             <EntityTypeMapping TypeName="studisModel.prijavanaizpit">
               <MappingFragment StoreEntitySet="prijavanaizpit">
+                <ScalarProperty Name="prijavilId" ColumnName="prijavilId" />
                 <ScalarProperty Name="odjavilId" ColumnName="odjavilId" />
                 <ScalarProperty Name="datumOdjave" ColumnName="datumOdjave" />
                 <ScalarProperty Name="datumPrijave" ColumnName="datumPrijave" />
