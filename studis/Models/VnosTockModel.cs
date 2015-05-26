@@ -27,6 +27,7 @@ namespace studis.Models
         public int zaporednoSteviloPonavljanja { get; set; }
     
         //vnos točk&ocen
+        [Range(0, 100)]
         public int tocke { get; set; }
         public int ocena { get; set; }
     }

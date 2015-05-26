@@ -4,8 +4,10 @@
         Layout = "~/Views/Shared/_Layout.cshtml";
     }
 
-    <h2>Vnos Točk</h2>
+<h2>Vnos Točk</h2>
 
+@using (Html.BeginForm())
+{
     <table id="izpis" class="table">
         <tr>
             <th>Šifra predmeta</th>
@@ -42,6 +44,9 @@
             <th>
                 Zap. št. polaganja
             </th>
+            <th>
+                Št. točk
+            </th>
         </tr>
         @if (Model != null)
         {
@@ -66,11 +71,15 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.zaporednoSteviloPonavljanja)
                     </td>
+                    <td class="editor-field">
+                        @Html.TextBoxFor(modelItem => item.tocke, new { @type = "number" })
+                        @Html.ValidationMessageFor(modelItem => item.tocke)
+                    </td>
                 </tr>
             }
         }
-    </table><br/>
-    @if (User.IsInRole("Referent") || User.IsInRole("Profesor"))
-    {
-        <li>@Html.ActionLink("Vpiši", "VpisTock", "IzpitniRok", new { id = @ViewBag.idRoka }, null)</li>
-    }
+    </table>
+    <p>
+        <input id="submit" type="submit" value="Potrdi vnos">
+    </p>
+}
