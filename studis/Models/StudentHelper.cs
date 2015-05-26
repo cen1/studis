@@ -51,6 +51,30 @@ namespace studis.Models
             return sum;
         }
 
+        public int zaporednoPolaganje(int vpisna, int predmetId, int studijskiprogram)
+        {
+            int sum = 0;
+            bool reset = false;
+            student s = db.students.Find(vpisna);
+
+            foreach (var v in s.vpis.Where(a => a.studijskiProgram == studijskiprogram))
+            {
+                foreach (var p in v.prijavanaizpits)
+                {
+                    if (p.izpitnirok.izvajanje.predmetId == predmetId)
+                    {
+                        if (v.vrstaVpisa == 2 && reset == false) //ponavljanje
+                        {
+                            sum = 0;
+                            reset = true;
+                        }
+                        sum++;
+                    }
+                }
+            }
+            return sum;
+        }
+
         public vpi trenutniVpis(int vpisna)
         {
             return db.vpis.Where(a => a.vpisnaStevilka == vpisna).Where(b => b.studijskoLeto == this.trenutnoSolskoLeto()).FirstOrDefault();
