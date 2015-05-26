@@ -116,11 +116,14 @@ namespace studis.Controllers
                 // pridobi opravljanja izpitov
                 List<prijavanaizpit> prijave = new List<prijavanaizpit>();
                 {
-                    foreach (var v in vpisi)
+                    foreach (var r in roki.OrderByDescending(r => r.datum))
                     {
-                        foreach (var p in v.prijavanaizpits.Where(p => p.stanje == 2).ToList())
+                        foreach (var p in r.prijavanaizpits.Where(p => p.stanje == 2).ToList())
                         {
-                            prijave.Add(p);
+                            if (p.ocenas != null)
+                            {
+                                prijave.Add(p);
+                            }
                         }       
                     }
                 }
@@ -204,11 +207,14 @@ namespace studis.Controllers
                 // pridobi opravljanja izpitov
                 List<prijavanaizpit> prijave = new List<prijavanaizpit>();
                 {
-                    foreach (var v in vpisi)
+                    foreach (var r in roki)
                     {
-                        foreach (var p in v.prijavanaizpits.Where(p => p.stanje == 2).ToList())
+                        foreach (var p in r.prijavanaizpits.Where(p => p.stanje == 2).ToList())
                         {
-                            prijave.Add(p);
+                            if (p.ocenas != null)
+                            {
+                                prijave.Add(p);
+                            }
                         }
                     }
                 }

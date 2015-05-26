@@ -20,7 +20,7 @@
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="datum" Type="date" Nullable="false" />
+          <Property Name="datum" Type="datetime" Precision="0" Nullable="false" />
           <Property Name="ura" Type="datetime" Precision="0" />
           <Property Name="izvajanjeId" Type="uint" Nullable="false" />
           <Property Name="prostorId" Type="int" />
@@ -189,7 +189,7 @@
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ocena" Type="int" Nullable="false" />
           <Property Name="prijavaId" Type="uint" Nullable="false" />
           <Property Name="datum" Type="datetime" Precision="0" Nullable="false" />
@@ -391,7 +391,7 @@
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="tocke" Type="int" Nullable="false" />
           <Property Name="prijavaId" Type="uint" Nullable="false" />
           <Property Name="datum" Type="datetime" Precision="0" Nullable="false" />

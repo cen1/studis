@@ -227,19 +227,19 @@ namespace studis.Controllers
 
         // POST: IzpitniRok/Seznam/5
         [HttpPost]
-        public ActionResult Seznam(string id)
+        public ActionResult Seznam(int id)
         {
-            try
-            {
-                int idRoka = Convert.ToInt32(id);
-                izpitnirok rok = db.izpitniroks.Where(i => i.id == idRoka).SingleOrDefault();
+            //try
+            //{
+                //int idRoka = Convert.ToInt32(id);
+                izpitnirok rok = db.izpitniroks.Where(i => i.id == id).SingleOrDefault();
 
                 return RedirectToAction("SeznamPrijavljenihKandidatov", rok);
-            }
+            /*}
             catch
             {
                 return Seznam();
-            }
+            }*/
         }
 
         public ActionResult SeznamPrijavljenihKandidatov(izpitnirok rok)
@@ -503,9 +503,7 @@ namespace studis.Controllers
 
         public string GetDatumForIzpitniRok(int id)
         {
-
-            int iid = Convert.ToInt32(id);
-            var datum = db.izpitniroks.SingleOrDefault(r => r.id == iid).datum;
+            var datum = db.izpitniroks.SingleOrDefault(r => r.id == id).datum;
             return UserHelper.DateToString(datum);
         }
 
@@ -592,11 +590,11 @@ namespace studis.Controllers
         public string PreveriPrijave(int id)
         {
             int st = 0;
-            try
-            {
+            //try
+            //{
                 st = db.izpitniroks.SingleOrDefault(r => r.id == id).prijavanaizpits.Count();
-            }
-            catch (Exception e) { st = -1; }
+            //}
+            //catch (Exception e) { st = -1; }
             return st.ToString();
         }
 
