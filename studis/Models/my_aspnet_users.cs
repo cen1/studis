@@ -22,6 +22,7 @@ namespace studis.Models
             this.students = new HashSet<student>();
             this.kandidats = new HashSet<kandidat>();
             this.prijavanaizpits = new HashSet<prijavanaizpit>();
+            this.prijavanaizpits1 = new HashSet<prijavanaizpit>();
         }
     
         public int id { get; set; }
@@ -38,5 +39,6 @@ namespace studis.Models
         public virtual ICollection<student> students { get; set; }
         public virtual ICollection<kandidat> kandidats { get; set; }
         public virtual ICollection<prijavanaizpit> prijavanaizpits { get; set; }
+        public virtual ICollection<prijavanaizpit> prijavanaizpits1 { get; set; }
     }
 }
