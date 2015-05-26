@@ -1,8 +1,162 @@
 ﻿
 @{
-    ViewBag.Title = "Prijavi";
+    ViewBag.Title = "Prijava na izpiti";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 
-<h2>Prijavi</h2>
+@model studis.Models.PrijavaNaIzpitModel
+<h2>Prijava na izpit</h2>
 
+
+@using (Html.BeginForm())
+{
+    <div>
+        <fieldset>
+            
+            @if (User.IsInRole("Referent")) 
+            {
+                <!--Izbira Studenta-->
+                <div class="editor-label">
+                    @Html.LabelFor(m => m.student)
+                </div>
+                <div class="editor-field">
+                    @Html.DropDownListFor(m => m.student, (SelectList)ViewBag.Studenti, "Izberi študenta")
+                    @Html.ValidationMessageFor(m => m.student)
+                </div>
+            }
+
+            <!--Izbira Izvajanja-->
+            <div class="editor-label">
+                @Html.LabelFor(m => m.izvajanje)
+            </div>
+            <div class="editor-field">
+                @if (User.IsInRole("Student"))
+                {
+                    @Html.DropDownListFor(m => m.izvajanje, (SelectList)ViewBag.Izvajanja, "Izberi predmet")
+                } else
+                {
+                    @Html.DropDownListFor(m => m.izvajanje, (SelectList)ViewBag.Prazen)
+                }
+                @Html.ValidationMessageFor(m => m.izvajanje)
+            </div>
+
+            <!--Izbira IzpitnegaRoka-->
+            <div class="editor-label">
+                @Html.LabelFor(m => m.izpitniRok)
+            </div>
+            <div class="editor-field">
+                @Html.DropDownListFor(m => m.izpitniRok, (SelectList)ViewBag.Prazen)
+                @Html.ValidationMessageFor(m => m.izpitniRok)
+            </div>
+
+
+
+            <ul id="error" style="color:red;"></ul>
+
+            <ul id="warning" style="color:orange;"></ul>
+
+            <p>
+                <input id="submit" type="submit" value="Prijavi">
+            </p>
+        </fieldset>
+    </div>
+}
+
+<script language="javascript" type="text/javascript">
+    //napolni izvajanja
+    $(document).ready(function () {
+        $("#student").change(function () {
+            var url = "/IzpitniRokPrijava/GetIzvajanjaForStudent/" + $(this).val();
+            $.get(url, function (response) {
+                var izvajanja = $.parseJSON(response);
+                var ddlIzvajanja = $("#izvajanje");
+                if ($("#student predmet option:first-child").text() == "Izberi") {
+                    $("#student option:first-child").remove();
+                }
+                //pocisti
+                $("#izvajanje > option").remove();
+
+                //pocisti2
+                $("#izpitniRok > option").remove();
+                $("#izpitniRok").append('<option value="">Izberi</option>');
+
+                //napolni
+                if (izvajanja.length < 1) {
+                    //ddlIzvajanja.append('<option value="">Ni izvajalcev.</option>');
+                } else {
+                    //ddlIzvajanja.append('<option value="">Izberi</option>');
+                }
+                for (i = 0; i < izvajanja.length; i++) {
+                    ddlIzvajanja.append('<option value="' + izvajanja[i].Value + '">' + izvajanja[i].Text + '</option>');
+                }
+            });
+        });
+    });
+
+    //napolni izpitne roke
+    $(document).ready(function () {
+        $("#izvajanje").change(function () {
+            console.log("Parameter: " + $(this).val());
+            var url = "/IzpitniRokPrijava/GetIzpitniRoksForIzvajanja/" + $(this).val();
+            console.log("URL: " + url);
+            $.get(url, function (response) {
+                var izpitniRoks = $.parseJSON(response);
+                var ddlIzpitniRoks = $("#izpitniRok");
+                if ($("#izvajanje option:first-child").text() == "Izberi") {
+                    $("#izvajanje option:first-child").remove();
+                }
+                //pocisti
+                $("#izpitniRok > option").remove();
+
+                //napolni
+                if (izpitniRoks.length < 1) {
+                    //ddlIzpitniRoks.append('<option value="">"Ta predmet nima razpisanih rokov."</option>');
+                } else {
+                    //ddlIzpitniroks.append('<option value="">Izberi</option>');
+                }
+                for (i = 0; i < izpitniRoks.length; i++) {
+                    ddlIzpitniRoks.append('<option value="' + izpitniRoks[i].Value + '">' + izpitniRoks[i].Text + '</option>');
+                }
+            });
+        });
+    });
+
+    //klici preverjanje
+    $(document).ready(function () {
+        $("#izpitniRok").change(function () {
+            if ($("#izpitniRok option:first-child").text() == "Izberi") {
+                $("#izPitniRok option:first-child").remove();
+            }
+            
+            console.log("Parameter: " + $(this).val());
+            //var url = "/IzpitniRokPrijava/Preveri/" + $("#student").val() + "&" + $(this).val();
+            //console.log("URL: " + url);
+            $.ajax({
+                type: "POST", 
+                url: "/IzpitniRokPrijava/Preveri/",
+                data: { vpisna: $("#student").val(), izpitniRok: $(this).val() },
+                success: function (response) {
+                    //var opozorila = $.parseJSON(response);
+
+                    var ulOpozorila = $("#warning");
+                    console.log("V funkciji");
+                    
+                    /*
+                    //pocisti
+                    $("#warning > option").remove();
+
+                    //napolni
+
+                    for (i = 0; i < izpitniRoks.length; i++) {
+                        ddlIzpitniRoks.append('<option value="' + izpitniRoks[i].Value + '">' + izpitniRoks[i].Text + '</option>');
+                    }
+                    */
+                },
+                dataType: "json",
+                traditional: true
+            });
+        });
+    });
+</script>

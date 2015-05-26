@@ -4,12 +4,14 @@ using studis.Models;
 using System.Security.Cryptography;
 using System.Net.Mail;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace studis.Models
 {
     public class UserHelper
     {
         private studisEntities db;
+        private static studisEntities baza = new studisEntities();
 
         public UserHelper()
         {
@@ -19,6 +21,17 @@ namespace studis.Models
         public my_aspnet_users FindByName(String name)
         {
             return db.my_aspnet_users.Where(a => a.applicationId == 1).Where(b => b.name == name).FirstOrDefault();
+        }
+
+        public static student GetStudentByUserName(String name)
+        {
+            return baza.my_aspnet_users.Where(a => a.applicationId == 1).Where(b => b.name == name).FirstOrDefault().students.FirstOrDefault();
+        }
+
+        public static student GetStudentByVpisna(int vpisna)
+        {
+            Debug.WriteLine("Vpisna: " + vpisna);
+            return baza.students.FirstOrDefault(a => a.vpisnaStevilka == vpisna);
         }
 
         public my_aspnet_membership FindByEmail(String email)

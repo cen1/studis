@@ -254,6 +254,7 @@ namespace studis.Controllers
             if (izv.izvajalec3Id != null)
                 izvajalci = izvajalci + ", " + izv.profesor2.priimek + " " + izv.profesor2.ime;
 
+            ViewBag.idRoka = rok.id;
             ViewBag.izvajalci = izvajalci;
             ViewBag.prostor = predavalnica.naziv;
             ViewBag.datum = GetDatumForIzpitniRok(rok.id);
@@ -295,7 +296,7 @@ namespace studis.Controllers
                             if (vpisan.id == prijava.vpisId)
                             {
                                 leta.Add(vpisan.sifrant_studijskoleto.naziv);
-                                int polaganja = sh.polaganjaVsa(list[i].vpisnaStevilka, (int)izv.predmetId, vpisan.studijskiProgram);
+                                int polaganja = sh.zaporednoPolaganje(list[i].vpisnaStevilka, (int)izv.predmetId, vpisan.studijskiProgram);
                                 vsaPolaganja.Add(polaganja);
                             }
                         }
@@ -310,6 +311,84 @@ namespace studis.Controllers
             return View(list);
         }
 
+
+        /*public ActionResult VpisTock(int rokID)
+        {
+            List<VnosTockModel> listVnosov = new List<VnosTockModel>();
+            ////////////////////////////seznam prijavljenih študentov
+
+            //podatki o izpitnem roku
+            izpitnirok rok = db.izpitniroks.Where(r => r.id == rokID).SingleOrDefault();
+            sifrant_prostor predavalnica = db.sifrant_prostor.Where(s => s.id == rok.prostorId).SingleOrDefault();
+            izvajanje izv = db.izvajanjes.Where(s => s.id == rokID).SingleOrDefault();
+
+            string izvajalci = izv.profesor.priimek + " " + izv.profesor.ime;
+            if (izv.izvajalec2Id != null)
+                izvajalci = izvajalci + ", " + izv.profesor1.priimek + " " + izv.profesor1.ime;
+            if (izv.izvajalec3Id != null)
+                izvajalci = izvajalci + ", " + izv.profesor2.priimek + " " + izv.profesor2.ime;
+
+            ViewBag.idRoka = rokID;
+            ViewBag.izvajalci = izvajalci;
+            ViewBag.prostor = predavalnica.naziv;
+            ViewBag.datum = GetDatumForIzpitniRok(rokID);
+            ViewBag.ura = UserHelper.TimeToString((DateTime)rok.ura);
+            ViewBag.sifraPredmeta = izv.predmetId;
+            ViewBag.imePredmeta = izv.predmet.ime;
+
+
+            //pridobi prijavljene študente
+            var prijave = db.prijavanaizpits.Where(p => p.izpitnirokId == rok.id).ToList();
+
+            List<student> list = new List<student>();
+            List<string> leta = new List<string>();
+            List<int> vsaPolaganja = new List<int>();
+            StudentHelper sh = new StudentHelper();
+            foreach (prijavanaizpit prijava in prijave)
+            {
+                vpi vpiss = db.vpis.Where(v => v.id == prijava.vpisId).SingleOrDefault();
+                student st = db.students.Where(s => s.vpisnaStevilka == vpiss.vpisnaStevilka).SingleOrDefault();
+
+                if (st != null)
+                {
+                    list.Add(st);
+
+
+                }
+            }
+
+            if (list.Any())
+            {
+                //uredi seznam študentov
+                list = list.OrderBy(o => o.priimek).ToList();
+
+                //naredi seznam let poslušanja predmeta v enakem vrstnem redu kot so študenti za izpis
+                for (int i = 0; i < list.Count; i++)
+                {
+                    foreach (vpi vpisan in list[i].vpis)
+                    {
+                        foreach (prijavanaizpit prijava in prijave)
+                        {
+                            if (vpisan.id == prijava.vpisId)
+                            {
+                                leta.Add(vpisan.sifrant_studijskoleto.naziv);
+                                int polaganja = sh.zaporednoPolaganje(list[i].vpisnaStevilka, (int)izv.predmetId, vpisan.studijskiProgram);
+                                vsaPolaganja.Add(polaganja);
+                            }
+                        }
+                    }
+                }
+                ViewBag.years = leta;
+                ViewBag.vsaPolaganja = vsaPolaganja;
+            }
+            else
+                list = null;
+            ////////////konec seznama prijavljenih študentov
+
+
+
+            return View(list);
+        }*/
 
         /*
         public string GetProfesorsForPredmet(int id)
