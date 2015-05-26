@@ -229,17 +229,16 @@ namespace studis.Controllers
         [HttpPost]
         public ActionResult Seznam(int id)
         {
-            //try
-            //{
-                //int idRoka = Convert.ToInt32(id);
+            try
+            {
                 izpitnirok rok = db.izpitniroks.Where(i => i.id == id).SingleOrDefault();
 
                 return RedirectToAction("SeznamPrijavljenihKandidatov", rok);
-            /*}
+            }
             catch
             {
                 return Seznam();
-            }*/
+            }
         }
 
         public ActionResult SeznamPrijavljenihKandidatov(izpitnirok rok)
@@ -298,7 +297,9 @@ namespace studis.Controllers
                             if (vpisan.id == prijava.vpisId)
                             {
                                 leta.Add(vpisan.sifrant_studijskoleto.naziv);
-                                int polaganja = sh.zaporednoPolaganje(list[i].vpisnaStevilka, (int)izv.predmetId, vpisan.studijskiProgram);
+
+
+                                int polaganja = sh.zaporednoPolaganje(list[i].vpisnaStevilka, (int)izv.predmetId, vpisan.studijskiProgram, prijava.izpitnirok.datum);
                                 vsaPolaganja.Add(polaganja);
                             }
                         }
@@ -367,7 +368,7 @@ namespace studis.Controllers
                             if (vpisan.id == prijava1.vpisId)
                             {
                                 vnos.studijskoLeto = vpisan.sifrant_studijskoleto.naziv;
-                                vnos.zaporednoSteviloPonavljanja = sh.zaporednoPolaganje(st.vpisnaStevilka, (int)izv.predmetId, vpisan.studijskiProgram);
+                                vnos.zaporednoSteviloPonavljanja = sh.zaporednoPolaganje(st.vpisnaStevilka, (int)izv.predmetId, vpisan.studijskiProgram, prijava1.izpitnirok.datum);
                             }
                         }
                     }
@@ -590,11 +591,11 @@ namespace studis.Controllers
         public string PreveriPrijave(int id)
         {
             int st = 0;
-            //try
-            //{
+            try
+            {
                 st = db.izpitniroks.SingleOrDefault(r => r.id == id).prijavanaizpits.Count();
-            //}
-            //catch (Exception e) { st = -1; }
+            }
+            catch (Exception e) { st = -1; }
             return st.ToString();
         }
 
