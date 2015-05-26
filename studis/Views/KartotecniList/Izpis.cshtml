@@ -104,7 +104,7 @@
                             {
                                 foreach (var p in @ViewBag.Prijave)
                                 {
-                                    if (i.studijskoletoId == v.studijskoLeto && i.izpitniroks.Contains(r) && p.vpisId == v.id && r.id == p.izpitnirokId)
+                                    if (i.studijskoletoId == v.studijskoLeto && i.izpitniroks.Contains(r) && p.vpisId == v.id && r.id == p.izpitnirokId && pisal == 0)
                                     {
                                         pisal++;
                                     
