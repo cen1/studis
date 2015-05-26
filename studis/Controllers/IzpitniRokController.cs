@@ -254,8 +254,6 @@ namespace studis.Controllers
                 izvajalci = izvajalci + ", " + izv.profesor2.priimek + " " + izv.profesor2.ime;
 
             ViewBag.idRoka = rok.id;
-            Debug.WriteLine("id roka_seznam: " + rok.id);
-
             ViewBag.izvajalci = izvajalci;
             ViewBag.prostor = predavalnica.naziv;
             ViewBag.datum = GetDatumForIzpitniRok(rok.id);
@@ -297,8 +295,6 @@ namespace studis.Controllers
                             if (vpisan.id == prijava.vpisId)
                             {
                                 leta.Add(vpisan.sifrant_studijskoleto.naziv);
-
-
                                 int polaganja = sh.zaporednoPolaganje(list[i].vpisnaStevilka, (int)izv.predmetId, vpisan.studijskiProgram, prijava.izpitnirok.datum);
                                 vsaPolaganja.Add(polaganja);
                             }
