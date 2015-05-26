@@ -17,6 +17,7 @@ namespace studis.Models
         public int id { get; set; }
         public int tocke1 { get; set; }
         public long prijavaId { get; set; }
+        public System.DateTime datum { get; set; }
     
         public virtual prijavanaizpit prijavanaizpit { get; set; }
     }

@@ -572,7 +572,9 @@ namespace studis.Controllers
             int steviloOcen = 0;
             try
             {
-                steviloOcen = db.izpitniroks.SingleOrDefault(r => r.id == id).ocenas.Count;
+                var prijave = db.izpitniroks.SingleOrDefault(r => r.id == id).prijavanaizpits;
+                foreach (var p in prijave)
+                    steviloOcen += p.ocenas.Count();
             }
             catch (Exception e)
             {

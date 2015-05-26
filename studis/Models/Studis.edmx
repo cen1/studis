@@ -192,6 +192,7 @@
           <Property Name="id" Type="int" Nullable="false" />
           <Property Name="ocena" Type="int" Nullable="false" />
           <Property Name="prijavaId" Type="uint" Nullable="false" />
+          <Property Name="datum" Type="datetime" Precision="0" Nullable="false" />
         </EntityType>
         <EntityType Name="password_recovery">
           <Key>
@@ -228,6 +229,10 @@
           <Property Name="vpisId" Type="int" Nullable="false" />
           <Property Name="izpitnirokId" Type="int" Nullable="false" />
           <Property Name="stanje" Type="int" Nullable="false" />
+          <Property Name="datumPrijave" Type="datetime" Precision="0" Nullable="false" />
+          <Property Name="datumOdjave" Type="datetime" Precision="0" />
+          <Property Name="odjavilId" Type="int" />
+          <Property Name="prijavilId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="profesor">
           <Key>
@@ -389,6 +394,7 @@
           <Property Name="id" Type="int" Nullable="false" />
           <Property Name="tocke" Type="int" Nullable="false" />
           <Property Name="prijavaId" Type="uint" Nullable="false" />
+          <Property Name="datum" Type="datetime" Precision="0" Nullable="false" />
         </EntityType>
         <EntityType Name="vpis">
           <Key>
@@ -669,6 +675,34 @@
             </Principal>
             <Dependent Role="prijavanaizpit">
               <PropertyRef Name="izpitnirokId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="prijava_odjavil_fk">
+          <End Role="my_aspnet_users" Type="Self.my_aspnet_users" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="prijavanaizpit" Type="Self.prijavanaizpit" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="my_aspnet_users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="prijavanaizpit">
+              <PropertyRef Name="odjavilId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="prijava_prijavil_fk">
+          <End Role="my_aspnet_users" Type="Self.my_aspnet_users" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="prijavanaizpit" Type="Self.prijavanaizpit" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="my_aspnet_users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="prijavanaizpit">
+              <PropertyRef Name="prijavilId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1340,6 +1374,14 @@
             <End Role="izpitnirok" EntitySet="izpitnirok" />
             <End Role="prijavanaizpit" EntitySet="prijavanaizpit" />
           </AssociationSet>
+          <AssociationSet Name="prijava_odjavil_fk" Association="Self.prijava_odjavil_fk">
+            <End Role="my_aspnet_users" EntitySet="my_aspnet_users" />
+            <End Role="prijavanaizpit" EntitySet="prijavanaizpit" />
+          </AssociationSet>
+          <AssociationSet Name="prijava_prijavil_fk" Association="Self.prijava_prijavil_fk">
+            <End Role="my_aspnet_users" EntitySet="my_aspnet_users" />
+            <End Role="prijavanaizpit" EntitySet="prijavanaizpit" />
+          </AssociationSet>
           <AssociationSet Name="prijava_vpis_fk" Association="Self.prijava_vpis_fk">
             <End Role="vpis" EntitySet="vpis" />
             <End Role="prijavanaizpit" EntitySet="prijavanaizpit" />
@@ -1637,6 +1679,8 @@
           <NavigationProperty Name="password_recovery" Relationship="studisModel.pr_to_user_fk" FromRole="my_aspnet_users" ToRole="password_recovery" />
           <NavigationProperty Name="students" Relationship="studisModel.userID_student_users" FromRole="my_aspnet_users" ToRole="student" />
           <NavigationProperty Name="kandidats" Relationship="studisModel.fk_userId" FromRole="my_aspnet_users" ToRole="kandidat" />
+          <NavigationProperty Name="prijavanaizpits" Relationship="studisModel.prijava_odjavil_fk" FromRole="my_aspnet_users" ToRole="prijavanaizpit" />
+          <NavigationProperty Name="prijavanaizpits1" Relationship="studisModel.prijava_prijavil_fk" FromRole="my_aspnet_users" ToRole="prijavanaizpit" />
         </EntityType>
         <EntityContainer Name="studisEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="my_aspnet_applications" EntityType="Self.my_aspnet_applications" />
@@ -1899,6 +1943,14 @@
           <AssociationSet Name="vpisinizvajanje" Association="studisModel.vpisinizvajanje">
             <End Role="izvajanje" EntitySet="izvajanjes" />
             <End Role="vpi" EntitySet="vpis" />
+          </AssociationSet>
+          <AssociationSet Name="prijava_odjavil_fk" Association="studisModel.prijava_odjavil_fk">
+            <End Role="my_aspnet_users" EntitySet="my_aspnet_users" />
+            <End Role="prijavanaizpit" EntitySet="prijavanaizpits" />
+          </AssociationSet>
+          <AssociationSet Name="prijava_prijavil_fk" Association="studisModel.prijava_prijavil_fk">
+            <End Role="my_aspnet_users" EntitySet="my_aspnet_users" />
+            <End Role="prijavanaizpit" EntitySet="prijavanaizpits" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="ip_lock">
@@ -2918,6 +2970,7 @@
           <Property Name="ocena1" Type="Int32" Nullable="false" />
           <Property Name="prijavaId" Type="Int64" Nullable="false" />
           <NavigationProperty Name="prijavanaizpit" Relationship="studisModel.ocena_prijava_fk" FromRole="ocena" ToRole="prijavanaizpit" />
+          <Property Name="datum" Type="DateTime" Nullable="false" />
         </EntityType>
         <EntityType Name="sifrant_prostor">
           <Key>
@@ -2967,6 +3020,12 @@
           <NavigationProperty Name="ocenas" Relationship="studisModel.ocena_prijava_fk" FromRole="prijavanaizpit" ToRole="ocena" />
           <NavigationProperty Name="vpi" Relationship="studisModel.prijava_vpis_fk" FromRole="prijavanaizpit" ToRole="vpi" />
           <NavigationProperty Name="tockes" Relationship="studisModel.tocke_prijava_fk" FromRole="prijavanaizpit" ToRole="tocke" />
+          <Property Name="datumPrijave" Type="DateTime" Nullable="false" />
+          <Property Name="datumOdjave" Type="DateTime" />
+          <Property Name="odjavilId" Type="Int32" />
+          <NavigationProperty Name="my_aspnet_users" Relationship="studisModel.prijava_odjavil_fk" FromRole="prijavanaizpit" ToRole="my_aspnet_users" />
+          <Property Name="prijavilId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="my_aspnet_users1" Relationship="studisModel.prijava_prijavil_fk" FromRole="prijavanaizpit" ToRole="my_aspnet_users" />
         </EntityType>
         <EntityType Name="tocke">
           <Key>
@@ -2976,6 +3035,7 @@
           <Property Name="tocke1" Type="Int32" Nullable="false" />
           <Property Name="prijavaId" Type="Int64" Nullable="false" />
           <NavigationProperty Name="prijavanaizpit" Relationship="studisModel.tocke_prijava_fk" FromRole="tocke" ToRole="prijavanaizpit" />
+          <Property Name="datum" Type="DateTime" Nullable="false" />
         </EntityType>
         <Association Name="prijava_izpitnirok_fk">
           <End Type="studisModel.izpitnirok" Role="izpitnirok" Multiplicity="1">
@@ -3036,6 +3096,34 @@
         <Association Name="vpisinizvajanje">
           <End Type="studisModel.izvajanje" Role="izvajanje" Multiplicity="*" />
           <End Type="studisModel.vpi" Role="vpi" Multiplicity="*" />
+        </Association>
+        <Association Name="prijava_odjavil_fk">
+          <End Type="studisModel.my_aspnet_users" Role="my_aspnet_users" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="studisModel.prijavanaizpit" Role="prijavanaizpit" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="my_aspnet_users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="prijavanaizpit">
+              <PropertyRef Name="odjavilId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="prijava_prijavil_fk">
+          <End Type="studisModel.my_aspnet_users" Role="my_aspnet_users" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="studisModel.prijavanaizpit" Role="prijavanaizpit" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="my_aspnet_users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="prijavanaizpit">
+              <PropertyRef Name="prijavilId" />
+            </Dependent>
+          </ReferentialConstraint>
         </Association>
         </Schema>
     </edmx:ConceptualModels>
@@ -3473,6 +3561,7 @@
           <EntitySetMapping Name="ocenas">
             <EntityTypeMapping TypeName="studisModel.ocena">
               <MappingFragment StoreEntitySet="ocena">
+                <ScalarProperty Name="datum" ColumnName="datum" />
                 <ScalarProperty Name="prijavaId" ColumnName="prijavaId" />
                 <ScalarProperty Name="ocena1" ColumnName="ocena" />
                 <ScalarProperty Name="id" ColumnName="id" />
@@ -3490,6 +3579,10 @@
           <EntitySetMapping Name="prijavanaizpits">
             <EntityTypeMapping TypeName="studisModel.prijavanaizpit">
               <MappingFragment StoreEntitySet="prijavanaizpit">
+                <ScalarProperty Name="prijavilId" ColumnName="prijavilId" />
+                <ScalarProperty Name="odjavilId" ColumnName="odjavilId" />
+                <ScalarProperty Name="datumOdjave" ColumnName="datumOdjave" />
+                <ScalarProperty Name="datumPrijave" ColumnName="datumPrijave" />
                 <ScalarProperty Name="stanje" ColumnName="stanje" />
                 <ScalarProperty Name="izpitnirokId" ColumnName="izpitnirokId" />
                 <ScalarProperty Name="vpisId" ColumnName="vpisId" />
@@ -3500,6 +3593,7 @@
           <EntitySetMapping Name="tockes">
             <EntityTypeMapping TypeName="studisModel.tocke">
               <MappingFragment StoreEntitySet="tocke">
+                <ScalarProperty Name="datum" ColumnName="datum" />
                 <ScalarProperty Name="prijavaId" ColumnName="prijavaId" />
                 <ScalarProperty Name="tocke1" ColumnName="tocke" />
                 <ScalarProperty Name="id" ColumnName="id" />

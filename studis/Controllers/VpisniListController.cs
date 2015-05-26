@@ -1355,15 +1355,16 @@ namespace studis.Controllers
                 {
                     foreach (var o in ph.obvezni2())
                     {
-                        //
+                        izvajanje i = db.izvajanjes.Where(a => a.predmetId == o.id).Where(b => b.studijskoletoId == DateTime.Now.Year).First();
+                        vl.izvajanjes.Add(i);
                     }
                 }
 
                 //dodaj izbirne
                 foreach (var p in dodaj_p) {
-                    //
+                    izvajanje i = db.izvajanjes.Where(a => a.predmetId == p.id).Where(b => b.studijskoletoId == DateTime.Now.Year).First();
+                    vl.izvajanjes.Add(i);
                 }
-                
 
                 try
                 {
@@ -1480,13 +1481,15 @@ namespace studis.Controllers
                 {
                     foreach (var o in ph.obvezni3())
                     {
-                        //
+                        izvajanje i = db.izvajanjes.Where(a => a.predmetId == o.id).Where(b => b.studijskoletoId == DateTime.Now.Year).First();
+                        vl.izvajanjes.Add(i);
                     }
                 }
                 //dodaj izbirne
                 foreach (var p in dodaj_p)
                 {
-                    //
+                    izvajanje i = db.izvajanjes.Where(a => a.predmetId == p.id).Where(b => b.studijskoletoId == DateTime.Now.Year).First();
+                    vl.izvajanjes.Add(i);
                 }
 
                 try
@@ -1616,13 +1619,15 @@ namespace studis.Controllers
                     {
                         foreach (var o in ph.obvezni3())
                         {
-                            //
+                            izvajanje i = db.izvajanjes.Where(a => a.predmetId == o.id).Where(b => b.studijskoletoId == DateTime.Now.Year).First();
+                            vl.izvajanjes.Add(i);
                         }
                     }
                     //dodaj izbirne
                     foreach (var p in dodaj_p)
                     {
-                        //
+                        izvajanje i = db.izvajanjes.Where(a => a.predmetId == p.id).Where(b => b.studijskoletoId == DateTime.Now.Year).First();
+                        vl.izvajanjes.Add(i);
                     }
 
                     try

@@ -24,10 +24,16 @@ namespace studis.Models
         public int vpisId { get; set; }
         public int izpitnirokId { get; set; }
         public int stanje { get; set; }
+        public System.DateTime datumPrijave { get; set; }
+        public Nullable<System.DateTime> datumOdjave { get; set; }
+        public Nullable<int> odjavilId { get; set; }
+        public int prijavilId { get; set; }
     
         public virtual izpitnirok izpitnirok { get; set; }
         public virtual ICollection<ocena> ocenas { get; set; }
         public virtual vpi vpi { get; set; }
         public virtual ICollection<tocke> tockes { get; set; }
+        public virtual my_aspnet_users my_aspnet_users { get; set; }
+        public virtual my_aspnet_users my_aspnet_users1 { get; set; }
     }
 }
