@@ -16,8 +16,6 @@ namespace studis.Models
     {
         public izpitnirok()
         {
-            this.students = new HashSet<student>();
-            this.ocenas = new HashSet<ocena>();
             this.prijavanaizpits = new HashSet<prijavanaizpit>();
         }
     
@@ -28,8 +26,6 @@ namespace studis.Models
         public Nullable<int> prostorId { get; set; }
     
         public virtual izvajanje izvajanje { get; set; }
-        public virtual ICollection<student> students { get; set; }
-        public virtual ICollection<ocena> ocenas { get; set; }
         public virtual sifrant_prostor sifrant_prostor { get; set; }
         public virtual ICollection<prijavanaizpit> prijavanaizpits { get; set; }
     }

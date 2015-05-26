@@ -111,6 +111,7 @@
         <AssociationConnector Association="studisModel.prijava_vpis_fk" />
         <AssociationConnector Association="studisModel.tocke_prijava_fk" />
         <AssociationConnector Association="studisModel.vpisinizvajanje" />
+        <AssociationConnector Association="studisModel.prijava_odjavil_fk" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

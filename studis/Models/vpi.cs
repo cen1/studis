@@ -16,7 +16,6 @@ namespace studis.Models
     {
         public vpi()
         {
-            this.ocenas = new HashSet<ocena>();
             this.prijavanaizpits = new HashSet<prijavanaizpit>();
             this.izvajanjes = new HashSet<izvajanje>();
         }
@@ -57,7 +56,6 @@ namespace studis.Models
         public virtual sifrant_vrstavpisa sifrant_vrstavpisa { get; set; }
         public virtual student student { get; set; }
         public virtual sifrant_smer sifrant_smer { get; set; }
-        public virtual ICollection<ocena> ocenas { get; set; }
         public virtual ICollection<prijavanaizpit> prijavanaizpits { get; set; }
         public virtual ICollection<izvajanje> izvajanjes { get; set; }
     }
