@@ -122,4 +122,41 @@
             });
         });
     });
+
+    //klici preverjanje
+    $(document).ready(function () {
+        $("#izpitniRok").change(function () {
+            if ($("#izpitniRok option:first-child").text() == "Izberi") {
+                $("#izPitniRok option:first-child").remove();
+            }
+            
+            console.log("Parameter: " + $(this).val());
+            //var url = "/IzpitniRokPrijava/Preveri/" + $("#student").val() + "&" + $(this).val();
+            //console.log("URL: " + url);
+            $.ajax({
+                type: "POST", 
+                url: "/IzpitniRokPrijava/Preveri/",
+                data: { vpisna: $("#student").val(), izpitniRok: $(this).val() },
+                success: function (response) {
+                    //var opozorila = $.parseJSON(response);
+
+                    var ulOpozorila = $("#warning");
+                    console.log("V funkciji");
+                    
+                    /*
+                    //pocisti
+                    $("#warning > option").remove();
+
+                    //napolni
+
+                    for (i = 0; i < izpitniRoks.length; i++) {
+                        ddlIzpitniRoks.append('<option value="' + izpitniRoks[i].Value + '">' + izpitniRoks[i].Text + '</option>');
+                    }
+                    */
+                },
+                dataType: "json",
+                traditional: true
+            });
+        });
+    });
 </script>
