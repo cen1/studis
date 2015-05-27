@@ -89,13 +89,7 @@
         <AssociationConnector Association="studisModel.vpis_s_smer" />
         <EntityTypeShape EntityType="studisModel.sklep" Width="1.5" PointX="26.125" PointY="10.625" />
         <AssociationConnector Association="studisModel.sklep_student" />
-        <EntityTypeShape EntityType="studisModel.izvajanje" Width="1.5" PointX="31.75" PointY="10.625" />
-        <AssociationConnector Association="studisModel.izvajanje_i1_fk" />
-        <AssociationConnector Association="studisModel.izvajanje_i2_fk" />
-        <AssociationConnector Association="studisModel.izvajanje_i3_fk" />
-        <AssociationConnector Association="studisModel.izvajanje_predmet_fk" />
         <EntityTypeShape EntityType="studisModel.izpitnirok" Width="1.5" PointX="39.125" PointY="1.75" />
-        <AssociationConnector Association="studisModel.izpitnirok_izvajanje_fk" />
         <AssociationConnector Association="studisModel.izpitnirokinstudent" />
         <EntityTypeShape EntityType="studisModel.ocena" Width="1.5" PointX="44.375" PointY="1.75" />
         <AssociationConnector Association="studisModel.ocena_izpitnirok_fk" />
@@ -103,16 +97,24 @@
         <AssociationConnector Association="studisModel.ocena_vpis" />
         <EntityTypeShape EntityType="studisModel.sifrant_prostor" Width="1.5" PointX="0.75" PointY="10.5" />
         <AssociationConnector Association="studisModel.izpitnirok_prostor_fk" />
-        <AssociationConnector Association="studisModel.izvajanje_studijskoleto_fk" />
         <EntityTypeShape EntityType="studisModel.prijavanaizpit" Width="1.5" PointX="40.875" PointY="1.75" />
         <EntityTypeShape EntityType="studisModel.tocke" Width="1.5" PointX="42.625" PointY="1.75" />
         <AssociationConnector Association="studisModel.prijava_izpitnirok_fk" />
         <AssociationConnector Association="studisModel.ocena_prijava_fk" />
         <AssociationConnector Association="studisModel.prijava_vpis_fk" />
         <AssociationConnector Association="studisModel.tocke_prijava_fk" />
-        <AssociationConnector Association="studisModel.vpisinizvajanje" />
         <AssociationConnector Association="studisModel.prijava_odjavil_fk" />
         <AssociationConnector Association="studisModel.prijava_prijavil_fk" />
+        <EntityTypeShape EntityType="studisModel.izvajanjeleto" Width="1.5" PointX="36" PointY="9.25" />
+        <AssociationConnector Association="studisModel.izvajanjeleto_leto_fk" />
+        <EntityTypeShape EntityType="studisModel.izvajanje" Width="1.5" PointX="31.75" PointY="10.75" />
+        <AssociationConnector Association="studisModel.izpitnirok_izvajanje_fk" />
+        <AssociationConnector Association="studisModel.izvajanje_i1_fk2" />
+        <AssociationConnector Association="studisModel.izvajanje_i2_fk2" />
+        <AssociationConnector Association="studisModel.izvajanje_i3_fk2" />
+        <AssociationConnector Association="studisModel.izvajanje_predmet_fk2" />
+        <AssociationConnector Association="studisModel.izvajanjeleto_izvajanje_fk" />
+        <AssociationConnector Association="studisModel.vpisinizvajanje" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

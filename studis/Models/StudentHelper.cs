@@ -16,6 +16,7 @@ namespace studis.Models
             db = new studisEntities();
         }
 
+        // vrne končni seštevek polaganj za to leto
         public int polaganjaLetos(int vpisId, int izvajanjeId)
         {
             int sum = 0;
@@ -27,6 +28,19 @@ namespace studis.Models
             return sum;
         }
 
+        // vrne zaporedno polaganje za to leto
+        public int zaporednoPolaganjaLetos(int vpisId, int izvajanjeId, int rokId)
+        {
+            int sum = 0;
+            vpi v = db.vpis.Find(vpisId);
+            foreach (var p in v.prijavanaizpits.Where(a => a.izpitnirok.izvajanjeId == izvajanjeId))
+            {
+                if (p.stanje == 2 && p.izpitnirok.id <= rokId) sum++;
+            }
+            return sum;
+        }
+
+        // vrne končni seštevek polaganj
         public int polaganjaVsa(int vpisna, int predmetId, int studijskiprogram)
         {
             int sum = 0;
@@ -51,6 +65,7 @@ namespace studis.Models
             return sum;
         }
 
+        // vrne zaporedno stevilko izpita
         public int zaporednoPolaganje(int vpisna, int predmetId, int studijskiprogram, DateTime datum)
         {
             int sum = 0;

@@ -34,7 +34,14 @@
           <Property Name="izvajalec1Id" Type="uint" Nullable="false" />
           <Property Name="izvajalec2Id" Type="uint" />
           <Property Name="izvajalec3Id" Type="uint" />
+        </EntityType>
+        <EntityType Name="izvajanjeleto">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="studijskoletoId" Type="int" Nullable="false" />
+          <Property Name="izvajanjeId" Type="uint" Nullable="false" />
         </EntityType>
         <EntityType Name="kandidat">
           <Key>
@@ -552,16 +559,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="izvajanje_studijskoleto_fk">
+        <Association Name="izvajanjeleto_izvajanje_fk">
+          <End Role="izvajanje" Type="Self.izvajanje" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="izvajanjeleto" Type="Self.izvajanjeleto" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="izvajanje">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="izvajanjeleto">
+              <PropertyRef Name="izvajanjeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="izvajanjeleto_leto_fk">
           <End Role="sifrant_studijskoleto" Type="Self.sifrant_studijskoleto" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
-          <End Role="izvajanje" Type="Self.izvajanje" Multiplicity="*" />
+          <End Role="izvajanjeleto" Type="Self.izvajanjeleto" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="sifrant_studijskoleto">
               <PropertyRef Name="id" />
             </Principal>
-            <Dependent Role="izvajanje">
+            <Dependent Role="izvajanjeleto">
               <PropertyRef Name="studijskoletoId" />
             </Dependent>
           </ReferentialConstraint>
@@ -1266,6 +1287,7 @@
           <EntitySet Name="ip_lock" EntityType="Self.ip_lock" Schema="studis" store:Type="Tables" />
           <EntitySet Name="izpitnirok" EntityType="Self.izpitnirok" Schema="studis" store:Type="Tables" />
           <EntitySet Name="izvajanje" EntityType="Self.izvajanje" Schema="studis" store:Type="Tables" />
+          <EntitySet Name="izvajanjeleto" EntityType="Self.izvajanjeleto" Schema="studis" store:Type="Tables" />
           <EntitySet Name="kandidat" EntityType="Self.kandidat" Schema="studis" store:Type="Tables" />
           <EntitySet Name="modul" EntityType="Self.modul" Schema="studis" store:Type="Tables" />
           <EntitySet Name="my_aspnet_applications" EntityType="Self.my_aspnet_applications" Schema="studis" store:Type="Tables" />
@@ -1338,9 +1360,13 @@
             <End Role="predmet" EntitySet="predmet" />
             <End Role="izvajanje" EntitySet="izvajanje" />
           </AssociationSet>
-          <AssociationSet Name="izvajanje_studijskoleto_fk" Association="Self.izvajanje_studijskoleto_fk">
-            <End Role="sifrant_studijskoleto" EntitySet="sifrant_studijskoleto" />
+          <AssociationSet Name="izvajanjeleto_izvajanje_fk" Association="Self.izvajanjeleto_izvajanje_fk">
             <End Role="izvajanje" EntitySet="izvajanje" />
+            <End Role="izvajanjeleto" EntitySet="izvajanjeleto" />
+          </AssociationSet>
+          <AssociationSet Name="izvajanjeleto_leto_fk" Association="Self.izvajanjeleto_leto_fk">
+            <End Role="sifrant_studijskoleto" EntitySet="sifrant_studijskoleto" />
+            <End Role="izvajanjeleto" EntitySet="izvajanjeleto" />
           </AssociationSet>
           <AssociationSet Name="membership_to_users" Association="Self.membership_to_users">
             <End Role="my_aspnet_users" EntitySet="my_aspnet_users" />
@@ -1890,37 +1916,12 @@
             <End Role="student" EntitySet="students" />
             <End Role="sklep" EntitySet="skleps" />
           </AssociationSet>
-          <EntitySet Name="izvajanjes" EntityType="studisModel.izvajanje" />
-          <AssociationSet Name="izvajanje_i1_fk" Association="studisModel.izvajanje_i1_fk">
-            <End Role="profesor" EntitySet="profesors" />
-            <End Role="izvajanje" EntitySet="izvajanjes" />
-          </AssociationSet>
-          <AssociationSet Name="izvajanje_i2_fk" Association="studisModel.izvajanje_i2_fk">
-            <End Role="profesor" EntitySet="profesors" />
-            <End Role="izvajanje" EntitySet="izvajanjes" />
-          </AssociationSet>
-          <AssociationSet Name="izvajanje_i3_fk" Association="studisModel.izvajanje_i3_fk">
-            <End Role="profesor" EntitySet="profesors" />
-            <End Role="izvajanje" EntitySet="izvajanjes" />
-          </AssociationSet>
-          <AssociationSet Name="izvajanje_predmet_fk" Association="studisModel.izvajanje_predmet_fk">
-            <End Role="predmet" EntitySet="predmets" />
-            <End Role="izvajanje" EntitySet="izvajanjes" />
-          </AssociationSet>
           <EntitySet Name="izpitniroks" EntityType="studisModel.izpitnirok" />
-          <AssociationSet Name="izpitnirok_izvajanje_fk" Association="studisModel.izpitnirok_izvajanje_fk">
-            <End Role="izvajanje" EntitySet="izvajanjes" />
-            <End Role="izpitnirok" EntitySet="izpitniroks" />
-          </AssociationSet>
           <EntitySet Name="ocenas" EntityType="studisModel.ocena" />
           <EntitySet Name="sifrant_prostor" EntityType="studisModel.sifrant_prostor" />
           <AssociationSet Name="izpitnirok_prostor_fk" Association="studisModel.izpitnirok_prostor_fk">
             <End Role="sifrant_prostor" EntitySet="sifrant_prostor" />
             <End Role="izpitnirok" EntitySet="izpitniroks" />
-          </AssociationSet>
-          <AssociationSet Name="izvajanje_studijskoleto_fk" Association="studisModel.izvajanje_studijskoleto_fk">
-            <End Role="sifrant_studijskoleto" EntitySet="sifrant_studijskoleto" />
-            <End Role="izvajanje" EntitySet="izvajanjes" />
           </AssociationSet>
           <EntitySet Name="prijavanaizpits" EntityType="studisModel.prijavanaizpit" />
           <EntitySet Name="tockes" EntityType="studisModel.tocke" />
@@ -1940,10 +1941,6 @@
             <End Role="prijavanaizpit" EntitySet="prijavanaizpits" />
             <End Role="tocke" EntitySet="tockes" />
           </AssociationSet>
-          <AssociationSet Name="vpisinizvajanje" Association="studisModel.vpisinizvajanje">
-            <End Role="izvajanje" EntitySet="izvajanjes" />
-            <End Role="vpi" EntitySet="vpis" />
-          </AssociationSet>
           <AssociationSet Name="prijava_odjavil_fk" Association="studisModel.prijava_odjavil_fk">
             <End Role="my_aspnet_users" EntitySet="my_aspnet_users" />
             <End Role="prijavanaizpit" EntitySet="prijavanaizpits" />
@@ -1951,6 +1948,40 @@
           <AssociationSet Name="prijava_prijavil_fk" Association="studisModel.prijava_prijavil_fk">
             <End Role="my_aspnet_users" EntitySet="my_aspnet_users" />
             <End Role="prijavanaizpit" EntitySet="prijavanaizpits" />
+          </AssociationSet>
+          <EntitySet Name="izvajanjeletoes" EntityType="studisModel.izvajanjeleto" />
+          <AssociationSet Name="izvajanjeleto_leto_fk" Association="studisModel.izvajanjeleto_leto_fk">
+            <End Role="sifrant_studijskoleto" EntitySet="sifrant_studijskoleto" />
+            <End Role="izvajanjeleto" EntitySet="izvajanjeletoes" />
+          </AssociationSet>
+          <EntitySet Name="izvajanjes" EntityType="studisModel.izvajanje" />
+          <AssociationSet Name="izpitnirok_izvajanje_fk" Association="studisModel.izpitnirok_izvajanje_fk">
+            <End Role="izvajanje" EntitySet="izvajanjes" />
+            <End Role="izpitnirok" EntitySet="izpitniroks" />
+          </AssociationSet>
+          <AssociationSet Name="izvajanje_i1_fk2" Association="studisModel.izvajanje_i1_fk2">
+            <End Role="profesor" EntitySet="profesors" />
+            <End Role="izvajanje" EntitySet="izvajanjes" />
+          </AssociationSet>
+          <AssociationSet Name="izvajanje_i2_fk2" Association="studisModel.izvajanje_i2_fk2">
+            <End Role="profesor" EntitySet="profesors" />
+            <End Role="izvajanje" EntitySet="izvajanjes" />
+          </AssociationSet>
+          <AssociationSet Name="izvajanje_i3_fk2" Association="studisModel.izvajanje_i3_fk2">
+            <End Role="profesor" EntitySet="profesors" />
+            <End Role="izvajanje" EntitySet="izvajanjes" />
+          </AssociationSet>
+          <AssociationSet Name="izvajanje_predmet_fk2" Association="studisModel.izvajanje_predmet_fk2">
+            <End Role="predmet" EntitySet="predmets" />
+            <End Role="izvajanje" EntitySet="izvajanjes" />
+          </AssociationSet>
+          <AssociationSet Name="izvajanjeleto_izvajanje_fk" Association="studisModel.izvajanjeleto_izvajanje_fk">
+            <End Role="izvajanje" EntitySet="izvajanjes" />
+            <End Role="izvajanjeleto" EntitySet="izvajanjeletoes" />
+          </AssociationSet>
+          <AssociationSet Name="vpisinizvajanje" Association="studisModel.vpisinizvajanje">
+            <End Role="izvajanje" EntitySet="izvajanjes" />
+            <End Role="vpi" EntitySet="vpis" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="ip_lock">
@@ -2138,7 +2169,7 @@
           <Property Name="id" Type="Int32" Nullable="false" />
           <Property Name="naziv" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="vpis" Relationship="studisModel.vpis_s_studijskoleto" FromRole="sifrant_studijskoleto" ToRole="vpi" />
-          <NavigationProperty Name="izvajanjes" Relationship="studisModel.izvajanje_studijskoleto_fk" FromRole="sifrant_studijskoleto" ToRole="izvajanje" />
+          <NavigationProperty Name="izvajanjeletoes" Relationship="studisModel.izvajanjeleto_leto_fk" FromRole="sifrant_studijskoleto" ToRole="izvajanjeleto" />
         </EntityType>
         <EntityType Name="sifrant_studijskoletoprvegavpisa">
           <Key>
@@ -2186,7 +2217,7 @@
           <NavigationProperty Name="sifrant_letnik" Relationship="studisModel.predmet_s_letnik" FromRole="predmet" ToRole="sifrant_letnik" />
           <NavigationProperty Name="sifrant_studijskiprogram" Relationship="studisModel.predmet_s_studijskiprogram" FromRole="predmet" ToRole="sifrant_studijskiprogram" />
           <NavigationProperty Name="sifrant_klasius" Relationship="studisModel.predmet_s_vrstastudija" FromRole="predmet" ToRole="sifrant_klasius" />
-          <NavigationProperty Name="izvajanjes" Relationship="studisModel.izvajanje_predmet_fk" FromRole="predmet" ToRole="izvajanje" />
+          <NavigationProperty Name="izvajanjes" Relationship="studisModel.izvajanje_predmet_fk2" FromRole="predmet" ToRole="izvajanje" />
         </EntityType>
         <EntityType Name="profesor">
           <Key>
@@ -2195,9 +2226,9 @@
           <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="ime" Type="String" Nullable="false" MaxLength="45" FixedLength="false" Unicode="false" />
           <Property Name="priimek" Type="String" Nullable="false" MaxLength="45" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="izvajanjes" Relationship="studisModel.izvajanje_i1_fk" FromRole="profesor" ToRole="izvajanje" />
-          <NavigationProperty Name="izvajanjes1" Relationship="studisModel.izvajanje_i2_fk" FromRole="profesor" ToRole="izvajanje" />
-          <NavigationProperty Name="izvajanjes2" Relationship="studisModel.izvajanje_i3_fk" FromRole="profesor" ToRole="izvajanje" />
+          <NavigationProperty Name="izvajanjes" Relationship="studisModel.izvajanje_i1_fk2" FromRole="profesor" ToRole="izvajanje" />
+          <NavigationProperty Name="izvajanjes1" Relationship="studisModel.izvajanje_i2_fk2" FromRole="profesor" ToRole="izvajanje" />
+          <NavigationProperty Name="izvajanjes2" Relationship="studisModel.izvajanje_i3_fk2" FromRole="profesor" ToRole="izvajanje" />
           </EntityType>
         <EntityType Name="student">
           <Key>
@@ -2861,80 +2892,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="izvajanje">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Int64" Nullable="false" />
-          <Property Name="predmetId" Type="Int64" Nullable="false" />
-          <Property Name="izvajalec1Id" Type="Int64" Nullable="false" />
-          <Property Name="izvajalec2Id" Type="Int64" />
-          <Property Name="izvajalec3Id" Type="Int64" />
-          <NavigationProperty Name="profesor" Relationship="studisModel.izvajanje_i1_fk" FromRole="izvajanje" ToRole="profesor" />
-          <NavigationProperty Name="profesor1" Relationship="studisModel.izvajanje_i2_fk" FromRole="izvajanje" ToRole="profesor" />
-          <NavigationProperty Name="profesor2" Relationship="studisModel.izvajanje_i3_fk" FromRole="izvajanje" ToRole="profesor" />
-          <NavigationProperty Name="predmet" Relationship="studisModel.izvajanje_predmet_fk" FromRole="izvajanje" ToRole="predmet" />
-          <NavigationProperty Name="izpitniroks" Relationship="studisModel.izpitnirok_izvajanje_fk" FromRole="izvajanje" ToRole="izpitnirok" />
-          <Property Name="studijskoletoId" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="sifrant_studijskoleto" Relationship="studisModel.izvajanje_studijskoleto_fk" FromRole="izvajanje" ToRole="sifrant_studijskoleto" />
-          <NavigationProperty Name="vpis" Relationship="studisModel.vpisinizvajanje" FromRole="izvajanje" ToRole="vpi" />
-        </EntityType>
-        <Association Name="izvajanje_i1_fk">
-          <End Type="studisModel.profesor" Role="profesor" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="studisModel.izvajanje" Role="izvajanje" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="profesor">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="izvajanje">
-              <PropertyRef Name="izvajalec1Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="izvajanje_i2_fk">
-          <End Type="studisModel.profesor" Role="profesor" Multiplicity="0..1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="studisModel.izvajanje" Role="izvajanje" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="profesor">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="izvajanje">
-              <PropertyRef Name="izvajalec2Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="izvajanje_i3_fk">
-          <End Type="studisModel.profesor" Role="profesor" Multiplicity="0..1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="studisModel.izvajanje" Role="izvajanje" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="profesor">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="izvajanje">
-              <PropertyRef Name="izvajalec3Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="izvajanje_predmet_fk">
-          <End Type="studisModel.predmet" Role="predmet" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="studisModel.izvajanje" Role="izvajanje" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="predmet">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="izvajanje">
-              <PropertyRef Name="predmetId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="izpitnirok">
           <Key>
             <PropertyRef Name="id" />
@@ -2942,26 +2899,12 @@
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="datum" Type="DateTime" Nullable="false" />
           <Property Name="izvajanjeId" Type="Int64" Nullable="false" />
-          <NavigationProperty Name="izvajanje" Relationship="studisModel.izpitnirok_izvajanje_fk" FromRole="izpitnirok" ToRole="izvajanje" />
           <Property Name="ura" Type="DateTime" />
           <Property Name="prostorId" Type="Int32" />
           <NavigationProperty Name="sifrant_prostor" Relationship="studisModel.izpitnirok_prostor_fk" FromRole="izpitnirok" ToRole="sifrant_prostor" />
           <NavigationProperty Name="prijavanaizpits" Relationship="studisModel.prijava_izpitnirok_fk" FromRole="izpitnirok" ToRole="prijavanaizpit" />
+          <NavigationProperty Name="izvajanje" Relationship="studisModel.izpitnirok_izvajanje_fk" FromRole="izpitnirok" ToRole="izvajanje" />
         </EntityType>
-        <Association Name="izpitnirok_izvajanje_fk">
-          <End Type="studisModel.izvajanje" Role="izvajanje" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="studisModel.izpitnirok" Role="izpitnirok" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="izvajanje">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="izpitnirok">
-              <PropertyRef Name="izvajanjeId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="ocena">
           <Key>
             <PropertyRef Name="id" />
@@ -2991,20 +2934,6 @@
             </Principal>
             <Dependent Role="izpitnirok">
               <PropertyRef Name="prostorId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="izvajanje_studijskoleto_fk">
-          <End Type="studisModel.sifrant_studijskoleto" Role="sifrant_studijskoleto" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="studisModel.izvajanje" Role="izvajanje" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="sifrant_studijskoleto">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="izvajanje">
-              <PropertyRef Name="studijskoletoId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -3093,10 +3022,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="vpisinizvajanje">
-          <End Type="studisModel.izvajanje" Role="izvajanje" Multiplicity="*" />
-          <End Type="studisModel.vpi" Role="vpi" Multiplicity="*" />
-        </Association>
         <Association Name="prijava_odjavil_fk">
           <End Type="studisModel.my_aspnet_users" Role="my_aspnet_users" Multiplicity="0..1">
             <OnDelete Action="Cascade" />
@@ -3124,6 +3049,135 @@
               <PropertyRef Name="prijavilId" />
             </Dependent>
           </ReferentialConstraint>
+        </Association>
+        <EntityType Name="izvajanjeleto">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="studijskoletoId" Type="Int32" Nullable="false" />
+          <Property Name="izvajanjeId" Type="Int64" Nullable="false" />
+          <NavigationProperty Name="sifrant_studijskoleto" Relationship="studisModel.izvajanjeleto_leto_fk" FromRole="izvajanjeleto" ToRole="sifrant_studijskoleto" />
+          <NavigationProperty Name="izvajanje" Relationship="studisModel.izvajanjeleto_izvajanje_fk" FromRole="izvajanjeleto" ToRole="izvajanje" />
+        </EntityType>
+        <Association Name="izvajanjeleto_leto_fk">
+          <End Type="studisModel.sifrant_studijskoleto" Role="sifrant_studijskoleto" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="studisModel.izvajanjeleto" Role="izvajanjeleto" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="sifrant_studijskoleto">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="izvajanjeleto">
+              <PropertyRef Name="studijskoletoId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="izvajanje">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="predmetId" Type="Int64" Nullable="false" />
+          <Property Name="izvajalec1Id" Type="Int64" Nullable="false" />
+          <Property Name="izvajalec2Id" Type="Int64" />
+          <Property Name="izvajalec3Id" Type="Int64" />
+          <NavigationProperty Name="izpitniroks" Relationship="studisModel.izpitnirok_izvajanje_fk" FromRole="izvajanje" ToRole="izpitnirok" />
+          <NavigationProperty Name="profesor" Relationship="studisModel.izvajanje_i1_fk2" FromRole="izvajanje" ToRole="profesor" />
+          <NavigationProperty Name="profesor1" Relationship="studisModel.izvajanje_i2_fk2" FromRole="izvajanje" ToRole="profesor" />
+          <NavigationProperty Name="profesor2" Relationship="studisModel.izvajanje_i3_fk2" FromRole="izvajanje" ToRole="profesor" />
+          <NavigationProperty Name="predmet" Relationship="studisModel.izvajanje_predmet_fk2" FromRole="izvajanje" ToRole="predmet" />
+          <NavigationProperty Name="izvajanjeletoes" Relationship="studisModel.izvajanjeleto_izvajanje_fk" FromRole="izvajanje" ToRole="izvajanjeleto" />
+          <NavigationProperty Name="vpis" Relationship="studisModel.vpisinizvajanje" FromRole="izvajanje" ToRole="vpi" />
+        </EntityType>
+        <Association Name="izpitnirok_izvajanje_fk">
+          <End Type="studisModel.izvajanje" Role="izvajanje" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="studisModel.izpitnirok" Role="izpitnirok" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="izvajanje">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="izpitnirok">
+              <PropertyRef Name="izvajanjeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="izvajanje_i1_fk2">
+          <End Type="studisModel.profesor" Role="profesor" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="studisModel.izvajanje" Role="izvajanje" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="profesor">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="izvajanje">
+              <PropertyRef Name="izvajalec1Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="izvajanje_i2_fk2">
+          <End Type="studisModel.profesor" Role="profesor" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="studisModel.izvajanje" Role="izvajanje" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="profesor">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="izvajanje">
+              <PropertyRef Name="izvajalec2Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="izvajanje_i3_fk2">
+          <End Type="studisModel.profesor" Role="profesor" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="studisModel.izvajanje" Role="izvajanje" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="profesor">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="izvajanje">
+              <PropertyRef Name="izvajalec3Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="izvajanje_predmet_fk2">
+          <End Type="studisModel.predmet" Role="predmet" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="studisModel.izvajanje" Role="izvajanje" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="predmet">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="izvajanje">
+              <PropertyRef Name="predmetId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="izvajanjeleto_izvajanje_fk">
+          <End Type="studisModel.izvajanje" Role="izvajanje" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="studisModel.izvajanjeleto" Role="izvajanjeleto" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="izvajanje">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="izvajanjeleto">
+              <PropertyRef Name="izvajanjeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="vpisinizvajanje">
+          <End Type="studisModel.izvajanje" Role="izvajanje" Multiplicity="*" />
+          <End Type="studisModel.vpi" Role="vpi" Multiplicity="*" />
         </Association>
         </Schema>
     </edmx:ConceptualModels>
@@ -3535,18 +3589,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="izvajanjes">
-            <EntityTypeMapping TypeName="studisModel.izvajanje">
-              <MappingFragment StoreEntitySet="izvajanje">
-                <ScalarProperty Name="studijskoletoId" ColumnName="studijskoletoId" />
-                <ScalarProperty Name="izvajalec3Id" ColumnName="izvajalec3Id" />
-                <ScalarProperty Name="izvajalec2Id" ColumnName="izvajalec2Id" />
-                <ScalarProperty Name="izvajalec1Id" ColumnName="izvajalec1Id" />
-                <ScalarProperty Name="predmetId" ColumnName="predmetId" />
-                <ScalarProperty Name="id" ColumnName="id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="izpitniroks">
             <EntityTypeMapping TypeName="studisModel.izpitnirok">
               <MappingFragment StoreEntitySet="izpitnirok">
@@ -3596,6 +3638,26 @@
                 <ScalarProperty Name="datum" ColumnName="datum" />
                 <ScalarProperty Name="prijavaId" ColumnName="prijavaId" />
                 <ScalarProperty Name="tocke1" ColumnName="tocke" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="izvajanjeletoes">
+            <EntityTypeMapping TypeName="studisModel.izvajanjeleto">
+              <MappingFragment StoreEntitySet="izvajanjeleto">
+                <ScalarProperty Name="izvajanjeId" ColumnName="izvajanjeId" />
+                <ScalarProperty Name="studijskoletoId" ColumnName="studijskoletoId" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="izvajanjes">
+            <EntityTypeMapping TypeName="studisModel.izvajanje">
+              <MappingFragment StoreEntitySet="izvajanje">
+                <ScalarProperty Name="izvajalec3Id" ColumnName="izvajalec3Id" />
+                <ScalarProperty Name="izvajalec2Id" ColumnName="izvajalec2Id" />
+                <ScalarProperty Name="izvajalec1Id" ColumnName="izvajalec1Id" />
+                <ScalarProperty Name="predmetId" ColumnName="predmetId" />
                 <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>
