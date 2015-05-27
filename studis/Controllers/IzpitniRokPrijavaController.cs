@@ -53,6 +53,17 @@ namespace studis.Controllers
         [HttpPost]
         public ActionResult Prijavi(PrijavaNaIzpitModel model)
         {
+           // model.izpitniRok;
+           // model.izvajanje;
+            if (User.IsInRole("Student"))
+            {
+                UserHelper.GetStudentByUserName(User.Identity.Name);
+            }
+            else //referent
+            {
+               // model.student;
+            }
+
             try
             {
                 // TODO: Add delete logic here
@@ -77,6 +88,17 @@ namespace studis.Controllers
         [HttpPost]
         public ActionResult Odjavi(PrijavaNaIzpitModel model)
         {
+            //model.izpitniRok;
+           // model.izvajanje;
+            if (User.IsInRole("Student"))
+            {
+                UserHelper.GetStudentByUserName(User.Identity.Name);
+            }
+            else //refernt
+            {
+               // model.student;
+            }
+            
             try
             {
                 // TODO: Add delete logic here
@@ -231,28 +253,44 @@ namespace studis.Controllers
             {
                 opozorila.Add("Rok za prijavo je potekel.");
             }
+            //-preveri da je od zadnje prijave minilo 7 dni
+            var zadnjaPrijava = db.prijavanaizpits.Where(a => a.izpitnirokId == iRok.id).Where(a => a.vpisId == trenutniVpis.id).LastOrDefault();
+            if (zadnjaPrijava != null)
+            {
+                TimeSpan razlika = DateTime.Now - zadnjaPrijava.datumPrijave;
+                if (razlika.Days < 7)
+                {
+                    opozorila.Add("Od zadnje prijave pri temu predmetu še ni minilo 7 dni." + "Datum zadnje prijave: " + UserHelper.DateToString(zadnjaPrijava.datumPrijave));
+                }
+            }
             //-max 3 polaganja letos
+            int letos = sh.polaganjaLetos(trenutniVpis.id, (int) iRok.izvajanjeId);
+            if (letos > 3)
+            {
+
+            }
             //-max 6 polaganj vse skupaj (ponavljanje resetira)
+            int skupaj = sh.polaganjaVsa(trenutniVpis.id, (int) iRok.izvajanjeId, trenutniVpis.studijskiProgram);
+            if (skupaj > 6)
+            {
+
+            }
             //-preveri ce prijva pri tem predmetu(izvajanju) ze obstaja
             if (db.prijavanaizpits.Where(a => a.izpitnirokId == iRok.id).Where(a => a.vpisId == trenutniVpis.id).Where(a => a.stanje == 0).FirstOrDefault() != null)
             {
                 opozorila.Add("Prijava pri tem predmetu že obstaja.");
             }
-            //-preveri prijavo na rok na katerga je ze prijavljen
+            //-preveri prijavo na rok na katerga je ze prijavljen |^
             //-preveri ce je izpit ze opravljen
-            //-preveri da je od zadnje prijave minilo ? dni
-            if()
-            {
-                opozorila.Add("");
-            }
             //-preveri ce za prejsnjo prijavo ze obstaja ocena
 
             //SAMO OBVSETILO
             //-preveri ce mora student placati izpit (4+ redni, 1+ izredni)
-            
+
+            var obvstilo = "";
             var warnings = new JavaScriptSerializer().Serialize(opozorila);
 
-            return Json(warnings);
+            return Json(warnings, obvstilo);
         }
     }
 }
