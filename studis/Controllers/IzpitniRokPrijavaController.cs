@@ -135,17 +135,28 @@ namespace studis.Controllers
 
         public string GetIzvajanjaForStudent(int id)
         {
-            student student;
+            int vpisna;
             if (User.IsInRole("Student"))
             {
-                student = UserHelper.GetStudentByUserName(User.Identity.Name);
+                //student = UserHelper.GetStudentByUserName(User.Identity.Name);
+                vpisna = UserHelper.GetStudentByUserName(User.Identity.Name).vpisnaStevilka;
             }
             else
             {
-                student = UserHelper.GetStudentByVpisna(id);
+                //student = UserHelper.GetStudentByVpisna(id);
+                vpisna = UserHelper.GetStudentByVpisna(id).vpisnaStevilka;
             }
-            var izvajanja = student.vpis.LastOrDefault().izvajanjes.ToList();
-            
+            StudentHelper shhlp = new StudentHelper();
+            var vpi = shhlp.trenutniVpis(vpisna);
+            List<izvajanje> izvajanja;
+            if(vpi == null)
+            {
+                izvajanja = new List<izvajanje>();
+            }
+            else 
+            {
+                izvajanja = vpi.izvajanjes.ToList();
+            }
             return new JavaScriptSerializer().Serialize(IzvajanaToSeznam(izvajanja));
         }
 
@@ -187,24 +198,61 @@ namespace studis.Controllers
 
         //PREVERJANJA
         /*
-        -preveri cas min 23 ur pred dnem izpita
-        -max 3 polaganja letos
-        -max 6 polaganj vse skupaj (ponavljanje resetira)
-        -preveri ce prijva pri tem predmetu(izvajanju) ze obstaja
-        -preveri prijavo na rok na katerga je ze prijavljen
-        -preveri ce je izpit ze opravljen
-        -preveri da je od prijave minilo x dni
-        -preveri ce za prejsnjo prijavo ze obstaja ocena
-        -preveri ce mora student placati izpit (4+ redni, 1+ izredni)
+        //-preveri cas min 23 ur pred dnem izpita
+        //-max 3 polaganja letos
+        //-max 6 polaganj vse skupaj (ponavljanje resetira)
+        //-preveri ce prijva pri tem predmetu(izvajanju) ze obstaja
+        //-preveri prijavo na rok na katerga je ze prijavljen
+        //-preveri ce je izpit ze opravljen
+        //-preveri da je od prijave minilo x dni
+        //-preveri ce za prejsnjo prijavo ze obstaja ocena
+        //-preveri ce mora student placati izpit (4+ redni, 1+ izredni)
         */
         [HttpPost]
         public JsonResult Preveri(string vpisna, string izpitniRok)
         {
-            
+            if(vpisna == "") {
+                vpisna = UserHelper.GetStudentByUserName(User.Identity.Name).vpisnaStevilka.ToString();
+            }
             int ivpisna= Convert.ToInt32(vpisna);
             int iizpitniRok= Convert.ToInt32(izpitniRok);
             Debug.WriteLine("Vpisna: " + vpisna + ", IzpitniRokId: " + izpitniRok);
-            return null;
+            izpitnirok iRok = db.izpitniroks.SingleOrDefault(a => a.id == iizpitniRok);
+            student stud = db.students.SingleOrDefault(a => a.vpisnaStevilka == ivpisna);
+
+            List<string> opozorila = new List<string>();
+            
+            StudentHelper sh = new StudentHelper();
+            var trenutniVpis = sh.trenutniVpis(stud.vpisnaStevilka);
+
+            //OPOZORILA
+            //-preveri cas min 23 ur pred dnem izpita
+            if (DateTime.Now > iRok.datum.Subtract(new TimeSpan(23, 0, 0)) )
+            {
+                opozorila.Add("Rok za prijavo je potekel.");
+            }
+            //-max 3 polaganja letos
+            //-max 6 polaganj vse skupaj (ponavljanje resetira)
+            //-preveri ce prijva pri tem predmetu(izvajanju) ze obstaja
+            if (db.prijavanaizpits.Where(a => a.izpitnirokId == iRok.id).Where(a => a.vpisId == trenutniVpis.id).Where(a => a.stanje == 0).FirstOrDefault() != null)
+            {
+                opozorila.Add("Prijava pri tem predmetu že obstaja.");
+            }
+            //-preveri prijavo na rok na katerga je ze prijavljen
+            //-preveri ce je izpit ze opravljen
+            //-preveri da je od zadnje prijave minilo ? dni
+            if()
+            {
+                opozorila.Add("");
+            }
+            //-preveri ce za prejsnjo prijavo ze obstaja ocena
+
+            //SAMO OBVSETILO
+            //-preveri ce mora student placati izpit (4+ redni, 1+ izredni)
+            
+            var warnings = new JavaScriptSerializer().Serialize(opozorila);
+
+            return Json(warnings);
         }
     }
 }
