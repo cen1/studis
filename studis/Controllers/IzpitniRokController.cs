@@ -229,17 +229,16 @@ namespace studis.Controllers
         [HttpPost]
         public ActionResult Seznam(int id)
         {
-            //try
-            //{
-                //int idRoka = Convert.ToInt32(id);
+            try
+            {
                 izpitnirok rok = db.izpitniroks.Where(i => i.id == id).SingleOrDefault();
 
                 return RedirectToAction("SeznamPrijavljenihKandidatov", rok);
-            /*}
+            }
             catch
             {
                 return Seznam();
-            }*/
+            }
         }
 
         public ActionResult SeznamPrijavljenihKandidatov(izpitnirok rok)
@@ -296,7 +295,7 @@ namespace studis.Controllers
                             if (vpisan.id == prijava.vpisId)
                             {
                                 leta.Add(vpisan.sifrant_studijskoleto.naziv);
-                                int polaganja = sh.zaporednoPolaganje(list[i].vpisnaStevilka, (int)izv.predmetId, vpisan.studijskiProgram);
+                                int polaganja = sh.zaporednoPolaganje(list[i].vpisnaStevilka, (int)izv.predmetId, vpisan.studijskiProgram, prijava.izpitnirok.datum);
                                 vsaPolaganja.Add(polaganja);
                             }
                         }
@@ -312,15 +311,15 @@ namespace studis.Controllers
         }
 
 
-        /*public ActionResult VpisTock(int rokID)
+        public ActionResult VpisTock(int rokID)
         {
-            List<VnosTockModel> listVnosov = new List<VnosTockModel>();
-            ////////////////////////////seznam prijavljenih študentov
-
             //podatki o izpitnem roku
             izpitnirok rok = db.izpitniroks.Where(r => r.id == rokID).SingleOrDefault();
+
+            Debug.WriteLine("id roka_vpis tock: " + rok.id);
+
             sifrant_prostor predavalnica = db.sifrant_prostor.Where(s => s.id == rok.prostorId).SingleOrDefault();
-            izvajanje izv = db.izvajanjes.Where(s => s.id == rokID).SingleOrDefault();
+            izvajanje izv = db.izvajanjes.Where(i => i.id == rok.izvajanjeId).SingleOrDefault();
 
             string izvajalci = izv.profesor.priimek + " " + izv.profesor.ime;
             if (izv.izvajalec2Id != null)
@@ -328,67 +327,62 @@ namespace studis.Controllers
             if (izv.izvajalec3Id != null)
                 izvajalci = izvajalci + ", " + izv.profesor2.priimek + " " + izv.profesor2.ime;
 
-            ViewBag.idRoka = rokID;
+            ViewBag.idRoka = rok.id;
             ViewBag.izvajalci = izvajalci;
             ViewBag.prostor = predavalnica.naziv;
-            ViewBag.datum = GetDatumForIzpitniRok(rokID);
+            ViewBag.datum = GetDatumForIzpitniRok(rok.id);
             ViewBag.ura = UserHelper.TimeToString((DateTime)rok.ura);
             ViewBag.sifraPredmeta = izv.predmetId;
             ViewBag.imePredmeta = izv.predmet.ime;
 
 
             //pridobi prijavljene študente
-            var prijave = db.prijavanaizpits.Where(p => p.izpitnirokId == rok.id).ToList();
-
-            List<student> list = new List<student>();
-            List<string> leta = new List<string>();
-            List<int> vsaPolaganja = new List<int>();
+            List<VnosTockModel> listVnosov = new List<VnosTockModel>();
             StudentHelper sh = new StudentHelper();
+
+            var prijave = db.prijavanaizpits.Where(p => p.izpitnirokId == rok.id).ToList();
+            
+            int zaporednaSt = 0;
             foreach (prijavanaizpit prijava in prijave)
             {
                 vpi vpiss = db.vpis.Where(v => v.id == prijava.vpisId).SingleOrDefault();
                 student st = db.students.Where(s => s.vpisnaStevilka == vpiss.vpisnaStevilka).SingleOrDefault();
+                VnosTockModel vnos = new VnosTockModel();
 
                 if (st != null)
                 {
-                    list.Add(st);
+                    zaporednaSt = zaporednaSt+1;
+                    vnos.zaporednaStevilka = zaporednaSt;
+                    vnos.vpisnaStevilka = st.vpisnaStevilka;
+                    vnos.ime = st.ime;
+                    vnos.priimek = st.priimek;
 
-
-                }
-            }
-
-            if (list.Any())
-            {
-                //uredi seznam študentov
-                list = list.OrderBy(o => o.priimek).ToList();
-
-                //naredi seznam let poslušanja predmeta v enakem vrstnem redu kot so študenti za izpis
-                for (int i = 0; i < list.Count; i++)
-                {
-                    foreach (vpi vpisan in list[i].vpis)
+                    foreach (vpi vpisan in st.vpis)
                     {
-                        foreach (prijavanaizpit prijava in prijave)
+                        foreach (prijavanaizpit prijava1 in prijave)
                         {
-                            if (vpisan.id == prijava.vpisId)
+                            if (vpisan.id == prijava1.vpisId)
                             {
-                                leta.Add(vpisan.sifrant_studijskoleto.naziv);
-                                int polaganja = sh.zaporednoPolaganje(list[i].vpisnaStevilka, (int)izv.predmetId, vpisan.studijskiProgram);
-                                vsaPolaganja.Add(polaganja);
+                                vnos.studijskoLeto = vpisan.sifrant_studijskoleto.naziv;
+                                vnos.zaporednoSteviloPonavljanja = sh.zaporednoPolaganje(st.vpisnaStevilka, (int)izv.predmetId, vpisan.studijskiProgram, prijava1.izpitnirok.datum);
                             }
                         }
                     }
+
+                    listVnosov.Add(vnos);
                 }
-                ViewBag.years = leta;
-                ViewBag.vsaPolaganja = vsaPolaganja;
+            }
+
+            if (listVnosov.Any())
+            {
+                //uredi seznam študentov
+                listVnosov = listVnosov.OrderBy(o => o.priimek).ToList();
             }
             else
-                list = null;
-            ////////////konec seznama prijavljenih študentov
+                listVnosov = null;
 
-
-
-            return View(list);
-        }*/
+            return View(listVnosov);
+        }
 
         /*
         public string GetProfesorsForPredmet(int id)
@@ -593,11 +587,11 @@ namespace studis.Controllers
         public string PreveriPrijave(int id)
         {
             int st = 0;
-            //try
-            //{
+            try
+            {
                 st = db.izpitniroks.SingleOrDefault(r => r.id == id).prijavanaizpits.Count();
-            //}
-            //catch (Exception e) { st = -1; }
+            }
+            catch (Exception e) { st = -1; }
             return st.ToString();
         }
 

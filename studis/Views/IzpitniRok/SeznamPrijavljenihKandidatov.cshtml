@@ -71,4 +71,8 @@
     </tr>
     }
 }
-</table>
+</table><br/>
+@if (User.IsInRole("Referent") || User.IsInRole("Profesor"))
+{ 
+    <li>@Html.ActionLink("Vpiši točke", "VpisTock", "IzpitniRok", new { rokID = @ViewBag.idRoka }, null)</li>
+}
