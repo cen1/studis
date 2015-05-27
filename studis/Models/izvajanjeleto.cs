@@ -12,21 +12,13 @@ namespace studis.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class izpitnirok
+    public partial class izvajanjeleto
     {
-        public izpitnirok()
-        {
-            this.prijavanaizpits = new HashSet<prijavanaizpit>();
-        }
-    
         public int id { get; set; }
-        public System.DateTime datum { get; set; }
+        public int studijskoletoId { get; set; }
         public long izvajanjeId { get; set; }
-        public Nullable<System.DateTime> ura { get; set; }
-        public Nullable<int> prostorId { get; set; }
     
-        public virtual sifrant_prostor sifrant_prostor { get; set; }
-        public virtual ICollection<prijavanaizpit> prijavanaizpits { get; set; }
+        public virtual sifrant_studijskoleto sifrant_studijskoleto { get; set; }
         public virtual izvajanje izvajanje { get; set; }
     }
 }
