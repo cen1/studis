@@ -383,16 +383,33 @@ namespace studis.Controllers
         }
 
         [HttpPost]
-        public ActionResult VpisTock(List<VnosTockModel> listVnosov)
+        public ActionResult VpisTock(IList<studis.Models.VnosTockModel> list)
         {
-            foreach (VnosTockModel m in listVnosov)
+            foreach (VnosTockModel m in list)
             {
+                Debug.WriteLine("element lista: "+m.ime+",tocke: "+m.tocke);
                 if (!ModelState.IsValid)
                 {
-                    return RedirectToAction("VpisTock", listVnosov);
+                    return View();
                 }
             }
-            return View("Seznam");
+            Debug.WriteLine("konec");
+            return View(list);
+        }
+
+        //[HttpPost]
+        public ActionResult VnosTock(IList<studis.Models.VnosTockModel> list)
+        {
+            foreach (VnosTockModel m in list)
+            {
+                Debug.WriteLine("element lista: " + m.ime);
+                if (!ModelState.IsValid)
+                {
+                    return View();
+                }
+            }
+            Debug.WriteLine("konec");
+            return View("Vpistock", list);
         }
 
 
