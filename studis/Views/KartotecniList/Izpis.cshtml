@@ -41,9 +41,13 @@
 
                 <!-- GLAVA -->
                 
-                <h2>@v.sifrant_studijskoleto.naziv - @v.sifrant_studijskiprogram.naziv</h2>
+                <h2>Študijsko leto @v.sifrant_studijskoleto.naziv</h2>
                 <table>
                     <tbody>
+                        <tr>
+                            <th>Študijski program</th>
+                            <td>@v.sifrant_studijskiprogram.naziv</td>
+                        </tr>
                         <tr>
                             <th>Letnik</th>
                             <td>@v.letnikStudija</td>
@@ -221,9 +225,13 @@
                 int ocena;
 
                 <!-- GLAVA -->
-                <h2>@v.sifrant_studijskoleto.naziv - @v.sifrant_studijskiprogram.naziv</h2>
+                <h2>Študijsko leto @v.sifrant_studijskoleto.naziv</h2>
                 <table>
                     <tbody>
+                        <tr>
+                            <th>Študijski program</th>
+                            <td>@v.sifrant_studijskiprogram.naziv</td>
+                        </tr>
                         <tr>
                             <th>Letnik</th>
                             <td>@v.letnikStudija</td>
@@ -300,9 +308,9 @@
                                             <td>@i.predmet.letnik</td>
                                             @{ var datum = sh.pridobiDatum(Convert.ToInt32(@p.id)); }
                                             <td>@datum</td>
-                                            @{ temp = sh.polaganjaVsa(Convert.ToInt32(@v.vpisnaStevilka), Convert.ToInt32(@i.predmetId), Convert.ToInt32(@v.studijskiProgram)); }
+                                            @{ temp = sh.zaporednoPolaganje(Convert.ToInt32(@v.vpisnaStevilka), Convert.ToInt32(@i.predmetId), Convert.ToInt32(@v.studijskiProgram), @r.datum); }
                                             <td>@temp</td>
-                                            @{ temp = sh.polaganjaLetos(Convert.ToInt32(@v.id), Convert.ToInt32(@i.id)); }
+                                            @{ temp = sh.zaporednoPolaganjaLetos(Convert.ToInt32(@v.id), Convert.ToInt32(@i.id), Convert.ToInt32(@r.id)); }
                                             <td>@temp</td>
                                             <td>@i.predmet.kreditne</td>
                                             @{ ocena = sh.pridobiOceno(Convert.ToInt32(@p.id)); }
