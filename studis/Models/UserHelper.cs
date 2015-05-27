@@ -95,11 +95,11 @@ namespace studis.Models
 
             double sum = 0;
             int cnt = 0;
-            foreach (var o in vp.ocenas)
+            /*foreach (var o in vp.ocenas)
             {
                 sum += o.ocena1;
                 cnt++;
-            }
+            }*/
             double avg = sum / cnt;
             if (avg >= 8) return true;
             else return false;

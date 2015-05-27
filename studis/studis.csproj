@@ -200,6 +200,9 @@
     <Compile Include="Models\izvajanje.cs">
       <DependentUpon>Studis.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\izvajanjeleto.cs">
+      <DependentUpon>Studis.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\IzvajanjeModel.cs" />
     <Compile Include="Models\kandidat.cs">
       <DependentUpon>Studis.tt</DependentUpon>
@@ -337,6 +340,7 @@
     <Compile Include="Models\UserHelper.cs" />
     <Compile Include="Models\UserModels.cs" />
     <Compile Include="Models\Validate.cs" />
+    <Compile Include="Models\VnosTockModel.cs" />
     <Compile Include="Models\vpi.cs">
       <DependentUpon>Studis.tt</DependentUpon>
     </Compile>
@@ -549,6 +553,7 @@
     <Content Include="Views\KartotecniList\Napaka.cshtml" />
     <Content Include="Views\IzpitniRok\SeznamPrijavljenihKandidatov.cshtml" />
     <Content Include="Views\IzpitniRok\Seznam.cshtml" />
+    <Content Include="Views\IzpitniRok\VpisTock.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

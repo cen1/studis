@@ -37,16 +37,13 @@
                 var opravil = 0;
                 var povprecje = 0;
                 int temp;
+                int ocena;
 
                 <!-- GLAVA -->
                 
-                <h2>@v.sifrant_studijskoleto.naziv</h2>
+                <h2>Študijsko leto @v.sifrant_studijskoleto.naziv</h2>
                 <table>
                     <tbody>
-                        <tr>
-                            <th>Študijsko leto</th>
-                            <td>@v.sifrant_studijskoleto.naziv</td>
-                        </tr>
                         <tr>
                             <th>Študijski program</th>
                             <td>@v.sifrant_studijskiprogram.naziv</td>
@@ -104,7 +101,7 @@
                             {
                                 foreach (var p in @ViewBag.Prijave)
                                 {
-                                    if (i.studijskoletoId == v.studijskoLeto && i.izpitnirok.Contains(r) && p.vpisId == v.id && r.id == p.izpitnirokId)
+                                    if (i.studijskoletoId == v.studijskoLeto && i.izpitniroks.Contains(r) && p.vpisId == v.id && r.id == p.izpitnirokId && pisal == 0)
                                     {
                                         pisal++;
                                     
@@ -119,25 +116,27 @@
                                                 }
                                                 @if (@i.izvajalec3Id != null)
                                                 {
-                                                    <span>, @i.profesor2.ime @i.profesor2.priimek</span>
+                                                    <span>, @i.profesor2.ime @i.profesor2.priimek</span>    
                                                 }
                                             </td>
                                             <td>@i.predmet.letnik</td>
-                                            <td><!-- r.prijavanaizpit.datumPrijave --></td>
-                                            @{ temp = sh.polaganjaVsa(@v.vpisnaStevilka, Convert.ToInt32(@i.predmetId), @v.studijskiProgram); }
+                                            @{ var datum = sh.pridobiDatum(Convert.ToInt32(@p.id)); }
+                                            <td>@datum</td>
+                                            @{ temp = sh.polaganjaVsa(Convert.ToInt32(@v.vpisnaStevilka), Convert.ToInt32(@i.predmetId), Convert.ToInt32(@v.studijskiProgram)); }
                                             <td>@temp</td>
-                                            @{ temp = sh.polaganjaLetos(@v.id, @i.id); }
+                                            @{ temp = sh.polaganjaLetos(Convert.ToInt32(@v.id), Convert.ToInt32(@i.id)); }
                                             <td>@temp</td>
                                             <td>@i.predmet.kreditne</td>
-                                            <td>@p.ocena.ocena</td>
+                                            @{ ocena = sh.pridobiOceno(Convert.ToInt32(@p.id)); }
+                                            <td>@ocena</td>
                                         </tr>
 
-                                        if (@p.ocena.ocena != null)
+                                        if (@ocena != 0)
                                         {
-                                            if (@p.ocena.ocena > 5)
+                                            if (@ocena > 5)
                                             {
                                                 tocke += @i.predmet.kreditne;
-                                                stOcen += @p.ocena.ocena;
+                                                stOcen += @ocena;
                                                 sestevek++;
                                                 opravil++;
                                             }
@@ -163,7 +162,7 @@
                                     </td>
                                     <td>@i.predmet.letnik</td>
                                     <td>/</td>
-                                    @{ temp = sh.polaganjaVsa(@v.vpisnaStevilka, Convert.ToInt32(@i.predmetId), @v.studijskiProgram); }
+                                    @{ temp = sh.polaganjaVsa(Convert.ToInt32(@v.vpisnaStevilka), Convert.ToInt32(@i.predmetId), Convert.ToInt32(@v.studijskiProgram)); }
                                     <td>@temp</td>
                                     <td>0</td>
                                     <td>@i.predmet.kreditne</td>
@@ -223,15 +222,12 @@
                 var opravil = 0;
                 var povprecje = 0;
                 int temp;
+                int ocena;
 
                 <!-- GLAVA -->
-                <h2>@v.sifrant_studijskoleto.naziv</h2>
+                <h2>Študijsko leto @v.sifrant_studijskoleto.naziv</h2>
                 <table>
                     <tbody>
-                        <tr>
-                            <th>Študijsko leto</th>
-                            <td>@v.sifrant_studijskoleto.naziv</td>
-                        </tr>
                         <tr>
                             <th>Študijski program</th>
                             <td>@v.sifrant_studijskiprogram.naziv</td>
@@ -291,7 +287,7 @@
                             {
                                 foreach (var p in @ViewBag.Prijave)
                                 {
-                                    if (i.studijskoletoId == v.studijskoLeto && i.izpitnirok.Contains(r) && p.vpisId == v.id && r.id == p.izpitnirokId)
+                                    if (i.studijskoletoId == v.studijskoLeto && i.izpitniroks.Contains(r) && p.vpisId == v.id && r.id == p.izpitnirokId)
                                     {
                                         pisal++;
                                         
@@ -310,16 +306,18 @@
                                                 }
                                             </td>
                                             <td>@i.predmet.letnik</td>
-                                            <td><!-- r.prijavanaizpit.datumPrijave --></td>
-                                            @{ temp = sh.polaganjaVsa(@v.vpisnaStevilka, Convert.ToInt32(@i.predmetId), @v.studijskiProgram); }
+                                            @{ var datum = sh.pridobiDatum(Convert.ToInt32(@p.id)); }
+                                            <td>@datum</td>
+                                            @{ temp = sh.zaporednoPolaganje(Convert.ToInt32(@v.vpisnaStevilka), Convert.ToInt32(@i.predmetId), Convert.ToInt32(@v.studijskiProgram), @r.datum); }
                                             <td>@temp</td>
-                                            @{ temp = sh.polaganjaLetos(@v.id, @i.id); }
+                                            @{ temp = sh.zaporednoPolaganjaLetos(Convert.ToInt32(@v.id), Convert.ToInt32(@i.id), Convert.ToInt32(@r.id)); }
                                             <td>@temp</td>
                                             <td>@i.predmet.kreditne</td>
-                                            <td>@p.ocena.ocena</td>
+                                            @{ ocena = sh.pridobiOceno(Convert.ToInt32(@p.id)); }
+                                            <td>@ocena</td>
                                         </tr>
                                         
-                                        zadnjaOcena = @p.ocena.ocena;
+                                        zadnjaOcena = @ocena;
                                     }
                                 }
                             }
@@ -341,7 +339,7 @@
                                         </td>
                                         <td>@i.predmet.letnik</td>
                                         <td>/</td>
-                                        @{ temp = sh.polaganjaVsa(@v.vpisnaStevilka, Convert.ToInt32(@i.predmetId), @v.studijskiProgram); }
+                                        @{ temp = sh.polaganjaVsa(Convert.ToInt32(@v.vpisnaStevilka), Convert.ToInt32(@i.predmetId), Convert.ToInt32(@v.studijskiProgram)); }
                                         <td>@temp</td>
                                         <td>0</td>
                                         <td>@i.predmet.kreditne</td>
