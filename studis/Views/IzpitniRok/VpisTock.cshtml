@@ -1,11 +1,14 @@
-﻿@model IEnumerable<studis.Models.VnosTockModel>
+﻿@model IList<studis.Models.VnosTockModel>
     @{
         ViewBag.Title = "Vnos Tock";
         Layout = "~/Views/Shared/_Layout.cshtml";
     }
 
-    <h2>Vnos Točk</h2>
+<h2>Vnos Točk</h2>
 
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(true)
     <table id="izpis" class="table">
         <tr>
             <th>Šifra predmeta</th>
@@ -42,35 +45,43 @@
             <th>
                 Zap. št. polaganja
             </th>
+            <th>
+                Št. točk
+            </th>
         </tr>
         @if (Model != null)
         {
-            foreach (var item in Model)
+            for (var i = 0; i < Model.Count; i++)
             {
                 <tr>
                     <td>
-                        @Html.DisplayFor(modelItem => item.zaporednaStevilka)
+                        @Html.DisplayFor(x => x[i].zaporednaStevilka)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.vpisnaStevilka)
+                        @Html.DisplayFor(x => x[i].vpisnaStevilka)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.priimek)
+                        @Html.DisplayFor(x => x[i].priimek)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.ime)
+                        @Html.DisplayFor(x => x[i].ime)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.studijskoLeto)
+                        @Html.DisplayFor(x => x[i].studijskoLeto)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.zaporednoSteviloPonavljanja)
+                        @Html.DisplayFor(x => x[i].zaporednoSteviloPonavljanja)
+                    </td>
+                    <td class="editor-field">
+                        @Html.TextBoxFor(x => x[i].tocke)
+                        @Html.ValidationMessageFor(x => x[i].tocke)
                     </td>
                 </tr>
             }
         }
-    </table><br/>
-    @if (User.IsInRole("Referent") || User.IsInRole("Profesor"))
-    {
-        <li>@Html.ActionLink("Vpiši", "VpisTock", "IzpitniRok", new { id = @ViewBag.idRoka }, null)</li>
-    }
+    </table>
+    <p>
+        <input id="submit" type="submit" value="Potrdi vnos">
+    </p>
+}
+@Html.ActionLink("Vnesi točke", "VnosTock", "IzpitniRok", new { list = Model }, null)

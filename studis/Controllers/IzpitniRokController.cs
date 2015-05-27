@@ -316,8 +316,6 @@ namespace studis.Controllers
             //podatki o izpitnem roku
             izpitnirok rok = db.izpitniroks.Where(r => r.id == rokID).SingleOrDefault();
 
-            Debug.WriteLine("id roka_vpis tock: " + rok.id);
-
             sifrant_prostor predavalnica = db.sifrant_prostor.Where(s => s.id == rok.prostorId).SingleOrDefault();
             izvajanje izv = db.izvajanjes.Where(i => i.id == rok.izvajanjeId).SingleOrDefault();
 
@@ -383,6 +381,37 @@ namespace studis.Controllers
 
             return View(listVnosov);
         }
+
+        [HttpPost]
+        public ActionResult VpisTock(IList<studis.Models.VnosTockModel> list)
+        {
+            foreach (VnosTockModel m in list)
+            {
+                Debug.WriteLine("element lista: "+m.ime+",tocke: "+m.tocke);
+                if (!ModelState.IsValid)
+                {
+                    return View();
+                }
+            }
+            Debug.WriteLine("konec");
+            return View(list);
+        }
+
+        //[HttpPost]
+        public ActionResult VnosTock(IList<studis.Models.VnosTockModel> list)
+        {
+            foreach (VnosTockModel m in list)
+            {
+                Debug.WriteLine("element lista: " + m.ime);
+                if (!ModelState.IsValid)
+                {
+                    return View();
+                }
+            }
+            Debug.WriteLine("konec");
+            return View("Vpistock", list);
+        }
+
 
         /*
         public string GetProfesorsForPredmet(int id)

@@ -39,20 +39,28 @@ namespace studis.Controllers
             //izbrano štud.leto
             int leto = Convert.ToInt32(Value);
             
-            //pridobi vsa izvajanja za določen predmet
-            var izvajanja = db.izvajanjes.Where(izv => izv.predmetId == id && izv.studijskoletoId == leto).ToList();
+            //pridobi izvajanje za določen predmet
+            var izvajanja = db.izvajanjes.Where(izv => izv.predmetId == id).ToList();
 
             //najdi vse študente ki ustrezajo kriterijem
             List<student> list = new List<student>();
             List<string> vrstaVpisa = new List<string>();
-            foreach (var izvajanje in izvajanja)
+
+            foreach(izvajanje izvajanje in izvajanja)
             {
-                foreach(vpi vpis in izvajanje.vpis)
+                foreach (izvajanjeleto letoizvajanja in izvajanje.izvajanjeletoes)
                 {
-                    student st = db.students.Where(s => s.vpisnaStevilka == vpis.vpisnaStevilka).SingleOrDefault();
-                    if (st != null)
+                    //predavanja v iskanem letu
+                    if (letoizvajanja.sifrant_studijskoleto.id == leto)
                     {
-                        list.Add(st);
+                        foreach (vpi vpis in izvajanje.vpis)
+                        {
+                            student st = db.students.Where(s => s.vpisnaStevilka == vpis.vpisnaStevilka).SingleOrDefault();
+                            if (st != null)
+                            {
+                                list.Add(st);
+                            }
+                        }
                     }
                 }
             }
