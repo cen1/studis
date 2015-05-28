@@ -40,8 +40,8 @@ namespace studis.Models
             return sum;
         }
 
-        // vrne končni seštevek polaganj
-        public int polaganjaVsa(int vpisna, int predmetId, int studijskiprogram)
+        // vrne končni seštevek polaganj za neko izvajanje
+        public int polaganjaVsa(int vpisna, int izvajanjeId, int studijskiprogram)
         {
             int sum = 0;
             bool reset = false;
@@ -51,7 +51,7 @@ namespace studis.Models
             {
                 foreach (var p in v.prijavanaizpits.Where(p => p.stanje == 2))
                 {
-                    if (p.izpitnirok.izvajanje.predmetId == predmetId)
+                    if (p.izpitnirok.izvajanje.id == izvajanjeId)
                     {
                         if (v.vrstaVpisa == 2 && reset==false) //ponavljanje
                         {
@@ -66,7 +66,7 @@ namespace studis.Models
         }
 
         // vrne zaporedno stevilko izpita
-        public int zaporednoPolaganje(int vpisna, int predmetId, int studijskiprogram, DateTime datum)
+        public int zaporednoPolaganje(int vpisna, int izvajanjeId, int studijskiprogram, DateTime datum)
         {
             int sum = 0;
             bool reset = false;
@@ -76,7 +76,7 @@ namespace studis.Models
             {
                 foreach (var p in v.prijavanaizpits)
                 {
-                    if (p.izpitnirok.izvajanje.predmetId == predmetId && p.izpitnirok.datum <= datum)
+                    if (p.izpitnirok.izvajanje.id == izvajanjeId && p.izpitnirok.datum <= datum)
                     {
                         if (v.vrstaVpisa == 2 && reset == false) //ponavljanje
                         {

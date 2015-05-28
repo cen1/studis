@@ -101,7 +101,7 @@
                             {
                                 foreach (var p in @ViewBag.Prijave)
                                 {
-                                    if (i.studijskoletoId == v.studijskoLeto && i.izpitniroks.Contains(r) && p.vpisId == v.id && r.id == p.izpitnirokId && pisal == 0)
+                                    if (v.izvajanjes.Contains(i) && i.izpitniroks.Contains(r) && p.vpisId == v.id && r.id == p.izpitnirokId && pisal == 0)
                                     {
                                         pisal++;
                                     
@@ -122,7 +122,7 @@
                                             <td>@i.predmet.letnik</td>
                                             @{ var datum = sh.pridobiDatum(Convert.ToInt32(@p.id)); }
                                             <td>@datum</td>
-                                            @{ temp = sh.polaganjaVsa(Convert.ToInt32(@v.vpisnaStevilka), Convert.ToInt32(@i.predmetId), Convert.ToInt32(@v.studijskiProgram)); }
+                                            @{ temp = sh.polaganjaVsa(Convert.ToInt32(@v.vpisnaStevilka), Convert.ToInt32(@i.id), Convert.ToInt32(@v.studijskiProgram)); }
                                             <td>@temp</td>
                                             @{ temp = sh.polaganjaLetos(Convert.ToInt32(@v.id), Convert.ToInt32(@i.id)); }
                                             <td>@temp</td>
@@ -144,7 +144,7 @@
                                     }
                                 }            
                             }
-                            if (pisal == 0 && i.studijskoletoId == v.studijskoLeto)
+                            if (v.izvajanjes.Contains(i) && pisal == 0)
                             {   
                                 <tr>
                                     <td>@i.predmet.koda</td>
@@ -162,7 +162,7 @@
                                     </td>
                                     <td>@i.predmet.letnik</td>
                                     <td>/</td>
-                                    @{ temp = sh.polaganjaVsa(Convert.ToInt32(@v.vpisnaStevilka), Convert.ToInt32(@i.predmetId), Convert.ToInt32(@v.studijskiProgram)); }
+                                    @{ temp = sh.polaganjaVsa(Convert.ToInt32(@v.vpisnaStevilka), Convert.ToInt32(@i.id), Convert.ToInt32(@v.studijskiProgram)); }
                                     <td>@temp</td>
                                     <td>0</td>
                                     <td>@i.predmet.kreditne</td>
@@ -287,7 +287,7 @@
                             {
                                 foreach (var p in @ViewBag.Prijave)
                                 {
-                                    if (i.studijskoletoId == v.studijskoLeto && i.izpitniroks.Contains(r) && p.vpisId == v.id && r.id == p.izpitnirokId)
+                                    if (v.izvajanjes.Contains(i) && i.izpitniroks.Contains(r) && p.vpisId == v.id && r.id == p.izpitnirokId)
                                     {
                                         pisal++;
                                         
@@ -308,7 +308,7 @@
                                             <td>@i.predmet.letnik</td>
                                             @{ var datum = sh.pridobiDatum(Convert.ToInt32(@p.id)); }
                                             <td>@datum</td>
-                                            @{ temp = sh.zaporednoPolaganje(Convert.ToInt32(@v.vpisnaStevilka), Convert.ToInt32(@i.predmetId), Convert.ToInt32(@v.studijskiProgram), @r.datum); }
+                                            @{ temp = sh.zaporednoPolaganje(Convert.ToInt32(@v.vpisnaStevilka), Convert.ToInt32(@i.id), Convert.ToInt32(@v.studijskiProgram), @r.datum); }
                                             <td>@temp</td>
                                             @{ temp = sh.zaporednoPolaganjaLetos(Convert.ToInt32(@v.id), Convert.ToInt32(@i.id), Convert.ToInt32(@r.id)); }
                                             <td>@temp</td>
@@ -321,7 +321,7 @@
                                     }
                                 }
                             }
-                            if (pisal == 0 && i.studijskoletoId == v.studijskoLeto)
+                            if (v.izvajanjes.Contains(i) && pisal == 0)
                             {
                                     <tr>
                                         <td>@i.predmet.koda</td>
@@ -339,7 +339,7 @@
                                         </td>
                                         <td>@i.predmet.letnik</td>
                                         <td>/</td>
-                                        @{ temp = sh.polaganjaVsa(Convert.ToInt32(@v.vpisnaStevilka), Convert.ToInt32(@i.predmetId), Convert.ToInt32(@v.studijskiProgram)); }
+                                        @{ temp = sh.polaganjaVsa(Convert.ToInt32(@v.vpisnaStevilka), Convert.ToInt32(@i.id), Convert.ToInt32(@v.studijskiProgram)); }
                                         <td>@temp</td>
                                         <td>0</td>
                                         <td>@i.predmet.kreditne</td>

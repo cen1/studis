@@ -409,6 +409,10 @@ namespace studis.Controllers
                 }
                 db.SaveChanges();
                 
+                //ce je ponavljanje predmetnik ostane star
+                if (v.vrstaVpisa == 2)
+                    return RedirectToAction("VpisniListSuccess", "VpisniList");
+
                 //ce je referent vzpostavi obvezni del predmetnika in vrzi na success
                 if (User.IsInRole("Referent"))
                 {
@@ -1222,11 +1226,19 @@ namespace studis.Controllers
             //shrani predmetnik
             foreach (var p in ph.obvezni1())
             {
-                //poiščemo izvajanje pri tem predmetu ki se izvaja v prihodnjem šolskem letu
-                foreach (var i in db.izvajanjes.Where(a => a.predmetId == p.id))
+                //poiščemo izvajanje pri tem predmetu ki se izvaja v prihodnjem šolskem letu, dodamo le eno!
+                var izlist = db.izvajanjes.Where(a => a.predmetId == p.id).ToList();
+                bool breakk = false;
+                foreach (var i in izlist)
+                {
+                    if (breakk) break;
                     foreach (var il in i.izvajanjeletoes)
-                        if (il.studijskoletoId == sh.trenutnoSolskoLeto()+1)
+                        if (il.studijskoletoId == sh.trenutnoSolskoLeto() + 1)
+                        {
                             vl.izvajanjes.Add(i);
+                            breakk = true;
+                        }
+                }
             }
 
             try
@@ -1359,20 +1371,36 @@ namespace studis.Controllers
                     foreach (var o in ph.obvezni2())
                     {
                         //poiščemo izvajanje pri tem predmetu ki se izvaja v prihodnjem šolskem letu
-                        foreach (var i in db.izvajanjes.Where(a => a.predmetId == o.id))
+                        var izlist = db.izvajanjes.Where(a => a.predmetId == o.id).ToList();
+                        bool breakk = false;
+                        foreach (var i in izlist)
+                        {
+                            if (breakk) break;
                             foreach (var il in i.izvajanjeletoes)
                                 if (il.studijskoletoId == sh.trenutnoSolskoLeto() + 1)
+                                {
                                     vl.izvajanjes.Add(i);
+                                    breakk = true;
+                                }
+                        }
                     }
                 }
 
                 //dodaj izbirne
                 foreach (var p in dodaj_p) {
                     //poiščemo izvajanje pri tem predmetu ki se izvaja v prihodnjem šolskem letu
-                    foreach (var i in db.izvajanjes.Where(a => a.predmetId == p.id))
+                    var izlist = db.izvajanjes.Where(a => a.predmetId == p.id).ToList();
+                    bool breakk = false;
+                    foreach (var i in izlist)
+                    {
+                        if (breakk) break;
                         foreach (var il in i.izvajanjeletoes)
                             if (il.studijskoletoId == sh.trenutnoSolskoLeto() + 1)
+                            {
                                 vl.izvajanjes.Add(i);
+                                breakk = true;
+                            }
+                    }
                 }
 
                 try
@@ -1492,20 +1520,36 @@ namespace studis.Controllers
                     foreach (var o in ph.obvezni3())
                     {
                         //poiščemo izvajanje pri tem predmetu ki se izvaja v prihodnjem šolskem letu
-                        foreach (var i in db.izvajanjes.Where(a => a.predmetId == o.id))
+                        var izlist = db.izvajanjes.Where(a => a.predmetId == o.id).ToList();
+                        bool breakk = false;
+                        foreach (var i in izlist)
+                        {
+                            if (breakk) break;
                             foreach (var il in i.izvajanjeletoes)
                                 if (il.studijskoletoId == sh.trenutnoSolskoLeto() + 1)
+                                {
                                     vl.izvajanjes.Add(i);
+                                    breakk = true;
+                                }
+                        }
                     }
                 }
                 //dodaj izbirne
                 foreach (var p in dodaj_p)
                 {
                     //poiščemo izvajanje pri tem predmetu ki se izvaja v prihodnjem šolskem letu
-                    foreach (var i in db.izvajanjes.Where(a => a.predmetId == p.id))
+                    var izlist = db.izvajanjes.Where(a => a.predmetId == p.id).ToList();
+                    bool breakk = false;
+                    foreach (var i in izlist)
+                    {
+                        if (breakk) break;
                         foreach (var il in i.izvajanjeletoes)
                             if (il.studijskoletoId == sh.trenutnoSolskoLeto() + 1)
+                            {
                                 vl.izvajanjes.Add(i);
+                                breakk = true;
+                            }
+                    }
                 }
 
                 try
@@ -1637,20 +1681,36 @@ namespace studis.Controllers
                         foreach (var o in ph.obvezni3())
                         {
                             //poiščemo izvajanje pri tem predmetu ki se izvaja v prihodnjem šolskem letu
-                            foreach (var i in db.izvajanjes.Where(a => a.predmetId == o.id))
+                            var izlist = db.izvajanjes.Where(a => a.predmetId == o.id).ToList();
+                            bool breakk = false;
+                            foreach (var i in izlist)
+                            {
+                                if (breakk) break;
                                 foreach (var il in i.izvajanjeletoes)
                                     if (il.studijskoletoId == sh.trenutnoSolskoLeto() + 1)
+                                    {
                                         vl.izvajanjes.Add(i);
+                                        breakk = true;
+                                    }
+                            }
                         }
                     }
                     //dodaj izbirne
                     foreach (var p in dodaj_p)
                     {
                         //poiščemo izvajanje pri tem predmetu ki se izvaja v prihodnjem šolskem letu
-                        foreach (var i in db.izvajanjes.Where(a => a.predmetId == p.id))
+                        var izlist = db.izvajanjes.Where(a => a.predmetId == p.id).ToList();
+                        bool breakk = false;
+                        foreach (var i in izlist)
+                        {
+                            if (breakk) break;
                             foreach (var il in i.izvajanjeletoes)
                                 if (il.studijskoletoId == sh.trenutnoSolskoLeto() + 1)
+                                {
                                     vl.izvajanjes.Add(i);
+                                    breakk = true;
+                                }
+                        }
                     }
 
                     try
