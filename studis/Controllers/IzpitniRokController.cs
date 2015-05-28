@@ -396,11 +396,33 @@ namespace studis.Controllers
             {
                 foreach (VnosTockModel m in list)
                 {
-                    //Debug.WriteLine("element lista: "+m.ime+", zap.st: "+m.zaporednaStevilka+",tocke: "+m.tocke+", idRoka="+m.idRoka);
-                    if (!ModelState.IsValid)
+                    //podatki o izpitnem roku
+                    if(m.zaporednaStevilka==1)
                     {
-                        //napaka v modelu..TO DO
-                        return View();
+                        izpitnirok rok = db.izpitniroks.Where(r => r.id == m.idRoka).SingleOrDefault();
+
+                        sifrant_prostor predavalnica = db.sifrant_prostor.Where(s => s.id == rok.prostorId).SingleOrDefault();
+                        izvajanje izv = db.izvajanjes.Where(i => i.id == rok.izvajanjeId).SingleOrDefault();
+
+                        string izvajalci = izv.profesor.priimek + " " + izv.profesor.ime;
+                        if (izv.izvajalec2Id != null)
+                            izvajalci = izvajalci + ", " + izv.profesor1.priimek + " " + izv.profesor1.ime;
+                        if (izv.izvajalec3Id != null)
+                            izvajalci = izvajalci + ", " + izv.profesor2.priimek + " " + izv.profesor2.ime;
+
+                        ViewBag.idRoka = rok.id;
+                        ViewBag.izvajalci = izvajalci;
+                        ViewBag.prostor = predavalnica.naziv;
+                        ViewBag.datum = GetDatumForIzpitniRok(rok.id);
+                        ViewBag.ura = UserHelper.TimeToString((DateTime)rok.ura);
+                        ViewBag.sifraPredmeta = izv.predmetId;
+                        ViewBag.imePredmeta = izv.predmet.ime;
+                    }
+
+                    //vnos točk
+                    if (!ModelState.IsValid)
+                    {                        
+                        return View();//napaka v modelu..TO DO
                     }
                     else
                     {
@@ -460,7 +482,6 @@ namespace studis.Controllers
                     }
                 }
             }
-            //Debug.WriteLine("konec");
             return View(list);
         }
 
