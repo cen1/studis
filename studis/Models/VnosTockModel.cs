@@ -17,6 +17,7 @@ namespace studis.Models
         public string datumIzvajanja { get; set; }
         public string uraIzvajanja { get; set; }
         public string prostor { get; set; }*/
+        public int idRoka { get; set; }
         
         //študenti
         public int zaporednaStevilka { get; set; }

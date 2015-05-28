@@ -340,7 +340,6 @@ namespace studis.Controllers
 
             var prijave = db.prijavanaizpits.Where(p => p.izpitnirokId == rok.id).ToList();
             
-            int zaporednaSt = 0;
             foreach (prijavanaizpit prijava in prijave)
             {
                 vpi vpiss = db.vpis.Where(v => v.id == prijava.vpisId).SingleOrDefault();
@@ -349,8 +348,7 @@ namespace studis.Controllers
 
                 if (st != null)
                 {
-                    zaporednaSt = zaporednaSt+1;
-                    vnos.zaporednaStevilka = zaporednaSt;
+                    vnos.idRoka = rokID;
                     vnos.vpisnaStevilka = st.vpisnaStevilka;
                     vnos.ime = st.ime;
                     vnos.priimek = st.priimek;
@@ -362,7 +360,7 @@ namespace studis.Controllers
                             if (vpisan.id == prijava1.vpisId)
                             {
                                 vnos.studijskoLeto = vpisan.sifrant_studijskoleto.naziv;
-                                vnos.zaporednoSteviloPonavljanja = sh.zaporednoPolaganje(st.vpisnaStevilka, (int)izv.predmetId, vpisan.studijskiProgram, prijava1.izpitnirok.datum);
+                                vnos.zaporednoSteviloPonavljanja = sh.zaporednoPolaganje(st.vpisnaStevilka, (int)izv.id, vpisan.studijskiProgram, prijava1.izpitnirok.datum);
                             }
                         }
                     }
@@ -375,6 +373,13 @@ namespace studis.Controllers
             {
                 //uredi seznam študentov
                 listVnosov = listVnosov.OrderBy(o => o.priimek).ToList();
+
+                int zaporednaSt = 0;
+                foreach (var item in listVnosov)
+                {
+                    zaporednaSt = zaporednaSt + 1;
+                    item.zaporednaStevilka = zaporednaSt;
+                }
             }
             else
                 listVnosov = null;
@@ -387,7 +392,7 @@ namespace studis.Controllers
         {
             foreach (VnosTockModel m in list)
             {
-                Debug.WriteLine("element lista: "+m.ime+",tocke: "+m.tocke);
+                Debug.WriteLine("element lista: "+m.ime+", zap.st: "+m.zaporednaStevilka+",tocke: "+m.tocke+", idRoka="+m.idRoka);
                 if (!ModelState.IsValid)
                 {
                     return View();
@@ -397,20 +402,6 @@ namespace studis.Controllers
             return View(list);
         }
 
-        //[HttpPost]
-        public ActionResult VnosTock(IList<studis.Models.VnosTockModel> list)
-        {
-            foreach (VnosTockModel m in list)
-            {
-                Debug.WriteLine("element lista: " + m.ime);
-                if (!ModelState.IsValid)
-                {
-                    return View();
-                }
-            }
-            Debug.WriteLine("konec");
-            return View("Vpistock", list);
-        }
 
 
         /*
