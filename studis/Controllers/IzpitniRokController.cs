@@ -6,6 +6,8 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
+using System.Data;
+using System.Data.Entity;
 
 namespace studis.Controllers
 {
@@ -390,15 +392,75 @@ namespace studis.Controllers
         [HttpPost]
         public ActionResult VpisTock(IList<studis.Models.VnosTockModel> list)
         {
-            foreach (VnosTockModel m in list)
+            if (list.Any())
             {
-                Debug.WriteLine("element lista: "+m.ime+", zap.st: "+m.zaporednaStevilka+",tocke: "+m.tocke+", idRoka="+m.idRoka);
-                if (!ModelState.IsValid)
+                foreach (VnosTockModel m in list)
                 {
-                    return View();
+                    //Debug.WriteLine("element lista: "+m.ime+", zap.st: "+m.zaporednaStevilka+",tocke: "+m.tocke+", idRoka="+m.idRoka);
+                    if (!ModelState.IsValid)
+                    {
+                        //napaka v modelu..TO DO
+                        return View();
+                    }
+                    else
+                    {
+                        //vpisi tocke, če so bile vnese v view-u...TO DO: namesto 0 neko boljše primerjanje
+                        if (m.tocke != 0)
+                        {
+                            vpi vpis = db.vpis.Where(v => v.vpisnaStevilka == m.vpisnaStevilka && v.sifrant_studijskoleto.naziv == m.studijskoLeto).FirstOrDefault();
+
+                            var vsePrijave = db.prijavanaizpits.Where(p => p.izpitnirokId == m.idRoka);
+                            prijavanaizpit prijava = vsePrijave.Where(p => p.izpitnirokId == m.idRoka && p.vpisId == vpis.id).FirstOrDefault();
+                            
+                            tocke tocke = null;
+                            try
+                            {
+                                //preveri če že obstaja vnos?
+                                tocke = db.tockes.Where(t => t.prijavaId == prijava.id).FirstOrDefault();                                
+                            }
+                            catch (Exception e) 
+                            {
+                                Debug.WriteLine("Tocke za tega studenta in prijavo niso še vnesene..");
+                            }
+
+                            //posodobi vnos
+                            if (tocke != null)
+                            {                                
+                                try
+                                {
+                                    tocke.tocke1 = m.tocke;
+                                    tocke.prijavaId = prijava.id;
+                                    tocke.datum = DateTime.Now;
+                                    db.Entry(tocke).State = EntityState.Modified;
+                                    db.SaveChanges();
+                                }
+                                catch (Exception e)
+                                {
+                                    Debug.WriteLine("Couldn't save changes to DB tocke!");
+                                }
+                            }
+                            //nov vnos
+                            else
+                            {                                 
+                                try
+                                {
+                                    tocke = new tocke();
+                                    tocke.tocke1 = m.tocke;
+                                    tocke.prijavaId = prijava.id;
+                                    tocke.datum = DateTime.Now;
+                                    db.tockes.Add(tocke);
+                                    db.SaveChanges();
+                                }
+                                catch (Exception e)
+                                {
+                                    Debug.WriteLine("Couldn't make new entry&save changes to DB tocke!");
+                                }
+                            }
+                        }
+                    }
                 }
             }
-            Debug.WriteLine("konec");
+            //Debug.WriteLine("konec");
             return View(list);
         }
 
