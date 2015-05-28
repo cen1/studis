@@ -101,7 +101,7 @@
                             {
                                 foreach (var p in @ViewBag.Prijave)
                                 {
-                                    if (i.studijskoletoId == v.studijskoLeto && i.izpitniroks.Contains(r) && p.vpisId == v.id && r.id == p.izpitnirokId && pisal == 0)
+                                    if (v.izvajanjes.Contains(i) && i.izpitniroks.Contains(r) && p.vpisId == v.id && r.id == p.izpitnirokId && pisal == 0)
                                     {
                                         pisal++;
                                     
@@ -144,7 +144,7 @@
                                     }
                                 }            
                             }
-                            if (pisal == 0 && i.studijskoletoId == v.studijskoLeto)
+                            if (v.izvajanjes.Contains(i) && pisal == 0)
                             {   
                                 <tr>
                                     <td>@i.predmet.koda</td>
@@ -287,7 +287,7 @@
                             {
                                 foreach (var p in @ViewBag.Prijave)
                                 {
-                                    if (i.studijskoletoId == v.studijskoLeto && i.izpitniroks.Contains(r) && p.vpisId == v.id && r.id == p.izpitnirokId)
+                                    if (v.izvajanjes.Contains(i) && i.izpitniroks.Contains(r) && p.vpisId == v.id && r.id == p.izpitnirokId)
                                     {
                                         pisal++;
                                         
@@ -321,7 +321,7 @@
                                     }
                                 }
                             }
-                            if (pisal == 0 && i.studijskoletoId == v.studijskoLeto)
+                            if (v.izvajanjes.Contains(i) && pisal == 0)
                             {
                                     <tr>
                                         <td>@i.predmet.koda</td>
