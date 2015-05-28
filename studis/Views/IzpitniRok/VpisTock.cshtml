@@ -53,24 +53,31 @@
         {
             for (var i = 0; i < Model.Count; i++)
             {
+                @Html.HiddenFor(x => x[i].idRoka)
                 <tr>
                     <td>
                         @Html.DisplayFor(x => x[i].zaporednaStevilka)
+                        @Html.HiddenFor(x => x[i].zaporednaStevilka)
                     </td>
                     <td>
                         @Html.DisplayFor(x => x[i].vpisnaStevilka)
+                        @Html.HiddenFor(x => x[i].vpisnaStevilka)
                     </td>
                     <td>
                         @Html.DisplayFor(x => x[i].priimek)
+                        @Html.HiddenFor(x => x[i].priimek)
                     </td>
                     <td>
                         @Html.DisplayFor(x => x[i].ime)
+                        @Html.HiddenFor(x => x[i].ime)
                     </td>
                     <td>
                         @Html.DisplayFor(x => x[i].studijskoLeto)
+                        @Html.HiddenFor(x => x[i].studijskoLeto)
                     </td>
                     <td>
                         @Html.DisplayFor(x => x[i].zaporednoSteviloPonavljanja)
+                        @Html.HiddenFor(x => x[i].zaporednoSteviloPonavljanja)
                     </td>
                     <td class="editor-field">
                         @Html.TextBoxFor(x => x[i].tocke)
@@ -84,4 +91,3 @@
         <input id="submit" type="submit" value="Potrdi vnos">
     </p>
 }
-@Html.ActionLink("Vnesi točke", "VnosTock", "IzpitniRok", new { list = Model }, null)

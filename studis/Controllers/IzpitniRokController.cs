@@ -6,6 +6,8 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
+using System.Data;
+using System.Data.Entity;
 
 namespace studis.Controllers
 {
@@ -340,7 +342,6 @@ namespace studis.Controllers
 
             var prijave = db.prijavanaizpits.Where(p => p.izpitnirokId == rok.id).ToList();
             
-            int zaporednaSt = 0;
             foreach (prijavanaizpit prijava in prijave)
             {
                 vpi vpiss = db.vpis.Where(v => v.id == prijava.vpisId).SingleOrDefault();
@@ -349,8 +350,7 @@ namespace studis.Controllers
 
                 if (st != null)
                 {
-                    zaporednaSt = zaporednaSt+1;
-                    vnos.zaporednaStevilka = zaporednaSt;
+                    vnos.idRoka = rokID;
                     vnos.vpisnaStevilka = st.vpisnaStevilka;
                     vnos.ime = st.ime;
                     vnos.priimek = st.priimek;
@@ -362,7 +362,7 @@ namespace studis.Controllers
                             if (vpisan.id == prijava1.vpisId)
                             {
                                 vnos.studijskoLeto = vpisan.sifrant_studijskoleto.naziv;
-                                vnos.zaporednoSteviloPonavljanja = sh.zaporednoPolaganje(st.vpisnaStevilka, (int)izv.predmetId, vpisan.studijskiProgram, prijava1.izpitnirok.datum);
+                                vnos.zaporednoSteviloPonavljanja = sh.zaporednoPolaganje(st.vpisnaStevilka, (int)izv.id, vpisan.studijskiProgram, prijava1.izpitnirok.datum);
                             }
                         }
                     }
@@ -375,6 +375,13 @@ namespace studis.Controllers
             {
                 //uredi seznam študentov
                 listVnosov = listVnosov.OrderBy(o => o.priimek).ToList();
+
+                int zaporednaSt = 0;
+                foreach (var item in listVnosov)
+                {
+                    zaporednaSt = zaporednaSt + 1;
+                    item.zaporednaStevilka = zaporednaSt;
+                }
             }
             else
                 listVnosov = null;
@@ -385,32 +392,99 @@ namespace studis.Controllers
         [HttpPost]
         public ActionResult VpisTock(IList<studis.Models.VnosTockModel> list)
         {
-            foreach (VnosTockModel m in list)
+            if (list.Any())
             {
-                Debug.WriteLine("element lista: "+m.ime+",tocke: "+m.tocke);
-                if (!ModelState.IsValid)
+                foreach (VnosTockModel m in list)
                 {
-                    return View();
+                    //podatki o izpitnem roku
+                    if(m.zaporednaStevilka==1)
+                    {
+                        izpitnirok rok = db.izpitniroks.Where(r => r.id == m.idRoka).SingleOrDefault();
+
+                        sifrant_prostor predavalnica = db.sifrant_prostor.Where(s => s.id == rok.prostorId).SingleOrDefault();
+                        izvajanje izv = db.izvajanjes.Where(i => i.id == rok.izvajanjeId).SingleOrDefault();
+
+                        string izvajalci = izv.profesor.priimek + " " + izv.profesor.ime;
+                        if (izv.izvajalec2Id != null)
+                            izvajalci = izvajalci + ", " + izv.profesor1.priimek + " " + izv.profesor1.ime;
+                        if (izv.izvajalec3Id != null)
+                            izvajalci = izvajalci + ", " + izv.profesor2.priimek + " " + izv.profesor2.ime;
+
+                        ViewBag.idRoka = rok.id;
+                        ViewBag.izvajalci = izvajalci;
+                        ViewBag.prostor = predavalnica.naziv;
+                        ViewBag.datum = GetDatumForIzpitniRok(rok.id);
+                        ViewBag.ura = UserHelper.TimeToString((DateTime)rok.ura);
+                        ViewBag.sifraPredmeta = izv.predmetId;
+                        ViewBag.imePredmeta = izv.predmet.ime;
+                    }
+
+                    //vnos točk
+                    if (!ModelState.IsValid)
+                    {                        
+                        return View();//napaka v modelu..TO DO
+                    }
+                    else
+                    {
+                        //vpisi tocke, če so bile vnese v view-u...TO DO: namesto 0 neko boljše primerjanje
+                        if (m.tocke != 0)
+                        {
+                            vpi vpis = db.vpis.Where(v => v.vpisnaStevilka == m.vpisnaStevilka && v.sifrant_studijskoleto.naziv == m.studijskoLeto).FirstOrDefault();
+
+                            var vsePrijave = db.prijavanaizpits.Where(p => p.izpitnirokId == m.idRoka);
+                            prijavanaizpit prijava = vsePrijave.Where(p => p.izpitnirokId == m.idRoka && p.vpisId == vpis.id).FirstOrDefault();
+                            
+                            tocke tocke = null;
+                            try
+                            {
+                                //preveri če že obstaja vnos?
+                                tocke = db.tockes.Where(t => t.prijavaId == prijava.id).FirstOrDefault();                                
+                            }
+                            catch (Exception e) 
+                            {
+                                Debug.WriteLine("Tocke za tega studenta in prijavo niso še vnesene..");
+                            }
+
+                            //posodobi vnos
+                            if (tocke != null)
+                            {                                
+                                try
+                                {
+                                    tocke.tocke1 = m.tocke;
+                                    tocke.prijavaId = prijava.id;
+                                    tocke.datum = DateTime.Now;
+                                    db.Entry(tocke).State = EntityState.Modified;
+                                    db.SaveChanges();
+                                }
+                                catch (Exception e)
+                                {
+                                    Debug.WriteLine("Couldn't save changes to DB tocke!");
+                                }
+                            }
+                            //nov vnos
+                            else
+                            {                                 
+                                try
+                                {
+                                    tocke = new tocke();
+                                    tocke.tocke1 = m.tocke;
+                                    tocke.prijavaId = prijava.id;
+                                    tocke.datum = DateTime.Now;
+                                    db.tockes.Add(tocke);
+                                    db.SaveChanges();
+                                }
+                                catch (Exception e)
+                                {
+                                    Debug.WriteLine("Couldn't make new entry&save changes to DB tocke!");
+                                }
+                            }
+                        }
+                    }
                 }
             }
-            Debug.WriteLine("konec");
             return View(list);
         }
 
-        //[HttpPost]
-        public ActionResult VnosTock(IList<studis.Models.VnosTockModel> list)
-        {
-            foreach (VnosTockModel m in list)
-            {
-                Debug.WriteLine("element lista: " + m.ime);
-                if (!ModelState.IsValid)
-                {
-                    return View();
-                }
-            }
-            Debug.WriteLine("konec");
-            return View("Vpistock", list);
-        }
 
 
         /*

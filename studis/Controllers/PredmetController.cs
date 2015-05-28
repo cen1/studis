@@ -48,37 +48,43 @@ namespace studis.Controllers
 
             foreach(izvajanje izvajanje in izvajanja)
             {
-                foreach (izvajanjeleto letoizvajanja in izvajanje.izvajanjeletoes)
-                {
+                //foreach (izvajanjeleto letoizvajanja in izvajanje.izvajanjeletoes)
+                //{
                     //predavanja v iskanem letu
-                    if (letoizvajanja.sifrant_studijskoleto.id == leto)
-                    {
+                    //if (letoizvajanja.sifrant_studijskoleto.id == leto)
+                   // {
+                        //System.Diagnostics.Debug.WriteLine(letoizvajanja.sifrant_studijskoleto.id+"="+leto);
                         foreach (vpi vpis in izvajanje.vpis)
                         {
-                            student st = db.students.Where(s => s.vpisnaStevilka == vpis.vpisnaStevilka).SingleOrDefault();
-                            if (st != null)
+                            if (vpis.studijskoLeto == leto)
                             {
-                                list.Add(st);
+                                student st = db.students.Where(s => s.vpisnaStevilka == vpis.vpisnaStevilka).SingleOrDefault();
+                                if (st != null)
+                                {
+                                    list.Add(st);
+                                }
                             }
                         }
-                    }
-                }
+                    //}
+                //}
             }
 
             //uredi seznam študentov
             if (list.Any())
-                list = list.OrderBy(o => o.priimek).ToList();
-            else
-                list = null;
-
-            //naredi seznam "vrst vpisov", v enakem vrstnem redu kot so študenti
-            foreach (var student in list)
             {
-                vpi vpis = student.vpis.Where(v => v.studijskoLeto == leto).SingleOrDefault();
-                string temp = vpis.sifrant_vrstavpisa.naziv;
-                vrstaVpisa.Add(temp);
+                list = list.OrderBy(o => o.priimek).ToList();
+
+                //naredi seznam "vrst vpisov", v enakem vrstnem redu kot so študenti
+                foreach (var student in list)
+                {
+                    vpi vpis = student.vpis.Where(v => v.studijskoLeto == leto).SingleOrDefault();
+                    string temp = vpis.sifrant_vrstavpisa.naziv;
+                    vrstaVpisa.Add(temp);
+                }
+                ViewBag.vrstaVpisa = vrstaVpisa;
             }
-            ViewBag.vrstaVpisa = vrstaVpisa;
+            else
+                list = null;            
 
             return View("PredmetStudenti", list);
         }
