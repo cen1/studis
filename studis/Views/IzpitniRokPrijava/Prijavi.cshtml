@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewBag.Title = "Prijava na izpiti";
+    ViewBag.Title = "Prijava na izpit";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
@@ -15,7 +15,7 @@
     <div>
         <fieldset>
             
-            @if (User.IsInRole("Referent")) 
+            @if (User.IsInRole("Referent") && ViewBag.Studenti != null) 
             {
                 <!--Izbira Studenta-->
                 <div class="editor-label">
@@ -163,7 +163,7 @@
 
                     //napolni
                     for (i = 0; i < izpitniRoks.length; i++) {
-                        ddlIzpitniRoks.append('<li>' + opozorila[i] + '</li>');
+                        ulOpozorila.append('<li>' + opozorila[i] + '</li>');
                     }
                     
                 },
