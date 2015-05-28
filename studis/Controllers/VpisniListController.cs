@@ -409,6 +409,10 @@ namespace studis.Controllers
                 }
                 db.SaveChanges();
                 
+                //ce je ponavljanje predmetnik ostane star
+                if (v.vrstaVpisa == 2)
+                    return RedirectToAction("VpisniListSuccess", "VpisniList");
+
                 //ce je referent vzpostavi obvezni del predmetnika in vrzi na success
                 if (User.IsInRole("Referent"))
                 {

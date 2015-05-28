@@ -256,6 +256,8 @@ namespace studis.Models
 
         public bool jePredmetnikVzpostavljen(vpi v)
         {
+            if (v.vrstaVpisa == 2) return true; //ponavljanje
+
             if (v.izvajanjes.Count() == 0)
             {
                 System.Diagnostics.Debug.WriteLine("Vzpostavljen za " + v.id.ToString() + " je false cnt 0");
