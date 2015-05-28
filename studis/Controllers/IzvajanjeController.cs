@@ -58,10 +58,16 @@ namespace studis.Controllers
                 if (model.profesor3 != 0)
                     izvajanje.profesor2 = db.profesors.SingleOrDefault(p => p.id == model.profesor3);
                 Debug.WriteLine("Dodano izvajanje1");
-                izvajanje.studijskoletoId = DateTime.Now.Year;
+                
                 db.izvajanjes.Add(izvajanje);
                 db.SaveChanges();
-                Debug.WriteLine("Dodano izvajanje2");
+
+                izvajanjeleto il = new izvajanjeleto();
+                il.izvajanjeId = izvajanje.id;
+                il.studijskoletoId = DateTime.Now.Year;
+                izvajanje.izvajanjeletoes.Add(il);
+                db.SaveChanges();
+
             }
             catch
             {

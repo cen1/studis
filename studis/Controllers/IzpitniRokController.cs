@@ -477,7 +477,6 @@ namespace studis.Controllers
                     profesorji += ", " + profesor3.ime + " " + profesor3.priimek;
                 }
 
-                profesorji = profesorji + " (" + i.sifrant_studijskoleto.naziv + ")";
                 seznamIzvajanja.Add(new SelectListItem() { Value = i.id.ToString(), Text = profesorji });
             }
             if (c < 1)
