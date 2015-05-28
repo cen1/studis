@@ -295,7 +295,7 @@ namespace studis.Controllers
                             if (vpisan.id == prijava.vpisId)
                             {
                                 leta.Add(vpisan.sifrant_studijskoleto.naziv);
-                                int polaganja = sh.zaporednoPolaganje(list[i].vpisnaStevilka, (int)izv.predmetId, vpisan.studijskiProgram, prijava.izpitnirok.datum);
+                                int polaganja = sh.zaporednoPolaganje(list[i].vpisnaStevilka, (int)izv.id, vpisan.studijskiProgram, prijava.izpitnirok.datum);
                                 vsaPolaganja.Add(polaganja);
                             }
                         }
