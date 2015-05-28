@@ -137,10 +137,10 @@
                 type: "POST", 
                 url: "/IzpitniRokPrijava/PreveriPrijavo/",
                 data: { vpisna: $("#student").val(), izpitniRok: $(this).val() },
-                success: function (response) {
-                    //var opozorila = $.parseJSON(response);
+                success: function (data) {
+                    var response = $.parseJSON(data);
                     var opozorila = response.warnings;
-                    var obvestilo = resposne.obvestilo;
+                    var obvestilo = response.obvestilo;
                     @if (User.IsInRole("Referent"))
                     {
                         <text>
@@ -162,7 +162,7 @@
                     ulOpozorila.empty();
 
                     //napolni
-                    for (i = 0; i < izpitniRoks.length; i++) {
+                    for (i = 0; i < opozorila.length; i++) {
                         ulOpozorila.append('<li>' + opozorila[i] + '</li>');
                     }
                     

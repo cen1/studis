@@ -272,7 +272,7 @@ namespace studis.Controllers
                 opozorila.Add("Rok za prijavo je potekel.");
             }
             //-preveri da je od zadnje prijave minilo 7 dni
-            var zadnjaPrijava = db.prijavanaizpits.Where(a => a.izpitnirokId == iRok.id).Where(a => a.vpisId == trenutniVpis.id).LastOrDefault();
+            var zadnjaPrijava = db.prijavanaizpits.Where(a => a.izpitnirokId == iRok.id).Where(a => a.vpisId == trenutniVpis.id).FirstOrDefault();
             if (zadnjaPrijava != null)
             {
                 TimeSpan razlika = DateTime.Now - zadnjaPrijava.datumPrijave;
@@ -288,7 +288,7 @@ namespace studis.Controllers
                 opozorila.Add("Preseženo število dovoljenih prijav za letos (3).");
             }
             //-max 6 polaganj vse skupaj (ponavljanje resetira)
-            int skupaj = sh.polaganjaVsa(trenutniVpis.id, (int) iRok.izvajanjeId, trenutniVpis.studijskiProgram);
+            int skupaj = sh.polaganjaVsa(trenutniVpis.vpisnaStevilka, (int) iRok.izvajanjeId, trenutniVpis.studijskiProgram);
             if (skupaj > 6)
             {
                 opozorila.Add("Preseženo število dovoljenih prijav (6).");
