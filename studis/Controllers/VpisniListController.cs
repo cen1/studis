@@ -1222,9 +1222,11 @@ namespace studis.Controllers
             //shrani predmetnik
             foreach (var p in ph.obvezni1())
             {
-                //vstavimo po defaultu prvo izvajanje za naslednje leto
-                izvajanje i = db.izvajanjes.Where(a => a.predmetId == p.id).Where(b => b.studijskoletoId == DateTime.Now.Year).First();
-                vl.izvajanjes.Add(i);
+                //poiščemo izvajanje pri tem predmetu ki se izvaja v prihodnjem šolskem letu
+                foreach (var i in db.izvajanjes.Where(a => a.predmetId == p.id))
+                    foreach (var il in i.izvajanjeletoes)
+                        if (il.studijskoletoId == sh.trenutnoSolskoLeto()+1)
+                            vl.izvajanjes.Add(i);
             }
 
             try
@@ -1314,6 +1316,7 @@ namespace studis.Controllers
             }
             
             PredmetHelper ph = new PredmetHelper();
+            StudentHelper sh = new StudentHelper();
             int kreditne = 60 - ph.getKreditObv2();
             List<predmet> dodaj_p = new List<predmet>();
 
@@ -1355,15 +1358,21 @@ namespace studis.Controllers
                 {
                     foreach (var o in ph.obvezni2())
                     {
-                        izvajanje i = db.izvajanjes.Where(a => a.predmetId == o.id).Where(b => b.studijskoletoId == DateTime.Now.Year).First();
-                        vl.izvajanjes.Add(i);
+                        //poiščemo izvajanje pri tem predmetu ki se izvaja v prihodnjem šolskem letu
+                        foreach (var i in db.izvajanjes.Where(a => a.predmetId == o.id))
+                            foreach (var il in i.izvajanjeletoes)
+                                if (il.studijskoletoId == sh.trenutnoSolskoLeto() + 1)
+                                    vl.izvajanjes.Add(i);
                     }
                 }
 
                 //dodaj izbirne
                 foreach (var p in dodaj_p) {
-                    izvajanje i = db.izvajanjes.Where(a => a.predmetId == p.id).Where(b => b.studijskoletoId == DateTime.Now.Year).First();
-                    vl.izvajanjes.Add(i);
+                    //poiščemo izvajanje pri tem predmetu ki se izvaja v prihodnjem šolskem letu
+                    foreach (var i in db.izvajanjes.Where(a => a.predmetId == p.id))
+                        foreach (var il in i.izvajanjeletoes)
+                            if (il.studijskoletoId == sh.trenutnoSolskoLeto() + 1)
+                                vl.izvajanjes.Add(i);
                 }
 
                 try
@@ -1456,6 +1465,7 @@ namespace studis.Controllers
             if (!uh.preveriPovprecje(vl.student)) return HttpNotFound();
 
             PredmetHelper ph = new PredmetHelper();
+            StudentHelper sh = new StudentHelper();
             int kreditne = 60 - ph.getKreditObv3();
             List<predmet> dodaj_p = new List<predmet>();
 
@@ -1481,15 +1491,21 @@ namespace studis.Controllers
                 {
                     foreach (var o in ph.obvezni3())
                     {
-                        izvajanje i = db.izvajanjes.Where(a => a.predmetId == o.id).Where(b => b.studijskoletoId == DateTime.Now.Year).First();
-                        vl.izvajanjes.Add(i);
+                        //poiščemo izvajanje pri tem predmetu ki se izvaja v prihodnjem šolskem letu
+                        foreach (var i in db.izvajanjes.Where(a => a.predmetId == o.id))
+                            foreach (var il in i.izvajanjeletoes)
+                                if (il.studijskoletoId == sh.trenutnoSolskoLeto() + 1)
+                                    vl.izvajanjes.Add(i);
                     }
                 }
                 //dodaj izbirne
                 foreach (var p in dodaj_p)
                 {
-                    izvajanje i = db.izvajanjes.Where(a => a.predmetId == p.id).Where(b => b.studijskoletoId == DateTime.Now.Year).First();
-                    vl.izvajanjes.Add(i);
+                    //poiščemo izvajanje pri tem predmetu ki se izvaja v prihodnjem šolskem letu
+                    foreach (var i in db.izvajanjes.Where(a => a.predmetId == p.id))
+                        foreach (var il in i.izvajanjeletoes)
+                            if (il.studijskoletoId == sh.trenutnoSolskoLeto() + 1)
+                                vl.izvajanjes.Add(i);
                 }
 
                 try
@@ -1566,6 +1582,7 @@ namespace studis.Controllers
             }
 
             PredmetHelper ph = new PredmetHelper();
+            StudentHelper sh = new StudentHelper();
             int kreditne = 60 - ph.getKreditObv3();
             List<predmet> dodaj_p = new List<predmet>();
             List<modul> moduli = new List<modul>();
@@ -1619,15 +1636,21 @@ namespace studis.Controllers
                     {
                         foreach (var o in ph.obvezni3())
                         {
-                            izvajanje i = db.izvajanjes.Where(a => a.predmetId == o.id).Where(b => b.studijskoletoId == DateTime.Now.Year).First();
-                            vl.izvajanjes.Add(i);
+                            //poiščemo izvajanje pri tem predmetu ki se izvaja v prihodnjem šolskem letu
+                            foreach (var i in db.izvajanjes.Where(a => a.predmetId == o.id))
+                                foreach (var il in i.izvajanjeletoes)
+                                    if (il.studijskoletoId == sh.trenutnoSolskoLeto() + 1)
+                                        vl.izvajanjes.Add(i);
                         }
                     }
                     //dodaj izbirne
                     foreach (var p in dodaj_p)
                     {
-                        izvajanje i = db.izvajanjes.Where(a => a.predmetId == p.id).Where(b => b.studijskoletoId == DateTime.Now.Year).First();
-                        vl.izvajanjes.Add(i);
+                        //poiščemo izvajanje pri tem predmetu ki se izvaja v prihodnjem šolskem letu
+                        foreach (var i in db.izvajanjes.Where(a => a.predmetId == p.id))
+                            foreach (var il in i.izvajanjeletoes)
+                                if (il.studijskoletoId == sh.trenutnoSolskoLeto() + 1)
+                                    vl.izvajanjes.Add(i);
                     }
 
                     try

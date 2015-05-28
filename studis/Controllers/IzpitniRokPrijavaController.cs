@@ -140,8 +140,10 @@ namespace studis.Controllers
                     var profesor3 = i.profesor2;
                     profesorji += ", " + profesor3.ime + " " + profesor3.priimek;
                 }
+
                 //izvajanje.izvajanjeleto.sifrant_studijskoleto.naziv
-                profesorji = profesorji + " (" + i.sifrant_studijskoleto.naziv + ")";
+                //profesorji = profesorji + " (" + i.sifrant_studijskoleto.naziv + ")";
+
                 seznamIzvajanja.Add(new SelectListItem() { Value = i.id.ToString(), Text = profesorji });
             }
             if (c < 1)
