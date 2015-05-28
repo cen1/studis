@@ -1223,7 +1223,8 @@ namespace studis.Controllers
             foreach (var p in ph.obvezni1())
             {
                 //poiščemo izvajanje pri tem predmetu ki se izvaja v prihodnjem šolskem letu
-                foreach (var i in db.izvajanjes.Where(a => a.predmetId == p.id))
+                var izlist = db.izvajanjes.Where(a => a.predmetId == p.id).ToList();
+                foreach (var i in izlist)
                     foreach (var il in i.izvajanjeletoes)
                         if (il.studijskoletoId == sh.trenutnoSolskoLeto()+1)
                             vl.izvajanjes.Add(i);
@@ -1359,7 +1360,8 @@ namespace studis.Controllers
                     foreach (var o in ph.obvezni2())
                     {
                         //poiščemo izvajanje pri tem predmetu ki se izvaja v prihodnjem šolskem letu
-                        foreach (var i in db.izvajanjes.Where(a => a.predmetId == o.id))
+                        var izlist = db.izvajanjes.Where(a => a.predmetId == o.id).ToList();
+                        foreach (var i in izlist)
                             foreach (var il in i.izvajanjeletoes)
                                 if (il.studijskoletoId == sh.trenutnoSolskoLeto() + 1)
                                     vl.izvajanjes.Add(i);
@@ -1369,7 +1371,8 @@ namespace studis.Controllers
                 //dodaj izbirne
                 foreach (var p in dodaj_p) {
                     //poiščemo izvajanje pri tem predmetu ki se izvaja v prihodnjem šolskem letu
-                    foreach (var i in db.izvajanjes.Where(a => a.predmetId == p.id))
+                    var izlist = db.izvajanjes.Where(a => a.predmetId == p.id).ToList();
+                    foreach (var i in izlist)
                         foreach (var il in i.izvajanjeletoes)
                             if (il.studijskoletoId == sh.trenutnoSolskoLeto() + 1)
                                 vl.izvajanjes.Add(i);
@@ -1492,7 +1495,8 @@ namespace studis.Controllers
                     foreach (var o in ph.obvezni3())
                     {
                         //poiščemo izvajanje pri tem predmetu ki se izvaja v prihodnjem šolskem letu
-                        foreach (var i in db.izvajanjes.Where(a => a.predmetId == o.id))
+                        var izlist = db.izvajanjes.Where(a => a.predmetId == o.id).ToList();
+                        foreach (var i in izlist)
                             foreach (var il in i.izvajanjeletoes)
                                 if (il.studijskoletoId == sh.trenutnoSolskoLeto() + 1)
                                     vl.izvajanjes.Add(i);
@@ -1502,7 +1506,8 @@ namespace studis.Controllers
                 foreach (var p in dodaj_p)
                 {
                     //poiščemo izvajanje pri tem predmetu ki se izvaja v prihodnjem šolskem letu
-                    foreach (var i in db.izvajanjes.Where(a => a.predmetId == p.id))
+                    var izlist = db.izvajanjes.Where(a => a.predmetId == p.id).ToList();
+                    foreach (var i in izlist)
                         foreach (var il in i.izvajanjeletoes)
                             if (il.studijskoletoId == sh.trenutnoSolskoLeto() + 1)
                                 vl.izvajanjes.Add(i);
@@ -1637,7 +1642,8 @@ namespace studis.Controllers
                         foreach (var o in ph.obvezni3())
                         {
                             //poiščemo izvajanje pri tem predmetu ki se izvaja v prihodnjem šolskem letu
-                            foreach (var i in db.izvajanjes.Where(a => a.predmetId == o.id))
+                            var izlist = db.izvajanjes.Where(a => a.predmetId == o.id).ToList();
+                            foreach (var i in izlist)
                                 foreach (var il in i.izvajanjeletoes)
                                     if (il.studijskoletoId == sh.trenutnoSolskoLeto() + 1)
                                         vl.izvajanjes.Add(i);
@@ -1647,7 +1653,8 @@ namespace studis.Controllers
                     foreach (var p in dodaj_p)
                     {
                         //poiščemo izvajanje pri tem predmetu ki se izvaja v prihodnjem šolskem letu
-                        foreach (var i in db.izvajanjes.Where(a => a.predmetId == p.id))
+                        var izlist = db.izvajanjes.Where(a => a.predmetId == p.id).ToList();
+                        foreach (var i in izlist)
                             foreach (var il in i.izvajanjeletoes)
                                 if (il.studijskoletoId == sh.trenutnoSolskoLeto() + 1)
                                     vl.izvajanjes.Add(i);
