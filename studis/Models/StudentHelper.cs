@@ -92,7 +92,8 @@ namespace studis.Models
 
         public vpi trenutniVpis(int vpisna)
         {
-            return db.vpis.Where(a => a.vpisnaStevilka == vpisna).Where(b => b.studijskoLeto == this.trenutnoSolskoLeto()).FirstOrDefault();
+            int tr = this.trenutnoSolskoLeto();
+            return db.vpis.Where(a => a.vpisnaStevilka == vpisna).Where(b => b.studijskoLeto == tr).FirstOrDefault();
         }
 
         public int trenutnoSolskoLeto()
