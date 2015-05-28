@@ -135,24 +135,39 @@
             //console.log("URL: " + url);
             $.ajax({
                 type: "POST", 
-                url: "/IzpitniRokPrijava/Preveri/",
+                url: "/IzpitniRokPrijava/PreveriPrijavo/",
                 data: { vpisna: $("#student").val(), izpitniRok: $(this).val() },
                 success: function (response) {
                     //var opozorila = $.parseJSON(response);
-
-                    var ulOpozorila = $("#warning");
+                    var opozorila = response.warnings;
+                    var obvestilo = resposne.obvestilo;
+                    @if (User.IsInRole("Referent"))
+                    {
+                        <text>
+                        var ulOpozorila = $("#warning");
+                        </text>
+                    }
+                    else if (User.IsInRole("Student"))
+                    {
+                        <text>
+                        var ulOpozorila = $("#error");
+                        </text>
+                    }
+                    
+                    
                     console.log("V funkciji");
                     
-                    /*
+                    
                     //pocisti
-                    $("#warning > li").remove();
+                    //$("#warning > li").remove();
+                    ulOpozorila.empty();
 
                     //napolni
 
                     for (i = 0; i < izpitniRoks.length; i++) {
                         ddlIzpitniRoks.append('<option value="' + izpitniRoks[i].Value + '">' + izpitniRoks[i].Text + '</option>');
                     }
-                    */
+                    
                 },
                 dataType: "json",
                 traditional: true
