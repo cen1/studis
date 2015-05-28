@@ -21,7 +21,7 @@ namespace studis.Controllers
 
 
         // GET: IzpitniRokPrijava/Prijavi
-       public ActionResult Prijavi()//SPREJMI VPISNO ind id, za boljso izbiro studenta
+       public ActionResult Prijavi()//SPREJMI VPISNO int id, za boljso izbiro studenta
         {
             List<SelectListItem> ltemp = new List<SelectListItem>();
             ltemp.Add(new SelectListItem() { Value = "", Text = "Izberi" });
@@ -116,7 +116,20 @@ namespace studis.Controllers
         private List<SelectListItem> GetIzvajanaForStudent()
         {
             var student = UserHelper.GetStudentByUserName(User.Identity.Name);
-            var izvajanja = student.vpis.LastOrDefault().izvajanjes.ToList();
+            //var izvajanja = student.vpis.LastOrDefault().izvajanjes.ToList();
+            StudentHelper sh = new StudentHelper();
+            var trenutniVpis = sh.trenutniVpis(student.vpisnaStevilka);
+            List<izvajanje> izvajanja = null;
+            if (trenutniVpis != null)
+            {
+                izvajanja = trenutniVpis.izvajanjes.ToList();
+            }
+            else
+            {
+                Debug.WriteLine("Trenutni vpis je null.");
+                izvajanja = new List<izvajanje>();
+            }
+            Debug.WriteLine("Stevilo izvajanj: " + izvajanja.Count);    
             return IzvajanaToSeznam(izvajanja);
         }
 
@@ -176,11 +189,14 @@ namespace studis.Controllers
             if(vpi == null)
             {
                 izvajanja = new List<izvajanje>();
+                Debug.WriteLine("Trenutni vpis je null.");
             }
             else 
             {
                 izvajanja = vpi.izvajanjes.ToList();
             }
+            Debug.WriteLine("Stevilo izvajanj: " + izvajanja.Count);    
+
             return new JavaScriptSerializer().Serialize(IzvajanaToSeznam(izvajanja));
         }
 
