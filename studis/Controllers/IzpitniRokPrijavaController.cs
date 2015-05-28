@@ -231,7 +231,7 @@ namespace studis.Controllers
         //-preveri ce mora student placati izpit (4+ redni, 1+ izredni)
         */
         [HttpPost]
-        public JsonResult Preveri(string vpisna, string izpitniRok)
+        public JsonResult PreveriPrijavo(string vpisna, string izpitniRok)
         {
             if(vpisna == "") {
                 vpisna = UserHelper.GetStudentByUserName(User.Identity.Name).vpisnaStevilka.ToString();
@@ -267,13 +267,13 @@ namespace studis.Controllers
             int letos = sh.polaganjaLetos(trenutniVpis.id, (int) iRok.izvajanjeId);
             if (letos > 3)
             {
-
+                opozorila.Add("Preseženo število dovoljenih prijav za letos (3).");
             }
             //-max 6 polaganj vse skupaj (ponavljanje resetira)
             int skupaj = sh.polaganjaVsa(trenutniVpis.id, (int) iRok.izvajanjeId, trenutniVpis.studijskiProgram);
             if (skupaj > 6)
             {
-
+                opozorila.Add("Preseženo število dovoljenih prijav (6).");
             }
             //-preveri ce prijva pri tem predmetu(izvajanju) ze obstaja
             if (db.prijavanaizpits.Where(a => a.izpitnirokId == iRok.id).Where(a => a.vpisId == trenutniVpis.id).Where(a => a.stanje == 0).FirstOrDefault() != null)
@@ -286,11 +286,14 @@ namespace studis.Controllers
 
             //SAMO OBVSETILO
             //-preveri ce mora student placati izpit (4+ redni, 1+ izredni)
-
-            var obvstilo = "";
+            string obvestilo = "";
+            if (skupaj > 3)
+            {
+                obvestilo = "Za ta izpit bo potrbeno placati 140€.";
+            }
             var warnings = new JavaScriptSerializer().Serialize(opozorila);
 
-            return Json(warnings, obvstilo);
+            return Json(warnings, obvestilo);
         }
     }
 }
