@@ -98,18 +98,9 @@ namespace studis.Controllers
                 {
                     foreach (var izv in izvajanja)
                     {
-                        var counter = 0;
-                        foreach (var r in izv.izpitniroks.ToList())
+                        foreach( var r in izv.izpitniroks.OrderByDescending(r => r.datum).ToList())
                         {
-                            if (r.prijavanaizpits.Where(p => p.stanje == 2).ToList() != null)
-                            {
-                                counter++;
-                            }                       
-                        }
-
-                        if (counter > 1)
-                        {
-                            roki.Add(izv.izpitniroks.ToList().Last());
+                            roki.Add(r);
                         }
                     }
                 }
