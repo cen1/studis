@@ -66,7 +66,7 @@ namespace studis.Models
         }
 
         // vrne zaporedno stevilko izpita
-        public int zaporednoPolaganje(int vpisna, int predmetId, int studijskiprogram, DateTime datum)
+        public int zaporednoPolaganje(int vpisna, int izvajanjeId, int studijskiprogram, DateTime datum)
         {
             int sum = 0;
             bool reset = false;
@@ -76,7 +76,7 @@ namespace studis.Models
             {
                 foreach (var p in v.prijavanaizpits)
                 {
-                    if (p.izpitnirok.izvajanje.predmetId == predmetId && p.izpitnirok.datum <= datum)
+                    if (p.izpitnirok.izvajanje.id == izvajanjeId && p.izpitnirok.datum <= datum)
                     {
                         if (v.vrstaVpisa == 2 && reset == false) //ponavljanje
                         {
