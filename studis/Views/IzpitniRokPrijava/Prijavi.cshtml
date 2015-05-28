@@ -159,13 +159,11 @@
                     
                     
                     //pocisti
-                    //$("#warning > li").remove();
                     ulOpozorila.empty();
 
                     //napolni
-
                     for (i = 0; i < izpitniRoks.length; i++) {
-                        ddlIzpitniRoks.append('<option value="' + izpitniRoks[i].Value + '">' + izpitniRoks[i].Text + '</option>');
+                        ddlIzpitniRoks.append('<li>' + opozorila[i] + '</li>');
                     }
                     
                 },
