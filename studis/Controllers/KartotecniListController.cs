@@ -84,9 +84,11 @@ namespace studis.Controllers
                     {
                         foreach (var izv in vpis.izvajanjes.ToList())
                         {
-                            izvajanja.Add(izv);
+                            if (izv != null)
+                            {
+                                izvajanja.Add(izv);
+                            }
                         }
-                        
                     }
                 }
                 ViewBag.Izvajanja = izvajanja;
@@ -181,7 +183,10 @@ namespace studis.Controllers
                     {
                         foreach (var izv in vpis.izvajanjes.ToList())
                         {
-                            izvajanja.Add(izv);
+                            if (izv != null)
+                            {
+                                izvajanja.Add(izv);
+                            }
                         }
 
                     }
