@@ -11,7 +11,7 @@ namespace studis.Models
         [Display(Name = "Student")]
         public int student { get; set; }
 
-        [Required(ErrorMessage = "Obvezno izbrati.")]
+        
         [Display(Name = "Predmet")]
         public int izvajanje { get; set; }
 
