@@ -6,6 +6,8 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
+using System.Data;
+using System.Data.Entity;
 
 namespace studis.Controllers
 {
@@ -340,7 +342,6 @@ namespace studis.Controllers
 
             var prijave = db.prijavanaizpits.Where(p => p.izpitnirokId == rok.id).ToList();
             
-            int zaporednaSt = 0;
             foreach (prijavanaizpit prijava in prijave)
             {
                 vpi vpiss = db.vpis.Where(v => v.id == prijava.vpisId).SingleOrDefault();
@@ -349,22 +350,31 @@ namespace studis.Controllers
 
                 if (st != null)
                 {
-                    zaporednaSt = zaporednaSt+1;
-                    vnos.zaporednaStevilka = zaporednaSt;
+                    vnos.idRoka = rokID;
                     vnos.vpisnaStevilka = st.vpisnaStevilka;
                     vnos.ime = st.ime;
                     vnos.priimek = st.priimek;
+                    vnos.studijskoLeto = vpiss.sifrant_studijskoleto.naziv;
+                    vnos.zaporednoSteviloPonavljanja = sh.zaporednoPolaganje(st.vpisnaStevilka, (int)izv.id, vpiss.studijskiProgram, prijava.izpitnirok.datum);
 
-                    foreach (vpi vpisan in st.vpis)
+                    try
                     {
-                        foreach (prijavanaizpit prijava1 in prijave)
+                        //preveri če že obstaja vnos?
+                        tocke tocke = db.tockes.Where( t => t.prijavaId == prijava.id).FirstOrDefault();
+
+                        if (prijava.stanje != 4)
                         {
-                            if (vpisan.id == prijava1.vpisId)
-                            {
-                                vnos.studijskoLeto = vpisan.sifrant_studijskoleto.naziv;
-                                vnos.zaporednoSteviloPonavljanja = sh.zaporednoPolaganje(st.vpisnaStevilka, (int)izv.predmetId, vpisan.studijskiProgram, prijava1.izpitnirok.datum);
-                            }
+                            vnos.zeVpisaneTocke = tocke.tocke1.ToString();
                         }
+                        else
+                        { 
+                            vnos.zeVpisaneTocke = "VP";
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        vnos.zeVpisaneTocke = "/";
+                        //Debug.WriteLine("Tocke za tega studenta in prijavo niso še vnesene..");
                     }
 
                     listVnosov.Add(vnos);
@@ -375,6 +385,13 @@ namespace studis.Controllers
             {
                 //uredi seznam študentov
                 listVnosov = listVnosov.OrderBy(o => o.priimek).ToList();
+
+                int zaporednaSt = 0;
+                foreach (var item in listVnosov)
+                {
+                    zaporednaSt = zaporednaSt + 1;
+                    item.zaporednaStevilka = zaporednaSt;
+                }
             }
             else
                 listVnosov = null;
@@ -385,32 +402,379 @@ namespace studis.Controllers
         [HttpPost]
         public ActionResult VpisTock(IList<studis.Models.VnosTockModel> list)
         {
-            foreach (VnosTockModel m in list)
+            UserHelper uHelper = new UserHelper();
+            if (list.Any())
             {
-                Debug.WriteLine("element lista: "+m.ime+",tocke: "+m.tocke);
-                if (!ModelState.IsValid)
+                foreach (VnosTockModel m in list)
                 {
-                    return View();
+                    //podatki o izpitnem roku
+                    if(m.zaporednaStevilka==1)
+                    {
+                        izpitnirok rok = db.izpitniroks.Where(r => r.id == m.idRoka).SingleOrDefault();
+
+                        sifrant_prostor predavalnica = db.sifrant_prostor.Where(s => s.id == rok.prostorId).SingleOrDefault();
+                        izvajanje izv = db.izvajanjes.Where(i => i.id == rok.izvajanjeId).SingleOrDefault();
+
+                        string izvajalci = izv.profesor.priimek + " " + izv.profesor.ime;
+                        if (izv.izvajalec2Id != null)
+                            izvajalci = izvajalci + ", " + izv.profesor1.priimek + " " + izv.profesor1.ime;
+                        if (izv.izvajalec3Id != null)
+                            izvajalci = izvajalci + ", " + izv.profesor2.priimek + " " + izv.profesor2.ime;
+
+                        ViewBag.idRoka = rok.id;
+                        ViewBag.izvajalci = izvajalci;
+                        ViewBag.prostor = predavalnica.naziv;
+                        ViewBag.datum = GetDatumForIzpitniRok(rok.id);
+                        ViewBag.ura = UserHelper.TimeToString((DateTime)rok.ura);
+                        ViewBag.sifraPredmeta = izv.predmetId;
+                        ViewBag.imePredmeta = izv.predmet.ime;
+                    }
+
+                    //vnos točk
+                    if (ModelState.IsValid)
+                    {                        
+                        //vpisi tocke, če so bile vnese v view-u
+                        if (m.tocke != null)
+                        {
+                            //VP=-1 tock(0 v bazi), drugače convert u int
+                            int stTock=-1;
+                            string stringTocke = m.tocke.ToLower();
+                            if(!stringTocke.Equals("vp"))
+                            {
+                                stTock = Convert.ToInt32(m.tocke);
+                            }
+                            
+                            vpi vpis = db.vpis.Where(v => v.vpisnaStevilka == m.vpisnaStevilka && v.sifrant_studijskoleto.naziv == m.studijskoLeto).FirstOrDefault();
+
+                            prijavanaizpit prijava = db.prijavanaizpits.Where(p => p.izpitnirokId == m.idRoka && p.vpisId == vpis.id).FirstOrDefault();
+                            tocke tocke = null;
+                            try
+                            {
+                                //preveri če že obstaja vnos?
+                                tocke = db.tockes.Where(t => t.prijavaId == prijava.id).FirstOrDefault();
+                            }
+                            catch (Exception e)
+                            {
+                                Debug.WriteLine("Ni vnosa v bazi..");
+                            }
+
+                            //posodobi vnos
+                            if (tocke != null)
+                            {
+                                try
+                                {
+                                    if (stTock == -1)
+                                    {
+                                        tocke.tocke1 = 0;
+                                        prijava.stanje = 4; //VP??
+                                        prijava.datumOdjave = DateTime.Now;
+                                        prijava.odjavilId = uHelper.FindByName(User.Identity.Name).id;
+
+                                        //sam za izpiz v viewu
+                                        m.zeVpisaneTocke = "VP";
+                                    }
+                                    else
+                                    {
+                                        tocke.tocke1 = stTock;
+                                        prijava.stanje = 2;
+
+                                        //sam za izpiz v viewu
+                                        m.zeVpisaneTocke = stTock.ToString();
+                                    }
+                                    tocke.prijavaId = prijava.id;
+                                    tocke.datum = DateTime.Now;
+                                    db.Entry(tocke).State = EntityState.Modified; //popravi točke v bazi
+                                    db.Entry(prijava).State = EntityState.Modified; //nastavi stanje prijave v bazi
+                                    db.SaveChanges();                                    
+                                }
+                                catch (Exception e)
+                                {
+                                    Debug.WriteLine("Couldn't save changes to DB tocke!");
+                                }
+                            }
+                            //nov vnos
+                            else
+                            {                                
+                                try
+                                {
+                                    tocke = new tocke();
+                                    if (stTock == -1)
+                                    {
+                                        tocke.tocke1 = 0;
+                                        prijava.stanje = 4; //VP??
+                                        prijava.datumOdjave = DateTime.Now;
+                                        prijava.odjavilId = uHelper.FindByName(User.Identity.Name).id;
+
+                                        //sam za izpiz v viewu
+                                        m.zeVpisaneTocke = "VP";
+                                    }
+                                    else
+                                    {
+                                        tocke.tocke1 = stTock;
+                                        prijava.stanje = 2;
+
+                                        //sam za izpiz v viewu
+                                        m.zeVpisaneTocke = stTock.ToString();
+                                    }
+                                    tocke.prijavaId = prijava.id;
+                                    tocke.datum = DateTime.Now;
+                                    db.tockes.Add(tocke); //vpiši točke v bazo
+                                    db.Entry(prijava).State = EntityState.Modified; //nastavi stanje prijave v bazi
+                                    db.SaveChanges();                                    
+                                }
+                                catch (Exception e)
+                                {
+                                    Debug.WriteLine("Couldn't make new entry&save changes to DB tocke!");
+                                }
+                            }
+                        }
+                    }
                 }
             }
-            Debug.WriteLine("konec");
             return View(list);
         }
 
-        //[HttpPost]
-        public ActionResult VnosTock(IList<studis.Models.VnosTockModel> list)
+
+        public ActionResult VpisOcen(int rokID)
         {
-            foreach (VnosTockModel m in list)
+            //podatki o izpitnem roku
+            izpitnirok rok = db.izpitniroks.Where(r => r.id == rokID).SingleOrDefault();
+
+            sifrant_prostor predavalnica = db.sifrant_prostor.Where(s => s.id == rok.prostorId).SingleOrDefault();
+            izvajanje izv = db.izvajanjes.Where(i => i.id == rok.izvajanjeId).SingleOrDefault();
+
+            string izvajalci = izv.profesor.priimek + " " + izv.profesor.ime;
+            if (izv.izvajalec2Id != null)
+                izvajalci = izvajalci + ", " + izv.profesor1.priimek + " " + izv.profesor1.ime;
+            if (izv.izvajalec3Id != null)
+                izvajalci = izvajalci + ", " + izv.profesor2.priimek + " " + izv.profesor2.ime;
+
+            ViewBag.idRoka = rok.id;
+            ViewBag.izvajalci = izvajalci;
+            ViewBag.prostor = predavalnica.naziv;
+            ViewBag.datum = GetDatumForIzpitniRok(rok.id);
+            ViewBag.ura = UserHelper.TimeToString((DateTime)rok.ura);
+            ViewBag.sifraPredmeta = izv.predmetId;
+            ViewBag.imePredmeta = izv.predmet.ime;
+
+
+            //pridobi prijavljene študente
+            List<VnosTockModel> listVnosov = new List<VnosTockModel>();
+            StudentHelper sh = new StudentHelper();
+
+            var prijave = db.prijavanaizpits.Where(p => p.izpitnirokId == rok.id).ToList();
+
+            foreach (prijavanaizpit prijava in prijave)
             {
-                Debug.WriteLine("element lista: " + m.ime);
-                if (!ModelState.IsValid)
+                vpi vpiss = db.vpis.Where(v => v.id == prijava.vpisId).SingleOrDefault();
+                student st = db.students.Where(s => s.vpisnaStevilka == vpiss.vpisnaStevilka).SingleOrDefault();
+                VnosTockModel vnos = new VnosTockModel();
+
+                if (st != null)
                 {
-                    return View();
+                    vnos.idRoka = rokID;
+                    vnos.vpisnaStevilka = st.vpisnaStevilka;
+                    vnos.ime = st.ime;
+                    vnos.priimek = st.priimek;
+                    vnos.studijskoLeto = vpiss.sifrant_studijskoleto.naziv;
+                    vnos.zaporednoSteviloPonavljanja = sh.zaporednoPolaganje(st.vpisnaStevilka, (int)izv.id, vpiss.studijskiProgram, prijava.izpitnirok.datum);
+
+                    try
+                    {
+                        //preveri če že obstaja vnos?
+                        ocena ocena = db.ocenas.Where(t => t.prijavaId == prijava.id).FirstOrDefault();
+
+                        if (prijava.stanje != 4)
+                        {
+                            vnos.zeVpisanaOcena = ocena.ocena1.ToString();
+                        }
+                        else
+                        {
+                            vnos.zeVpisanaOcena = "VP";
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        vnos.zeVpisanaOcena = "/";
+                        //Debug.WriteLine("Ocena za tega studenta in prijavo ni še vnesena..");
+                    }
+
+                    listVnosov.Add(vnos);
                 }
             }
-            Debug.WriteLine("konec");
-            return View("Vpistock", list);
+
+            if (listVnosov.Any())
+            {
+                //uredi seznam študentov
+                listVnosov = listVnosov.OrderBy(o => o.priimek).ToList();
+
+                int zaporednaSt = 0;
+                foreach (var item in listVnosov)
+                {
+                    zaporednaSt = zaporednaSt + 1;
+                    item.zaporednaStevilka = zaporednaSt;
+                }
+            }
+            else
+                listVnosov = null;
+
+            return View(listVnosov);
         }
+
+
+        [HttpPost]
+        public ActionResult VpisOcen(IList<studis.Models.VnosTockModel> list)
+        {
+            UserHelper uHelper = new UserHelper();
+            if (list.Any())
+            {
+                foreach (VnosTockModel m in list)
+                {
+                    //podatki o izpitnem roku
+                    if (m.zaporednaStevilka == 1)
+                    {
+                        izpitnirok rok = db.izpitniroks.Where(r => r.id == m.idRoka).SingleOrDefault();
+
+                        sifrant_prostor predavalnica = db.sifrant_prostor.Where(s => s.id == rok.prostorId).SingleOrDefault();
+                        izvajanje izv = db.izvajanjes.Where(i => i.id == rok.izvajanjeId).SingleOrDefault();
+
+                        string izvajalci = izv.profesor.priimek + " " + izv.profesor.ime;
+                        if (izv.izvajalec2Id != null)
+                            izvajalci = izvajalci + ", " + izv.profesor1.priimek + " " + izv.profesor1.ime;
+                        if (izv.izvajalec3Id != null)
+                            izvajalci = izvajalci + ", " + izv.profesor2.priimek + " " + izv.profesor2.ime;
+
+                        ViewBag.idRoka = rok.id;
+                        ViewBag.izvajalci = izvajalci;
+                        ViewBag.prostor = predavalnica.naziv;
+                        ViewBag.datum = GetDatumForIzpitniRok(rok.id);
+                        ViewBag.ura = UserHelper.TimeToString((DateTime)rok.ura);
+                        ViewBag.sifraPredmeta = izv.predmetId;
+                        ViewBag.imePredmeta = izv.predmet.ime;
+                    }
+
+                    //vnos točk
+                    if (ModelState.IsValid)
+                    {
+                        //vpisi tocke, če so bile vnese v view-u
+                        if (m.ocena != null)
+                        {
+                            //VP=-1 tock(0 v bazi), drugače convert u int
+                            int tempOcena = -1;
+                            string stringOcena = m.ocena.ToLower();
+                            if (!stringOcena.Equals("vp"))
+                            {
+                                tempOcena = Convert.ToInt32(m.ocena);
+                            }
+
+                            vpi vpis = db.vpis.Where(v => v.vpisnaStevilka == m.vpisnaStevilka && v.sifrant_studijskoleto.naziv == m.studijskoLeto).FirstOrDefault();
+
+                            prijavanaizpit prijava = db.prijavanaizpits.Where(p => p.izpitnirokId == m.idRoka && p.vpisId == vpis.id).FirstOrDefault();
+                            ocena ocena = null;
+                            tocke tocke = null;
+                            try
+                            {
+                                //preveri če že obstaja vnos?
+                                ocena = db.ocenas.Where(t => t.prijavaId == prijava.id).FirstOrDefault();
+                            }
+                            catch (Exception e)
+                            {
+                                Debug.WriteLine("Ni vnosa v bazi..");
+                            }
+
+                            //posodobi vnos
+                            if (ocena != null)
+                            {
+                                try
+                                {
+                                    if (tempOcena == -1)
+                                    {
+                                        ocena.ocena1 = 0;
+                                        prijava.stanje = 4; //VP??
+                                        prijava.datumOdjave = DateTime.Now;
+                                        prijava.odjavilId = uHelper.FindByName(User.Identity.Name).id;
+                                        
+                                        //v primeru VP točke na 0
+                                        tocke = db.tockes.Where(t => t.prijavaId == prijava.id).FirstOrDefault();
+                                        if (tocke != null)
+                                        {
+                                            tocke.tocke1 = 0;
+                                            db.Entry(tocke).State = EntityState.Modified;
+                                        }
+
+                                        //sam za izpiz v viewu
+                                        m.zeVpisanaOcena = "VP";
+                                    }
+                                    else
+                                    {
+                                        ocena.ocena1 = tempOcena;
+                                        prijava.stanje = 2;
+
+                                        //sam za izpiz v viewu
+                                        m.zeVpisanaOcena = tempOcena.ToString();
+                                    }
+                                    ocena.prijavaId = prijava.id;
+                                    ocena.datum = DateTime.Now;
+                                    db.Entry(ocena).State = EntityState.Modified; //popravi oceno v bazi
+                                    db.Entry(prijava).State = EntityState.Modified; //nastavi stanje prijave v bazi                                    
+                                    db.SaveChanges();
+                                }
+                                catch (Exception e)
+                                {
+                                    Debug.WriteLine("Couldn't save changes to DB ocena!");
+                                }
+                            }
+                            //nov vnos
+                            else
+                            {
+                                try
+                                {
+                                    ocena = new ocena();
+                                    if (tempOcena == -1)
+                                    {
+                                        ocena.ocena1 = 0;
+                                        prijava.stanje = 4; //VP??
+                                        prijava.datumOdjave = DateTime.Now;
+                                        prijava.odjavilId = uHelper.FindByName(User.Identity.Name).id;
+
+                                        //v primeru VP točke na 0
+                                        tocke = db.tockes.Where(t => t.prijavaId == prijava.id).FirstOrDefault();
+                                        if (tocke != null)
+                                        {
+                                            tocke.tocke1 = 0;
+                                            db.Entry(tocke).State = EntityState.Modified;
+                                        }
+
+                                        //sam za izpiz v viewu
+                                        m.zeVpisanaOcena = "VP";
+                                    }
+                                    else
+                                    {
+                                        ocena.ocena1 = tempOcena;
+                                        prijava.stanje = 2;
+
+                                        //sam za izpiz v viewu
+                                        m.zeVpisanaOcena = tempOcena.ToString();
+                                    }
+                                    ocena.prijavaId = prijava.id;
+                                    ocena.datum = DateTime.Now;
+                                    db.ocenas.Add(ocena); //vpiši oceno v bazo
+                                    db.Entry(prijava).State = EntityState.Modified; //nastavi stanje prijave v bazi
+                                    db.SaveChanges();
+                                }
+                                catch (Exception e)
+                                {
+                                    Debug.WriteLine("Couldn't make new entry&save changes to DB tocke!");
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return View(list);
+        }
+
+
 
 
         /*
@@ -622,6 +986,5 @@ namespace studis.Controllers
             catch (Exception e) { st = -1; }
             return st.ToString();
         }
-
     }
 }

@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewBag.Title = "Prijava na izpiti";
+    ViewBag.Title = "Prijava na izpit";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
@@ -15,7 +15,7 @@
     <div>
         <fieldset>
             
-            @if (User.IsInRole("Referent")) 
+            @if (User.IsInRole("Referent") && ViewBag.Studenti != null) 
             {
                 <!--Izbira Studenta-->
                 <div class="editor-label">
@@ -23,7 +23,16 @@
                 </div>
                 <div class="editor-field">
                     @Html.DropDownListFor(m => m.student, (SelectList)ViewBag.Studenti, "Izberi študenta")
-                    @Html.ValidationMessageFor(m => m.student)
+                </div>
+            }
+            else if (User.IsInRole("Referent") && ViewBag.StudentIme != null && ViewBag.StudentVpisna != null)
+            {
+                <!--Izbira Studenta-->
+                <div class="editor-label">
+                    <p>
+                        @Html.Raw(ViewBag.StudentVpisna) @Html.Raw(ViewBag.StudentIme)
+                        <input id="student" type="hidden" name="student" value="@Html.Raw(ViewBag.StudentVpisna)">
+                    </p>
                 </div>
             }
 
@@ -35,9 +44,13 @@
                 @if (User.IsInRole("Student"))
                 {
                     @Html.DropDownListFor(m => m.izvajanje, (SelectList)ViewBag.Izvajanja, "Izberi predmet")
-                } else
+                } else if(ViewBag.IzvajanjaZaVpisna == null)
                 {
                     @Html.DropDownListFor(m => m.izvajanje, (SelectList)ViewBag.Prazen)
+                }
+                else
+                {
+                    @Html.DropDownListFor(m => m.izvajanje, (SelectList)ViewBag.IzvajanjaZaVpisna)
                 }
                 @Html.ValidationMessageFor(m => m.izvajanje)
             </div>
@@ -54,17 +67,17 @@
 
 
             <ul id="error" style="color:red;"></ul>
-
             <ul id="warning" style="color:orange;"></ul>
-
+            <ul id="notice" style="color:orange;"></ul>
             <p>
-                <input id="submit" type="submit" value="Prijavi">
+                <input id="submit" type="submit" value="Prijavi" onclick="obvestilo()">
             </p>
         </fieldset>
     </div>
 }
 
-<script language="javascript" type="text/javascript">
+<script language="javascript" type="text/javascript"> 
+    function potrdi() { }
     //napolni izvajanja
     $(document).ready(function () {
         $("#student").change(function () {
@@ -129,7 +142,25 @@
             if ($("#izpitniRok option:first-child").text() == "Izberi") {
                 $("#izPitniRok option:first-child").remove();
             }
-            
+            var ulOpozorila;
+            var ulObvestilo = $("#notice");
+            @if (User.IsInRole("Referent"))
+            {
+                <text>
+                ulOpozorila = $("#warning");
+                </text>
+            }
+            else if (User.IsInRole("Student"))
+            {
+                <text>
+                ulOpozorila = $("#error");
+                </text>
+            }
+            //pocisti
+            ulOpozorila.empty();
+            ulObvestilo.empty();
+            $("#submit").prop("disabled", false);
+            potrdi = function () { };
             console.log("Parameter: " + $(this).val());
             //var url = "/IzpitniRokPrijava/Preveri/" + $("#student").val() + "&" + $(this).val();
             //console.log("URL: " + url);
@@ -137,35 +168,40 @@
                 type: "POST", 
                 url: "/IzpitniRokPrijava/PreveriPrijavo/",
                 data: { vpisna: $("#student").val(), izpitniRok: $(this).val() },
-                success: function (response) {
-                    //var opozorila = $.parseJSON(response);
-                    var opozorila = response.warnings;
-                    var obvestilo = resposne.obvestilo;
+                
+                success: function (data) {
+                    console.log("V funkciji");
+                    if (data === undefined) {
+                        console.log("data is undefined");
+                    }
+                    console.log(data);
+                    var response = data;//$.parseJSON(data);
+                    var opozorila = $.parseJSON(response.Warnings);
+                    var obvestilo = response.Notice;
+                    if (opozorila === undefined) {
+                        console.log("opozorila is undefined");
+                    }
                     @if (User.IsInRole("Referent"))
                     {
                         <text>
-                        var ulOpozorila = $("#warning");
                         </text>
                     }
                     else if (User.IsInRole("Student"))
                     {
                         <text>
-                        var ulOpozorila = $("#error");
+                    if (opozorila.length > 0)
+                            $("#submit").prop("disabled", true);
                         </text>
                     }
-                    
-                    
-                    console.log("V funkciji");
-                    
-                    
-                    //pocisti
-                    ulOpozorila.empty();
-
+                    potrdi = function () {
+                        confirm(obvestilo);
+                    };
                     //napolni
-                    for (i = 0; i < izpitniRoks.length; i++) {
-                        ddlIzpitniRoks.append('<li>' + opozorila[i] + '</li>');
+                    ulOpozorila.append('<li>--test client--</li>');
+                    for (i = 0; i < opozorila.length; i++) {
+                        ulOpozorila.append('<li>' + opozorila[i] + '</li>');
                     }
-                    
+                    ulObvestilo.append('<li>' + obvestilo + '</li>');
                 },
                 dataType: "json",
                 traditional: true

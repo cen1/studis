@@ -21,7 +21,7 @@ namespace studis.Controllers
 
 
         // GET: IzpitniRokPrijava/Prijavi
-       public ActionResult Prijavi()//SPREJMI VPISNO ind id, za boljso izbiro studenta
+       public ActionResult Prijavi()
         {
             List<SelectListItem> ltemp = new List<SelectListItem>();
             ltemp.Add(new SelectListItem() { Value = "", Text = "Izberi" });
@@ -45,7 +45,25 @@ namespace studis.Controllers
                 studenti.Add(p);
             }
             ViewBag.Studenti = new SelectList(studenti, "Value", "Text");
-
+            return View();
+        }
+        // GET: IzpitniRokPrijava/PrijaviStudenta/vpisna
+        public ActionResult PrijaviStudenta(int vpisna)
+        {
+            student stud = UserHelper.GetStudentByVpisna(vpisna);
+            List<SelectListItem> ltemp = new List<SelectListItem>();
+            ltemp.Add(new SelectListItem() { Value = "", Text = "Izberi" });
+            ViewBag.Prazen = new SelectList(ltemp, "Value", "Text");
+            if (User.IsInRole("Student"))
+            {
+                ViewBag.Izvajanja = GetIzvajanaForStudent();
+            }
+            else if(User.IsInRole("Referent"))
+            {
+                ViewBag.StudentIme = stud.ime + " " + stud.priimek;
+                ViewBag.StudentVpisna = stud.vpisnaStevilka.ToString();
+                ViewBag.IzvajanjaZaVpisna = GetIzvajanjaForStudent(vpisna);//new SelectList(ltemp, "Value", "Text");
+            }
             return View();
         }
 
@@ -116,7 +134,20 @@ namespace studis.Controllers
         private List<SelectListItem> GetIzvajanaForStudent()
         {
             var student = UserHelper.GetStudentByUserName(User.Identity.Name);
-            var izvajanja = student.vpis.LastOrDefault().izvajanjes.ToList();
+            //var izvajanja = student.vpis.LastOrDefault().izvajanjes.ToList();
+            StudentHelper sh = new StudentHelper();
+            var trenutniVpis = sh.trenutniVpis(student.vpisnaStevilka);
+            List<izvajanje> izvajanja = null;
+            if (trenutniVpis != null)
+            {
+                izvajanja = trenutniVpis.izvajanjes.ToList();
+            }
+            else
+            {
+                Debug.WriteLine("Trenutni vpis je null.");
+                izvajanja = new List<izvajanje>();
+            }
+            Debug.WriteLine("Stevilo izvajanj: " + izvajanja.Count);    
             return IzvajanaToSeznam(izvajanja);
         }
 
@@ -176,11 +207,14 @@ namespace studis.Controllers
             if(vpi == null)
             {
                 izvajanja = new List<izvajanje>();
+                Debug.WriteLine("Trenutni vpis je null.");
             }
             else 
             {
                 izvajanja = vpi.izvajanjes.ToList();
             }
+            Debug.WriteLine("Stevilo izvajanj: " + izvajanja.Count);    
+
             return new JavaScriptSerializer().Serialize(IzvajanaToSeznam(izvajanja));
         }
 
@@ -256,7 +290,7 @@ namespace studis.Controllers
                 opozorila.Add("Rok za prijavo je potekel.");
             }
             //-preveri da je od zadnje prijave minilo 7 dni
-            var zadnjaPrijava = db.prijavanaizpits.Where(a => a.izpitnirokId == iRok.id).Where(a => a.vpisId == trenutniVpis.id).LastOrDefault();
+            var zadnjaPrijava = db.prijavanaizpits.Where(a => a.izpitnirokId == iRok.id).Where(a => a.vpisId == trenutniVpis.id).FirstOrDefault();
             if (zadnjaPrijava != null)
             {
                 TimeSpan razlika = DateTime.Now - zadnjaPrijava.datumPrijave;
@@ -272,7 +306,7 @@ namespace studis.Controllers
                 opozorila.Add("Preseženo število dovoljenih prijav za letos (3).");
             }
             //-max 6 polaganj vse skupaj (ponavljanje resetira)
-            int skupaj = sh.polaganjaVsa(trenutniVpis.id, (int) iRok.izvajanjeId, trenutniVpis.studijskiProgram);
+            int skupaj = sh.polaganjaVsa(trenutniVpis.vpisnaStevilka, (int) iRok.izvajanjeId, trenutniVpis.studijskiProgram);
             if (skupaj > 6)
             {
                 opozorila.Add("Preseženo število dovoljenih prijav (6).");
@@ -286,6 +320,9 @@ namespace studis.Controllers
             //-preveri ce je izpit ze opravljen
             //-preveri ce za prejsnjo prijavo ze obstaja ocena
 
+            opozorila.Add("--1test server--");
+            opozorila.Add("--2test server--");
+
             //SAMO OBVSETILO
             //-preveri ce mora student placati izpit (4+ redni, 1+ izredni)
             string obvestilo = "";
@@ -293,9 +330,8 @@ namespace studis.Controllers
             {
                 obvestilo = "Za ta izpit bo potrbeno placati 140€.";
             }
-            var warnings = new JavaScriptSerializer().Serialize(opozorila);
 
-            return Json(warnings, obvestilo);
+            return Json(new { Warnings = new JavaScriptSerializer().Serialize(opozorila), Notice = obvestilo });
         }
     }
 }

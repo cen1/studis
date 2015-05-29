@@ -17,6 +17,7 @@ namespace studis.Models
         public string datumIzvajanja { get; set; }
         public string uraIzvajanja { get; set; }
         public string prostor { get; set; }*/
+        public int idRoka { get; set; }
         
         //študenti
         public int zaporednaStevilka { get; set; }
@@ -27,8 +28,13 @@ namespace studis.Models
         public int zaporednoSteviloPonavljanja { get; set; }
     
         //vnos točk&ocen
-        [Range(0, 100, ErrorMessage = "Število točk mora biti med 0 in 100")]
-        public int tocke { get; set; }
-        public int ocena { get; set; }
+        public string zeVpisaneTocke { get; set; }
+        public string zeVpisanaOcena { get; set; }
+
+        [RegularExpression(@"^(vp)|(VP)|0*(?:[1-9][0-9]?|100)$", ErrorMessage = "Vnos mora biti število med 0 in 100 ali VP!")]
+        public string tocke { get; set; }
+
+        [RegularExpression(@"^(vp)|(VP)|([0-9]|10)$", ErrorMessage = "Vnos mora biti število med 0 in 10 ali VP!")]
+        public string ocena { get; set; }
     }
 }
