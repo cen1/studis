@@ -48,7 +48,10 @@
                 Zap. št. polaganja
             </th>
             <th>
-                Vpiši točke
+                Vpisane točke
+            </th>
+            <th>
+                Vpiši/spremeni točke
             </th>
         </tr>
         @if (Model != null)
@@ -80,6 +83,10 @@
                     <td>
                         @Html.DisplayFor(x => x[i].zaporednoSteviloPonavljanja)
                         @Html.HiddenFor(x => x[i].zaporednoSteviloPonavljanja)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(x => x[i].zeVpisaneTocke)
+                        @Html.HiddenFor(x => x[i].zeVpisaneTocke)
                     </td>
                     <td class="editor-field">
                         @Html.TextBoxFor(x => x[i].tocke)

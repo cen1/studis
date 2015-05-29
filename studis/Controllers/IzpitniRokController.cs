@@ -355,6 +355,19 @@ namespace studis.Controllers
                     vnos.ime = st.ime;
                     vnos.priimek = st.priimek;
 
+                    try
+                    {
+                        //preveri če že obstaja vnos?
+                        tocke tocke= db.tockes.Where(t => t.prijavaId == prijava.id).FirstOrDefault();
+                        vnos.zeVpisaneTocke = tocke.tocke1;
+                    }
+                    catch (Exception e)
+                    {
+                        vnos.zeVpisaneTocke = 0;
+                        Debug.WriteLine("Tocke za tega studenta in prijavo niso še vnesene..");
+                    }
+
+
                     foreach (vpi vpisan in st.vpis)
                     {
                         foreach (prijavanaizpit prijava1 in prijave)
@@ -420,18 +433,14 @@ namespace studis.Controllers
                     }
 
                     //vnos točk
-                    if (!ModelState.IsValid)
+                    if (ModelState.IsValid)
                     {                        
-                        return View();//napaka v modelu..TO DO
-                    }
-                    else
-                    {
-                        //vpisi tocke, če so bile vnese v view-u...TO DO: namesto 0 neko boljše primerjanje
+                        //vpisi tocke, če so bile vnese v view-u
                         if (m.tocke != null)
                         {
                             //VP=0 tock, drugače convert u int
                             int stTock=0;
-                            string stringTocke = m.tocke.ToString().ToLower();
+                            string stringTocke = m.tocke.ToLower();
                             if(!stringTocke.Equals("vp"))
                             {
                                 stTock = Convert.ToInt32(m.tocke);
@@ -441,7 +450,7 @@ namespace studis.Controllers
 
                             var vsePrijave = db.prijavanaizpits.Where(p => p.izpitnirokId == m.idRoka);
                             prijavanaizpit prijava = vsePrijave.Where(p => p.izpitnirokId == m.idRoka && p.vpisId == vpis.id).FirstOrDefault();
-                            
+
                             tocke tocke = null;
                             try
                             {
@@ -455,7 +464,7 @@ namespace studis.Controllers
 
                             //posodobi vnos
                             if (tocke != null)
-                            {                                
+                            {
                                 try
                                 {
                                     tocke.tocke1 = stTock;
@@ -463,6 +472,9 @@ namespace studis.Controllers
                                     tocke.datum = DateTime.Now;
                                     db.Entry(tocke).State = EntityState.Modified;
                                     db.SaveChanges();
+
+                                    //sam za izpiz v viewu
+                                    m.zeVpisaneTocke = stTock;
                                 }
                                 catch (Exception e)
                                 {
@@ -471,7 +483,7 @@ namespace studis.Controllers
                             }
                             //nov vnos
                             else
-                            {                                 
+                            {                                
                                 try
                                 {
                                     tocke = new tocke();
@@ -480,6 +492,9 @@ namespace studis.Controllers
                                     tocke.datum = DateTime.Now;
                                     db.tockes.Add(tocke);
                                     db.SaveChanges();
+
+                                    //sam za izpiz v viewu
+                                    m.zeVpisaneTocke = stTock;
                                 }
                                 catch (Exception e)
                                 {
