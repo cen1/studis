@@ -402,6 +402,7 @@ namespace studis.Controllers
         [HttpPost]
         public ActionResult VpisTock(IList<studis.Models.VnosTockModel> list)
         {
+            UserHelper uHelper = new UserHelper();
             if (list.Any())
             {
                 foreach (VnosTockModel m in list)
@@ -466,6 +467,8 @@ namespace studis.Controllers
                                     {
                                         tocke.tocke1 = 0;
                                         prijava.stanje = 4; //VP??
+                                        prijava.datumOdjave = DateTime.Now;
+                                        prijava.odjavilId = uHelper.FindByName(User.Identity.Name).id;
 
                                         //sam za izpiz v viewu
                                         m.zeVpisaneTocke = "VP";
@@ -499,6 +502,8 @@ namespace studis.Controllers
                                     {
                                         tocke.tocke1 = 0;
                                         prijava.stanje = 4; //VP??
+                                        prijava.datumOdjave = DateTime.Now;
+                                        prijava.odjavilId = uHelper.FindByName(User.Identity.Name).id;
 
                                         //sam za izpiz v viewu
                                         m.zeVpisaneTocke = "VP";
@@ -620,6 +625,7 @@ namespace studis.Controllers
         [HttpPost]
         public ActionResult VpisOcen(IList<studis.Models.VnosTockModel> list)
         {
+            UserHelper uHelper = new UserHelper();
             if (list.Any())
             {
                 foreach (VnosTockModel m in list)
@@ -685,7 +691,9 @@ namespace studis.Controllers
                                     {
                                         ocena.ocena1 = 0;
                                         prijava.stanje = 4; //VP??
-
+                                        prijava.datumOdjave = DateTime.Now;
+                                        prijava.odjavilId = uHelper.FindByName(User.Identity.Name).id;
+                                        
                                         //v primeru VP točke na 0
                                         tocke = db.tockes.Where(t => t.prijavaId == prijava.id).FirstOrDefault();
                                         if (tocke != null)
@@ -726,6 +734,8 @@ namespace studis.Controllers
                                     {
                                         ocena.ocena1 = 0;
                                         prijava.stanje = 4; //VP??
+                                        prijava.datumOdjave = DateTime.Now;
+                                        prijava.odjavilId = uHelper.FindByName(User.Identity.Name).id;
 
                                         //v primeru VP točke na 0
                                         tocke = db.tockes.Where(t => t.prijavaId == prijava.id).FirstOrDefault();
