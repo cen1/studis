@@ -555,6 +555,7 @@
     <Content Include="Views\IzpitniRok\Seznam.cshtml" />
     <Content Include="Views\IzpitniRok\VpisTock.cshtml" />
     <Content Include="Views\IzpitniRok\VpisOcen.cshtml" />
+    <Content Include="Views\IzpitniRok\IzpisTock.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
