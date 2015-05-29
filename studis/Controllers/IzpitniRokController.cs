@@ -427,8 +427,16 @@ namespace studis.Controllers
                     else
                     {
                         //vpisi tocke, če so bile vnese v view-u...TO DO: namesto 0 neko boljše primerjanje
-                        if (m.tocke != 0)
+                        if (m.tocke != null)
                         {
+                            //VP=0 tock, drugače convert u int
+                            int stTock=0;
+                            string stringTocke = m.tocke.ToString().ToLower();
+                            if(!stringTocke.Equals("vp"))
+                            {
+                                stTock = Convert.ToInt32(m.tocke);
+                            }
+                            
                             vpi vpis = db.vpis.Where(v => v.vpisnaStevilka == m.vpisnaStevilka && v.sifrant_studijskoleto.naziv == m.studijskoLeto).FirstOrDefault();
 
                             var vsePrijave = db.prijavanaizpits.Where(p => p.izpitnirokId == m.idRoka);
@@ -450,7 +458,7 @@ namespace studis.Controllers
                             {                                
                                 try
                                 {
-                                    tocke.tocke1 = m.tocke;
+                                    tocke.tocke1 = stTock;
                                     tocke.prijavaId = prijava.id;
                                     tocke.datum = DateTime.Now;
                                     db.Entry(tocke).State = EntityState.Modified;
@@ -467,7 +475,7 @@ namespace studis.Controllers
                                 try
                                 {
                                     tocke = new tocke();
-                                    tocke.tocke1 = m.tocke;
+                                    tocke.tocke1 = stTock;
                                     tocke.prijavaId = prijava.id;
                                     tocke.datum = DateTime.Now;
                                     db.tockes.Add(tocke);
@@ -696,6 +704,5 @@ namespace studis.Controllers
             catch (Exception e) { st = -1; }
             return st.ToString();
         }
-
     }
 }

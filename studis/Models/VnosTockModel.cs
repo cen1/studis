@@ -28,8 +28,8 @@ namespace studis.Models
         public int zaporednoSteviloPonavljanja { get; set; }
     
         //vnos točk&ocen
-        [Range(0, 100, ErrorMessage = "Število točk mora biti med 0 in 100")]
-        public int tocke { get; set; }
+        [RegularExpression(@"^(vp)|(VP)|0*(?:[1-9][0-9]?|100)$", ErrorMessage = "Ni število med 0 in 100!")]
+        public string tocke { get; set; }
         public int ocena { get; set; }
     }
 }
