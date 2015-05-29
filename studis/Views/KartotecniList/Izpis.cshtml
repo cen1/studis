@@ -103,7 +103,7 @@
                                 {
                                     foreach (var p in @ViewBag.Prijave)
                                     {
-                                        if (@ViewBag.Zacasni.izvajanjes.Contains(i) && i.izpitniroks.Contains(r) && (p.vpisId == @ViewBag.Zacasni.id || p.vpisId == v.id ) && r.id == p.izpitnirokId && pisal == 0)
+                                        if (pisal == 0 && r.id == p.izpitnirokId && (p.vpisId == @ViewBag.Zacasni.id || p.vpisId == v.id) && i.izpitniroks.Contains(r) && @ViewBag.Zacasni.izvajanjes.Contains(i))
                                         {
                                             pisal++;
 
@@ -133,20 +133,20 @@
                                                 <td>@ocena</td>
                                             </tr>
 
-                                                 if (@ocena != 0)
-                                                 {
-                                                     if (@ocena > 5)
-                                                     {
-                                                         tocke += @i.predmet.kreditne;
-                                                         stOcen += @ocena;
-                                                         sestevek++;
-                                                         opravil++;
-                                                     }
-                                                 }
+                                            if (@ocena != 0)
+                                            {
+                                                if (@ocena > 5)
+                                                {
+                                                    tocke += @i.predmet.kreditne;
+                                                    stOcen += @ocena;
+                                                    sestevek++;
+                                                    opravil++;
+                                                }
+                                            }
                                         }
                                     }
                                 }
-                                if (v.izvajanjes.Contains(i) && pisal == 0)
+                                if (pisal == 0 && v.izvajanjes.Contains(i))
                                 {
                                     <tr>
                                         <td>@i.predmet.koda</td>
@@ -181,7 +181,7 @@
                                 {
                                     foreach (var p in @ViewBag.Prijave)
                                     {
-                                        if (v.izvajanjes.Contains(i) && i.izpitniroks.Contains(r) && p.vpisId == v.id && r.id == p.izpitnirokId && pisal == 0)
+                                        if (pisal == 0 && p.vpisId == v.id && r.id == p.izpitnirokId && i.izpitniroks.Contains(r) && v.izvajanjes.Contains(i))
                                         {
                                             pisal++;
 
@@ -224,7 +224,7 @@
                                         }
                                     }         
                                 }
-                                if (v.izvajanjes.Contains(i) && pisal == 0)
+                                if (pisal == 0 && v.izvajanjes.Contains(i))
                                 {   
                                     <tr>
                                         <td>@i.predmet.koda</td>
@@ -373,7 +373,7 @@
                                 {
                                     foreach (var p in @ViewBag.Prijave)
                                     {
-                                        if (@ViewBag.Zacasni.izvajanjes.Contains(i) && i.izpitniroks.Contains(r) && (p.vpisId == @ViewBag.Zacasni.id || p.vpisId == v.id) && r.id == p.izpitnirokId)
+                                        if (r.id == p.izpitnirokId && (p.vpisId == @ViewBag.Zacasni.id || p.vpisId == v.id) && i.izpitniroks.Contains(r) && @ViewBag.Zacasni.izvajanjes.Contains(i))
                                         {
                                             pisal++;
                                         
@@ -407,7 +407,7 @@
                                         }
                                     }
                                 }
-                                if (v.izvajanjes.Contains(i) && pisal == 0)
+                                if (pisal == 0 && v.izvajanjes.Contains(i))
                                 {
                                         <tr>
                                             <td>@i.predmet.koda</td>
@@ -455,7 +455,7 @@
                                 {
                                     foreach (var p in @ViewBag.Prijave)
                                     {
-                                        if (v.izvajanjes.Contains(i) && i.izpitniroks.Contains(r) && p.vpisId == v.id && r.id == p.izpitnirokId)
+                                        if (p.vpisId == v.id && r.id == p.izpitnirokId && i.izpitniroks.Contains(r) && v.izvajanjes.Contains(i))
                                         {
                                             pisal++;
 
@@ -489,7 +489,7 @@
                                         }
                                     }
                                 }
-                                if (v.izvajanjes.Contains(i) && pisal == 0)
+                                if (pisal == 0 && v.izvajanjes.Contains(i))
                                 {
                                     <tr>
                                         <td>@i.predmet.koda</td>

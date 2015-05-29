@@ -134,38 +134,35 @@ namespace studis.Controllers
                 ViewBag.Izbira = 0;
 
                 // vrni modula, ko je študent v 3. letniku BUNI
-                /*if (model.id == 1000468)
+                try
                 {
-                    try
-                    {
-                        var vm = db.vpis.Where(v => v.vpisnaStevilka == vpisna && v.studijskiProgram == model.id && v.letnikStudija == 3).FirstOrDefault();
+                    var vm = db.vpis.Where(v => v.vpisnaStevilka == vpisna && v.letnikStudija == 3).FirstOrDefault();
 
-                        List<int> moduli = new List<int>();
+                    List<int> moduli = new List<int>();
                             
-                        foreach (var i in vm.izvajanjes)
+                    foreach (var i in vm.izvajanjes)
+                    {
+                        if (i.predmet.modul != null)
                         {
-                            if (i.predmet.modul != null)
-                            {
-                                moduli.Add(Convert.ToInt32(i.predmet.modul.id));
-                            }
+                            moduli.Add(Convert.ToInt32(i.predmet.modul.id));
                         }
-
-                        var unique = moduli.Distinct();
-
-                        List<string> final = new List<string>();
-                        
-                        foreach (var u in unique)
-                        {
-                            if (moduli.Count(item => item == Convert.ToInt32(u)) > 1)
-                            {
-                                final.Add(vm.izvajanjes.Where(i => i.predmet.modulId == u).Select(i => i.predmet.modul.ime).First());
-                            }
-                        }
-                        
-                        ViewBag.Moduli = final;
                     }
-                    catch { }
-                }*/
+
+                    var unique = moduli.Distinct();
+
+                    List<string> final = new List<string>();
+                        
+                    foreach (var u in unique)
+                    {
+                        if (moduli.Count(item => item == Convert.ToInt32(u)) > 1)
+                        {
+                            final.Add(vm.izvajanjes.Where(i => i.predmet.modulId == u).Select(i => i.predmet.modul.ime).First());
+                        }
+                    }
+                        
+                    ViewBag.Moduli = final;
+                }
+                catch { }
             } 
 
             // vsa polaganja
@@ -242,38 +239,35 @@ namespace studis.Controllers
                 ViewBag.Izbira = 1;
 
                 // vrni modula, ko je študent v 3. letniku BUNI
-                /*if (model.id == 1000468)
+                try
                 {
-                    try
+                    var vm = db.vpis.Where(v => v.vpisnaStevilka == vpisna && v.letnikStudija == 3).FirstOrDefault();
+
+                    List<int> moduli = new List<int>();
+                        
+                    foreach (var i in vm.izvajanjes)
                     {
-                        var vm = db.vpis.Where(v => v.vpisnaStevilka == vpisna && v.studijskiProgram == model.id && v.letnikStudija == 3).FirstOrDefault();
-
-                        List<int> moduli = new List<int>();
-                        
-                        foreach (var i in vm.izvajanjes)
+                        if (i.predmet.modul != null)
                         {
-                            if (i.predmet.modul != null)
-                            {
-                                moduli.Add(Convert.ToInt32(i.predmet.modul.id));
-                            }
+                            moduli.Add(Convert.ToInt32(i.predmet.modul.id));
                         }
-                        
-                        var unique = moduli.Distinct();
-
-                        List<string> final = new List<string>();
-                        
-                        foreach (var u in unique)
-                        {
-                            if (moduli.Count(item => item == Convert.ToInt32(u)) > 1)
-                            {
-                                final.Add(vm.izvajanjes.Where(i => i.predmet.modulId == u).Select(i => i.predmet.modul.ime).First());
-                            }
-                        }
-                        
-                        ViewBag.Moduli = final;
                     }
-                    catch { }
-                }*/
+                        
+                    var unique = moduli.Distinct();
+
+                    List<string> final = new List<string>();
+                        
+                    foreach (var u in unique)
+                    {
+                        if (moduli.Count(item => item == Convert.ToInt32(u)) > 1)
+                        {
+                            final.Add(vm.izvajanjes.Where(i => i.predmet.modulId == u).Select(i => i.predmet.modul.ime).First());
+                        }
+                    }
+                        
+                    ViewBag.Moduli = final;
+                }
+                catch { }
             }
 
             return View();

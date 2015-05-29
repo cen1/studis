@@ -3,6 +3,8 @@
         ViewBag.Title = "Vnos Tock";
         Layout = "~/Views/Shared/_Layout.cshtml";
     }
+    <script src="@Url.Content("~/Scripts/jquery.validate.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.js")" type="text/javascript"></script>
 
 <h2>Vnos Točk</h2>
 
@@ -46,7 +48,7 @@
                 Zap. št. polaganja
             </th>
             <th>
-                Št. točk
+                Vpiši točke
             </th>
         </tr>
         @if (Model != null)
