@@ -258,6 +258,49 @@ namespace studis.Controllers
             return new JavaScriptSerializer().Serialize(seznamIzpitniRoki);
         }
 
+        public string GetPrijaveForStudent(int id)
+        {
+            StudentHelper sh = new StudentHelper();
+            int vpisna;
+            if (User.IsInRole("Referent"))
+            {
+                vpisna = id;
+            }
+            else
+            {
+                vpisna = UserHelper.GetStudentByUserName(User.Identity.Name).vpisnaStevilka;
+            }
+            int vpisID = sh.trenutniVpis(vpisna).id;
+            var prijave = db.prijavanaizpits.Where(a => a.vpisId == vpisID).Where(a => a.stanje == 0).ToList();
+
+            var seznamIzpitniRoki = new List<SelectListItem>();
+            int c = 0;
+            foreach (prijavanaizpit i in prijave)
+            {
+                c++;
+                string prostor = "";
+                if (i.izpitnirok.sifrant_prostor != null)
+                {
+                    prostor = i.izpitnirok.sifrant_prostor.naziv;
+                }
+                string ura = "";
+                if (i.izpitnirok.ura != null)
+                {
+                    ura = UserHelper.TimeToString((DateTime)i.izpitnirok.ura);
+                }
+                seznamIzpitniRoki.Add(new SelectListItem() { Value = i.id.ToString(), Text = UserHelper.DateToString(i.izpitnirok.datum) + " " + ura + " " + prostor });
+            }
+            if (c < 1)
+            {
+                seznamIzpitniRoki.Add(new SelectListItem() { Value = "", Text = "Ni prijav." });
+            }
+            else
+            {
+                seznamIzpitniRoki.Insert(0, new SelectListItem() { Value = "", Text = "Izberi" });
+            }
+            return new JavaScriptSerializer().Serialize(seznamIzpitniRoki);
+        }
+
         //PREVERJANJA
         /*
         //-preveri cas min 23 ur pred dnem izpita
