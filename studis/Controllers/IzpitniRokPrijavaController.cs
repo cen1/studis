@@ -21,7 +21,7 @@ namespace studis.Controllers
 
 
         // GET: IzpitniRokPrijava/Prijavi
-       public ActionResult Prijavi()//SPREJMI VPISNO ind id, za boljso izbiro studenta
+       public ActionResult Prijavi()//SPREJMI VPISNO int id, za boljso izbiro studenta
         {
             List<SelectListItem> ltemp = new List<SelectListItem>();
             ltemp.Add(new SelectListItem() { Value = "", Text = "Izberi" });
@@ -116,7 +116,20 @@ namespace studis.Controllers
         private List<SelectListItem> GetIzvajanaForStudent()
         {
             var student = UserHelper.GetStudentByUserName(User.Identity.Name);
-            var izvajanja = student.vpis.LastOrDefault().izvajanjes.ToList();
+            //var izvajanja = student.vpis.LastOrDefault().izvajanjes.ToList();
+            StudentHelper sh = new StudentHelper();
+            var trenutniVpis = sh.trenutniVpis(student.vpisnaStevilka);
+            List<izvajanje> izvajanja = null;
+            if (trenutniVpis != null)
+            {
+                izvajanja = trenutniVpis.izvajanjes.ToList();
+            }
+            else
+            {
+                Debug.WriteLine("Trenutni vpis je null.");
+                izvajanja = new List<izvajanje>();
+            }
+            Debug.WriteLine("Stevilo izvajanj: " + izvajanja.Count);    
             return IzvajanaToSeznam(izvajanja);
         }
 
@@ -176,11 +189,14 @@ namespace studis.Controllers
             if(vpi == null)
             {
                 izvajanja = new List<izvajanje>();
+                Debug.WriteLine("Trenutni vpis je null.");
             }
             else 
             {
                 izvajanja = vpi.izvajanjes.ToList();
             }
+            Debug.WriteLine("Stevilo izvajanj: " + izvajanja.Count);    
+
             return new JavaScriptSerializer().Serialize(IzvajanaToSeznam(izvajanja));
         }
 
@@ -256,7 +272,7 @@ namespace studis.Controllers
                 opozorila.Add("Rok za prijavo je potekel.");
             }
             //-preveri da je od zadnje prijave minilo 7 dni
-            var zadnjaPrijava = db.prijavanaizpits.Where(a => a.izpitnirokId == iRok.id).Where(a => a.vpisId == trenutniVpis.id).LastOrDefault();
+            var zadnjaPrijava = db.prijavanaizpits.Where(a => a.izpitnirokId == iRok.id).Where(a => a.vpisId == trenutniVpis.id).FirstOrDefault();
             if (zadnjaPrijava != null)
             {
                 TimeSpan razlika = DateTime.Now - zadnjaPrijava.datumPrijave;
@@ -272,7 +288,7 @@ namespace studis.Controllers
                 opozorila.Add("Preseženo število dovoljenih prijav za letos (3).");
             }
             //-max 6 polaganj vse skupaj (ponavljanje resetira)
-            int skupaj = sh.polaganjaVsa(trenutniVpis.id, (int) iRok.izvajanjeId, trenutniVpis.studijskiProgram);
+            int skupaj = sh.polaganjaVsa(trenutniVpis.vpisnaStevilka, (int) iRok.izvajanjeId, trenutniVpis.studijskiProgram);
             if (skupaj > 6)
             {
                 opozorila.Add("Preseženo število dovoljenih prijav (6).");

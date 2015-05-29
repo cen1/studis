@@ -47,7 +47,9 @@ namespace studis.Models
             bool reset = false;
             student s = db.students.Find(vpisna);
 
-            foreach (var v in s.vpis.Where(a => a.studijskiProgram == studijskiprogram))
+            var vpisi = s.vpis.Where(a => a.studijskiProgram == studijskiprogram);
+            
+            if(vpisi != null)foreach (var v in vpisi)
             {
                 foreach (var p in v.prijavanaizpits.Where(p => p.stanje == 2))
                 {
