@@ -40,15 +40,52 @@ namespace studis
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "letnik,studijskiProgram,vrstaVpisa,vrstaStudija,oblikaStudija")] zeton zeton, int id)
         {
+            student s = db.students.Find(id);
+            vpi zadnjivpisUNI = s.vpis.Where(a => a.studijskiProgram == 1000468).Last();
+
             if (ModelState.IsValid)
             {
-                zeton.porabljen = false;
-                zeton.vpisnaStevilka = id;
-                db.zetons.Add(zeton);
-                db.SaveChanges();
-                if (zeton.studijskiProgram != 1000468 || zeton.letnik>=4 || zeton.vrstaStudija != 16204)
-                    TempData["warning"] = "Dodali ste žeton s parametri za program, ki trenutno ni podprt. Še enkrat poglejte če je to res bil vaš namen.";
-                return RedirectToAction("Index");
+                if (zeton.studijskiProgram == 1000468) { //UNI
+                    //preveri če se vpisuje v višji če ni ponavljanje
+                    if (zeton.letnik <= zadnjivpisUNI.letnikStudija && zeton.vrstaVpisa != 2)
+                    {
+                        ModelState.AddModelError("", "Premajhen letnik študija");
+                    } //preveri če se vpisuje v isti če je ponavljanje
+                    else if (zeton.vrstaVpisa == 2 && zeton.letnik != zadnjivpisUNI.letnikStudija)
+                    {
+                        ModelState.AddModelError("", "Letnik mora biti enak zadnjemu vpisu, ker gre za ponavljanje");
+                    } //preveri ce je absolvent da ima vpis v 3 letnik
+                    else if (zeton.letnik == 0 && s.vpis.Where(a => a.letnikStudija == 3).Where(a => a.studijskiProgram == 1000468).FirstOrDefault() == null)
+                    {
+                        ModelState.AddModelError("", "Študent se ne more vpisati v dodatno leto ker nima opravljenega 3. letnika UNI");
+                    }
+                } //mag prvi letnik
+                else if (zeton.studijskiProgram == 1000471 && zeton.letnik == 1) {
+                    if (s.vpis.Where(a => a.letnikStudija == 3).Where(a => a.studijskiProgram == 1000468).FirstOrDefault() == null) {
+                        ModelState.AddModelError("", "Študent še ni bil vpisan v 3. letnik UNI");
+                    }
+                } //mag neprvi
+                else if (zeton.studijskiProgram == 1000471 && zeton.letnik == 1) {
+                    ModelState.AddModelError("", "Podprt je samo prvi letnik magisterskega študija");
+                } //preveri pavziranje
+                else if (zeton.vrstaVpisa == 3 && (zeton.letnik != zadnjivpisUNI.letnikStudija))
+                {
+                    ModelState.AddModelError("", "Študent lahko pavzira le zadnji vpisan letnik");
+                } //vpis za zaključek le če ima tretji in uni
+                else if (s.vpis.Where(a => a.letnikStudija == 3).Where(a => a.studijskiProgram == 1000468).FirstOrDefault() == null && zeton.studijskiProgram == 1000468)
+                {
+                    ModelState.AddModelError("", "Študent nima vpisa za 3. letnik UNI");
+                }
+
+                if (ModelState.IsValid)
+                {
+
+                    zeton.porabljen = false;
+                    zeton.vpisnaStevilka = id;
+                    db.zetons.Add(zeton);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }                
             }
 
             ViewBag.vrstaStudija = new SelectList(db.sifrant_klasius.OrderBy(a => a.id != 16204).ThenBy(b => b.id), "id", "naziv");

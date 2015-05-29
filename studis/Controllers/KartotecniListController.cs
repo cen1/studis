@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Data.Entity;
 using System.Web;
 using System.Web.Mvc;
 using studis.Models;
@@ -74,7 +75,7 @@ namespace studis.Controllers
             if (polaganja == "Zadnje polaganje")
             {
                 // pridobi vse vpisne liste za študenta, kjer je študijski program = selected
-                var vpisi = db.vpis.Where(v => v.vpisnaStevilka == vpisna && v.studijskiProgram == model.id).ToList();
+                var vpisi = db.vpis.Where(v => v.vpisnaStevilka == vpisna && v.studijskiProgram == model.id).Include(a => a.izvajanjes).ToList();
                 ViewBag.Vpisi = vpisi;
 
                 // pridobi izvajanja
@@ -118,9 +119,9 @@ namespace studis.Controllers
                 // pridobi opravljanja izpitov
                 List<prijavanaizpit> prijave = new List<prijavanaizpit>();
                 {
-                    foreach (var r in roki.OrderByDescending(r => r.datum))
+                    foreach (var r in roki.OrderByDescending(r => r.datum).ToList())
                     {
-                        foreach (var p in r.prijavanaizpits.Where(p => p.stanje == 2).ToList())
+                        foreach (var p in r.prijavanaizpits.Where(p => p.stanje == 2))
                         {
                             if (p.ocenas != null)
                             {
@@ -173,7 +174,7 @@ namespace studis.Controllers
             else
             {
                 // pridobi vse vpisne liste za študenta, kjer je študijski program = selected
-                var vpisi = db.vpis.Where(v => v.vpisnaStevilka == vpisna && v.studijskiProgram == model.id).ToList();
+                var vpisi = db.vpis.Where(v => v.vpisnaStevilka == vpisna && v.studijskiProgram == model.id).Include(v => v.izvajanjes).ToList();
                 ViewBag.Vpisi = vpisi;
 
                 // pridobi izvajanja
@@ -233,7 +234,7 @@ namespace studis.Controllers
                 {
                     try
                     {
-                        var vm = db.vpis.Where(v => v.vpisnaStevilka == vpisna && v.studijskiProgram == model.id && v.letnikStudija == 3).FirstOrDefault();
+                        var vm = db.vpis.Where(v => v.vpisnaStevilka == vpisna && v.studijskiProgram == model.id && v.letnikStudija == 3).Include(v => v.izvajanjes).FirstOrDefault();
 
                         List<int> moduli = new List<int>();
                         {
