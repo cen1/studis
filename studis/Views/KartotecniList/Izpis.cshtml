@@ -12,19 +12,18 @@
 <!--- selektor za vsa/zadnje polaganje; selektor za študijski program -->
 @using (Html.BeginForm("Izpis", "KartotecniList", new { vpisna = ViewBag.Vpisna }, FormMethod.Post, null))
 {
-    @Html.DropDownList("polaganja", new SelectList(new[] { "Zadnje polaganje", "Vsa polaganja" })) 
-    @Html.DropDownListFor(m => m.id, (SelectList)ViewBag.Program)
-    <br />
-    <br />
-    <input type="submit" value="Izpiši" />
+    @Html.DropDownList("polaganja", new SelectList(new[] { "Zadnje polaganje", "Vsa polaganja" })) <input type="submit" value="Izpiši" />
 }
     
 <br />
-<br />
 
-@if (@ViewBag.Izbira != null) 
+@if (@ViewBag.Izbira != null)
 {
-    <!-- Zadnje polaganje -->
+    var skupneOcene = 0.0;
+    var skupniSestevek = 0.0;
+    var skupneTocke = 0;
+    double skupnoPovprecje = 0;
+        
     if (@ViewBag.Izbira == 0)
     {
         <div id="izpis">
@@ -41,12 +40,12 @@
 
                 <!-- GLAVA -->
                 
-                <h2>Študijsko leto @v.sifrant_studijskoleto.naziv</h2>
+                <h2>@v.sifrant_studijskiprogram.naziv </h2>
                 <table>
                     <tbody>
                         <tr>
-                            <th>Študijski program</th>
-                            <td>@v.sifrant_studijskiprogram.naziv</td>
+                            <th>Študijsko leto</th>
+                            <td>@v.sifrant_studijskoleto.naziv</td>
                         </tr>
                         <tr>
                             <th>Letnik</th>
@@ -104,7 +103,7 @@
                                 {
                                     foreach (var p in @ViewBag.Prijave)
                                     {
-                                        if (@ViewBag.Zacasni.izvajanjes.Contains(i) && i.izpitniroks.Contains(r) && (p.vpisId == @ViewBag.Zacasni.id || p.vpisId == v.id ) && r.id == p.izpitnirokId && pisal == 0)
+                                        if (pisal == 0 && r.id == p.izpitnirokId && (p.vpisId == @ViewBag.Zacasni.id || p.vpisId == v.id) && i.izpitniroks.Contains(r) && @ViewBag.Zacasni.izvajanjes.Contains(i))
                                         {
                                             pisal++;
 
@@ -125,7 +124,7 @@
                                                 <td>@i.predmet.letnik</td>
                                                 @{ var datum = sh.pridobiDatum(Convert.ToInt32(@p.id)); }
                                                 <td>@datum</td>
-                                                @{ temp = sh.polaganjaVsa(Convert.ToInt32(@v.vpisnaStevilka), Convert.ToInt32(@i.id), Convert.ToInt32(@v.studijskiProgram)); }
+                                                @{ temp = sh.polaganjaLetos(Convert.ToInt32(@v.id), Convert.ToInt32(@i.id)); }
                                                 <td>@temp</td>
                                                 @{ temp = sh.polaganjaLetos(Convert.ToInt32(@v.id), Convert.ToInt32(@i.id)); }
                                                 <td>@temp</td>
@@ -134,20 +133,20 @@
                                                 <td>@ocena</td>
                                             </tr>
 
-                                                 if (@ocena != 0)
-                                                 {
-                                                     if (@ocena > 5)
-                                                     {
-                                                         tocke += @i.predmet.kreditne;
-                                                         stOcen += @ocena;
-                                                         sestevek++;
-                                                         opravil++;
-                                                     }
-                                                 }
+                                            if (@ocena != 0)
+                                            {
+                                                if (@ocena > 5)
+                                                {
+                                                    tocke += @i.predmet.kreditne;
+                                                    stOcen += @ocena;
+                                                    sestevek++;
+                                                    opravil++;
+                                                }
+                                            }
                                         }
                                     }
                                 }
-                                if (v.izvajanjes.Contains(i) && pisal == 0)
+                                if (pisal == 0 && v.izvajanjes.Contains(i))
                                 {
                                     <tr>
                                         <td>@i.predmet.koda</td>
@@ -165,8 +164,7 @@
                                         </td>
                                         <td>@i.predmet.letnik</td>
                                         <td>/</td>
-                                        @{ temp = sh.polaganjaVsa(Convert.ToInt32(@v.vpisnaStevilka), Convert.ToInt32(@i.id), Convert.ToInt32(@v.studijskiProgram)); }
-                                        <td>@temp</td>
+                                        <td>0</td>
                                         <td>0</td>
                                         <td>@i.predmet.kreditne</td>
                                         <td>/</td>
@@ -183,7 +181,7 @@
                                 {
                                     foreach (var p in @ViewBag.Prijave)
                                     {
-                                        if (v.izvajanjes.Contains(i) && i.izpitniroks.Contains(r) && p.vpisId == v.id && r.id == p.izpitnirokId && pisal == 0)
+                                        if (pisal == 0 && p.vpisId == v.id && r.id == p.izpitnirokId && i.izpitniroks.Contains(r) && v.izvajanjes.Contains(i))
                                         {
                                             pisal++;
 
@@ -204,7 +202,7 @@
                                                 <td>@i.predmet.letnik</td>
                                                 @{ var datum = sh.pridobiDatum(Convert.ToInt32(@p.id)); }
                                                 <td>@datum</td>
-                                                @{ temp = sh.polaganjaVsaPonavljanje(Convert.ToInt32(@v.vpisnaStevilka), Convert.ToInt32(@i.id), Convert.ToInt32(@v.studijskiProgram)); }
+                                                @{ temp = sh.polaganjaVsa(Convert.ToInt32(@v.vpisnaStevilka), Convert.ToInt32(@i.id), Convert.ToInt32(@v.studijskiProgram)); }
                                                 <td>@temp</td>
                                                 @{ temp = sh.polaganjaLetos(Convert.ToInt32(@v.id), Convert.ToInt32(@i.id)); }
                                                 <td>@temp</td>
@@ -226,7 +224,7 @@
                                         }
                                     }         
                                 }
-                                if (v.izvajanjes.Contains(i) && pisal == 0)
+                                if (pisal == 0 && v.izvajanjes.Contains(i))
                                 {   
                                     <tr>
                                         <td>@i.predmet.koda</td>
@@ -259,14 +257,13 @@
                 <br />
 
                 <!--- NOGA -->
-                <h2>Povprečne ocene po študijskih letih</h2>
                 <table>
                     <thead>
                         <tr>
                             <th>Študijsko leto</th>
                             <th>Število opravljenih izpitov</th>
-                            <th>Kreditne točke</th>
-                            <th>Skupno povprečje</th>
+                            <th>KT</th>
+                            <th>Povprečje</th>
                         </tr>
                     </thead>
 
@@ -285,13 +282,17 @@
                         </tr>
                     </tbody>
                 </table>
+                skupneTocke += tocke;
+                skupneOcene += stOcen;
+                skupniSestevek += sestevek;
 
                 <br />
                 <br />
         }
         </div>
+        <!-- Povprečne ocene po študijskih letih  -->
     }
-    
+
     <!-- Vsa polaganja -->
     if (@ViewBag.Izbira == 1)
     {
@@ -308,12 +309,12 @@
                 int ocena;
 
                 <!-- GLAVA -->
-                <h2>Študijsko leto @v.sifrant_studijskoleto.naziv</h2>
+                <h2>@v.sifrant_studijskiprogram.naziv</h2>
                 <table>
                     <tbody>
                         <tr>
-                            <th>Študijski program</th>
-                            <td>@v.sifrant_studijskiprogram.naziv</td>
+                            <th>Študijsko leto</th>
+                            <td>@v.sifrant_studijskoleto.naziv</td>
                         </tr>
                         <tr>
                             <th>Letnik</th>
@@ -372,7 +373,7 @@
                                 {
                                     foreach (var p in @ViewBag.Prijave)
                                     {
-                                        if (@ViewBag.Zacasni.izvajanjes.Contains(i) && i.izpitniroks.Contains(r) && (p.vpisId == @ViewBag.Zacasni.id ||p.vpisId == v.id) && r.id == p.izpitnirokId)
+                                        if (r.id == p.izpitnirokId && (p.vpisId == @ViewBag.Zacasni.id || p.vpisId == v.id) && i.izpitniroks.Contains(r) && @ViewBag.Zacasni.izvajanjes.Contains(i))
                                         {
                                             pisal++;
                                         
@@ -393,7 +394,7 @@
                                                 <td>@i.predmet.letnik</td>
                                                 @{ var datum = sh.pridobiDatum(Convert.ToInt32(@p.id)); }
                                                 <td>@datum</td>
-                                                @{ temp = sh.zaporednoPolaganje(Convert.ToInt32(@v.vpisnaStevilka), Convert.ToInt32(@i.id), Convert.ToInt32(@v.studijskiProgram), @r.datum); }
+                                                @{ temp = sh.zaporednoPolaganjaLetos(Convert.ToInt32(@v.id), Convert.ToInt32(@i.id), Convert.ToInt32(@r.id)); }
                                                 <td>@temp</td>
                                                 @{ temp = sh.zaporednoPolaganjaLetos(Convert.ToInt32(@v.id), Convert.ToInt32(@i.id), Convert.ToInt32(@r.id)); }
                                                 <td>@temp</td>
@@ -406,7 +407,7 @@
                                         }
                                     }
                                 }
-                                if (v.izvajanjes.Contains(i) && pisal == 0)
+                                if (pisal == 0 && v.izvajanjes.Contains(i))
                                 {
                                         <tr>
                                             <td>@i.predmet.koda</td>
@@ -454,7 +455,7 @@
                                 {
                                     foreach (var p in @ViewBag.Prijave)
                                     {
-                                        if (v.izvajanjes.Contains(i) && i.izpitniroks.Contains(r) && p.vpisId == v.id && r.id == p.izpitnirokId)
+                                        if (p.vpisId == v.id && r.id == p.izpitnirokId && i.izpitniroks.Contains(r) && v.izvajanjes.Contains(i))
                                         {
                                             pisal++;
 
@@ -488,7 +489,7 @@
                                         }
                                     }
                                 }
-                                if (v.izvajanjes.Contains(i) && pisal == 0)
+                                if (pisal == 0 && v.izvajanjes.Contains(i))
                                 {
                                     <tr>
                                         <td>@i.predmet.koda</td>
@@ -506,8 +507,7 @@
                                         </td>
                                         <td>@i.predmet.letnik</td>
                                         <td>/</td>
-                                        @{ temp = sh.polaganjaVsa(Convert.ToInt32(@v.vpisnaStevilka), Convert.ToInt32(@i.id), Convert.ToInt32(@v.studijskiProgram)); }
-                                        <td>@temp</td>
+                                        <td>0</td>
                                         <td>0</td>
                                         <td>@i.predmet.kreditne</td>
                                         <td>/</td>
@@ -531,14 +531,13 @@
                 <br />
 
                 <!--- NOGA -->
-                <h2>Povprečne ocene po študijskih letih</h2>
                 <table>
                     <thead>
                         <tr>
                             <th>Študijsko leto</th>
                             <th>Število opravljenih izpitov</th>
-                            <th>Kreditne točke</th>
-                            <th>Skupno povprečje</th>
+                            <th>KT</th>
+                            <th>Povprečje</th>
                         </tr>
                     </thead>
 
@@ -557,10 +556,38 @@
                         </tr>
                     </tbody>
                 </table>
+                
+                skupneTocke += tocke;
+                skupneOcene += stOcen;
+                skupniSestevek += sestevek;
 
                 <br />
                 <br />
             }
         </div>
     }
+
+    <!-- Povprečne ocene po študijskih letih  -->
+    <h2>Povprečne ocene po študijskih letih</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Skupaj KT</th>
+                <th>Skupno povprečje</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr>
+                <td>@skupneTocke</td>
+                <td>
+                    @if (skupneOcene != 0 && skupniSestevek != 0)
+                    {
+                        skupnoPovprecje = skupneOcene / skupniSestevek;
+                    }
+                    @skupnoPovprecje
+                </td>
+            </tr>
+        </tbody>
+    </table>
 }

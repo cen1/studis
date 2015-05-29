@@ -18,42 +18,34 @@ namespace studis.Controllers
         public ActionResult Izpis(int? id)
         {
             // akcija za referenta
-            if (id != null && User.IsInRole("Referent"))
+            if (User.IsInRole("Referent"))
             {
-                try
+                if (id != null)
                 {
-                    // vrni študentove študijske programe
-                    var tmp = db.vpis.Where(v => v.vpisnaStevilka == id).Select(v => v.studijskiProgram);
-                    var seznam = tmp.Distinct();
-                    var items = db.sifrant_studijskiprogram.Where(p => seznam.Contains(p.id));
-                    ViewBag.Program = new SelectList(items, "id", "naziv");
                     ViewBag.Vpisna = id;
+                    return View();
                 }
-                catch
+                else
                 {
-                    TempData["Napaka"] = "Študent nima nobenega vpisnega lista!";
-                    return RedirectToAction("Napaka");
-                } 
+                    TempData["Napaka"] = "Izbran ni bil noben študent!";
+                    RedirectToAction("Napaka");
+                }
             }
-            else
+            else if (User.IsInRole("Študent"))
             {
-                // pridobi študenta
-                UserHelper uh = new UserHelper();
-                var student = uh.FindByName(User.Identity.Name).students.FirstOrDefault();
-
                 try
                 {
-                    // vrni študentove študijske programe
-                    var tmp = db.vpis.Where(v => v.vpisnaStevilka == student.vpisnaStevilka).Select(v => v.studijskiProgram);
-                    var seznam = tmp.Distinct();
-                    var items = db.sifrant_studijskiprogram.Where(p => seznam.Contains(p.id));
-                    ViewBag.Program = new SelectList(items, "id", "naziv");
+                    // pridobi študenta
+                    UserHelper uh = new UserHelper();
+                    var student = uh.FindByName(User.Identity.Name).students.FirstOrDefault();
+
                     ViewBag.Vpisna = student.vpisnaStevilka;
+                    return View();
                 }
                 catch
                 {
-                    TempData["Napaka"] = "Študent nima nobenega vpisnega lista!";
-                    return RedirectToAction("Napaka");
+                    TempData["Napaka"] = "Študent nima vzpostavljenega nobenega izvajanja!";
+                    RedirectToAction("Napaka");
                 }
             }
 
@@ -62,7 +54,7 @@ namespace studis.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Referent, Študent")]
-        public ActionResult Izpis(int vpisna, string polaganja, sifrant_studijskiprogram model)
+        public ActionResult Izpis(int vpisna, string polaganja)
         {
             var tmp = db.vpis.Where(v => v.vpisnaStevilka == vpisna).Select(v => v.studijskiProgram);
             var seznam = tmp.Distinct();
@@ -74,7 +66,7 @@ namespace studis.Controllers
             if (polaganja == "Zadnje polaganje")
             {
                 // pridobi vse vpisne liste za študenta, kjer je študijski program = selected
-                var vpisi = db.vpis.Where(v => v.vpisnaStevilka == vpisna && v.studijskiProgram == model.id).ToList();
+                var vpisi = db.vpis.Where(v => v.vpisnaStevilka == vpisna).ToList();
                 ViewBag.Vpisi = vpisi;
 
                 // preveri če je ponavljanje
@@ -126,6 +118,8 @@ namespace studis.Controllers
 
                 foreach (var r in roki.OrderByDescending(r => r.datum))
                 {
+                    var tn = vpisnaId.First();
+                    var tn2 = vpisnaId.Last();
                     foreach (var p in r.prijavanaizpits.Where(p => p.stanje == 2).ToList())
                     {
                         if (p.ocenas != null)
@@ -140,45 +134,42 @@ namespace studis.Controllers
                 ViewBag.Izbira = 0;
 
                 // vrni modula, ko je študent v 3. letniku BUNI
-                if (model.id == 1000468)
+                try
                 {
-                    try
-                    {
-                        var vm = db.vpis.Where(v => v.vpisnaStevilka == vpisna && v.studijskiProgram == model.id && v.letnikStudija == 3).FirstOrDefault();
+                    var vm = db.vpis.Where(v => v.vpisnaStevilka == vpisna && v.letnikStudija == 3).FirstOrDefault();
 
-                        List<int> moduli = new List<int>();
+                    List<int> moduli = new List<int>();
                             
-                        foreach (var i in vm.izvajanjes)
+                    foreach (var i in vm.izvajanjes)
+                    {
+                        if (i.predmet.modul != null)
                         {
-                            if (i.predmet.modul != null)
-                            {
-                                moduli.Add(Convert.ToInt32(i.predmet.modul.id));
-                            }
+                            moduli.Add(Convert.ToInt32(i.predmet.modul.id));
                         }
-
-                        var unique = moduli.Distinct();
-
-                        List<string> final = new List<string>();
-                        
-                        foreach (var u in unique)
-                        {
-                            if (moduli.Count(item => item == Convert.ToInt32(u)) > 1)
-                            {
-                                final.Add(vm.izvajanjes.Where(i => i.predmet.modulId == u).Select(i => i.predmet.modul.ime).First());
-                            }
-                        }
-                        
-                        ViewBag.Moduli = final;
                     }
-                    catch { }
+
+                    var unique = moduli.Distinct();
+
+                    List<string> final = new List<string>();
+                        
+                    foreach (var u in unique)
+                    {
+                        if (moduli.Count(item => item == Convert.ToInt32(u)) > 1)
+                        {
+                            final.Add(vm.izvajanjes.Where(i => i.predmet.modulId == u).Select(i => i.predmet.modul.ime).First());
+                        }
+                    }
+                        
+                    ViewBag.Moduli = final;
                 }
+                catch { }
             } 
 
             // vsa polaganja
             else
             {
                 // pridobi vse vpisne liste za študenta, kjer je študijski program = selected
-                var vpisi = db.vpis.Where(v => v.vpisnaStevilka == vpisna && v.studijskiProgram == model.id).ToList();
+                var vpisi = db.vpis.Where(v => v.vpisnaStevilka == vpisna).ToList();
                 ViewBag.Vpisi = vpisi;
 
                 // preveri če je ponavljanje
@@ -248,38 +239,35 @@ namespace studis.Controllers
                 ViewBag.Izbira = 1;
 
                 // vrni modula, ko je študent v 3. letniku BUNI
-                if (model.id == 1000468)
+                try
                 {
-                    try
+                    var vm = db.vpis.Where(v => v.vpisnaStevilka == vpisna && v.letnikStudija == 3).FirstOrDefault();
+
+                    List<int> moduli = new List<int>();
+                        
+                    foreach (var i in vm.izvajanjes)
                     {
-                        var vm = db.vpis.Where(v => v.vpisnaStevilka == vpisna && v.studijskiProgram == model.id && v.letnikStudija == 3).FirstOrDefault();
-
-                        List<int> moduli = new List<int>();
-                        
-                        foreach (var i in vm.izvajanjes)
+                        if (i.predmet.modul != null)
                         {
-                            if (i.predmet.modul != null)
-                            {
-                                moduli.Add(Convert.ToInt32(i.predmet.modul.id));
-                            }
+                            moduli.Add(Convert.ToInt32(i.predmet.modul.id));
                         }
-                        
-                        var unique = moduli.Distinct();
-
-                        List<string> final = new List<string>();
-                        
-                        foreach (var u in unique)
-                        {
-                            if (moduli.Count(item => item == Convert.ToInt32(u)) > 1)
-                            {
-                                final.Add(vm.izvajanjes.Where(i => i.predmet.modulId == u).Select(i => i.predmet.modul.ime).First());
-                            }
-                        }
-                        
-                        ViewBag.Moduli = final;
                     }
-                    catch { }
+                        
+                    var unique = moduli.Distinct();
+
+                    List<string> final = new List<string>();
+                        
+                    foreach (var u in unique)
+                    {
+                        if (moduli.Count(item => item == Convert.ToInt32(u)) > 1)
+                        {
+                            final.Add(vm.izvajanjes.Where(i => i.predmet.modulId == u).Select(i => i.predmet.modul.ime).First());
+                        }
+                    }
+                        
+                    ViewBag.Moduli = final;
                 }
+                catch { }
             }
 
             return View();
