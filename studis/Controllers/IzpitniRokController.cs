@@ -359,12 +359,15 @@ namespace studis.Controllers
                     {
                         //preveri če že obstaja vnos?
                         tocke tocke= db.tockes.Where(t => t.prijavaId == prijava.id).FirstOrDefault();
-                        vnos.zeVpisaneTocke = tocke.tocke1;
+                        if (prijava.stanje != 4)
+                            vnos.zeVpisaneTocke = tocke.tocke1.ToString();
+                        else
+                            vnos.zeVpisaneTocke = "VP";
                     }
                     catch (Exception e)
                     {
-                        vnos.zeVpisaneTocke = 0;
-                        Debug.WriteLine("Tocke za tega studenta in prijavo niso še vnesene..");
+                        vnos.zeVpisaneTocke = "/";
+                        //Debug.WriteLine("Tocke za tega studenta in prijavo niso še vnesene..");
                     }
 
 
@@ -438,8 +441,8 @@ namespace studis.Controllers
                         //vpisi tocke, če so bile vnese v view-u
                         if (m.tocke != null)
                         {
-                            //VP=0 tock, drugače convert u int
-                            int stTock=0;
+                            //VP=-1 tock(0 v bazi), drugače convert u int
+                            int stTock=-1;
                             string stringTocke = m.tocke.ToLower();
                             if(!stringTocke.Equals("vp"))
                             {
@@ -467,14 +470,27 @@ namespace studis.Controllers
                             {
                                 try
                                 {
-                                    tocke.tocke1 = stTock;
+                                    if (stTock == -1)
+                                    {
+                                        tocke.tocke1 = 0;
+                                        prijava.stanje = 4; //VP??
+
+                                        //sam za izpiz v viewu
+                                        m.zeVpisaneTocke = "VP";
+                                    }
+                                    else
+                                    {
+                                        tocke.tocke1 = stTock;
+                                        prijava.stanje = 2;
+
+                                        //sam za izpiz v viewu
+                                        m.zeVpisaneTocke = stTock.ToString();
+                                    }
                                     tocke.prijavaId = prijava.id;
                                     tocke.datum = DateTime.Now;
-                                    db.Entry(tocke).State = EntityState.Modified;
-                                    db.SaveChanges();
-
-                                    //sam za izpiz v viewu
-                                    m.zeVpisaneTocke = stTock;
+                                    db.Entry(tocke).State = EntityState.Modified; //popravi točke v bazi
+                                    db.Entry(prijava).State = EntityState.Modified; //nastavi stanje prijave v bazi
+                                    db.SaveChanges();                                    
                                 }
                                 catch (Exception e)
                                 {
@@ -487,14 +503,27 @@ namespace studis.Controllers
                                 try
                                 {
                                     tocke = new tocke();
-                                    tocke.tocke1 = stTock;
+                                    if (stTock == -1)
+                                    {
+                                        tocke.tocke1 = 0;
+                                        prijava.stanje = 4; //VP??
+
+                                        //sam za izpiz v viewu
+                                        m.zeVpisaneTocke = "VP";
+                                    }
+                                    else
+                                    {
+                                        tocke.tocke1 = stTock;
+                                        prijava.stanje = 2;
+
+                                        //sam za izpiz v viewu
+                                        m.zeVpisaneTocke = stTock.ToString();
+                                    }
                                     tocke.prijavaId = prijava.id;
                                     tocke.datum = DateTime.Now;
-                                    db.tockes.Add(tocke);
-                                    db.SaveChanges();
-
-                                    //sam za izpiz v viewu
-                                    m.zeVpisaneTocke = stTock;
+                                    db.tockes.Add(tocke); //vpiši točke v bazo
+                                    db.Entry(prijava).State = EntityState.Modified; //nastavi stanje prijave v bazi
+                                    db.SaveChanges();                                    
                                 }
                                 catch (Exception e)
                                 {

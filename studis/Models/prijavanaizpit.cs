@@ -11,7 +11,9 @@ namespace studis.Models
 {
     using System;
     using System.Collections.Generic;
-    
+
+    //Stanje 2: študent je pisal izpit
+    //Stanje 4: vrnjena prijava
     public partial class prijavanaizpit
     {
         public prijavanaizpit()

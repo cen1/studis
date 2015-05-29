@@ -28,7 +28,7 @@ namespace studis.Models
         public int zaporednoSteviloPonavljanja { get; set; }
     
         //vnos točk&ocen
-        public int zeVpisaneTocke { get; set; }
+        public string zeVpisaneTocke { get; set; }
 
         [RegularExpression(@"^(vp)|(VP)|0*(?:[1-9][0-9]?|100)$", ErrorMessage = "Vnos mora biti število med 0 in 100 ali VP!")]
         public string tocke { get; set; }
