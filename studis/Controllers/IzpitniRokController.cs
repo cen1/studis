@@ -778,7 +778,7 @@ namespace studis.Controllers
         }
 
 
-        public ActionResult IzpisTock(int rokID)
+        public ActionResult IzpisTock(int rokID, int seznam)
         {
             //podatki o izpitnem roku
             izpitnirok rok = db.izpitniroks.Where(r => r.id == rokID).SingleOrDefault();
@@ -861,7 +861,10 @@ namespace studis.Controllers
             else
                 listVnosov = null;
 
-            return View(listVnosov);
+            if(seznam==0)
+                return View(listVnosov);
+            else
+                return View("IzpisTockAnonymous",listVnosov);
         }
 
 
