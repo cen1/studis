@@ -21,7 +21,7 @@ namespace studis.Controllers
 
 
         // GET: IzpitniRokPrijava/Prijavi
-       public ActionResult Prijavi()//SPREJMI VPISNO int id, za boljso izbiro studenta
+       public ActionResult Prijavi()
         {
             List<SelectListItem> ltemp = new List<SelectListItem>();
             ltemp.Add(new SelectListItem() { Value = "", Text = "Izberi" });
@@ -45,7 +45,25 @@ namespace studis.Controllers
                 studenti.Add(p);
             }
             ViewBag.Studenti = new SelectList(studenti, "Value", "Text");
-
+            return View();
+        }
+        // GET: IzpitniRokPrijava/PrijaviStudenta/vpisna
+        public ActionResult PrijaviStudenta(int vpisna)
+        {
+            student stud = UserHelper.GetStudentByVpisna(vpisna);
+            List<SelectListItem> ltemp = new List<SelectListItem>();
+            ltemp.Add(new SelectListItem() { Value = "", Text = "Izberi" });
+            ViewBag.Prazen = new SelectList(ltemp, "Value", "Text");
+            if (User.IsInRole("Student"))
+            {
+                ViewBag.Izvajanja = GetIzvajanaForStudent();
+            }
+            else if(User.IsInRole("Referent"))
+            {
+                ViewBag.StudentIme = stud.ime + " " + stud.priimek;
+                ViewBag.StudentVpisna = stud.vpisnaStevilka.ToString();
+                ViewBag.IzvajanjaZaVpisna = GetIzvajanjaForStudent(vpisna);//new SelectList(ltemp, "Value", "Text");
+            }
             return View();
         }
 
@@ -302,6 +320,9 @@ namespace studis.Controllers
             //-preveri ce je izpit ze opravljen
             //-preveri ce za prejsnjo prijavo ze obstaja ocena
 
+            opozorila.Add("--1test server--");
+            opozorila.Add("--2test server--");
+
             //SAMO OBVSETILO
             //-preveri ce mora student placati izpit (4+ redni, 1+ izredni)
             string obvestilo = "";
@@ -309,9 +330,8 @@ namespace studis.Controllers
             {
                 obvestilo = "Za ta izpit bo potrbeno placati 140€.";
             }
-            var warnings = new JavaScriptSerializer().Serialize(opozorila);
 
-            return Json(warnings, obvestilo);
+            return Json(new { Warnings = new JavaScriptSerializer().Serialize(opozorila), Notice = obvestilo });
         }
     }
 }
