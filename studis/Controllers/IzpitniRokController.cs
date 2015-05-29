@@ -354,6 +354,8 @@ namespace studis.Controllers
                     vnos.vpisnaStevilka = st.vpisnaStevilka;
                     vnos.ime = st.ime;
                     vnos.priimek = st.priimek;
+                    vnos.studijskoLeto = vpiss.sifrant_studijskoleto.naziv;
+                    vnos.zaporednoSteviloPonavljanja = sh.zaporednoPolaganje(st.vpisnaStevilka, (int)izv.id, vpiss.studijskiProgram, prijava.izpitnirok.datum);
 
                     try
                     {
@@ -368,19 +370,6 @@ namespace studis.Controllers
                     {
                         vnos.zeVpisaneTocke = "/";
                         //Debug.WriteLine("Tocke za tega studenta in prijavo niso še vnesene..");
-                    }
-
-
-                    foreach (vpi vpisan in st.vpis)
-                    {
-                        foreach (prijavanaizpit prijava1 in prijave)
-                        {
-                            if (vpisan.id == prijava1.vpisId)
-                            {
-                                vnos.studijskoLeto = vpisan.sifrant_studijskoleto.naziv;
-                                vnos.zaporednoSteviloPonavljanja = sh.zaporednoPolaganje(st.vpisnaStevilka, (int)izv.id, vpisan.studijskiProgram, prijava1.izpitnirok.datum);
-                            }
-                        }
                     }
 
                     listVnosov.Add(vnos);
@@ -451,9 +440,7 @@ namespace studis.Controllers
                             
                             vpi vpis = db.vpis.Where(v => v.vpisnaStevilka == m.vpisnaStevilka && v.sifrant_studijskoleto.naziv == m.studijskoLeto).FirstOrDefault();
 
-                            var vsePrijave = db.prijavanaizpits.Where(p => p.izpitnirokId == m.idRoka);
-                            prijavanaizpit prijava = vsePrijave.Where(p => p.izpitnirokId == m.idRoka && p.vpisId == vpis.id).FirstOrDefault();
-
+                            prijavanaizpit prijava = db.prijavanaizpits.Where(p => p.izpitnirokId == m.idRoka && p.vpisId == vpis.id).FirstOrDefault();
                             tocke tocke = null;
                             try
                             {
