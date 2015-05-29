@@ -665,6 +665,7 @@ namespace studis.Controllers
 
                             prijavanaizpit prijava = db.prijavanaizpits.Where(p => p.izpitnirokId == m.idRoka && p.vpisId == vpis.id).FirstOrDefault();
                             ocena ocena = null;
+                            tocke tocke = null;
                             try
                             {
                                 //preveri če že obstaja vnos?
@@ -685,6 +686,14 @@ namespace studis.Controllers
                                         ocena.ocena1 = 0;
                                         prijava.stanje = 4; //VP??
 
+                                        //v primeru VP točke na 0
+                                        tocke = db.tockes.Where(t => t.prijavaId == prijava.id).FirstOrDefault();
+                                        if (tocke != null)
+                                        {
+                                            tocke.tocke1 = 0;
+                                            db.Entry(tocke).State = EntityState.Modified;
+                                        }
+
                                         //sam za izpiz v viewu
                                         m.zeVpisanaOcena = "VP";
                                     }
@@ -698,8 +707,8 @@ namespace studis.Controllers
                                     }
                                     ocena.prijavaId = prijava.id;
                                     ocena.datum = DateTime.Now;
-                                    db.Entry(ocena).State = EntityState.Modified; //popravi točke v bazi
-                                    db.Entry(prijava).State = EntityState.Modified; //nastavi stanje prijave v bazi
+                                    db.Entry(ocena).State = EntityState.Modified; //popravi oceno v bazi
+                                    db.Entry(prijava).State = EntityState.Modified; //nastavi stanje prijave v bazi                                    
                                     db.SaveChanges();
                                 }
                                 catch (Exception e)
@@ -718,6 +727,14 @@ namespace studis.Controllers
                                         ocena.ocena1 = 0;
                                         prijava.stanje = 4; //VP??
 
+                                        //v primeru VP točke na 0
+                                        tocke = db.tockes.Where(t => t.prijavaId == prijava.id).FirstOrDefault();
+                                        if (tocke != null)
+                                        {
+                                            tocke.tocke1 = 0;
+                                            db.Entry(tocke).State = EntityState.Modified;
+                                        }
+
                                         //sam za izpiz v viewu
                                         m.zeVpisanaOcena = "VP";
                                     }
@@ -731,7 +748,7 @@ namespace studis.Controllers
                                     }
                                     ocena.prijavaId = prijava.id;
                                     ocena.datum = DateTime.Now;
-                                    db.ocenas.Add(ocena); //vpiši točke v bazo
+                                    db.ocenas.Add(ocena); //vpiši oceno v bazo
                                     db.Entry(prijava).State = EntityState.Modified; //nastavi stanje prijave v bazi
                                     db.SaveChanges();
                                 }
