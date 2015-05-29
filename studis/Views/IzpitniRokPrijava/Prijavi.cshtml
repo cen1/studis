@@ -31,6 +31,7 @@
                 <div class="editor-label">
                     <p>
                         @Html.Raw(ViewBag.StudentVpisna) @Html.Raw(ViewBag.StudentIme)
+                        <input id="student" type="hidden" name="student" value="@Html.Raw(ViewBag.StudentVpisna)">
                     </p>
                 </div>
             }
@@ -66,17 +67,17 @@
 
 
             <ul id="error" style="color:red;"></ul>
-
             <ul id="warning" style="color:orange;"></ul>
-
+            <ul id="notice" style="color:orange;"></ul>
             <p>
-                <input id="submit" type="submit" value="Prijavi">
+                <input id="submit" type="submit" value="Prijavi" onclick="obvestilo()">
             </p>
         </fieldset>
     </div>
 }
 
-<script language="javascript" type="text/javascript">
+<script language="javascript" type="text/javascript"> 
+    function potrdi() { }
     //napolni izvajanja
     $(document).ready(function () {
         $("#student").change(function () {
@@ -142,6 +143,7 @@
                 $("#izPitniRok option:first-child").remove();
             }
             var ulOpozorila;
+            var ulObvestilo = $("#notice");
             @if (User.IsInRole("Referent"))
             {
                 <text>
@@ -156,8 +158,9 @@
             }
             //pocisti
             ulOpozorila.empty();
+            ulObvestilo.empty();
             $("#submit").prop("disabled", false);
-
+            potrdi = function () { };
             console.log("Parameter: " + $(this).val());
             //var url = "/IzpitniRokPrijava/Preveri/" + $("#student").val() + "&" + $(this).val();
             //console.log("URL: " + url);
@@ -190,13 +193,15 @@
                             $("#submit").prop("disabled", true);
                         </text>
                     }
-                    
+                    potrdi = function () {
+                        confirm(obvestilo);
+                    };
                     //napolni
                     ulOpozorila.append('<li>--test client--</li>');
                     for (i = 0; i < opozorila.length; i++) {
                         ulOpozorila.append('<li>' + opozorila[i] + '</li>');
                     }
-                    
+                    ulObvestilo.append('<li>' + obvestilo + '</li>');
                 },
                 dataType: "json",
                 traditional: true
