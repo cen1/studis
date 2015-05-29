@@ -71,26 +71,30 @@ namespace studis.Controllers
         [HttpPost]
         public ActionResult Prijavi(PrijavaNaIzpitModel model)
         {
-           // model.izpitniRok;
-           // model.izvajanje;
+            StudentHelper sh = new StudentHelper();
+            prijavanaizpit prijava = new prijavanaizpit();
+            prijava.datumPrijave = DateTime.Now;
+            prijava.izpitnirok = db.izpitniroks.FirstOrDefault(a => a.id == model.izpitniRok);
+            prijava.stanje = 0;
             if (User.IsInRole("Student"))
             {
-                UserHelper.GetStudentByUserName(User.Identity.Name);
+               prijava.vpisId = sh.trenutniVpis(UserHelper.GetStudentByUserName(User.Identity.Name).vpisnaStevilka).id;
             }
             else //referent
             {
-               // model.student;
+                prijava.vpisId = sh.trenutniVpis(model.student).id;
             }
-
+            UserHelper uh = new UserHelper();
+            prijava.prijavilId = uh.FindByName(User.Identity.Name).id;
             try
             {
-                // TODO: Add delete logic here
+                db.prijavanaizpits.Add(prijava);
 
                 return RedirectToAction("Index");
             }
             catch
             {
-                return View();
+                return Prijavi();
             }
         }
 
