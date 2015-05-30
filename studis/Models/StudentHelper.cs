@@ -123,7 +123,14 @@ namespace studis.Models
         {
             var datum = db.ocenas.Where(o => o.prijavaId == prijavaId).FirstOrDefault();
 
-            return datum.datum.ToString("dd/MM/yyyy");
+            if (datum != null)
+            {
+                return datum.datum.ToString("dd/MM/yyyy");
+            }
+            else
+            {
+                return "/";
+            }
         }
     }
 }

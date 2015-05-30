@@ -84,7 +84,7 @@
             $.get(url, function (response) {
                 var izvajanja = $.parseJSON(response);
                 var ddlIzvajanja = $("#izvajanje");
-                if ($("#student predmet option:first-child").text() == "Izberi študenta") {
+                if ($("#student option:first-child").text() == "Izberi študenta") {
                     $("#student option:first-child").remove();
                 }
                 //pocisti

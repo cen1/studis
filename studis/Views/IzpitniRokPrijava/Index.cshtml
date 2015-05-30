@@ -1,8 +1,20 @@
 ﻿
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Izpiti";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Index</h2>
+<h2>Izpiti</h2>
 
+<ul>
+
+    @if (User.IsInRole("Referent") || User.IsInRole("Referent"))
+    {
+        <li>@Html.ActionLink("Prijavi", "Prijavi", "IzpitniRokPrijava")</li>
+    }
+    @if (User.IsInRole("Referent") || User.IsInRole("Referent"))
+    {
+        <li>@Html.ActionLink("Odjavi", "Odjavi", "IzpitniRokPrijava")</li>
+    }
+
+</ul>
