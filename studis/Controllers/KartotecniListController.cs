@@ -119,8 +119,6 @@ namespace studis.Controllers
 
                 foreach (var r in roki.OrderByDescending(r => r.datum).ToList())
                 {
-                    var tn = vpisnaId.First();
-                    var tn2 = vpisnaId.Last();
                     foreach (var p in r.prijavanaizpits.Where(p => p.stanje == 2))
                     {
                         if (p.ocenas != null)
@@ -273,7 +271,7 @@ namespace studis.Controllers
             return View();
         }
 
-        [Authorize(Roles = "Referent, Študent")]
+        [Authorize(Roles = "Referent, Študent, Profesor")]
         public ActionResult Napaka()
         {
             ViewBag.Message = TempData["Napaka"];
