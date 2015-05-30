@@ -115,6 +115,7 @@
         <AssociationConnector Association="studisModel.izvajanje_predmet_fk2" />
         <AssociationConnector Association="studisModel.izvajanjeleto_izvajanje_fk" />
         <AssociationConnector Association="studisModel.vpisinizvajanje" />
+        <AssociationConnector Association="studisModel.profesor_user_fk" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
