@@ -210,15 +210,33 @@ namespace studis.Controllers
         // GET: IzpitniRok/Seznam/5
         public ActionResult Seznam()
         {
-            List<predmet> temp = db.predmets.OrderBy(a => a.ime).ToList();
-
             List<SelectListItem> predmeti = new List<SelectListItem>();
-            foreach (predmet i in temp)
+
+            if (User.IsInRole("Referent"))
             {
-                SelectListItem p = new SelectListItem();
-                p.Value = i.id.ToString();
-                p.Text = Convert.ToInt32(p.Value).ToString("000") + " - " + i.ime + " (" + i.koda + ")";
-                predmeti.Add(p);
+                List<predmet> temp = db.predmets.OrderBy(a => a.ime).ToList();
+                foreach (predmet i in temp)
+                {
+                    SelectListItem p = new SelectListItem();
+                    p.Value = i.id.ToString();
+                    p.Text = Convert.ToInt32(p.Value).ToString("000") + " - " + i.ime + " (" + i.koda + ")";
+                    predmeti.Add(p);
+                }
+            }
+            else if (User.IsInRole("Profesor"))
+            {
+                int profid = Convert.ToInt32(UserHelper.getProfByName(User.Identity.Name).id);
+                var izvajanja = db.izvajanjes.Where(a => a.izvajalec1Id == profid || a.izvajalec2Id == profid || a.izvajalec3Id == profid);
+                if (izvajanja != null)
+                {
+                    foreach (izvajanje i in izvajanja.ToList())
+                    {
+                        SelectListItem p = new SelectListItem();
+                        p.Value = i.predmetId.ToString();
+                        p.Text = Convert.ToInt32(p.Value).ToString("000") + " - " + i.predmet.ime + " (" + i.predmet.koda + ")";
+                        predmeti.Add(p);
+                    }
+                }
             }
 
 
