@@ -119,11 +119,11 @@ namespace studis.Models
             }       
         }
 
-        public System.DateTime pridobiDatum(int prijavaId)
+        public string pridobiDatum(int prijavaId)
         {
             var datum = db.ocenas.Where(o => o.prijavaId == prijavaId).FirstOrDefault();
 
-            return datum.datum;
+            return datum.datum.ToString("dd/MM/yyyy");
         }
     }
 }

@@ -39,7 +39,20 @@
                 btn2.appendChild(text2);
                 document.getElementById('main').appendChild(btn2);
             }
+            if (document.getElementById('izpis2'))
+            {
+                var btn1 = document.createElement("button");
+                var text1 = document.createTextNode("Prenesi PDF");
+                btn1.onclick = printPdf2;
+                btn1.appendChild(text1);
+                document.getElementById('main').appendChild(btn1);
 
+                var btn2 = document.createElement("button");
+                var text2 = document.createTextNode("Prenesi CSV");
+                btn2.onclick = printCsv2;
+                btn2.appendChild(text2);
+                document.getElementById('main').appendChild(btn2);
+            }
         });
         
         function printPdf() {
@@ -53,8 +66,23 @@
 
         }
 
+        function printPdf2() {
+            var pdf = new jsPDF('p', 'pt', 'a3');
+
+            pdf.addHTML(document.getElementById('izpis2'), 13, 0, {
+                'pagesplit': true
+            }, function () {
+                pdf.save('izpis.pdf');
+            });
+
+        }
+
         function printCsv() {
             $('#izpis').table2CSV();
+        }
+
+        function printCsv2() {
+            $('#izpis2').table2CSV();
         }
     </script>
 </head>

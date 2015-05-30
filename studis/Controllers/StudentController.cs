@@ -124,13 +124,10 @@ namespace studis.Controllers
 
             if (User.IsInRole("Profesor"))
             {
-                /*
+                
                 UserHelper uh = new UserHelper();
                 var profesor = uh.FindByName(User.Identity.Name);
-                var izvajanja = db.profesors.Where(p => p.id == profesor.id).First().izvajanjes.ToList(); // namesto p.id mora bit nek drug ID
-
-                */
-                var izvajanja = db.profesors.Where(p => p.id == 93).First().izvajanjes.ToList(); // TEMP!!
+                var izvajanja = db.profesors.Where(p => p.userId == profesor.id).First().izvajanjes.ToList();
 
                 List<izpitnirok> roki = new List<izpitnirok>();
                 foreach (var i in izvajanja)
