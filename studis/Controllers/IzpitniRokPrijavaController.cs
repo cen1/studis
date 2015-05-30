@@ -48,6 +48,7 @@ namespace studis.Controllers
             return View();
         }
         // GET: IzpitniRokPrijava/PrijaviStudenta/vpisna
+        [Authorize(Roles = "Referent")]
         public ActionResult PrijaviStudenta(int vpisna)
         {
             student stud = UserHelper.GetStudentByVpisna(vpisna);
@@ -100,13 +101,42 @@ namespace studis.Controllers
 
 
 
-        // GET: IzpitniRokPrijava/Delete/5
-        public ActionResult Odjavi()
+        // GET: IzpitniRokPrijava/Odjavi/
+        public ActionResult Odjavi() //sem gre student ali referent, refernt dobi se dropdown
+        {
+            List<SelectListItem> ltemp = new List<SelectListItem>();
+            ltemp.Add(new SelectListItem() { Value = "", Text = "Izberi" });
+            ViewBag.Prazen = new SelectList(ltemp, "Value", "Text");
+            if (User.IsInRole("Student"))
+            {
+                ViewBag.Izvajanja = GetIzvajanaForStudent();
+            }
+            else
+            {
+                ViewBag.Izvajanja = new SelectList(ltemp, "Value", "Text");
+            }
+            List<student> temp = db.students.OrderBy(a => a.priimek).ToList();
+
+            List<SelectListItem> studenti = new List<SelectListItem>();
+            foreach (student i in temp)
+            {
+                SelectListItem p = new SelectListItem();
+                p.Value = i.vpisnaStevilka.ToString();
+                p.Text = Convert.ToInt32(p.Value).ToString() + " - " + i.ime + " " + i.priimek;
+                studenti.Add(p);
+            }
+            ViewBag.Studenti = new SelectList(studenti, "Value", "Text");
+            return View();
+        }
+
+        [Authorize(Roles = "Referent")]
+        // GET: IzpitniRokPrijava/Odjavi/
+        public ActionResult OdjaviStudenta(int vpisna)
         {
             return View();
         }
 
-        // POST: IzpitniRokPrijava/Delete/5
+        // POST: IzpitniRokPrijava/Odjavi
         [HttpPost]
         public ActionResult Odjavi(PrijavaNaIzpitModel model)
         {
@@ -258,20 +288,29 @@ namespace studis.Controllers
             return new JavaScriptSerializer().Serialize(seznamIzpitniRoki);
         }
 
-        public string GetPrijaveForStudent(int id)
+        [HttpPost]
+        public JsonResult GetPrijaveForStudent(int studentId, int izvajanjeId)
         {
             StudentHelper sh = new StudentHelper();
             int vpisna;
             if (User.IsInRole("Referent"))
             {
-                vpisna = id;
+                vpisna = studentId;
             }
             else
             {
                 vpisna = UserHelper.GetStudentByUserName(User.Identity.Name).vpisnaStevilka;
             }
             int vpisID = sh.trenutniVpis(vpisna).id;
-            var prijave = db.prijavanaizpits.Where(a => a.vpisId == vpisID).Where(a => a.stanje == 0).ToList();
+            List<prijavanaizpit> prijave;
+            if (izvajanjeId == 0)
+            {
+                prijave = db.prijavanaizpits.Where(a => a.vpisId == vpisID).Where(a => a.stanje == 0).ToList();
+            }
+            else
+            {
+                prijave = db.prijavanaizpits.Where(a => a.vpisId == vpisID).Where(a => a.stanje == 0).Where(a => a.izpitnirok.izvajanjeId == izvajanjeId).ToList();
+            }
 
             var seznamIzpitniRoki = new List<SelectListItem>();
             int c = 0;
@@ -298,7 +337,7 @@ namespace studis.Controllers
             {
                 seznamIzpitniRoki.Insert(0, new SelectListItem() { Value = "", Text = "Izberi" });
             }
-            return new JavaScriptSerializer().Serialize(seznamIzpitniRoki);
+            return Json(new { Prijave = new JavaScriptSerializer().Serialize(seznamIzpitniRoki) } );
         }
 
         //PREVERJANJA
