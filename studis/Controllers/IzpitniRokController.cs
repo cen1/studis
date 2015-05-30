@@ -329,6 +329,13 @@ namespace studis.Controllers
             else
                 list = null;
 
+            //dodaj linke za vpis točk in ocen?
+            StudentHelper uh = new StudentHelper();
+            if (rok.datum.Year == uh.trenutnoSolskoLeto()+1)
+                ViewBag.ocenetocke = true;
+            else
+                ViewBag.ocenetocke = false;
+
             return View(list);
         }
 
