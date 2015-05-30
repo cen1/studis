@@ -5,6 +5,7 @@ using System.Security.Cryptography;
 using System.Net.Mail;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Web.Security;
 
 namespace studis.Models
 {
@@ -21,6 +22,11 @@ namespace studis.Models
         public my_aspnet_users FindByName(String name)
         {
             return db.my_aspnet_users.Where(a => a.applicationId == 1).Where(b => b.name == name).FirstOrDefault();
+        }
+
+        public static profesor getProfByName(String name)
+        {
+            return baza.my_aspnet_users.Where(a => a.applicationId == 1).Where(b => b.name == name).FirstOrDefault().profesors.FirstOrDefault();
         }
 
         public static student GetStudentByUserName(String name)
@@ -341,6 +347,40 @@ namespace studis.Models
                 return cas.Hour.ToString("00") + ":" + cas.Minute.ToString("00");
             else
                 return "";
+        }
+
+        public void kreirajProfesorje()
+        {
+            foreach (var p in db.profesors.Where( a => a.id < 103).ToList())
+            {
+                string uname = p.ime.ToLower().Substring(0, 1) + p.priimek.ToLower().Substring(0, 1);
+                if (p.id < 10)
+                    uname += p.id.ToString().Substring(0, 1) + p.id.ToString().Substring(0, 1) + p.id.ToString().Substring(0, 1) + p.id.ToString().Substring(0, 1);
+                else if (p.id < 100)
+                    uname += p.id.ToString().Substring(0, 2) + p.id.ToString().Substring(0, 2);
+                else
+                    uname += p.id.ToString().Substring(0, 3) + p.id.ToString().Substring(0, 1);
+
+                uname = uname.Replace("ž", "z");
+                uname = uname.Replace("č", "c");
+                uname = uname.Replace("š", "s");
+                string pass = "testtest";
+                string mail = uname + "@fri.uni-lj.si";
+
+                System.Diagnostics.Debug.WriteLine("Dodajam: " + uname + " " + pass + " " + mail);
+
+                /*MembershipUser user = Membership.CreateUser(uname, pass, mail);
+                MembershipUser myObject = Membership.GetUser(uname);
+                Roles.AddUserToRole(uname, "Profesor");
+                string id = myObject.ProviderUserKey.ToString();*/
+
+                try
+                {
+                    p.userId = Convert.ToInt32(db.my_aspnet_users.Where(a => a.name == uname).First().id);
+                }
+                catch (Exception e) { }
+            }
+            db.SaveChanges();
         }
     }
 

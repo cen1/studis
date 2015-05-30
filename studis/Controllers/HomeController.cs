@@ -16,6 +16,8 @@ namespace studis.Controllers
             UserHelper uh = new UserHelper();
             var usr = uh.FindByName(User.Identity.Name);
 
+            //uh.kreirajProfesorje();
+
             if (usr != null)
             {
                 var s = usr.students;
