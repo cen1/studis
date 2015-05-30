@@ -248,6 +248,7 @@
           <Property Name="id" Type="uint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ime" Type="varchar" MaxLength="45" Nullable="false" />
           <Property Name="priimek" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="userId" Type="int" />
         </EntityType>
         <EntityType Name="sifrant_drzava">
           <Key>
@@ -738,6 +739,20 @@
             </Principal>
             <Dependent Role="prijavanaizpit">
               <PropertyRef Name="vpisId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="profesor_user_fk">
+          <End Role="my_aspnet_users" Type="Self.my_aspnet_users" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="profesor" Type="Self.profesor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="my_aspnet_users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="profesor">
+              <PropertyRef Name="userId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1412,6 +1427,10 @@
             <End Role="vpis" EntitySet="vpis" />
             <End Role="prijavanaizpit" EntitySet="prijavanaizpit" />
           </AssociationSet>
+          <AssociationSet Name="profesor_user_fk" Association="Self.profesor_user_fk">
+            <End Role="my_aspnet_users" EntitySet="my_aspnet_users" />
+            <End Role="profesor" EntitySet="profesor" />
+          </AssociationSet>
           <AssociationSet Name="sklep_student" Association="Self.sklep_student">
             <End Role="student" EntitySet="student" />
             <End Role="sklep" EntitySet="sklep" />
@@ -1707,6 +1726,7 @@
           <NavigationProperty Name="kandidats" Relationship="studisModel.fk_userId" FromRole="my_aspnet_users" ToRole="kandidat" />
           <NavigationProperty Name="prijavanaizpits" Relationship="studisModel.prijava_odjavil_fk" FromRole="my_aspnet_users" ToRole="prijavanaizpit" />
           <NavigationProperty Name="prijavanaizpits1" Relationship="studisModel.prijava_prijavil_fk" FromRole="my_aspnet_users" ToRole="prijavanaizpit" />
+          <NavigationProperty Name="profesors" Relationship="studisModel.profesor_user_fk" FromRole="my_aspnet_users" ToRole="profesor" />
         </EntityType>
         <EntityContainer Name="studisEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="my_aspnet_applications" EntityType="Self.my_aspnet_applications" />
@@ -1983,6 +2003,10 @@
             <End Role="izvajanje" EntitySet="izvajanjes" />
             <End Role="vpi" EntitySet="vpis" />
           </AssociationSet>
+          <AssociationSet Name="profesor_user_fk" Association="studisModel.profesor_user_fk">
+            <End Role="my_aspnet_users" EntitySet="my_aspnet_users" />
+            <End Role="profesor" EntitySet="profesors" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="ip_lock">
           <Key>
@@ -2229,6 +2253,8 @@
           <NavigationProperty Name="izvajanjes" Relationship="studisModel.izvajanje_i1_fk2" FromRole="profesor" ToRole="izvajanje" />
           <NavigationProperty Name="izvajanjes1" Relationship="studisModel.izvajanje_i2_fk2" FromRole="profesor" ToRole="izvajanje" />
           <NavigationProperty Name="izvajanjes2" Relationship="studisModel.izvajanje_i3_fk2" FromRole="profesor" ToRole="izvajanje" />
+          <Property Name="userId" Type="Int32" />
+          <NavigationProperty Name="my_aspnet_users" Relationship="studisModel.profesor_user_fk" FromRole="profesor" ToRole="my_aspnet_users" />
           </EntityType>
         <EntityType Name="student">
           <Key>
@@ -3179,6 +3205,20 @@
           <End Type="studisModel.izvajanje" Role="izvajanje" Multiplicity="*" />
           <End Type="studisModel.vpi" Role="vpi" Multiplicity="*" />
         </Association>
+        <Association Name="profesor_user_fk">
+          <End Type="studisModel.my_aspnet_users" Role="my_aspnet_users" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="studisModel.profesor" Role="profesor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="my_aspnet_users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="profesor">
+              <PropertyRef Name="userId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -3481,6 +3521,7 @@
           <EntitySetMapping Name="profesors">
             <EntityTypeMapping TypeName="studisModel.profesor">
               <MappingFragment StoreEntitySet="profesor">
+                <ScalarProperty Name="userId" ColumnName="userId" />
                 <ScalarProperty Name="priimek" ColumnName="priimek" />
                 <ScalarProperty Name="ime" ColumnName="ime" />
                 <ScalarProperty Name="id" ColumnName="id" />

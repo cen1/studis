@@ -78,4 +78,6 @@
     <li>@Html.ActionLink("Vpiši ocene", "VpisOcen", "IzpitniRok", new { rokID = @ViewBag.idRoka }, null)</li>
     <li>@Html.ActionLink("Izpiši seznam s točkami", "IzpisTock", "IzpitniRok", new { rokID = @ViewBag.idRoka, seznam = 0 }, null)</li>
     <li>@Html.ActionLink("Izpiši seznam s točkami(brez imen)", "IzpisTock", "IzpitniRok", new { rokID = @ViewBag.idRoka, seznam = 1 }, null)</li>
+    <li>@Html.ActionLink("Izpiši seznam s končnimi ocenami", "IzpisOcen", "IzpitniRok", new { rokID = @ViewBag.idRoka, seznam = 0 }, null)</li>
+    <li>@Html.ActionLink("Izpiši seznam s končnimi ocenami(brez imen)", "IzpisOcen", "IzpitniRok", new { rokID = @ViewBag.idRoka, seznam = 1 }, null)</li>
 }

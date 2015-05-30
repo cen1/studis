@@ -78,7 +78,7 @@ namespace studis.Models
             {
                 foreach (var p in v.prijavanaizpits)
                 {
-                    if (p.izpitnirok.izvajanje.id == izvajanjeId && p.izpitnirok.datum <= datum)
+                    if (p.izpitnirok.izvajanje.id == izvajanjeId && p.izpitnirok.datum <= datum && p.stanje != 1 && p.stanje != 4)
                     {
                         if (v.vrstaVpisa == 2 && reset == false) //ponavljanje
                         {

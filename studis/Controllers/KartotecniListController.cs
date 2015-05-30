@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Data.Entity;
 using System.Web;
 using System.Web.Mvc;
 using studis.Models;
@@ -14,11 +15,11 @@ namespace studis.Controllers
         public studisEntities db = new studisEntities();
 
         // GET: KartotecniList
-        [Authorize(Roles = "Referent, Študent")]
+        [Authorize(Roles = "Referent, Študent, Profesor")]
         public ActionResult Izpis(int? id)
         {
             // akcija za referenta
-            if (User.IsInRole("Referent"))
+            if (User.IsInRole("Referent") || User.IsInRole("Profesor"))
             {
                 if (id != null)
                 {
@@ -53,7 +54,7 @@ namespace studis.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Referent, Študent")]
+        [Authorize(Roles = "Referent, Študent, Profesor")]
         public ActionResult Izpis(int vpisna, string polaganja)
         {
             var tmp = db.vpis.Where(v => v.vpisnaStevilka == vpisna).Select(v => v.studijskiProgram);
@@ -66,7 +67,7 @@ namespace studis.Controllers
             if (polaganja == "Zadnje polaganje")
             {
                 // pridobi vse vpisne liste za študenta, kjer je študijski program = selected
-                var vpisi = db.vpis.Where(v => v.vpisnaStevilka == vpisna).ToList();
+                var vpisi = db.vpis.Where(v => v.vpisnaStevilka == vpisna).Include(a => a.izvajanjes).ToList();
                 ViewBag.Vpisi = vpisi;
 
                 // preveri če je ponavljanje
@@ -116,11 +117,11 @@ namespace studis.Controllers
                 // pridobi opravljanja izpitov
                 List<prijavanaizpit> prijave = new List<prijavanaizpit>();
 
-                foreach (var r in roki.OrderByDescending(r => r.datum))
+                foreach (var r in roki.OrderByDescending(r => r.datum).ToList())
                 {
                     var tn = vpisnaId.First();
                     var tn2 = vpisnaId.Last();
-                    foreach (var p in r.prijavanaizpits.Where(p => p.stanje == 2).ToList())
+                    foreach (var p in r.prijavanaizpits.Where(p => p.stanje == 2))
                     {
                         if (p.ocenas != null)
                         {
@@ -169,7 +170,7 @@ namespace studis.Controllers
             else
             {
                 // pridobi vse vpisne liste za študenta, kjer je študijski program = selected
-                var vpisi = db.vpis.Where(v => v.vpisnaStevilka == vpisna).ToList();
+                var vpisi = db.vpis.Where(v => v.vpisnaStevilka == vpisna).Include(v => v.izvajanjes).ToList();
                 ViewBag.Vpisi = vpisi;
 
                 // preveri če je ponavljanje
@@ -241,8 +242,7 @@ namespace studis.Controllers
                 // vrni modula, ko je študent v 3. letniku BUNI
                 try
                 {
-                    var vm = db.vpis.Where(v => v.vpisnaStevilka == vpisna && v.letnikStudija == 3).FirstOrDefault();
-
+                    var vm = db.vpis.Where(v => v.vpisnaStevilka == vpisna && v.letnikStudija == 3).Include(v => v.izvajanjes).FirstOrDefault();
                     List<int> moduli = new List<int>();
                         
                     foreach (var i in vm.izvajanjes)

@@ -18,32 +18,32 @@ namespace studis.Models
 
         public IQueryable<predmet> obvezni1()
         {
-            return db.predmets.Where(a => a.letnik == 1).Where(b => b.obvezen == true);
+            return db.predmets.Where(a => a.letnik == 1).Where(b => b.obvezen == true).Where(c => c.studijskiProgram == 1000468);
         }
 
         public IQueryable<predmet> obvezni2()
         {
-            return db.predmets.Where(a => a.letnik == 2).Where(b => b.obvezen == true);
+            return db.predmets.Where(a => a.letnik == 2).Where(b => b.obvezen == true).Where(c => c.studijskiProgram == 1000468);
         }
 
         public IQueryable<predmet> obvezni3()
         {
-            return db.predmets.Where(a => a.letnik == 3).Where(b => b.obvezen == true);
+            return db.predmets.Where(a => a.letnik == 3).Where(b => b.obvezen == true).Where(c => c.studijskiProgram == 1000468);
         }
 
         public IQueryable<predmet> prostoizbirni2()
         {
-            return db.predmets.Where(a => a.letnik == 2).Where(b => b.prostoizbirni == true);
+            return db.predmets.Where(a => a.letnik == 2).Where(b => b.prostoizbirni == true).Where(c => c.studijskiProgram == 1000468);
         }
 
         public IQueryable<predmet> strokovnoizbirni2()
         {
-            return db.predmets.Where(a => a.letnik == 2).Where(b => b.strokovnoizbirni == true);
+            return db.predmets.Where(a => a.letnik == 2).Where(b => b.strokovnoizbirni == true).Where(c => c.studijskiProgram == 1000468);
         }
 
         public IQueryable<predmet> izbirni3()
         {
-            return db.predmets.Where(a => a.letnik == 3).Where(b => b.obvezen == false);
+            return db.predmets.Where(a => a.letnik == 3).Where(b => b.obvezen == false).Where(c => c.studijskiProgram == 1000468);
         }
 
         public bool preveriIzbirne3(List<modul> moduli, predmet pr)
@@ -102,6 +102,16 @@ namespace studis.Models
                 sumObv += pr.kreditne;
 
             return sumObv;
+        }
+
+        public IQueryable<predmet> obvmag1()
+        {
+            return db.predmets.Where(a => a.letnik == 1).Where(b => b.obvezen == true).Where(c => c.studijskiProgram == 1000471);
+        }
+
+        public IQueryable<predmet> strokmag1() //modulski 3 letnik
+        {
+            return db.predmets.Where(a => a.letnik == 3).Where(b => b.obvezen == false).Where(c => c.studijskiProgram == 1000468);
         }
     }
 }

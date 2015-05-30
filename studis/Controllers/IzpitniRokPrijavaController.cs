@@ -71,26 +71,30 @@ namespace studis.Controllers
         [HttpPost]
         public ActionResult Prijavi(PrijavaNaIzpitModel model)
         {
-           // model.izpitniRok;
-           // model.izvajanje;
+            StudentHelper sh = new StudentHelper();
+            prijavanaizpit prijava = new prijavanaizpit();
+            prijava.datumPrijave = DateTime.Now;
+            prijava.izpitnirok = db.izpitniroks.FirstOrDefault(a => a.id == model.izpitniRok);
+            prijava.stanje = 0;
             if (User.IsInRole("Student"))
             {
-                UserHelper.GetStudentByUserName(User.Identity.Name);
+               prijava.vpisId = sh.trenutniVpis(UserHelper.GetStudentByUserName(User.Identity.Name).vpisnaStevilka).id;
             }
             else //referent
             {
-               // model.student;
+                prijava.vpisId = sh.trenutniVpis(model.student).id;
             }
-
+            UserHelper uh = new UserHelper();
+            prijava.prijavilId = uh.FindByName(User.Identity.Name).id;
             try
             {
-                // TODO: Add delete logic here
+                db.prijavanaizpits.Add(prijava);
 
                 return RedirectToAction("Index");
             }
             catch
             {
-                return View();
+                return Prijavi();
             }
         }
 
@@ -246,6 +250,49 @@ namespace studis.Controllers
             if (c < 1)
             {
                 seznamIzpitniRoki.Add(new SelectListItem() { Value = "", Text = "Ta predmet nima razpisanih rokov." });
+            }
+            else
+            {
+                seznamIzpitniRoki.Insert(0, new SelectListItem() { Value = "", Text = "Izberi" });
+            }
+            return new JavaScriptSerializer().Serialize(seznamIzpitniRoki);
+        }
+
+        public string GetPrijaveForStudent(int id)
+        {
+            StudentHelper sh = new StudentHelper();
+            int vpisna;
+            if (User.IsInRole("Referent"))
+            {
+                vpisna = id;
+            }
+            else
+            {
+                vpisna = UserHelper.GetStudentByUserName(User.Identity.Name).vpisnaStevilka;
+            }
+            int vpisID = sh.trenutniVpis(vpisna).id;
+            var prijave = db.prijavanaizpits.Where(a => a.vpisId == vpisID).Where(a => a.stanje == 0).ToList();
+
+            var seznamIzpitniRoki = new List<SelectListItem>();
+            int c = 0;
+            foreach (prijavanaizpit i in prijave)
+            {
+                c++;
+                string prostor = "";
+                if (i.izpitnirok.sifrant_prostor != null)
+                {
+                    prostor = i.izpitnirok.sifrant_prostor.naziv;
+                }
+                string ura = "";
+                if (i.izpitnirok.ura != null)
+                {
+                    ura = UserHelper.TimeToString((DateTime)i.izpitnirok.ura);
+                }
+                seznamIzpitniRoki.Add(new SelectListItem() { Value = i.id.ToString(), Text = UserHelper.DateToString(i.izpitnirok.datum) + " " + ura + " " + prostor });
+            }
+            if (c < 1)
+            {
+                seznamIzpitniRoki.Add(new SelectListItem() { Value = "", Text = "Ni prijav." });
             }
             else
             {

@@ -24,9 +24,11 @@ namespace studis.Models
         public long id { get; set; }
         public string ime { get; set; }
         public string priimek { get; set; }
+        public Nullable<int> userId { get; set; }
     
         public virtual ICollection<izvajanje> izvajanjes { get; set; }
         public virtual ICollection<izvajanje> izvajanjes1 { get; set; }
         public virtual ICollection<izvajanje> izvajanjes2 { get; set; }
+        public virtual my_aspnet_users my_aspnet_users { get; set; }
     }
 }
