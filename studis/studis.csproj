@@ -556,6 +556,9 @@
     <Content Include="Views\IzpitniRok\VpisTock.cshtml" />
     <Content Include="Views\IzpitniRok\VpisOcen.cshtml" />
     <Content Include="Views\IzpitniRok\IzpisTock.cshtml" />
+    <Content Include="Views\IzpitniRok\IzpisTockAnonymous.cshtml" />
+    <Content Include="Views\IzpitniRok\IzpisOcen.cshtml" />
+    <Content Include="Views\IzpitniRok\IzpisOcenAnonymous.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

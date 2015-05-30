@@ -778,7 +778,7 @@ namespace studis.Controllers
         }
 
 
-        public ActionResult IzpisTock(int rokID)
+        public ActionResult IzpisTock(int rokID, int seznam)
         {
             //podatki o izpitnem roku
             izpitnirok rok = db.izpitniroks.Where(r => r.id == rokID).SingleOrDefault();
@@ -861,7 +861,120 @@ namespace studis.Controllers
             else
                 listVnosov = null;
 
-            return View(listVnosov);
+            if(seznam==0)
+                return View(listVnosov);
+            else
+                return View("IzpisTockAnonymous",listVnosov);
+        }
+
+
+        public ActionResult IzpisOcen(int rokID, int seznam)
+        {
+            //podatki o izpitnem roku
+            izpitnirok rok = db.izpitniroks.Where(r => r.id == rokID).SingleOrDefault();
+
+            sifrant_prostor predavalnica = db.sifrant_prostor.Where(s => s.id == rok.prostorId).SingleOrDefault();
+            izvajanje izv = db.izvajanjes.Where(i => i.id == rok.izvajanjeId).SingleOrDefault();
+
+            string izvajalci = izv.profesor.priimek + " " + izv.profesor.ime;
+            if (izv.izvajalec2Id != null)
+                izvajalci = izvajalci + ", " + izv.profesor1.priimek + " " + izv.profesor1.ime;
+            if (izv.izvajalec3Id != null)
+                izvajalci = izvajalci + ", " + izv.profesor2.priimek + " " + izv.profesor2.ime;
+
+            ViewBag.idRoka = rok.id;
+            ViewBag.izvajalci = izvajalci;
+            ViewBag.prostor = predavalnica.naziv;
+            ViewBag.datum = GetDatumForIzpitniRok(rok.id);
+            ViewBag.ura = UserHelper.TimeToString((DateTime)rok.ura);
+            ViewBag.sifraPredmeta = izv.predmetId;
+            ViewBag.imePredmeta = izv.predmet.ime;
+
+
+            //pridobi prijavljene študente
+            List<VnosTockModel> listVnosov = new List<VnosTockModel>();
+            StudentHelper sh = new StudentHelper();
+
+            var prijave = db.prijavanaizpits.Where(p => p.izpitnirokId == rok.id).ToList();
+
+            foreach (prijavanaizpit prijava in prijave)
+            {
+                vpi vpiss = db.vpis.Where(v => v.id == prijava.vpisId).SingleOrDefault();
+                student st = db.students.Where(s => s.vpisnaStevilka == vpiss.vpisnaStevilka).SingleOrDefault();
+                VnosTockModel vnos = new VnosTockModel();
+
+                if (st != null)
+                {
+                    vnos.idRoka = rokID;
+                    vnos.vpisnaStevilka = st.vpisnaStevilka;
+                    vnos.ime = st.ime;
+                    vnos.priimek = st.priimek;
+                    vnos.studijskoLeto = vpiss.sifrant_studijskoleto.naziv;
+                    vnos.zaporednoSteviloPonavljanja = sh.zaporednoPolaganje(st.vpisnaStevilka, (int)izv.id, vpiss.studijskiProgram, prijava.izpitnirok.datum);
+
+                    try
+                    {
+                        //preveri če že obstaja vnos?
+                        tocke tocke = db.tockes.Where(t => t.prijavaId == prijava.id).FirstOrDefault();
+
+                        if (prijava.stanje != 4)
+                        {
+                            vnos.zeVpisaneTocke = tocke.tocke1.ToString();
+                        }
+                        else
+                        {
+                            vnos.zeVpisaneTocke = "VP";
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        vnos.zeVpisaneTocke = "/";
+                        //Debug.WriteLine("Tocke za tega studenta in prijavo niso še vnesene..");
+                    }
+
+                    try
+                    {
+                        //preveri če že obstaja vnos?
+                        ocena ocena = db.ocenas.Where(o => o.prijavaId == prijava.id).FirstOrDefault();
+
+                        if (prijava.stanje != 4)
+                        {
+                            vnos.zeVpisanaOcena = ocena.ocena1.ToString();
+                        }
+                        else
+                        {
+                            vnos.zeVpisanaOcena = "VP";
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        vnos.zeVpisanaOcena = "/";
+                        //Debug.WriteLine("Tocke za tega studenta in prijavo niso še vnesene..");
+                    }
+
+                    listVnosov.Add(vnos);
+                }
+            }
+
+            if (listVnosov.Any())
+            {
+                //uredi seznam študentov
+                listVnosov = listVnosov.OrderBy(o => o.priimek).ToList();
+
+                int zaporednaSt = 0;
+                foreach (var item in listVnosov)
+                {
+                    zaporednaSt = zaporednaSt + 1;
+                    item.zaporednaStevilka = zaporednaSt;
+                }
+            }
+            else
+                listVnosov = null;
+
+            if (seznam == 0)
+                return View(listVnosov);
+            else
+                return View("IzpisOcenAnonymous", listVnosov);
         }
 
 
