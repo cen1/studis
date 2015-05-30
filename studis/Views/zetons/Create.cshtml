@@ -6,6 +6,9 @@
 
 <h2>Dodaj žeton</h2>
 
+@Html.ValidationSummary(true, "Oddaja ni uspela. Popravite napake in poskusite ponovno.")
+
+
 @using (Html.BeginForm()) 
 {
     @Html.AntiForgeryToken()
