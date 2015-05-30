@@ -19,7 +19,7 @@
                 @Html.LabelFor(m => m.predmet)
             </div>
             <div class="editor-field">
-                @Html.DropDownListFor(m => m.predmet, (SelectList)ViewBag.Predmets, "Izberi predmet")
+                @Html.DropDownListFor(m => m.predmet, (SelectList)ViewBag.Predmets)
                 @Html.ValidationMessageFor(m => m.predmet)
             </div>
 
@@ -53,67 +53,75 @@
 }
 
 <script language="javascript" type="text/javascript">
-    //napolni izvajanja
     $(document).ready(function () {
+
+        //napolni izvajanja prvič(ko se stran naloži)
+        var url = "/IzpitniRok/GetIzvajanjaOnlyForPredmet/" + $("#predmet").val();
+        $.get(url, function (response) {
+            var izvajanja = $.parseJSON(response);
+            var ddlIzvajanja = $("#izvajanje");
+
+            //pocisti
+            if ($("#izvajanje option:first-child").text() == "Iščem..") {
+                $("#izvajanje option:first-child").remove();
+            }
+            $("#izvajanje > option").remove();
+
+            for (i = 0; i < izvajanja.length; i++) {
+                ddlIzvajanja.append('<option value="' + izvajanja[i].Value + '">' + izvajanja[i].Text + '</option>');                
+            }
+            napolniRoke();
+        });
+
+        //ob spremembi izbranega predmeta
         $("#predmet").change(function () {
-            var url = "/IzpitniRok/GetIzvajanjaForPredmet/" + $(this).val();
+            var url = "/IzpitniRok/GetIzvajanjaOnlyForPredmet/" + $(this).val();
             $.get(url, function (response) {
                 var izvajanja = $.parseJSON(response);
                 var ddlIzvajanja = $("#izvajanje");
-                if ($("#predmet option:first-child").text() == "Izberi predmet") {
-                    $("#predmet option:first-child").remove();
-                }
+
                 //pocisti
                 $("#izvajanje > option").remove();
 
-                //pocisti2
-                $("#id > option").remove();
-                $("#id").append('<option value="">Izberi</option>');
-
-                //napolni
-                if (izvajanja.length < 1) {
-                    //ddlIzvajanja.append('<option value="">Ni izvajalcev.</option>');
-                } else {
-                    //ddlIzvajanja.append('<option value="">Izberi</option>');
-                }
                 for (i = 0; i < izvajanja.length; i++) {
                     ddlIzvajanja.append('<option value="' + izvajanja[i].Value + '">' + izvajanja[i].Text + '</option>');
                 }
+                napolniRoke();
             });
         });
-    });
-
-    //napolni izpitne roke
-    $(document).ready(function () {
-        $("#izvajanje").change(function () {
-            console.log("Parameter: " + $(this).val());
-            var url = "/IzpitniRok/GetIzpitniRoksForIzvajanja/" + $(this).val();
-            console.log("URL: " + url);
+        
+        //napolni roke
+        function napolniRoke() {
+            var url = "/IzpitniRok/GetIzpitniRoksOnlyForIzvajanja/" + $("#izvajanje").val();
             $.get(url, function (response) {
                 var izpitniRoks = $.parseJSON(response);
                 var ddlIzpitniRoks = $("#id");
-                if ($("#predmet option:first-child").text() == "Izberi") {
-                    $("#predmet option:first-child").remove();
-                }
+
                 //pocisti
+                if ($("#id option:first-child").text() == "Iščem..") {
+                    $("#id option:first-child").remove();
+                }
                 $("#id > option").remove();
 
-                //napolni
-                if (izpitniRoks.length < 1) {
-                    //ddlIzpitniRoks.append('<option value="">"Ta predmet nima razpisanih rokov."</option>');
-                } else {
-                    //ddlIzpitniroks.append('<option value="">Izberi</option>');
-                }
                 for (i = 0; i < izpitniRoks.length; i++) {
                     ddlIzpitniRoks.append('<option value="' + izpitniRoks[i].Value + '">' + izpitniRoks[i].Text + '</option>');
                 }
+                preveriStPrijav()
             });
-        });
-    });
+        };
 
-    //on submit
-    $(document).ready(function () {
+        //ob spremembi izbranega izvajanja
+        $("#izvajanje").change(function () {
+            napolniRoke();
+            preveriStPrijav()
+        });
+
+        //submit
         $("#id").change(function () {
+            preveriStPrijav()
+        });
+
+        function preveriStPrijav() {
             if ($("#id").val() != "") {
                 var url = "/IzpitniRok/PreveriPrijave/" + $("#id").val();
                 console.log("URL: " + url);
@@ -124,7 +132,7 @@
             } else {
                 $("#warning").text("");
             }
-        });
+        }
     });
 
 
