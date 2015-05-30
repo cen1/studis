@@ -14,11 +14,11 @@ namespace studis.Controllers
         public studisEntities db = new studisEntities();
 
         // GET: KartotecniList
-        [Authorize(Roles = "Referent, Študent")]
+        [Authorize(Roles = "Referent, Študent, Profesor")]
         public ActionResult Izpis(int? id)
         {
             // akcija za referenta
-            if (User.IsInRole("Referent"))
+            if (User.IsInRole("Referent") || User.IsInRole("Profesor"))
             {
                 if (id != null)
                 {
@@ -53,7 +53,7 @@ namespace studis.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Referent, Študent")]
+        [Authorize(Roles = "Referent, Študent, Profesor")]
         public ActionResult Izpis(int vpisna, string polaganja)
         {
             var tmp = db.vpis.Where(v => v.vpisnaStevilka == vpisna).Select(v => v.studijskiProgram);

@@ -120,6 +120,39 @@ namespace studis.Controllers
 
             ViewBag.sklep = student.skleps.ToList();
 
+            if (User.IsInRole("Profesor"))
+            {
+                /*
+                UserHelper uh = new UserHelper();
+                var profesor = uh.FindByName(User.Identity.Name);
+                var izvajanja = db.profesors.Where(p => p.id == profesor.id).First().izvajanjes.ToList(); // namesto p.id mora bit nek drug ID
+
+                */
+                var izvajanja = db.profesors.Where(p => p.id == 93).First().izvajanjes.ToList(); // TEMP!!
+
+                List<izpitnirok> roki = new List<izpitnirok>();
+                foreach (var i in izvajanja)
+                {
+                    foreach (var r in i.izpitniroks.ToList())
+                    {
+                        roki.Add(r);
+                    }
+                }
+                ViewBag.Roki = roki;
+
+                var vpis = db.vpis.Where(v => v.vpisnaStevilka == vpisnaSt).ToList();
+
+                List<prijavanaizpit> prijave = new List<prijavanaizpit>();
+                foreach (var v in vpis)
+                {
+                    foreach (var p in v.prijavanaizpits.Where(p => p.stanje == 2 || p.stanje == 3).ToList())
+                    {
+                        prijave.Add(p);
+                    }
+                }
+                ViewBag.Prijave = prijave;
+            }
+            
             return View(student);
         }
 
