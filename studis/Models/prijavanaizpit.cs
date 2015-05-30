@@ -12,8 +12,6 @@ namespace studis.Models
     using System;
     using System.Collections.Generic;
 
-    //Stanje 2: študent je pisal izpit
-    //Stanje 4: vrnjena prijava
     public partial class prijavanaizpit
     {
         public prijavanaizpit()
@@ -25,6 +23,12 @@ namespace studis.Models
         public long id { get; set; }
         public int vpisId { get; set; }
         public int izpitnirokId { get; set; }
+
+        //Stanje 0: študent je prijavljen na izpit
+        //Stanje 1: študent se je odjavil od izpita
+        //Stanje 2: študent je pisal izpit
+        //Stanje 3: študent ni pisal izpita
+        //Stanje 4: vrnjena prijava
         public int stanje { get; set; }
         public System.DateTime datumPrijave { get; set; }
         public Nullable<System.DateTime> datumOdjave { get; set; }
