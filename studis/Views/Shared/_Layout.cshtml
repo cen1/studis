@@ -112,6 +112,7 @@
                     @if (User.IsInRole("Študent"))
                     {
                         <li>@Html.ActionLink("Kartotečni list", "Izpis", "KartotecniList")</li>
+                        <li>@Html.ActionLink("Izpiti", "Index", "IzpitniRokPrijava")</li>
                     }  
                     @if (User.IsInRole("Referent"))
                     {
