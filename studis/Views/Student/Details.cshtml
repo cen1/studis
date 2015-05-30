@@ -65,8 +65,6 @@
             <th>Izvajalec</th>
             <th>Letnik</th>
             <th>Datum</th>
-            <th>Polaganje</th>
-            <th>Polaganje v tem letu</th>
             <th>KT</th>
             <th>Ocena</th>
             <th>Vnos</th>
@@ -98,12 +96,10 @@
                         <td>@r.izvajanje.predmet.letnik</td>
                         @{ var datum = sh.pridobiDatum(Convert.ToInt32(@p.id)); }
                         <td>@datum</td>
-                        <td></td>
-                        <td></td>
                         <td>@r.izvajanje.predmet.kreditne</td>
                         @{ var ocena = sh.pridobiOceno(Convert.ToInt32(@p.id)); }
                         <td>@ocena</td>
-                        <td>@Html.ActionLink("Vnos", "Students")</td>
+                        <td>@Html.ActionLink("Vnos", "VpisOcen", "IzpitniRok")</td> <!-- potrebno dodati prav ID -->
                     </tr>
                 }
             }

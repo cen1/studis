@@ -7,9 +7,20 @@
     StudentHelper sh = new StudentHelper();
 }
 
+<style>
+    html {
+            font-family: 'Arial';
+    }
+    table {
+        font-family: 'Arial';
+        border: solid 1px #ccc;
+        border-collapse: collapse;
+        background-color: White;
+    }
+</style>
+
 <h2>Kartotečni list</h2>
 
-<!--- selektor za vsa/zadnje polaganje; selektor za študijski program -->
 @using (Html.BeginForm("Izpis", "KartotecniList", new { vpisna = ViewBag.Vpisna }, FormMethod.Post, null))
 {
     @Html.DropDownList("polaganja", new SelectList(new[] { "Zadnje polaganje", "Vsa polaganja" })) <input type="submit" value="Izpiši" />
@@ -26,8 +37,7 @@
         
     if (@ViewBag.Izbira == 0)
     {
-        <div id="izpis">
-            <!--- foreach {leto študija} -->
+        <div id="izpis2">
             @foreach (var v in @ViewBag.Vpisi)
             {
                 var tocke = 0;
@@ -41,34 +51,39 @@
                 <!-- GLAVA -->
                 
                 <h2>@v.sifrant_studijskiprogram.naziv </h2>
-                <table>
-                    <tbody>
+                <table class="prva">
+                    <thead>
                         <tr>
                             <th>Študijsko leto</th>
-                            <td>@v.sifrant_studijskoleto.naziv</td>
-                        </tr>
-                        <tr>
                             <th>Letnik</th>
-                            <td>@v.letnikStudija</td>
-                        </tr>
-                        @if (@v.letnikStudija == 3 && @v.studijskiProgram == 1000468 && @ViewBag.Moduli != null)
-                        {
-                            var st = 1;
-                            foreach (var mod in @ViewBag.Moduli)
+                            @if (@v.letnikStudija == 3 && @v.studijskiProgram == 1000468 && @ViewBag.Moduli != null)
                             {
-                                <tr>
+                                var st = 1;
+                                foreach (var mod in @ViewBag.Moduli)
+                                {
                                     <th>Moduli @st</th>
-                                    <td>@mod</td>
-                                </tr>
-                                st++;
+                                    st++;
+                                }
                             }
-                        }
-                        <tr>
                             <th>Vrsta vpisa</th>
-                            <td>@v.sifrant_vrstavpisa.naziv</td>
-                        </tr>
-                        <tr>
                             <th>Način študija</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr>
+                            <td>@v.sifrant_studijskoleto.naziv</td>                       
+                            <td>@v.letnikStudija</td>
+                            @if (@v.letnikStudija == 3 && @v.studijskiProgram == 1000468 && @ViewBag.Moduli != null)
+                            {
+                                var st = 1;
+                                foreach (var mod in @ViewBag.Moduli)
+                                {
+                                    <td>@mod</td>
+                                    st++;
+                                }
+                            } 
+                            <td>@v.sifrant_vrstavpisa.naziv</td>
                             <td>@v.sifrant_nacinstudija.naziv</td>
                         </tr>
                     </tbody>
@@ -77,16 +92,15 @@
                 <br />
 
                 <!-- IZPIS -->
-                <table>
+                <table class="druga">
                     <thead>
                         <tr>
                             <th>Šifra</th>
-                            <th>Predmet</th>
-                            <th>Izvajalec</th>
+                            <th style="width: 130px">Predmet</th>
+                            <th style="width: 100px">Izvajalec</th>
                             <th>Letnik</th>
                             <th>Datum</th>
-                            <th>Polaganje</th>
-                            <th>Polaganje v tem letu</th>
+                            <th colspan="2">Polaganja</th>
                             <th>KT</th>
                             <th>Ocena</th>
                         </tr>
@@ -114,11 +128,11 @@
                                                     @i.profesor.ime @i.profesor.priimek
                                                     @if (@i.izvajalec2Id != null)
                                                     {
-                                                        <span>, @i.profesor1.ime @i.profesor1.priimek</span>
+                                                        <span>,</span><span><br />@i.profesor1.ime @i.profesor1.priimek</span>
                                                     }
                                                     @if (@i.izvajalec3Id != null)
                                                     {
-                                                        <span>, @i.profesor2.ime @i.profesor2.priimek</span>
+                                                        <span>,</span><span><br />@i.profesor2.ime @i.profesor2.priimek</span>
                                                     }
                                                 </td>
                                                 <td>@i.predmet.letnik</td>
@@ -155,11 +169,11 @@
                                             @i.profesor.ime @i.profesor.priimek
                                             @if (@i.izvajalec2Id != null)
                                             {
-                                                <span>, @i.profesor1.ime @i.profesor1.priimek</span>
+                                                <span>,</span><span><br />@i.profesor1.ime @i.profesor1.priimek</span>
                                             }
                                             @if (@i.izvajalec3Id != null)
                                             {
-                                                <span>, @i.profesor2.ime @i.profesor2.priimek</span>
+                                                <span>,</span><span><br />@i.profesor2.ime @i.profesor2.priimek</span>
                                             }
                                         </td>
                                         <td>@i.predmet.letnik</td>
@@ -192,11 +206,11 @@
                                                     @i.profesor.ime @i.profesor.priimek
                                                     @if (@i.izvajalec2Id != null)
                                                     {
-                                                        <span>, @i.profesor1.ime @i.profesor1.priimek</span>
+                                                        <span>,</span><span><br />@i.profesor1.ime @i.profesor1.priimek</span>
                                                     }
                                                     @if (@i.izvajalec3Id != null)
                                                     {
-                                                        <span>, @i.profesor2.ime @i.profesor2.priimek</span>    
+                                                        <span>,</span><span><br />@i.profesor2.ime @i.profesor2.priimek</span>    
                                                     }
                                                 </td>
                                                 <td>@i.predmet.letnik</td>
@@ -233,11 +247,11 @@
                                             @i.profesor.ime @i.profesor.priimek
                                             @if (@i.izvajalec2Id != null)
                                             {
-                                                <span>, @i.profesor1.ime @i.profesor1.priimek</span>
+                                                <span>,</span><span><br />@i.profesor1.ime @i.profesor1.priimek</span>
                                             }
                                             @if (@i.izvajalec3Id != null)
                                             {
-                                                <span>, @i.profesor2.ime @i.profesor2.priimek</span>
+                                                <span>,</span><span><br />@i.profesor2.ime @i.profesor2.priimek</span>
                                             }
                                         </td>
                                         <td>@i.predmet.letnik</td>
@@ -257,7 +271,7 @@
                 <br />
 
                 <!--- NOGA -->
-                <table>
+                <table class="tretja">
                     <thead>
                         <tr>
                             <th>Študijsko leto</th>
@@ -286,18 +300,18 @@
                 skupneOcene += stOcen;
                 skupniSestevek += sestevek;
 
-                <br />
-                <br />
-        }
+                <div>
+                    <br />
+                    <br />
+                </div>
+            }
         </div>
-        <!-- Povprečne ocene po študijskih letih  -->
     }
 
     <!-- Vsa polaganja -->
     if (@ViewBag.Izbira == 1)
     {
-        <div id="izpis">
-            <!--- foreach {leto študija} -->
+        <div id="izpis2">
             @foreach (var v in @ViewBag.Vpisi)
             {
                 var tocke = 0;
@@ -310,7 +324,7 @@
 
                 <!-- GLAVA -->
                 <h2>@v.sifrant_studijskiprogram.naziv</h2>
-                <table>
+                <table class="prva">
                     <tbody>
                         <tr>
                             <th>Študijsko leto</th>
@@ -346,16 +360,15 @@
                 <br />
 
                 <!-- IZPIS -->
-                <table>
+                <table class="druga">
                     <thead>
                         <tr>
                             <th>Šifra</th>
-                            <th>Predmet</th>
-                            <th>Izvajalec</th>
+                            <th style="width: 130px">Predmet</th>
+                            <th style="width: 100px">Izvajalec</th>
                             <th>Letnik</th>
                             <th>Datum</th>
-                            <th>Polaganje</th>
-                            <th>Polaganje v tem letu</th>
+                            <th colspan="2">Polaganja</th>
                             <th>KT</th>
                             <th>Ocena</th>
                         </tr>
@@ -376,7 +389,7 @@
                                         if (r.id == p.izpitnirokId && (p.vpisId == @ViewBag.Zacasni.id || p.vpisId == v.id) && i.izpitniroks.Contains(r) && @ViewBag.Zacasni.izvajanjes.Contains(i))
                                         {
                                             pisal++;
-                                        
+
                                             <tr>
                                                 <td>@i.predmet.koda</td>
                                                 <td>@i.predmet.ime</td>
@@ -384,11 +397,11 @@
                                                     @i.profesor.ime @i.profesor.priimek
                                                     @if (@i.izvajalec2Id != null)
                                                     {
-                                                        <span>, @i.profesor1.ime @i.profesor1.priimek</span>
+                                                        <span>,</span><span><br />@i.profesor1.ime @i.profesor1.priimek</span>
                                                     }
                                                     @if (@i.izvajalec3Id != null)
                                                     {
-                                                        <span>, @i.profesor2.ime @i.profesor2.priimek</span>
+                                                        <span>,</span><span><br />@i.profesor2.ime @i.profesor2.priimek</span>
                                                     }
                                                 </td>
                                                 <td>@i.predmet.letnik</td>
@@ -402,35 +415,35 @@
                                                 @{ ocena = sh.pridobiOceno(Convert.ToInt32(@p.id)); }
                                                 <td>@ocena</td>
                                             </tr>
-                                        
-                                            zadnjaOcena = @ocena;
+
+                                                 zadnjaOcena = @ocena;
                                         }
                                     }
                                 }
                                 if (pisal == 0 && v.izvajanjes.Contains(i))
                                 {
-                                        <tr>
-                                            <td>@i.predmet.koda</td>
-                                            <td>@i.predmet.ime</td>
-                                            <td>
-                                                @i.profesor.ime @i.profesor.priimek
-                                                @if (@i.izvajalec2Id != null)
-                                                {
-                                                    <span>, @i.profesor1.ime @i.profesor1.priimek</span>
-                                                }
-                                                @if (@i.izvajalec3Id != null)
-                                                {
-                                                    <span>, @i.profesor2.ime @i.profesor2.priimek</span>
-                                                }
-                                            </td>
-                                            <td>@i.predmet.letnik</td>
-                                            <td>/</td>
-                                            @{ temp = sh.polaganjaVsa(Convert.ToInt32(@v.vpisnaStevilka), Convert.ToInt32(@i.id), Convert.ToInt32(@v.studijskiProgram)); }
-                                            <td>@temp</td>
-                                            <td>0</td>
-                                            <td>@i.predmet.kreditne</td>
-                                            <td>/</td>
-                                        </tr>
+                                    <tr>
+                                        <td>@i.predmet.koda</td>
+                                        <td>@i.predmet.ime</td>
+                                        <td>
+                                            @i.profesor.ime @i.profesor.priimek
+                                            @if (@i.izvajalec2Id != null)
+                                            {
+                                                <span>,</span><span><br />@i.profesor1.ime @i.profesor1.priimek</span>
+                                            }
+                                            @if (@i.izvajalec3Id != null)
+                                            {
+                                                <span>,</span><span><br />@i.profesor2.ime @i.profesor2.priimek</span>
+                                            }
+                                        </td>
+                                        <td>@i.predmet.letnik</td>
+                                        <td>/</td>
+                                        @{ temp = sh.polaganjaVsa(Convert.ToInt32(@v.vpisnaStevilka), Convert.ToInt32(@i.id), Convert.ToInt32(@v.studijskiProgram)); }
+                                        <td>@temp</td>
+                                        <td>0</td>
+                                        <td>@i.predmet.kreditne</td>
+                                        <td>/</td>
+                                    </tr>
                                 }
                                 else
                                 {
@@ -466,11 +479,11 @@
                                                     @i.profesor.ime @i.profesor.priimek
                                                     @if (@i.izvajalec2Id != null)
                                                     {
-                                                        <span>, @i.profesor1.ime @i.profesor1.priimek</span>
+                                                        <span>,</span><span><br />@i.profesor1.ime @i.profesor1.priimek</span>
                                                     }
                                                     @if (@i.izvajalec3Id != null)
                                                     {
-                                                        <span>, @i.profesor2.ime @i.profesor2.priimek</span>
+                                                        <span>,</span><span><br />@i.profesor2.ime @i.profesor2.priimek</span>
                                                     }
                                                 </td>
                                                 <td>@i.predmet.letnik</td>
@@ -498,11 +511,11 @@
                                             @i.profesor.ime @i.profesor.priimek
                                             @if (@i.izvajalec2Id != null)
                                             {
-                                                <span>, @i.profesor1.ime @i.profesor1.priimek</span>
+                                                <span>,</span><span><br />@i.profesor1.ime @i.profesor1.priimek</span>
                                             }
                                             @if (@i.izvajalec3Id != null)
                                             {
-                                                <span>, @i.profesor2.ime @i.profesor2.priimek</span>
+                                                <span>,</span><span><br />@i.profesor2.ime @i.profesor2.priimek</span>
                                             }
                                         </td>
                                         <td>@i.predmet.letnik</td>
@@ -531,7 +544,7 @@
                 <br />
 
                 <!--- NOGA -->
-                <table>
+                <table class="tretja">
                     <thead>
                         <tr>
                             <th>Študijsko leto</th>
@@ -549,20 +562,20 @@
                             <td>
                                 @if (stOcen != 0 && sestevek != 0)
                                 {
-                                    povprecje = stOcen/sestevek; 
+                                    povprecje = stOcen / sestevek;
                                 }
                                 @povprecje
                             </td>
                         </tr>
                     </tbody>
                 </table>
-                
-                skupneTocke += tocke;
-                skupneOcene += stOcen;
-                skupniSestevek += sestevek;
 
-                <br />
-                <br />
+                                skupneTocke += tocke;
+                                skupneOcene += stOcen;
+                                skupniSestevek += sestevek;
+
+                                <br />
+                                <br />
             }
         </div>
     }
@@ -590,4 +603,6 @@
             </tr>
         </tbody>
     </table>
+    
+    <br />
 }
