@@ -90,7 +90,7 @@ namespace studis.Controllers
             try
             {
                 db.prijavanaizpits.Add(prijava);
-
+                db.SaveChanges();
                 return RedirectToAction("Index");
             }
             catch
@@ -142,24 +142,33 @@ namespace studis.Controllers
         {
             //model.izpitniRok;
            // model.izvajanje;
+            int vpisna;
+            student stud;
             if (User.IsInRole("Student"))
             {
-                UserHelper.GetStudentByUserName(User.Identity.Name);
+                stud = UserHelper.GetStudentByUserName(User.Identity.Name);
             }
             else //refernt
             {
-               // model.student;
+                stud = UserHelper.GetStudentByVpisna(model.student);
             }
-            
+            UserHelper uh = new UserHelper();
+            StudentHelper sh = new StudentHelper();
+
+            vpi trenutniVpis = sh.trenutniVpis(stud.vpisnaStevilka);
+            prijavanaizpit prijava = db.prijavanaizpits.Where(a => a.vpisId == trenutniVpis.id).Where(a => a.izpitnirokId == model.izpitniRok).Where(a => a.stanje == 0).FirstOrDefault(); ;
+            prijava.stanje = 0;
+
+            prijava.odjavilId = uh.FindByName(User.Identity.Name).id;
             try
             {
                 // TODO: Add delete logic here
-
+                db.SaveChanges();
                 return RedirectToAction("Index");
             }
             catch
             {
-                return View();
+                return Odjavi();
             }
         }
 
