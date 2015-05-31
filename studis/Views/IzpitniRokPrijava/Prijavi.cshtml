@@ -41,7 +41,7 @@
                 @Html.LabelFor(m => m.izvajanje)
             </div>
             <div class="editor-field">
-                @if (User.IsInRole("Student"))
+                @if (User.IsInRole("Študent"))
                 {
                     @Html.DropDownListFor(m => m.izvajanje, (SelectList)ViewBag.Izvajanja, "Izberi predmet")
                 } else if(ViewBag.IzvajanjaZaVpisna == null)
@@ -150,7 +150,7 @@
                 ulOpozorila = $("#warning");
                 </text>
             }
-            else if (User.IsInRole("Student"))
+            else if (User.IsInRole("Študent"))
             {
                 <text>
                 ulOpozorila = $("#error");
@@ -186,7 +186,7 @@
                         <text>
                         </text>
                     }
-                    else if (User.IsInRole("Student"))
+                    else if (User.IsInRole("Študent"))
                     {
                         <text>
                     if (opozorila.length > 0)

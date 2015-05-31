@@ -77,7 +77,7 @@ namespace studis.Controllers
             prijava.datumPrijave = DateTime.Now;
             prijava.izpitnirok = db.izpitniroks.FirstOrDefault(a => a.id == model.izpitniRok);
             prijava.stanje = 0;
-            if (User.IsInRole("Student"))
+            if (User.IsInRole("Študent"))
             {
                prijava.vpisId = sh.trenutniVpis(UserHelper.GetStudentByUserName(User.Identity.Name).vpisnaStevilka).id;
             }
