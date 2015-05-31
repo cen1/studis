@@ -9,7 +9,7 @@ using System.Web.Script.Serialization;
 
 namespace studis.Controllers
 {
-    [Authorize(Roles = "Student, Referent")]
+    [Authorize(Roles = "Študent, Referent")]
     public class IzpitniRokPrijavaController : Controller
     {
         public studisEntities db = new studisEntities();
@@ -26,7 +26,7 @@ namespace studis.Controllers
             List<SelectListItem> ltemp = new List<SelectListItem>();
             ltemp.Add(new SelectListItem() { Value = "", Text = "Izberi" });
             ViewBag.Prazen = new SelectList(ltemp, "Value", "Text");
-            if (User.IsInRole("Student"))
+            if (User.IsInRole("Študent"))
             {
                 ViewBag.Izvajanja = GetIzvajanaForStudent();
             }
@@ -55,7 +55,7 @@ namespace studis.Controllers
             List<SelectListItem> ltemp = new List<SelectListItem>();
             ltemp.Add(new SelectListItem() { Value = "", Text = "Izberi" });
             ViewBag.Prazen = new SelectList(ltemp, "Value", "Text");
-            if (User.IsInRole("Student"))
+            if (User.IsInRole("Študent"))
             {
                 ViewBag.Izvajanja = GetIzvajanaForStudent();
             }
@@ -107,7 +107,7 @@ namespace studis.Controllers
             List<SelectListItem> ltemp = new List<SelectListItem>();
             ltemp.Add(new SelectListItem() { Value = "", Text = "Izberi" });
             ViewBag.Prazen = new SelectList(ltemp, "Value", "Text");
-            if (User.IsInRole("Student"))
+            if (User.IsInRole("Študent"))
             {
                 ViewBag.Izvajanja = GetIzvajanaForStudent();
             }
@@ -144,7 +144,7 @@ namespace studis.Controllers
            // model.izvajanje;
             int vpisna;
             student stud;
-            if (User.IsInRole("Student"))
+            if (User.IsInRole("Študent"))
             {
                 stud = UserHelper.GetStudentByUserName(User.Identity.Name);
             }
@@ -173,7 +173,7 @@ namespace studis.Controllers
         }
 
 
-        [Authorize(Roles = "Student")]
+        [Authorize(Roles = "Študent")]
         private List<SelectListItem> GetIzvajanaForStudent()
         {
             var student = UserHelper.GetStudentByUserName(User.Identity.Name);
@@ -234,7 +234,7 @@ namespace studis.Controllers
         public string GetIzvajanjaForStudent(int id)
         {
             int vpisna;
-            if (User.IsInRole("Student"))
+            if (User.IsInRole("Študent"))
             {
                 //student = UserHelper.GetStudentByUserName(User.Identity.Name);
                 vpisna = UserHelper.GetStudentByUserName(User.Identity.Name).vpisnaStevilka;
