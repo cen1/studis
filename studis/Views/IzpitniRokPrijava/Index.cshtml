@@ -8,11 +8,11 @@
 
 <ul>
 
-    @if (User.IsInRole("Referent") || User.IsInRole("Referent"))
+    @if (User.IsInRole("Referent") || User.IsInRole("Študent"))
     {
         <li>@Html.ActionLink("Prijavi", "Prijavi", "IzpitniRokPrijava")</li>
     }
-    @if (User.IsInRole("Referent") || User.IsInRole("Referent"))
+    @if (User.IsInRole("Referent") || User.IsInRole("Študent"))
     {
         <li>@Html.ActionLink("Odjavi", "Odjavi", "IzpitniRokPrijava")</li>
     }
