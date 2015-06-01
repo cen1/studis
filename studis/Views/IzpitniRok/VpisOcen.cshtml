@@ -100,3 +100,8 @@
             <input id="submit" type="submit" value="Potrdi vnos">
         </p>
     }
+@if (User.IsInRole("Referent") || User.IsInRole("Profesor"))
+{
+    <li>@Html.ActionLink("Izpiši seznam s končnimi ocenami", "IzpisOcen", "IzpitniRok", new { rokID = @ViewBag.idRoka, seznam = 0 }, null)</li>
+    <li>@Html.ActionLink("Izpiši seznam s končnimi ocenami(brez imen)", "IzpisOcen", "IzpitniRok", new { rokID = @ViewBag.idRoka, seznam = 1 }, null)</li>
+}

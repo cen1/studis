@@ -287,47 +287,40 @@ namespace studis.Controllers
             //pridobi prijavljene študente
             var prijave = db.prijavanaizpits.Where( p => p.izpitnirokId == rok.id).ToList();
 
-            List<student> list = new List<student>();
-            List<string> leta = new List<string>();
-            List<int> vsaPolaganja = new List<int>();
+            List<VnosTockModel> listVnosov = new List<VnosTockModel>();
             StudentHelper sh = new StudentHelper();
             foreach(prijavanaizpit prijava in prijave)
             {
                 vpi vpiss = db.vpis.Where(v => v.id == prijava.vpisId).SingleOrDefault();
                 student st = db.students.Where(s => s.vpisnaStevilka == vpiss.vpisnaStevilka).SingleOrDefault();
-               
+                VnosTockModel vnos = new VnosTockModel();
+
                 if (st != null)
                 {
-                    list.Add(st);
+                    vnos.idRoka = rok.id;
+                    vnos.vpisnaStevilka = st.vpisnaStevilka;
+                    vnos.ime = st.ime;
+                    vnos.priimek = st.priimek;
+                    vnos.studijskoLeto = vpiss.sifrant_studijskoleto.naziv;
+                    vnos.zaporednoSteviloPonavljanja = sh.zaporednoPolaganje(st.vpisnaStevilka, (int)izv.id, vpiss.studijskiProgram, prijava.izpitnirok.datum);
+                    listVnosov.Add(vnos);
                 }
             }
 
-            if (list.Any())
+            if (listVnosov.Any())
             {
                 //uredi seznam študentov
-                list = list.OrderBy(o => o.priimek).ToList();
+                listVnosov = listVnosov.OrderBy(o => o.priimek).ToList();
 
-                //naredi seznam let poslušanja predmeta v enakem vrstnem redu kot so študenti za izpis
-                for(int i=0; i < list.Count; i++)
+                int zaporednaSt = 0;
+                foreach (var item in listVnosov)
                 {
-                    foreach (vpi vpisan in list[i].vpis)
-                    {
-                        foreach (prijavanaizpit prijava in prijave)
-                        {
-                            if (vpisan.id == prijava.vpisId)
-                            {
-                                leta.Add(vpisan.sifrant_studijskoleto.naziv);
-                                int polaganja = sh.zaporednoPolaganje(list[i].vpisnaStevilka, (int)izv.id, vpisan.studijskiProgram, prijava.izpitnirok.datum);
-                                vsaPolaganja.Add(polaganja);
-                            }
-                        }
-                    }
+                    zaporednaSt = zaporednaSt + 1;
+                    item.zaporednaStevilka = zaporednaSt;
                 }
-                ViewBag.years = leta;
-                ViewBag.vsaPolaganja = vsaPolaganja;
             }
             else
-                list = null;
+                listVnosov = null;
 
             //dodaj linke za vpis točk in ocen?
             StudentHelper uh = new StudentHelper();
@@ -336,7 +329,7 @@ namespace studis.Controllers
             else
                 ViewBag.ocenetocke = false;
 
-            return View(list);
+            return View(listVnosov);
         }
 
 
