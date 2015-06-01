@@ -81,7 +81,7 @@ namespace studis.Controllers
             {
                 ViewBag.StudentIme = stud.ime + " " + stud.priimek;
                 ViewBag.StudentVpisna = stud.vpisnaStevilka.ToString();
-                ViewBag.IzvajanjaZaVpisna = GetIzvajanjaForStudent(vpisna);//new SelectList(ltemp, "Value", "Text");
+                ViewBag.IzvajanjaZaVpisna = new SelectList(GetIzvajanaForStudentVpisna(vpisna), "Value", "Text");
             }
             return View("Prijavi");
         }
@@ -178,7 +178,7 @@ namespace studis.Controllers
             {
                 ViewBag.StudentIme = stud.ime + " " + stud.priimek;
                 ViewBag.StudentVpisna = stud.vpisnaStevilka.ToString();
-                ViewBag.IzvajanjaZaVpisna = GetIzvajanjaForStudent(vpisna);//new SelectList(ltemp, "Value", "Text");
+                ViewBag.IzvajanjaZaVpisna = new SelectList(GetIzvajanaForStudentVpisna(vpisna), "Value", "Text");
             }
             return View("Odjavi");
         }
@@ -238,6 +238,27 @@ namespace studis.Controllers
                 izvajanja = new List<izvajanje>();
             }
             Debug.WriteLine("Stevilo izvajanj: " + izvajanja.Count);    
+            return IzvajanaToSeznam(izvajanja);
+        }
+
+        [Authorize(Roles = "Referent")]
+        private List<SelectListItem> GetIzvajanaForStudentVpisna(int vpisna)
+        {
+            var student = UserHelper.GetStudentByVpisna(vpisna);
+            //var izvajanja = student.vpis.LastOrDefault().izvajanjes.ToList();
+            StudentHelper sh = new StudentHelper();
+            var trenutniVpis = sh.trenutniVpis(student.vpisnaStevilka);
+            List<izvajanje> izvajanja = null;
+            if (trenutniVpis != null)
+            {
+                izvajanja = trenutniVpis.izvajanjes.ToList();
+            }
+            else
+            {
+                Debug.WriteLine("Trenutni vpis je null.");
+                izvajanja = new List<izvajanje>();
+            }
+            Debug.WriteLine("Stevilo izvajanj: " + izvajanja.Count);
             return IzvajanaToSeznam(izvajanja);
         }
 
