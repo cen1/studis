@@ -474,5 +474,45 @@ namespace studis.Controllers
 
             return Json(new { Warnings = new JavaScriptSerializer().Serialize(opozorila), Notice = obvestilo });
         }
+
+
+        [HttpPost]
+        public JsonResult PreveriOdjavo(string vpisna, string izpitniRok)
+        {
+            if (vpisna == "" || User.IsInRole("Študent"))
+            {
+                vpisna = UserHelper.GetStudentByUserName(User.Identity.Name).vpisnaStevilka.ToString();
+            }
+            int ivpisna = Convert.ToInt32(vpisna);
+            int iizpitniRok = Convert.ToInt32(izpitniRok);
+            Debug.WriteLine("Vpisna: " + vpisna + ", IzpitniRokId: " + izpitniRok);
+            izpitnirok iRok = db.izpitniroks.SingleOrDefault(a => a.id == iizpitniRok);
+            student stud = db.students.SingleOrDefault(a => a.vpisnaStevilka == ivpisna);
+
+            List<string> opozorila = new List<string>();
+
+            StudentHelper sh = new StudentHelper();
+            var trenutniVpis = sh.trenutniVpis(stud.vpisnaStevilka);
+
+            //OPOZORILA
+            //-preveri cas min 23 ur pred dnem izpita
+            if (DateTime.Now > iRok.datum.Subtract(new TimeSpan(23, 0, 0)))
+            {
+                opozorila.Add("Rok za odjavo je potekel.");
+            }
+            
+            //-preveri ce je izpit ze opravljen
+            //-preveri ce za prejsnjo prijavo ze obstaja ocena
+
+            opozorila.Add("--1test server--");
+            opozorila.Add("--2test server--");
+
+            //SAMO OBVSETILO
+            //-preveri ce mora student placati izpit (4+ redni, 1+ izredni)
+            string obvestilo = "";
+
+
+            return Json(new { Warnings = new JavaScriptSerializer().Serialize(opozorila), Notice = obvestilo });
+        }
     }
 }
