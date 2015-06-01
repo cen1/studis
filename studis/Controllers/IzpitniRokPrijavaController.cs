@@ -73,6 +73,8 @@ namespace studis.Controllers
             if (User.IsInRole("Študent"))
             {
                 ViewBag.Izvajanja = GetIzvajanaForStudent();
+                ViewBag.StudentIme = stud.ime + " " + stud.priimek;
+                ViewBag.StudentVpisna = stud.vpisnaStevilka.ToString();
             }
             else if(User.IsInRole("Referent"))
             {
@@ -98,6 +100,7 @@ namespace studis.Controllers
             }
             else //referent
             {
+
                 prijava.vpisId = sh.trenutniVpis(model.student).id;
             }
             UserHelper uh = new UserHelper();
@@ -119,12 +122,21 @@ namespace studis.Controllers
         // GET: IzpitniRokPrijava/Odjavi/
         public ActionResult Odjavi() //sem gre student ali referent, refernt dobi se dropdown
         {
+            ViewBag.Izvajanja = null;
+            ViewBag.StudentIme = null;
+            ViewBag.StudentVpisna = null;
+            ViewBag.Izvajanja = null;
+            ViewBag.IzvajanjaZaVpisna = null;
             List<SelectListItem> ltemp = new List<SelectListItem>();
             ltemp.Add(new SelectListItem() { Value = "", Text = "Izberi" });
             ViewBag.Prazen = new SelectList(ltemp, "Value", "Text");
+
             if (User.IsInRole("Študent"))
             {
-                ViewBag.Izvajanja = GetIzvajanaForStudent();
+                student stud = UserHelper.GetStudentByUserName(User.Identity.Name);
+                ViewBag.Izvajanja = new SelectList(GetIzvajanaForStudent(), "Value", "Text");
+                ViewBag.StudentIme = stud.ime + " " + stud.priimek;
+                ViewBag.StudentVpisna = stud.vpisnaStevilka.ToString();
             }
             else
             {
@@ -148,6 +160,25 @@ namespace studis.Controllers
         // GET: IzpitniRokPrijava/Odjavi/
         public ActionResult OdjaviStudenta(int vpisna)
         {
+            ViewBag.Izvajanja = null;
+            ViewBag.StudentIme = null;
+            ViewBag.StudentVpisna = null;
+            ViewBag.Izvajanja = null;
+            ViewBag.IzvajanjaZaVpisna = null;
+            student stud = UserHelper.GetStudentByVpisna(vpisna);
+            List<SelectListItem> ltemp = new List<SelectListItem>();
+            ltemp.Add(new SelectListItem() { Value = "", Text = "Izberi" });
+            ViewBag.Prazen = new SelectList(ltemp, "Value", "Text");
+            if (User.IsInRole("Študent"))
+            {
+                ViewBag.Izvajanja = GetIzvajanaForStudent();
+            }
+            else if (User.IsInRole("Referent"))
+            {
+                ViewBag.StudentIme = stud.ime + " " + stud.priimek;
+                ViewBag.StudentVpisna = stud.vpisnaStevilka.ToString();
+                ViewBag.IzvajanjaZaVpisna = GetIzvajanjaForStudent(vpisna);//new SelectList(ltemp, "Value", "Text");
+            }
             return View();
         }
 
