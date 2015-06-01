@@ -33,15 +33,24 @@
                     </p>
                 </div>
             }
+            else if (User.IsInRole("Študent"))
+            {
+                <!--Izbira Studenta-->
+                <div class="editor-label">
+                    <p>
+                        <input id="student" type="hidden" name="student" value="@Html.Raw(ViewBag.StudentVpisna)">
+                    </p>
+                </div>
+            }
             
             <!--Izbira Izvajanja-->
             <div class="editor-label">
                 @Html.LabelFor(m => m.izvajanje)
             </div>
             <div class="editor-field">
-                @if (User.IsInRole("Student"))
+                @if (User.IsInRole("Študent"))
                 {
-                    @Html.DropDownListFor(m => m.izvajanje, (SelectList)ViewBag.Izvajanja, "Izberi predmet")
+                    @Html.DropDownListFor(m => m.izvajanje, (SelectList)ViewBag.Izvajanja)
                 }
                 else if (ViewBag.IzvajanjaZaVpisna == null)
                 {
