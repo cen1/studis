@@ -23,17 +23,21 @@ namespace studis.Controllers
         // GET: IzpitniRokPrijava/Prijavi
        public ActionResult Prijavi()
         {
-            ViewBag.Izvajanja = 0;
-            ViewBag.StudentIme = 0;
-            ViewBag.StudentVpisna = 0;
-            ViewBag.Izvajanja = 0;
-            ViewBag.IzvajanjaZaVpisna = 0;
+            ViewBag.Izvajanja = null;
+            ViewBag.StudentIme = null;
+            ViewBag.StudentVpisna = null;
+            ViewBag.Izvajanja = null;
+            ViewBag.IzvajanjaZaVpisna = null;
             List<SelectListItem> ltemp = new List<SelectListItem>();
             ltemp.Add(new SelectListItem() { Value = "", Text = "Izberi" });
             ViewBag.Prazen = new SelectList(ltemp, "Value", "Text");
+            
             if (User.IsInRole("Študent"))
             {
-                ViewBag.Izvajanja = GetIzvajanaForStudent();
+                student stud = UserHelper.GetStudentByUserName(User.Identity.Name);
+                ViewBag.Izvajanja = new SelectList(GetIzvajanaForStudent(), "Value", "Text");
+                ViewBag.StudentIme = stud.ime + " " + stud.priimek;
+                ViewBag.StudentVpisna = stud.vpisnaStevilka.ToString();
             }
             else
             {
@@ -52,15 +56,16 @@ namespace studis.Controllers
             ViewBag.Studenti = new SelectList(studenti, "Value", "Text");
             return View();
         }
+
         // GET: IzpitniRokPrijava/PrijaviStudenta/vpisna
         [Authorize(Roles = "Referent")]
         public ActionResult PrijaviStudenta(int vpisna)
         {
-            ViewBag.Izvajanja = 0;
-            ViewBag.StudentIme = 0;
-            ViewBag.StudentVpisna = 0;
-            ViewBag.Izvajanja = 0;
-            ViewBag.IzvajanjaZaVpisna = 0;
+            ViewBag.Izvajanja = null;
+            ViewBag.StudentIme = null;
+            ViewBag.StudentVpisna = null;
+            ViewBag.Izvajanja = null;
+            ViewBag.IzvajanjaZaVpisna = null;
             student stud = UserHelper.GetStudentByVpisna(vpisna);
             List<SelectListItem> ltemp = new List<SelectListItem>();
             ltemp.Add(new SelectListItem() { Value = "", Text = "Izberi" });
@@ -224,7 +229,7 @@ namespace studis.Controllers
                     var profesor3 = i.profesor2;
                     profesorji += ", " + profesor3.ime + " " + profesor3.priimek;
                 }
-
+                profesorji = i.predmet.ime + " (" + i.predmet.koda + ")  -  " + profesorji;
                 //izvajanje.izvajanjeleto.sifrant_studijskoleto.naziv
                 //profesorji = profesorji + " (" + i.sifrant_studijskoleto.naziv + ")";
 
