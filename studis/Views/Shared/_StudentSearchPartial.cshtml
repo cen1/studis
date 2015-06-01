@@ -35,6 +35,10 @@
             {
                 <th>Kartotečni list</th>
             }
+            @if (User.IsInRole("Referent"))
+            {
+                <th>Izpiti</th>
+            }
         </tr>
 @if (Model != null)
 {
@@ -65,6 +69,10 @@
             @if (User.IsInRole("Referent"))
             {
                 <td>@Html.ActionLink("Izpiši", "Izpis", "KartotecniList", new { id = item.vpisnaStevilka }, null)</td>
+            }
+            @if (User.IsInRole("Referent"))
+            {
+                <td>@Html.ActionLink("Prijavi", "PrijaviStudenta", "IzpitniRokPrijava", new { vpisna = item.vpisnaStevilka }, null) / @Html.ActionLink("Odjavi", "OdjaviStudenta", "IzpitniRokPrijava", new { vpisna = item.vpisnaStevilka }, null)</td>
             }
     </tr>
     }

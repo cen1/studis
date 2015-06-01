@@ -61,6 +61,7 @@ namespace studis.Controllers
         [Authorize(Roles = "Referent")]
         public ActionResult PrijaviStudenta(int vpisna)
         {
+            Debug.WriteLine("Vpisna: " + vpisna);
             ViewBag.Izvajanja = null;
             ViewBag.StudentIme = null;
             ViewBag.StudentVpisna = null;
@@ -82,7 +83,7 @@ namespace studis.Controllers
                 ViewBag.StudentVpisna = stud.vpisnaStevilka.ToString();
                 ViewBag.IzvajanjaZaVpisna = GetIzvajanjaForStudent(vpisna);//new SelectList(ltemp, "Value", "Text");
             }
-            return View();
+            return View("Prijavi");
         }
 
         // POST: IzpitniRokPrijava/Prijavi
@@ -179,7 +180,7 @@ namespace studis.Controllers
                 ViewBag.StudentVpisna = stud.vpisnaStevilka.ToString();
                 ViewBag.IzvajanjaZaVpisna = GetIzvajanjaForStudent(vpisna);//new SelectList(ltemp, "Value", "Text");
             }
-            return View();
+            return View("Odjavi");
         }
 
         // POST: IzpitniRokPrijava/Odjavi
