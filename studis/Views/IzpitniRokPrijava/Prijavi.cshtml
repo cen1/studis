@@ -15,7 +15,7 @@
     <div>
         <fieldset>
             
-            @if (User.IsInRole("Referent") && ViewBag.Studenti != null) 
+            @if (User.IsInRole("Referent") && ViewBag.Studenti != 0) 
             {
                 <!--Izbira Studenta-->
                 <div class="editor-label">
@@ -25,7 +25,7 @@
                     @Html.DropDownListFor(m => m.student, (SelectList)ViewBag.Studenti, "Izberi študenta")
                 </div>
             }
-            else if (User.IsInRole("Referent") && ViewBag.StudentIme != null && ViewBag.StudentVpisna != null)
+            else if (User.IsInRole("Referent") && ViewBag.StudentIme != 0 && ViewBag.StudentVpisna != 0)
             {
                 <!--Izbira Studenta-->
                 <div class="editor-label">
@@ -44,7 +44,8 @@
                 @if (User.IsInRole("Študent"))
                 {
                     @Html.DropDownListFor(m => m.izvajanje, (SelectList)ViewBag.Izvajanja, "Izberi predmet")
-                } else if(ViewBag.IzvajanjaZaVpisna == null)
+                } 
+                else if(ViewBag.IzvajanjaZaVpisna == 0)
                 {
                     @Html.DropDownListFor(m => m.izvajanje, (SelectList)ViewBag.Prazen)
                 }

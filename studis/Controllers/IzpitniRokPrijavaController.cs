@@ -23,6 +23,11 @@ namespace studis.Controllers
         // GET: IzpitniRokPrijava/Prijavi
        public ActionResult Prijavi()
         {
+            ViewBag.Izvajanja = 0;
+            ViewBag.StudentIme = 0;
+            ViewBag.StudentVpisna = 0;
+            ViewBag.Izvajanja = 0;
+            ViewBag.IzvajanjaZaVpisna = 0;
             List<SelectListItem> ltemp = new List<SelectListItem>();
             ltemp.Add(new SelectListItem() { Value = "", Text = "Izberi" });
             ViewBag.Prazen = new SelectList(ltemp, "Value", "Text");
@@ -51,6 +56,11 @@ namespace studis.Controllers
         [Authorize(Roles = "Referent")]
         public ActionResult PrijaviStudenta(int vpisna)
         {
+            ViewBag.Izvajanja = 0;
+            ViewBag.StudentIme = 0;
+            ViewBag.StudentVpisna = 0;
+            ViewBag.Izvajanja = 0;
+            ViewBag.IzvajanjaZaVpisna = 0;
             student stud = UserHelper.GetStudentByVpisna(vpisna);
             List<SelectListItem> ltemp = new List<SelectListItem>();
             ltemp.Add(new SelectListItem() { Value = "", Text = "Izberi" });
