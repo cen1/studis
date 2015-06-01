@@ -15,7 +15,7 @@
     <div>
         <fieldset>
             
-            @if (User.IsInRole("Referent") && ViewBag.Studenti != 0) 
+            @if (User.IsInRole("Referent") && ViewBag.Studenti != null) 
             {
                 <!--Izbira Studenta-->
                 <div class="editor-label">
@@ -25,12 +25,21 @@
                     @Html.DropDownListFor(m => m.student, (SelectList)ViewBag.Studenti, "Izberi študenta")
                 </div>
             }
-            else if (User.IsInRole("Referent") && ViewBag.StudentIme != 0 && ViewBag.StudentVpisna != 0)
+            else if (User.IsInRole("Referent") && ViewBag.StudentIme != null && ViewBag.StudentVpisna != null)
             {
                 <!--Izbira Studenta-->
                 <div class="editor-label">
                     <p>
                         @Html.Raw(ViewBag.StudentVpisna) @Html.Raw(ViewBag.StudentIme)
+                        <input id="student" type="hidden" name="student" value="@Html.Raw(ViewBag.StudentVpisna)">
+                    </p>
+                </div>
+            }
+            else if (User.IsInRole("Študent"))
+            {
+                <!--Izbira Studenta-->
+                <div class="editor-label">
+                    <p>
                         <input id="student" type="hidden" name="student" value="@Html.Raw(ViewBag.StudentVpisna)">
                     </p>
                 </div>
@@ -43,9 +52,9 @@
             <div class="editor-field">
                 @if (User.IsInRole("Študent"))
                 {
-                    @Html.DropDownListFor(m => m.izvajanje, (SelectList)ViewBag.Izvajanja, "Izberi predmet")
+                    @Html.DropDownListFor(m => m.izvajanje, (SelectList)ViewBag.Izvajanja)
                 } 
-                else if(ViewBag.IzvajanjaZaVpisna == 0)
+                else if(ViewBag.IzvajanjaZaVpisna == null)
                 {
                     @Html.DropDownListFor(m => m.izvajanje, (SelectList)ViewBag.Prazen)
                 }
@@ -86,7 +95,7 @@
             $.get(url, function (response) {
                 var izvajanja = $.parseJSON(response);
                 var ddlIzvajanja = $("#izvajanje");
-                if ($("#student predmet option:first-child").text() == "Izberi") {
+                if ($("#student option:first-child").text() == "Izberi") {
                     $("#student option:first-child").remove();
                 }
                 //pocisti

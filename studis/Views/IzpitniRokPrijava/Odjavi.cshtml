@@ -13,7 +13,7 @@
     <div>
         <fieldset>
 
-            @if (User.IsInRole("Referent") && ViewBag.Studenti != 0)
+            @if (User.IsInRole("Referent") && ViewBag.Studenti != null)
             {
                 <!--Izbira Studenta-->
                 <div class="editor-label">
@@ -23,7 +23,7 @@
                     @Html.DropDownListFor(m => m.student, (SelectList)ViewBag.Studenti, "Izberi študenta")
                 </div>
             }
-            else if (User.IsInRole("Referent") && ViewBag.StudentIme != 0 && ViewBag.StudentVpisna != 0)
+            else if (User.IsInRole("Referent") && ViewBag.StudentIme != null && ViewBag.StudentVpisna != null)
             {
                 <!--Izbira Studenta-->
                 <div class="editor-label">
@@ -43,7 +43,7 @@
                 {
                     @Html.DropDownListFor(m => m.izvajanje, (SelectList)ViewBag.Izvajanja, "Izberi predmet")
                 }
-                else if (ViewBag.IzvajanjaZaVpisna == 0)
+                else if (ViewBag.IzvajanjaZaVpisna == null)
                 {
                     @Html.DropDownListFor(m => m.izvajanje, (SelectList)ViewBag.Prazen)
                 }
