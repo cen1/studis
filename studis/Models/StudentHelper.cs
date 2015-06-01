@@ -132,5 +132,24 @@ namespace studis.Models
                 return "/";
             }
         }
+
+        public int pridobiPrijavaId(int vpisna, int rokId)
+        {
+
+            var vpisi = db.vpis.Where(v => v.vpisnaStevilka == vpisna).ToList();
+
+            foreach (var v in vpisi)
+            {
+                foreach (var p in v.prijavanaizpits)
+                {
+                    if (p.izpitnirokId == rokId)
+                    {
+                        return Convert.ToInt32(p.id);
+                    }
+                }
+            }
+
+            return 0;
+        }
     }
 }

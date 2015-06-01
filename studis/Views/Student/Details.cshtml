@@ -67,7 +67,7 @@
             <th>Datum</th>
             <th>KT</th>
             <th>Ocena</th>
-            <th>Vnos</th>
+            <th>Vpis ocene</th>
         </tr>
     </thead>
 
@@ -99,7 +99,7 @@
                         <td>@r.izvajanje.predmet.kreditne</td>
                         @{ var ocena = sh.pridobiOceno(Convert.ToInt32(@p.id)); }
                         <td>@ocena</td>
-                        <td>@Html.ActionLink("Vnos", "VpisOcen", "IzpitniRok")</td> <!-- potrebno dodati prav ID -->
+                        <td>@Html.ActionLink("Vpis", "IndiVpisOcen", "IzpitniRok", new { rokId = @p.izpitnirokId, prijavaID = @p.id }, null)</td>
                     </tr>
                 }
             }
