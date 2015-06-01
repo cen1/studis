@@ -1,4 +1,4 @@
-﻿@model IEnumerable<studis.Models.student>
+﻿@model IEnumerable<studis.Models.VnosTockModel>
 
 @{
     ViewBag.Title = "SeznamPrijavljenihKandidatov";
@@ -46,12 +46,10 @@
     </tr>
 @if(Model!=null)
 {
-    int zap=0;
     foreach (var item in Model) {
-        zap = zap + 1;
     <tr>
         <td>
-            @zap
+            @Html.DisplayFor(modelItem => item.zaporednaStevilka)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.vpisnaStevilka)
@@ -63,10 +61,10 @@
             @Html.DisplayFor(modelItem => item.ime)
         </td>
         <td>
-            @ViewBag.years[zap-1]
+            @Html.DisplayFor(modelItem => item.studijskoLeto)
         </td>
         <td>
-            @ViewBag.vsaPolaganja[zap - 1]
+            @Html.DisplayFor(modelItem => item.zaporednoSteviloPonavljanja)
         </td>
     </tr>
     }
