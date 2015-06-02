@@ -204,15 +204,14 @@ namespace studis.Controllers
             }
             UserHelper uh = new UserHelper();
             StudentHelper sh = new StudentHelper();
-
-            vpi trenutniVpis = sh.trenutniVpis(stud.vpisnaStevilka);
-            prijavanaizpit prijava = db.prijavanaizpits.Where(a => a.vpisId == trenutniVpis.id).Where(a => a.izpitnirokId == model.izpitniRok).Where(a => a.stanje == 0).FirstOrDefault(); ;
-            prijava.stanje = 0;
-
-            prijava.odjavilId = uh.FindByName(User.Identity.Name).id;
+            
             try
             {
-                // TODO: Add delete logic here
+                vpi trenutniVpis = sh.trenutniVpis(stud.vpisnaStevilka);
+                prijavanaizpit prijava = db.prijavanaizpits.SingleOrDefault(a => a.id == model.izpitniRok);
+                prijava.stanje = 1;
+                prijava.odjavilId = uh.FindByName(User.Identity.Name).id;
+
                 db.SaveChanges();
                 if (User.IsInRole("Referent"))
                     return RedirectToAction("Students", "Student");
@@ -505,22 +504,31 @@ namespace studis.Controllers
 
 
         [HttpPost]
-        public JsonResult PreveriOdjavo(string vpisna, string izpitniRok)
+        public JsonResult PreveriOdjavo(string vpisna, string prijavaId)
         {
             if (vpisna == "" || User.IsInRole("Študent"))
             {
                 vpisna = UserHelper.GetStudentByUserName(User.Identity.Name).vpisnaStevilka.ToString();
             }
             int ivpisna = Convert.ToInt32(vpisna);
-            int iizpitniRok = Convert.ToInt32(izpitniRok);
-            Debug.WriteLine("Vpisna: " + vpisna + ", IzpitniRokId: " + izpitniRok);
-            izpitnirok iRok = db.izpitniroks.SingleOrDefault(a => a.id == iizpitniRok);
+            int iprijavaId = Convert.ToInt32(prijavaId);
+            Debug.WriteLine("Vpisna: " + vpisna + ", IzpitniRokId: " + iprijavaId);
+            izpitnirok iRok = db.prijavanaizpits.SingleOrDefault(a => a.id == iprijavaId).izpitnirok;//db.izpitniroks.SingleOrDefault(a => a.id == iizpitniRok);
             student stud = db.students.SingleOrDefault(a => a.vpisnaStevilka == ivpisna);
 
             List<string> opozorila = new List<string>();
 
             StudentHelper sh = new StudentHelper();
             var trenutniVpis = sh.trenutniVpis(stud.vpisnaStevilka);
+
+            if (iRok == null)
+            {
+                Debug.WriteLine("iRok je null");
+            }
+            if (iRok.datum == null)
+            {
+                Debug.WriteLine("iRok.datum je null");
+            }
 
             //OPOZORILA
             //-preveri cas min 23 ur pred dnem izpita

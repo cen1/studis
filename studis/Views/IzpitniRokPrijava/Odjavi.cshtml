@@ -180,7 +180,7 @@
             $.ajax({
                 type: "POST", 
                 url: "/IzpitniRokPrijava/PreveriOdjavo/",
-                data: { vpisna: $("#student").val(), izpitniRok: $(this).val() },
+                data: { vpisna: $("#student").val(), prijavaId: $(this).val() },
                 
                 success: function (data) {
                     console.log("V funkciji");
