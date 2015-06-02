@@ -64,7 +64,10 @@ namespace studis.Models
                 sum+=p.kreditne;
 
             System.Diagnostics.Debug.WriteLine(sum.ToString());
-            if (sum != 60) return false;
+            if (sum != 60)
+            {
+                return false;
+            }
             else return true;
         }
 

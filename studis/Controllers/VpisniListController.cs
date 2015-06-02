@@ -1381,6 +1381,7 @@ namespace studis.Controllers
                                 {
                                     vl.izvajanjes.Add(i);
                                     breakk = true;
+                                    break;
                                 }
                         }
                     }
@@ -1388,6 +1389,7 @@ namespace studis.Controllers
 
                 //dodaj izbirne
                 foreach (var p in dodaj_p) {
+                    System.Diagnostics.Debug.WriteLine("--"+p.ime+p.id.ToString());
                     //poiščemo izvajanje pri tem predmetu ki se izvaja v prihodnjem šolskem letu
                     var izlist = db.izvajanjes.Where(a => a.predmetId == p.id).ToList();
                     bool breakk = false;
@@ -1395,11 +1397,16 @@ namespace studis.Controllers
                     {
                         if (breakk) break;
                         foreach (var il in i.izvajanjeletoes)
+                        {
+                            System.Diagnostics.Debug.WriteLine("---izvajanje leto " + il.studijskoletoId);
                             if (il.studijskoletoId == sh.trenutnoSolskoLeto() + 1)
                             {
                                 vl.izvajanjes.Add(i);
                                 breakk = true;
+                                System.Diagnostics.Debug.WriteLine("---" + i.predmet.ime);
+                                break;
                             }
+                        }
                     }
                 }
 

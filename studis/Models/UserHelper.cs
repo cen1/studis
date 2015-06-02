@@ -262,7 +262,11 @@ namespace studis.Models
 
         public bool jePredmetnikVzpostavljen(vpi v)
         {
-            if (v.vrstaVpisa != 1) return true; //ponavljanje, zakljucek, pavziranje
+            if (v.vrstaVpisa != 1)
+            {
+                System.Diagnostics.Debug.WriteLine("Ponavljanje, zakljucek, pavziranje");
+                return true; //ponavljanje, zakljucek, pavziranje
+            }
 
             if (v.izvajanjes.Count() == 0)
             {
