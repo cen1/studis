@@ -206,15 +206,17 @@
                         $("#submit").prop("disabled", true);
                         </text>
                     }
-                    potrdi = function () {
-                        confirm(obvestilo);
-                    };
+                    if (obvestilo != "") {
+                        potrdi = function () {
+                            confirm(obvestilo);
+                        };
+                    }
                     //napolni
                     //ulOpozorila.append('<li>--test client--</li>');
                     for (i = 0; i < opozorila.length; i++) {
                         ulOpozorila.append('<li>' + opozorila[i] + '</li>');
                     }
-                    ulObvestilo.append('<li>' + obvestilo + '</li>');
+                    //ulObvestilo.append('<li>' + obvestilo + '</li>');
                 },
                 dataType: "json",
                 traditional: true
