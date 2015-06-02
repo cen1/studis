@@ -110,11 +110,14 @@ namespace studis.Controllers
             {
                 db.prijavanaizpits.Add(prijava);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                if(User.IsInRole("Referent"))
+                    return RedirectToAction("Students", "Student");
+                else
+                    return Odjavi();
             }
             catch
             {
-                return Prijavi();
+                return View("Neuspesno");
             }
         }
 
@@ -211,11 +214,14 @@ namespace studis.Controllers
             {
                 // TODO: Add delete logic here
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                if (User.IsInRole("Referent"))
+                    return RedirectToAction("Students", "Student");
+                else
+                    return Odjavi();
             }
             catch
             {
-                return Odjavi();
+                return View("Neuspesno");
             }
         }
 
@@ -483,8 +489,8 @@ namespace studis.Controllers
             //-preveri ce je izpit ze opravljen
             //-preveri ce za prejsnjo prijavo ze obstaja ocena
 
-            opozorila.Add("--1test server--");
-            opozorila.Add("--2test server--");
+            //opozorila.Add("--1test server--");
+            //opozorila.Add("--2test server--");
 
             //SAMO OBVSETILO
             //-preveri ce mora student placati izpit (4+ redni, 1+ izredni)
@@ -526,8 +532,8 @@ namespace studis.Controllers
             //-preveri ce je izpit ze opravljen
             //-preveri ce za prejsnjo prijavo ze obstaja ocena
 
-            opozorila.Add("--1test server--");
-            opozorila.Add("--2test server--");
+            //opozorila.Add("--1test server--");
+            //opozorila.Add("--2test server--");
 
             //SAMO OBVSETILO
             //-preveri ce mora student placati izpit (4+ redni, 1+ izredni)
