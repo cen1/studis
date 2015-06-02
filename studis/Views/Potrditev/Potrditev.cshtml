@@ -195,7 +195,8 @@
 </table>
 
 <br />
-<h2>Predmetnik</h2>
+<br />
+
 <table class="peta">
     <tbody>
         <tr>
@@ -205,22 +206,34 @@
             <td colspan="3">@ViewBag.StudijskiProgram</td>
         </tr>
         <tr>
-            <th>Koda</th>
+            <th>Učitelj</th>
             <th>Učna enota</th>
             <th>Število KT</th>
         </tr>
-        @foreach (var data in @ViewBag.Predmeti)
+        @foreach (var data in @ViewBag.Izvajanja)
         {
             <tr>
-                <td>@data.predmet.koda</td>
-                <td>@data.predmet.ime</td>
-                <td>@data.predmet.kreditne</td>
+                <td style="width: 25%;">
+                    @data.profesor.ime @data.profesor.priimek
+                    @if (@data.izvajalec2Id != null)
+                    {
+                        <span>, <br />@data.profesor1.ime @data.profesor1.priimek</span>
+                    }
+                    @if (@data.izvajalec3Id != null)
+                    {
+                        <span>, <br />@data.profesor2.ime @data.profesor2.priimek</span>
+                    }
+                </td>
+                <td style="width: 60%;">@data.predmet.ime</td>
+                <td style="width: 15%;">@data.predmet.kreditne</td>
             </tr>
         }
     </tbody>
 </table>
 
 <br />
+<br />
+
 @if(@ViewBag.StudijskiProgram2 != null) {
     <table class="sesta">
         <tbody>
