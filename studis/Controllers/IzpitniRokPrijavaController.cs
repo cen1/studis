@@ -483,8 +483,8 @@ namespace studis.Controllers
             //-preveri ce je izpit ze opravljen
             //-preveri ce za prejsnjo prijavo ze obstaja ocena
 
-            opozorila.Add("--1test server--");
-            opozorila.Add("--2test server--");
+            //opozorila.Add("--1test server--");
+            //opozorila.Add("--2test server--");
 
             //SAMO OBVSETILO
             //-preveri ce mora student placati izpit (4+ redni, 1+ izredni)
@@ -526,8 +526,8 @@ namespace studis.Controllers
             //-preveri ce je izpit ze opravljen
             //-preveri ce za prejsnjo prijavo ze obstaja ocena
 
-            opozorila.Add("--1test server--");
-            opozorila.Add("--2test server--");
+            //opozorila.Add("--1test server--");
+            //opozorila.Add("--2test server--");
 
             //SAMO OBVSETILO
             //-preveri ce mora student placati izpit (4+ redni, 1+ izredni)
