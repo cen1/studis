@@ -110,11 +110,14 @@ namespace studis.Controllers
             {
                 db.prijavanaizpits.Add(prijava);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                if(User.IsInRole("Referent"))
+                    return RedirectToAction("Students", "Student");
+                else
+                    return Odjavi();
             }
             catch
             {
-                return Prijavi();
+                return View("Neuspesno");
             }
         }
 
@@ -211,11 +214,14 @@ namespace studis.Controllers
             {
                 // TODO: Add delete logic here
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                if (User.IsInRole("Referent"))
+                    return RedirectToAction("Students", "Student");
+                else
+                    return Odjavi();
             }
             catch
             {
-                return Odjavi();
+                return View("Neuspesno");
             }
         }
 
