@@ -560,6 +560,8 @@
     <Content Include="Views\IzpitniRok\IzpisOcen.cshtml" />
     <Content Include="Views\IzpitniRok\IzpisOcenAnonymous.cshtml" />
     <Content Include="Views\IzpitniRok\IndiVpisOcen.cshtml" />
+    <Content Include="Views\IzpitniRokPrijava\Uspesno.cshtml" />
+    <Content Include="Views\IzpitniRokPrijava\Neuspesno.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
