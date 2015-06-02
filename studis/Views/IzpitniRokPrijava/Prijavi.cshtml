@@ -80,14 +80,14 @@
             <ul id="warning" style="color:orange;"></ul>
             <ul id="notice" style="color:orange;"></ul>
             <p>
-                <input id="submit" type="submit" value="Prijavi" onclick="obvestilo()">
+                <input id="submit" type="submit" value="Prijavi" onclick="potrdi()">
             </p>
         </fieldset>
     </div>
 }
 
 <script language="javascript" type="text/javascript"> 
-    function potrdi() { }
+    function potrdi() { return true; }
     //napolni izvajanja
     $(document).ready(function () {
         $("#student").change(function () {
@@ -170,7 +170,7 @@
             ulOpozorila.empty();
             ulObvestilo.empty();
             $("#submit").prop("disabled", false);
-            potrdi = function () { };
+            potrdi = function () { return true; };
             console.log("Parameter: " + $(this).val());
             //var url = "/IzpitniRokPrijava/Preveri/" + $("#student").val() + "&" + $(this).val();
             //console.log("URL: " + url);
