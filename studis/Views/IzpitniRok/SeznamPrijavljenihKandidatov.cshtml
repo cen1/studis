@@ -71,10 +71,17 @@
         <td>
             @Html.DisplayFor(modelItem => item.zaporednoSteviloPonavljanja)
         </td>
+        @if (ViewBag.ocenetocke == true)
+        {
         <td>
             @{ var prijavaId = sh.pridobiPrijavaId(Convert.ToInt32(item.vpisnaStevilka), @ViewBag.idRoka); }
             @Html.ActionLink("Vpis", "IndiVpisOcen", "IzpitniRok", new { rokId = @ViewBag.idRoka, prijavaID = @prijavaId }, null)
         </td>
+        }
+        else
+        {
+            <td>Ni mogoče</td>
+        }
     </tr>
     }
 }
