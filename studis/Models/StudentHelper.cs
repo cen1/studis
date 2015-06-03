@@ -125,7 +125,7 @@ namespace studis.Models
 
             if (datum != null)
             {
-                return datum.datum.ToString("dd/MM/yyyy");
+                return datum.datum.ToString("dd.MM.yyyy");
             }
             else
             {

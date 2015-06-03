@@ -16,10 +16,17 @@
         border: solid 1px #ccc;
         border-collapse: collapse;
         background-color: White;
+        text-align: center;
+    }
+    #left {
+        text-align: left;
+    }
+    #center {
+        text-align: center;
     }
 </style>
 
-<h2>Kartotečni list</h2>
+<h2>Kartotečni list - @ViewBag.Student.ime @ViewBag.Student.priimek</h2>
 
 @using (Html.BeginForm("Izpis", "KartotecniList", new { vpisna = ViewBag.Vpisna }, FormMethod.Post, null))
 {
@@ -37,6 +44,7 @@
         
     if (@ViewBag.Izbira == 0)
     {
+        var cntProg = 0;
         <div id="izpis2">
             @foreach (var v in @ViewBag.Vpisi)
             {
@@ -47,26 +55,72 @@
                 double povprecje = 0;
                 int temp;
                 int ocena;
+                var cnt = 1;
+
+                if (v.sifrant_studijskiprogram.id == 1000471 && cntProg != 0)
+                {
+                    <!-- Povprečne ocene po študijskih letih  -->
+                    <h2>Povprečne ocene v tem programu</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Skupaj KT</th>
+                                <th>Skupno povprečje</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr>
+                                <td>@skupneTocke</td>
+                                <td>
+                                    @if (skupneOcene != 0 && skupniSestevek != 0)
+                                    {
+                                        skupnoPovprecje = skupneOcene / skupniSestevek;
+                                    }
+                                    @skupnoPovprecje
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                
+                    skupneTocke = 0;
+                    skupneOcene = 0.0;
+                    skupniSestevek = 0.0;
+                    skupnoPovprecje = 0;
+
+                    <br />
+                    <br />
+                    <br />
+                }
 
                 <!-- GLAVA -->
-                
-                <h2>@v.sifrant_studijskiprogram.naziv </h2>
+                if (v.sifrant_studijskiprogram.id == 1000468 && cntProg == 0)
+                {
+                    <h2>@v.sifrant_studijskiprogram.naziv</h2>
+                    cntProg++;
+                }
+                else if (v.sifrant_studijskiprogram.id == 1000471 && cntProg != 0)
+                {
+                    <h2>@v.sifrant_studijskiprogram.naziv</h2>
+                    cntProg = 0;
+                }
+
                 <table class="prva">
                     <thead>
                         <tr>
-                            <th>Študijsko leto</th>
-                            <th>Letnik</th>
+                            <th id="center">Študijsko leto</th>
+                            <th id="center">Letnik</th>
                             @if (@v.letnikStudija == 3 && @v.studijskiProgram == 1000468 && @ViewBag.Moduli != null)
                             {
                                 var st = 1;
                                 foreach (var mod in @ViewBag.Moduli)
                                 {
-                                    <th>Moduli @st</th>
+                                    <th id="center">Moduli @st</th>
                                     st++;
                                 }
                             }
-                            <th>Vrsta vpisa</th>
-                            <th>Način študija</th>
+                            <th id="center">Vrsta vpisa</th>
+                            <th id="center">Način študija</th>
                         </tr>
                     </thead>
 
@@ -95,14 +149,15 @@
                 <table class="druga">
                     <thead>
                         <tr>
-                            <th>Šifra</th>
-                            <th style="width: 130px">Predmet</th>
-                            <th style="width: 100px">Izvajalec</th>
-                            <th>Letnik</th>
-                            <th>Datum</th>
-                            <th colspan="2">Polaganja</th>
-                            <th>KT</th>
-                            <th>Ocena</th>
+                            <th id="center">#</th>
+                            <th id="center">Šifra</th>
+                            <th id="center" style="width: 130px">Predmet</th>
+                            <th id="center">KT</th>
+                            <th id="center">Letnik</th>
+                            <th id="center" style="width: 100px">Izvajalec</th>
+                            <th id="center">Datum</th>
+                            <th id="center" colspan="2">Polaganja</th>
+                            <th id="center">Ocena</th>
                         </tr>
                     </thead>
 
@@ -122,9 +177,12 @@
                                             pisal++;
 
                                             <tr>
+                                                <td>@cnt</td>
                                                 <td>@i.predmet.koda</td>
-                                                <td>@i.predmet.ime</td>
-                                                <td>
+                                                <td id="left">@i.predmet.ime</td>
+                                                <td>@i.predmet.kreditne</td>
+                                                <td>@i.predmet.letnik</td>
+                                                <td id="left">
                                                     @i.profesor.ime @i.profesor.priimek
                                                     @if (@i.izvajalec2Id != null)
                                                     {
@@ -135,26 +193,32 @@
                                                         <span>,</span><span><br />@i.profesor2.ime @i.profesor2.priimek</span>
                                                     }
                                                 </td>
-                                                <td>@i.predmet.letnik</td>
                                                 @{ var datum = sh.pridobiDatum(Convert.ToInt32(@p.id)); }
                                                 <td>@datum</td>
                                                 @{ temp = sh.polaganjaLetos(Convert.ToInt32(@v.id), Convert.ToInt32(@i.id)); }
                                                 @if (temp != 0)
-                                                { <td>@temp</td> }
+                                                { 
+                                                    <td>@temp</td>
+                                                }
                                                 else
-                                                { <td></td> }
+                                                { 
+                                                    <td></td> 
+                                                }
                                                 @{ temp = sh.polaganjaLetos(Convert.ToInt32(@v.id), Convert.ToInt32(@i.id)); }
                                                 @if (temp != 0)
                                                 {
-                                                    <td>@temp</td> }
+                                                    <td>@temp</td> 
+                                                }
                                                 else
                                                 {
-                                                    <td></td> }
-                                                <td>@i.predmet.kreditne</td>
+                                                    <td></td> 
+                                                } 
                                                 @{ ocena = sh.pridobiOceno(Convert.ToInt32(@p.id)); }
                                                 <td>@ocena</td>
                                             </tr>
-
+                            
+                                            cnt++;                
+                            
                                             if (@ocena != 0)
                                             {
                                                 if (@ocena > 5)
@@ -171,26 +235,19 @@
                                 if (pisal == 0 && v.izvajanjes.Contains(i))
                                 {
                                     <tr>
+                                        <td>@cnt</td>
                                         <td>@i.predmet.koda</td>
-                                        <td>@i.predmet.ime</td>
-                                        <td>
-                                            @i.profesor.ime @i.profesor.priimek
-                                            @if (@i.izvajalec2Id != null)
-                                            {
-                                                <span>,</span><span><br />@i.profesor1.ime @i.profesor1.priimek</span>
-                                            }
-                                            @if (@i.izvajalec3Id != null)
-                                            {
-                                                <span>,</span><span><br />@i.profesor2.ime @i.profesor2.priimek</span>
-                                            }
-                                        </td>
-                                        <td>@i.predmet.letnik</td>
-                                        <td>/</td>
-                                        <td></td>
-                                        <td></td>
+                                        <td id="left">@i.predmet.ime</td>
                                         <td>@i.predmet.kreditne</td>
-                                        <td>/</td>
+                                        <td>@i.predmet.letnik</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
                                     </tr>
+                            
+                                    cnt++;
                                 }
                             }
                         }
@@ -208,9 +265,12 @@
                                             pisal++;
 
                                             <tr>
+                                                <td>@cnt</td>
                                                 <td>@i.predmet.koda</td>
-                                                <td>@i.predmet.ime</td>
-                                                <td>
+                                                <td id="left">@i.predmet.ime</td>
+                                                <td>@i.predmet.kreditne</td>
+                                                <td>@i.predmet.letnik</td>
+                                                <td id="left">
                                                     @i.profesor.ime @i.profesor.priimek
                                                     @if (@i.izvajalec2Id != null)
                                                     {
@@ -218,30 +278,34 @@
                                                     }
                                                     @if (@i.izvajalec3Id != null)
                                                     {
-                                                        <span>,</span><span><br />@i.profesor2.ime @i.profesor2.priimek</span>    
+                                                        <span>,</span><span><br />@i.profesor2.ime @i.profesor2.priimek</span>
                                                     }
                                                 </td>
-                                                <td>@i.predmet.letnik</td>
                                                 @{ var datum = sh.pridobiDatum(Convert.ToInt32(@p.id)); }
                                                 <td>@datum</td>
                                                 @{ temp = sh.polaganjaVsa(Convert.ToInt32(@v.vpisnaStevilka), Convert.ToInt32(@i.id), Convert.ToInt32(@v.studijskiProgram)); }
                                                 @if (temp != 0)
                                                 {
-                                                    <td>@temp</td> }
+                                                    <td>@temp</td> 
+                                                }
                                                 else
                                                 {
-                                                    <td></td> }
+                                                    <td></td> 
+                                                }
                                                 @{ temp = sh.polaganjaLetos(Convert.ToInt32(@v.id), Convert.ToInt32(@i.id)); }
                                                 @if (temp != 0)
                                                 {
-                                                    <td>@temp</td> }
+                                                    <td>@temp</td> 
+                                                }
                                                 else
                                                 {
-                                                    <td></td> }
-                                                <td>@i.predmet.kreditne</td>
+                                                    <td></td> 
+                                                }
                                                 @{ ocena = sh.pridobiOceno(Convert.ToInt32(@p.id)); }
                                                 <td>@ocena</td>
                                             </tr>
+                            
+                                            cnt++;
 
                                             if (@ocena != 0)
                                             {
@@ -259,32 +323,33 @@
                                 if (pisal == 0 && v.izvajanjes.Contains(i))
                                 {   
                                     <tr>
+                                        <td>@cnt</td>
                                         <td>@i.predmet.koda</td>
-                                        <td>@i.predmet.ime</td>
-                                        <td>
-                                            @i.profesor.ime @i.profesor.priimek
-                                            @if (@i.izvajalec2Id != null)
-                                            {
-                                                <span>,</span><span><br />@i.profesor1.ime @i.profesor1.priimek</span>
-                                            }
-                                            @if (@i.izvajalec3Id != null)
-                                            {
-                                                <span>,</span><span><br />@i.profesor2.ime @i.profesor2.priimek</span>
-                                            }
-                                        </td>
+                                        <td id="left">@i.predmet.ime</td>
+                                        <td>@i.predmet.kreditne</td>
                                         <td>@i.predmet.letnik</td>
-                                        <td>/</td>
                                         @{ temp = sh.polaganjaVsa(Convert.ToInt32(@v.vpisnaStevilka), Convert.ToInt32(@i.id), Convert.ToInt32(@v.studijskiProgram)); }
                                         @if (temp != 0)
                                         {
-                                            <td>@temp</td> }
+                                            <td></td>
+                                            <td></td>
+                                            <td>@temp</td>
+                                            <td></td>
+                                            <td></td>
+
+                                        }
                                         else
                                         {
-                                            <td></td> }
-                                        <td></td>
-                                        <td>@i.predmet.kreditne</td>
-                                        <td>/</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        }
+                                        
                                     </tr>
+                            
+                                    cnt++;
                                 }
                             }
                         }
@@ -334,6 +399,7 @@
     <!-- Vsa polaganja -->
     if (@ViewBag.Izbira == 1)
     {
+        var cntProg = 0;
         <div id="izpis2">
             @foreach (var v in @ViewBag.Vpisi)
             {
@@ -344,37 +410,88 @@
                 double povprecje = 0;
                 int temp;
                 int ocena;
+                var cnt = 1;
+
+                if (v.sifrant_studijskiprogram.id == 1000471 && cntProg != 0)
+                {
+                    <!-- Povprečne ocene po študijskih letih  -->
+                    <h2>Povprečne ocene v tem programu</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Skupaj KT</th>
+                                <th>Skupno povprečje</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr>
+                                <td>@skupneTocke</td>
+                                <td>
+                                    @if (skupneOcene != 0 && skupniSestevek != 0)
+                                    {
+                                        skupnoPovprecje = skupneOcene / skupniSestevek;
+                                    }
+                                    @skupnoPovprecje
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    skupneTocke = 0;
+                    skupneOcene = 0.0;
+                    skupniSestevek = 0.0;
+                    skupnoPovprecje = 0;
+
+                    <br />
+                    <br />
+                    <br />
+                }
 
                 <!-- GLAVA -->
-                <h2>@v.sifrant_studijskiprogram.naziv</h2>
+                if (v.sifrant_studijskiprogram.id == 1000468 && cntProg == 0)
+                {
+                    <h2>@v.sifrant_studijskiprogram.naziv</h2>
+                    cntProg++;
+                }
+                else if (v.sifrant_studijskiprogram.id == 1000471 && cntProg != 0)
+                {
+                    <h2>@v.sifrant_studijskiprogram.naziv</h2>
+                    cntProg = 0;
+                }
                 <table class="prva">
+                    <thead>
+                        <tr>
+                            <th id="center">Študijsko leto</th>
+                            <th id="center">Letnik</th>
+                            @if (@v.letnikStudija == 3 && @v.studijskiProgram == 1000468 && @ViewBag.Moduli != null)
+                            {
+                                var st = 1;
+                                foreach (var mod in @ViewBag.Moduli)
+                                {
+                                    <th id="center">Moduli @st</th>
+                                    st++;
+                                }
+                            }
+                            <th id="center">Vrsta vpisa</th>
+                            <th id="center">Način študija</th>
+                        </tr>
+                    </thead>
+
                     <tbody>
                         <tr>
-                            <th>Študijsko leto</th>
-                            <td>@v.sifrant_studijskoleto.naziv</td>
-                        </tr>
-                        <tr>
-                            <th>Letnik</th>
+                            <td>@v.sifrant_studijskoleto.naziv</td>                       
                             <td>@v.letnikStudija</td>
-                        </tr>
-                        @if (@v.letnikStudija == 3 && @v.studijskiProgram == 1000468 && @ViewBag.Moduli != null)
-                        {
-                            var st = 1;
-                            foreach (var mod in @ViewBag.Moduli)
+                            @if (@v.letnikStudija == 3 && @v.studijskiProgram == 1000468 && @ViewBag.Moduli != null)
                             {
-                                <tr>
-                                    <th>Moduli @st</th>
+                                var st = 1;
+                                foreach (var mod in @ViewBag.Moduli)
+                                {
                                     <td>@mod</td>
-                                </tr>
-                                st++;
-                            }
-                        }
-                        <tr>
-                            <th>Vrsta vpisa</th>
+                                    st++;
+                                }
+                            } 
                             <td>@v.sifrant_vrstavpisa.naziv</td>
-                        </tr>
-                        <tr>
-                            <th>Način študija</th>
                             <td>@v.sifrant_nacinstudija.naziv</td>
                         </tr>
                     </tbody>
@@ -386,14 +503,15 @@
                 <table class="druga">
                     <thead>
                         <tr>
-                            <th>Šifra</th>
-                            <th style="width: 130px">Predmet</th>
-                            <th style="width: 100px">Izvajalec</th>
-                            <th>Letnik</th>
-                            <th>Datum</th>
-                            <th colspan="2">Polaganja</th>
-                            <th>KT</th>
-                            <th>Ocena</th>
+                            <th id="center">#</th>
+                            <th id="center">Šifra</th>
+                            <th id="center" style="width: 130px">Predmet</th>
+                            <th id="center">KT</th>
+                            <th id="center">Letnik</th>
+                            <th id="center" style="width: 100px">Izvajalec</th>
+                            <th id="center">Datum</th>
+                            <th id="center" colspan="2">Polaganja</th>
+                            <th id="center">Ocena</th>
                         </tr>
                     </thead>
 
@@ -411,20 +529,25 @@
                                     {
                                         if (r.id == p.izpitnirokId && (p.vpisId == @ViewBag.Zacasni.id || p.vpisId == v.id) && i.izpitniroks.Contains(r) && @ViewBag.Zacasni.izvajanjes.Contains(i))
                                         {
-                                            
-
                                             <tr>
-                                                @if(pisal == 0)
+                                                @if (pisal == 0)
                                                 {
-                                                <td>@i.predmet.koda</td>
-                                                <td>@i.predmet.ime</td>    
+                                                    <td>@cnt</td>
+                                                    <td>@i.predmet.koda</td>
+                                                    <td id="left">@i.predmet.ime</td>
+                                                    <td>@i.predmet.kreditne</td>
+                                                    <td>@i.predmet.letnik</td>
+                                                    cnt++;
                                                 }
                                                 else
                                                 {
                                                     <td></td>
                                                     <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
                                                 }
-                                                <td>
+                                                <td id="left">
                                                     @i.profesor.ime @i.profesor.priimek
                                                     @if (@i.izvajalec2Id != null)
                                                     {
@@ -435,24 +558,26 @@
                                                         <span>,</span><span><br />@i.profesor2.ime @i.profesor2.priimek</span>
                                                     }
                                                 </td>
-                                                <td>@i.predmet.letnik</td>
                                                 @{ var datum = sh.pridobiDatum(Convert.ToInt32(@p.id)); }
                                                 <td>@datum</td>
                                                 @{ temp = sh.zaporednoPolaganjaLetos(Convert.ToInt32(@v.id), Convert.ToInt32(@i.id), Convert.ToInt32(@r.id)); }
                                                 @if (temp != 0)
                                                 {
-                                                    <td>@temp</td> }
+                                                    <td>@temp</td> 
+                                                }
                                                 else
                                                 {
-                                                    <td></td> }
+                                                    <td></td> 
+                                                }
                                                 @{ temp = sh.zaporednoPolaganjaLetos(Convert.ToInt32(@v.id), Convert.ToInt32(@i.id), Convert.ToInt32(@r.id)); }
                                                 @if (temp != 0)
                                                 {
-                                                    <td>@temp</td> }
+                                                    <td>@temp</td> 
+                                                }
                                                 else
                                                 {
-                                                    <td></td> }
-                                                <td>@i.predmet.kreditne</td>
+                                                    <td></td> 
+                                                }
                                                 @{ ocena = sh.pridobiOceno(Convert.ToInt32(@p.id)); }
                                                 <td>@ocena</td>
                                             </tr>
@@ -465,9 +590,12 @@
                                 if (pisal == 0 && v.izvajanjes.Contains(i))
                                 {
                                     <tr>
+                                        <td>@cnt</td>
                                         <td>@i.predmet.koda</td>
-                                        <td>@i.predmet.ime</td>
-                                        <td>
+                                        <td id="left">@i.predmet.ime</td>
+                                        <td>@i.predmet.kreditne</td>
+                                        <td>@i.predmet.letnik</td>
+                                        <td id="left">
                                             @i.profesor.ime @i.profesor.priimek
                                             @if (@i.izvajalec2Id != null)
                                             {
@@ -478,19 +606,27 @@
                                                 <span>,</span><span><br />@i.profesor2.ime @i.profesor2.priimek</span>
                                             }
                                         </td>
-                                        <td>@i.predmet.letnik</td>
-                                        <td>/</td>
                                         @{ temp = sh.polaganjaVsa(Convert.ToInt32(@v.vpisnaStevilka), Convert.ToInt32(@i.id), Convert.ToInt32(@v.studijskiProgram)); }
                                         @if (temp != 0)
                                         {
-                                            <td>@temp</td> }
+                                            <td></td>
+                                            <td></td>
+                                            <td>@temp</td>
+                                            <td></td> 
+                                            <td></td>
+                                        }
                                         else
                                         {
-                                            <td></td> }
-                                        <td></td>
-                                        <td>@i.predmet.kreditne</td>
-                                        <td>/</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        }
+                                        
                                     </tr>
+                            
+                                    cnt++;
                                 }
                                 else
                                 {
@@ -522,15 +658,22 @@
                                             <tr>
                                                 @if (pisal == 0)
                                                 {
-                                                <td>@i.predmet.koda</td>
-                                                <td>@i.predmet.ime</td> 
+                                                    <td>@cnt</td>
+                                                    <td>@i.predmet.koda</td>
+                                                    <td id="left">@i.predmet.ime</td>
+                                                    <td>@i.predmet.kreditne</td>
+                                                    <td>@i.predmet.letnik</td>
+                                                    cnt++;
                                                 }
                                                 else
                                                 {
                                                     <td></td>
                                                     <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
                                                 }
-                                                <td>
+                                                <td id="left">
                                                     @i.profesor.ime @i.profesor.priimek
                                                     @if (@i.izvajalec2Id != null)
                                                     {
@@ -541,24 +684,26 @@
                                                         <span>,</span><span><br />@i.profesor2.ime @i.profesor2.priimek</span>
                                                     }
                                                 </td>
-                                                <td>@i.predmet.letnik</td>
                                                 @{ var datum = sh.pridobiDatum(Convert.ToInt32(@p.id)); }
                                                 <td>@datum</td>
                                                 @{ temp = sh.zaporednoPolaganje(Convert.ToInt32(@v.vpisnaStevilka), Convert.ToInt32(@i.id), Convert.ToInt32(@v.studijskiProgram), @r.datum); }
                                                 @if (temp != 0)
                                                 {
-                                                    <td>@temp</td> }
+                                                    <td>@temp</td> 
+                                                }
                                                 else
                                                 {
-                                                    <td></td> }
+                                                    <td></td> 
+                                                }
                                                 @{ temp = sh.zaporednoPolaganjaLetos(Convert.ToInt32(@v.id), Convert.ToInt32(@i.id), Convert.ToInt32(@r.id)); }
                                                 @if (temp != 0)
                                                 {
-                                                    <td>@temp</td> }
+                                                    <td>@temp</td>
+                                                }
                                                 else
                                                 {
-                                                    <td></td> }
-                                                <td>@i.predmet.kreditne</td>
+                                                    <td></td> 
+                                                }
                                                 @{ ocena = sh.pridobiOceno(Convert.ToInt32(@p.id)); }
                                                 <td>@ocena</td>
                                             </tr>
@@ -570,26 +715,19 @@
                                 if (pisal == 0 && v.izvajanjes.Contains(i))
                                 {
                                     <tr>
+                                        <td>@cnt</td>
                                         <td>@i.predmet.koda</td>
-                                        <td>@i.predmet.ime</td>
-                                        <td>
-                                            @i.profesor.ime @i.profesor.priimek
-                                            @if (@i.izvajalec2Id != null)
-                                            {
-                                                <span>,</span><span><br />@i.profesor1.ime @i.profesor1.priimek</span>
-                                            }
-                                            @if (@i.izvajalec3Id != null)
-                                            {
-                                                <span>,</span><span><br />@i.profesor2.ime @i.profesor2.priimek</span>
-                                            }
-                                        </td>
-                                        <td>@i.predmet.letnik</td>
-                                        <td>/</td>
-                                        <td></td>
-                                        <td></td>
+                                        <td id="left">@i.predmet.ime</td>
                                         <td>@i.predmet.kreditne</td>
-                                        <td>/</td>
+                                        <td>@i.predmet.letnik</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
                                     </tr>
+                            
+                                    cnt++;
                                 }
                                 else
                                 {
@@ -635,18 +773,18 @@
                     </tbody>
                 </table>
 
-                                skupneTocke += tocke;
-                                skupneOcene += stOcen;
-                                skupniSestevek += sestevek;
+                skupneTocke += tocke;
+                skupneOcene += stOcen;
+                skupniSestevek += sestevek;
 
-                                <br />
-                                <br />
+                <br />
+                <br />
             }
         </div>
     }
 
     <!-- Povprečne ocene po študijskih letih  -->
-    <h2>Povprečne ocene po študijskih letih</h2>
+    <h2>Povprečne ocene v tem programu</h2>
     <table>
         <thead>
             <tr>

@@ -24,6 +24,7 @@ namespace studis.Controllers
                 if (id != null)
                 {
                     ViewBag.Vpisna = id;
+                    ViewBag.Student = db.students.Where(s => s.vpisnaStevilka == id).First();
                     return View();
                 }
                 else
@@ -40,6 +41,7 @@ namespace studis.Controllers
                     UserHelper uh = new UserHelper();
                     var student = uh.FindByName(User.Identity.Name).students.FirstOrDefault();
 
+                    ViewBag.Student = db.students.Where(s => s.vpisnaStevilka == student.vpisnaStevilka).First();
                     ViewBag.Vpisna = student.vpisnaStevilka;
                     return View();
                 }
@@ -57,11 +59,8 @@ namespace studis.Controllers
         [Authorize(Roles = "Referent, Študent, Profesor")]
         public ActionResult Izpis(int vpisna, string polaganja)
         {
-            var tmp = db.vpis.Where(v => v.vpisnaStevilka == vpisna).Select(v => v.studijskiProgram);
-            var seznam = tmp.Distinct();
-            var items = db.sifrant_studijskiprogram.Where(p => seznam.Contains(p.id));
-            ViewBag.Program = new SelectList(items, "id", "naziv");
             ViewBag.Vpisna = vpisna;
+            ViewBag.Student = db.students.Where(s => s.vpisnaStevilka == vpisna).First();
 
             // samo zadnje polaganje
             if (polaganja == "Zadnje polaganje")
