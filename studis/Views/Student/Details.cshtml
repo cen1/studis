@@ -35,85 +35,134 @@
             <th>Besedilo</th>
             <th>Izdajatelj</th>
         </tr>
-@foreach (var s in ViewBag.sklep)
-{
-        <tr>
-            <td>@s.datum</td>
-            @if(s.veljavnost==null)
-            { 
-                <td>/</td>
-            }
-            else
-            {
-                <td>@s.veljavnost</td>
-            }
-            <td>@s.besedilo</td>
-            <td>@s.izdajatelj</td>
-        </tr>
-}
-    </table>
-</div>
-
-<br />
-
-<h3>Polaganja</h3>
-<table>
-    <thead>
-        <tr>
-            <th>Šifra</th>
-            <th>Predmet</th>
-            <th>Izvajalec</th>
-            <th>Letnik</th>
-            <th>Datum</th>
-            <th>KT</th>
-            <th>Ocena</th>
-            <th>Urejanje ocene</th>
-        </tr>
-    </thead>
-
-    <tbody>
-        @foreach (var r in @ViewBag.Roki)
+        @foreach (var s in ViewBag.sklep)
         {
-            foreach (var p in @ViewBag.Prijave)
-            {
-                if (r.id == p.izpitnirokId)
+            <tr>
+                <td>@s.datum</td>
+                @if (s.veljavnost == null)
                 {
-                    <tr>
-                        <td>@r.izvajanje.predmet.koda</td>
-                        <td>@r.izvajanje.predmet.ime</td>
-                        <td>
-                            @r.izvajanje.profesor.ime @r.izvajanje.profesor.priimek
-                            @if (@r.izvajanje.izvajalec2Id != null)
-                            {
-                                <span>, @r.izvajanje.profesor1.ime @r.izvajanje.profesor1.priimek</span>
-                            }
-                            @if (@r.izvajanje.izvajalec3Id != null)
-                            {
-                                <span>, @r.izvajanje.profesor2.ime @r.izvajanje.profesor2.priimek</span>
-                            }
-                        </td>
-
-                        <td>@r.izvajanje.predmet.letnik</td>
-                        @{ var datum = sh.pridobiDatum(Convert.ToInt32(@p.id)); }
-                        <td>@datum</td>
-                        <td>@r.izvajanje.predmet.kreditne</td>
-                        @{ var ocena = sh.pridobiOceno(Convert.ToInt32(@p.id)); }
-                        <td>@ocena</td>
-                        @if (datum.Contains("2015"))
-                        {
-                        <td>@Html.ActionLink("Uredi", "IndiVpisOcen", "IzpitniRok", new { rokId = @p.izpitnirokId, prijavaID = @p.id }, null)</td>
-                        }
-                        else
-                        {
-                           <td>Ni mogoče</td>
-                        }
-                    </tr>
+                    <td>/</td>
                 }
-            }
-        }                 
-    </tbody>
-</table>
+                else
+                {
+                    <td>@s.veljavnost</td>
+                }
+                <td>@s.besedilo</td>
+                <td>@s.izdajatelj</td>
+            </tr>
+        }
+    </table>
+
+    <br />
+
+    @if (User.IsInRole("Profesor"))
+    {
+        <h3>Polaganja</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Šifra</th>
+                    <th>Predmet</th>
+                    <th>Izvajalec</th>
+                    <th>Letnik</th>
+                    <th>Datum</th>
+                    <th>KT</th>
+                    <th>Točke</th>
+                    <th>Ocena</th>
+                    <th>Uredi/Dodaj oceno</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var i in @ViewBag.Izvajanja)
+                {
+                    var counter = 0;
+                    foreach (var r in @ViewBag.Roki)
+                    {
+                        foreach (var p in @ViewBag.Prijave)
+                        {
+                            if (i.id == r.izvajanjeId && r.id == p.izpitnirokId)
+                            {
+                                counter++;
+                                <tr>
+                                    <td>@i.predmet.koda</td>
+                                    <td>@i.predmet.ime</td>
+                                    <td>
+                                        @i.profesor.ime @i.profesor.priimek
+                                        @if (@i.izvajalec2Id != null)
+                                        {
+                                            <span>, @i.profesor1.ime @i.profesor1.priimek</span>
+                                        }
+                                        @if (@i.izvajalec3Id != null)
+                                        {
+                                            <span>, @i.profesor2.ime @i.profesor2.priimek</span>
+                                        }
+                                    </td>
+                                    <td>@i.predmet.letnik</td>
+                                    @{ var datum = sh.pridobiDatum(Convert.ToInt32(@p.id)); }
+                                    <td>@datum</td>
+                                    <td>@i.predmet.kreditne</td>
+                                    @{ var tocke = sh.pridobiTocke(Convert.ToInt32(@p.id)); }
+                                    <td>@tocke</td>
+                                    @{ var ocena = sh.pridobiOceno(Convert.ToInt32(@p.id)); }
+                                    @if (@ocena > 0)
+                                    {
+                                        <td>@ocena</td>
+                                    }
+                                    else
+                                    {
+                                        <td></td>
+                                    }
+                                    @if (@ocena > 0 && @r.datum.Year == DateTime.Now.Year && @r.datum < DateTime.Now)
+                                    {
+                                        <td>@Html.ActionLink("Uredi", "IndiVpisOcen", "IzpitniRok", new { rokId = @p.izpitnirokId, prijavaID = @p.id }, null)</td>
+                                    }
+                                    else if (@ocena == 0 && @r.datum.Year == DateTime.Now.Year && @r.datum <= DateTime.Now)
+                                    {
+                                        <td>@Html.ActionLink("Dodaj", "IndiVpisOcen", "IzpitniRok", new { rokId = @p.izpitnirokId, prijavaID = @p.id }, null)</td>
+                                    }
+                                    else if (@r.datum.Year != DateTime.Now.Year)
+                                    {
+                                        <td>Ni več možno</td>
+                                    }
+                                    else if (@r.datum > DateTime.Now)
+                                    {
+                                        <td>Še ni možno</td>
+                                    }
+                                </tr>
+                            }
+                        }
+                    }
+                    if (counter == 0)
+                    {
+                        <tr>
+                            <td>@i.predmet.koda</td>
+                            <td>@i.predmet.ime</td>
+                            <td>
+                                @i.profesor.ime @i.profesor.priimek
+                                @if (@i.izvajalec2Id != null)
+                                {
+                                    <span>, @i.profesor1.ime @i.profesor1.priimek</span>
+                                }
+                                @if (@i.izvajalec3Id != null)
+                                {
+                                    <span>, @i.profesor2.ime @i.profesor2.priimek</span>
+                                }
+                            </td>
+                            <td>@i.predmet.letnik</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>@Html.ActionLink("Dodaj", "IndiVpisOcen", "IzpitniRok")</td> <!-- DODAJ POVEZAVO NA VNOS ROKA, PRIJAVE IN OCENE! -->
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    }       
+</div>
 <p>
     @Html.ActionLink("Nazaj", "Students")<br />
-    @Html.ActionLink("Kartotečni list", "Izpis", "KartotecniList", new { id = Model.vpisnaStevilka }, null)
+    @Html.ActionLink("Kartotečni list", "Izpis", "KartotecniList", new { id = Model.vpisnaStevilka }, null)<br />
 </p>

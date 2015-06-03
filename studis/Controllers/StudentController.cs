@@ -126,11 +126,34 @@ namespace studis.Controllers
             {
                 
                 UserHelper uh = new UserHelper();
-                var profesor = uh.FindByName(User.Identity.Name);
-                var izvajanja = db.profesors.Where(p => p.userId == profesor.id).First().izvajanjes.ToList();
+                var profesor = uh.FindByName(User.Identity.Name).profesors.FirstOrDefault();
+                var vpisi = db.vpis.Where(v => v.vpisnaStevilka == vpisnaSt).ToList();
+
+                List<izvajanje> izvsp = new List<izvajanje>();
+                foreach (var v in vpisi)
+                {
+                    foreach (var i in v.izvajanjes)
+                    {
+                        if (i.profesor.id == profesor.id)
+                        {
+                            izvsp.Add(i);
+                        }
+                        else if (i.profesor1 != null &&  i.profesor1.id == profesor.id)
+                        {
+                            izvsp.Add(i);
+                        }
+                        else if (i.profesor2 != null && i.profesor2.id == profesor.id)
+                        {
+                            izvsp.Add(i);
+                        }
+                    }
+                }
+                ViewBag.Izvajanja = izvsp;
+
+                //var izvajanja = db.profesors.Where(p => p.userId == profesor.id).First().izvajanjes.ToList();
 
                 List<izpitnirok> roki = new List<izpitnirok>();
-                foreach (var i in izvajanja)
+                foreach (var i in izvsp)
                 {
                     foreach (var r in i.izpitniroks.ToList())
                     {
@@ -139,12 +162,10 @@ namespace studis.Controllers
                 }
                 ViewBag.Roki = roki;
 
-                var vpis = db.vpis.Where(v => v.vpisnaStevilka == vpisnaSt).ToList();
-
                 List<prijavanaizpit> prijave = new List<prijavanaizpit>();
-                foreach (var v in vpis)
+                foreach (var v in vpisi)
                 {
-                    foreach (var p in v.prijavanaizpits.Where(p => p.stanje == 2 || p.stanje == 3).ToList())
+                    foreach (var p in v.prijavanaizpits.Where(p => p.stanje == 2).ToList())
                     {
                         prijave.Add(p);
                     }
