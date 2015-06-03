@@ -24,6 +24,7 @@ namespace studis.Models
         public long izvajanjeId { get; set; }
         public Nullable<System.DateTime> ura { get; set; }
         public Nullable<int> prostorId { get; set; }
+        public bool fiktiven { get; set; }
     
         public virtual sifrant_prostor sifrant_prostor { get; set; }
         public virtual ICollection<prijavanaizpit> prijavanaizpits { get; set; }

@@ -12,11 +12,6 @@ namespace studis.Models
     using System;
     using System.Collections.Generic;
     
-    //uporabniska imena za profesorje
-    //ID manj kot 10: zacetnice imena in priimka lowercase plus ID ponovljen 4x, npr: ma1111 (Milan AMbrozic)
-    //ID manj kot 103: zactenice plus prvi dve stevki v ID, npr Mira Trebar 98 je mt9898
-    //ID nad 103: zacetnice plus 3 stevke IDja plus prva stevka: Martin VUk 104 je mv1041
-
     public partial class profesor
     {
         public profesor()
