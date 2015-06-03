@@ -249,7 +249,7 @@ namespace studis.Controllers
 
         // POST: IzpitniRok/Seznam/5
         [HttpPost]
-        public ActionResult Seznam(int id)
+        public ActionResult Seznam(int id = -1)
         {
             try
             {
@@ -265,6 +265,9 @@ namespace studis.Controllers
 
         public ActionResult SeznamPrijavljenihKandidatov(izpitnirok rok)
         {
+            if(rok == null)
+                return RedirectToAction("Seznam");
+
             //podatki o izpitnem roku
             sifrant_prostor predavalnica = db.sifrant_prostor.Where(s => s.id == rok.prostorId).SingleOrDefault();
             izvajanje izv = db.izvajanjes.Where(s => s.id == rok.izvajanjeId).SingleOrDefault();
@@ -322,9 +325,9 @@ namespace studis.Controllers
             else
                 listVnosov = null;
 
-            //dodaj linke za vpis točk in ocen?
+            //dodaj linke za vpis točk in ocen? ..prikaži za trenutno šolsko leto in če rok ni v prihodnosti
             StudentHelper uh = new StudentHelper();
-            if (rok.datum.Year == uh.trenutnoSolskoLeto()+1)
+            if (rok.datum.Year == uh.trenutnoSolskoLeto()+1 && rok.datum < DateTime.Now)
                 ViewBag.ocenetocke = true;
             else
                 ViewBag.ocenetocke = false;
@@ -333,9 +336,10 @@ namespace studis.Controllers
         }
 
 
-        public ActionResult VpisTock(int rokID)
+        public ActionResult VpisTock(int rokID = -1)
         {
-            ViewBag.idRoka = rokID; //parameter za klic view z izpisom
+            if (rokID == -1)
+                return RedirectToAction("Seznam");
 
             //podatki o izpitnem roku
             izpitnirok rok = db.izpitniroks.Where(r => r.id == rokID).SingleOrDefault();
@@ -558,8 +562,12 @@ namespace studis.Controllers
         }
 
 
-        public ActionResult VpisOcen(int rokID)
+        public ActionResult VpisOcen(int rokID = -1)
         {
+            if (rokID == -1)
+                return RedirectToAction("Seznam");
+
+
             //podatki o izpitnem roku
             izpitnirok rok = db.izpitniroks.Where(r => r.id == rokID).SingleOrDefault();
 
@@ -1038,8 +1046,12 @@ namespace studis.Controllers
         }
 
 
-        public ActionResult IzpisTock(int rokID, int seznam)
+        public ActionResult IzpisTock(int rokID = -1, int seznam = -1)
         {
+            if (rokID == -1 || seznam == -1)
+                return RedirectToAction("Seznam");
+
+
             //podatki o izpitnem roku
             izpitnirok rok = db.izpitniroks.Where(r => r.id == rokID).SingleOrDefault();
 
@@ -1128,8 +1140,12 @@ namespace studis.Controllers
         }
 
 
-        public ActionResult IzpisOcen(int rokID, int seznam)
+        public ActionResult IzpisOcen(int rokID = -1, int seznam = -1)
         {
+            if (rokID == -1 || seznam == -1)
+                return RedirectToAction("Seznam");
+
+
             //podatki o izpitnem roku
             izpitnirok rok = db.izpitniroks.Where(r => r.id == rokID).SingleOrDefault();
 

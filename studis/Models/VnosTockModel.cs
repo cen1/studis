@@ -31,7 +31,7 @@ namespace studis.Models
         public string zeVpisaneTocke { get; set; }
         public string zeVpisanaOcena { get; set; }
 
-        [RegularExpression(@"^(vp)|(VP)|0*(?:0|[1-9][0-9]?|1[0-9][0-9]?|200)$", ErrorMessage = "Vnos mora biti število med 0 in 200 ali VP!")]
+        [RegularExpression(@"^(vp)|(VP)|(Vp)|(vP)|0*(?:0|[1-9][0-9]?|100)$", ErrorMessage = "Vnos mora biti število med 0 in 100 ali VP!")]
         public string tocke { get; set; }
 
         [RegularExpression(@"^(vp)|(VP)|([0-9]|10)$", ErrorMessage = "Vnos mora biti število med 0 in 10 ali VP!")]
