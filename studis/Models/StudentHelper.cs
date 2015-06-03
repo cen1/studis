@@ -119,13 +119,27 @@ namespace studis.Models
             }       
         }
 
+        public int pridobiTocke(int prijavaId)
+        {
+            var tocke = db.tockes.Where(o => o.prijavaId == prijavaId).FirstOrDefault();
+
+            if (tocke != null)
+            {
+                return tocke.tocke1;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
         public string pridobiDatum(int prijavaId)
         {
             var datum = db.ocenas.Where(o => o.prijavaId == prijavaId).FirstOrDefault();
 
             if (datum != null)
             {
-                return datum.datum.ToString("dd/MM/yyyy");
+                return datum.datum.ToString("dd.MM.yyyy");
             }
             else
             {
