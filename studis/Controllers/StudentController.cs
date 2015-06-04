@@ -113,7 +113,7 @@ namespace studis.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            
+
             student student = db.students.Find(vpisnaSt);
             if (student == null)
             {
@@ -124,7 +124,7 @@ namespace studis.Controllers
 
             if (User.IsInRole("Profesor"))
             {
-                
+
                 UserHelper uh = new UserHelper();
                 var profesor = uh.FindByName(User.Identity.Name).profesors.FirstOrDefault();
                 var vpisi = db.vpis.Where(v => v.vpisnaStevilka == vpisnaSt).ToList();
@@ -138,7 +138,7 @@ namespace studis.Controllers
                         {
                             izvsp.Add(i);
                         }
-                        else if (i.profesor1 != null &&  i.profesor1.id == profesor.id)
+                        else if (i.profesor1 != null && i.profesor1.id == profesor.id)
                         {
                             izvsp.Add(i);
                         }
@@ -171,59 +171,9 @@ namespace studis.Controllers
                     }
                 }
                 ViewBag.Prijave = prijave;
-
-                //form za vpis ocene
-                List<SelectListItem> predmeti = new List<SelectListItem>();
-                int profid = Convert.ToInt32(profesor.id);
-                var izvajanja = db.izvajanjes.Where(a => a.izvajalec1Id == profid || a.izvajalec2Id == profid || a.izvajalec3Id == profid);
-                if (izvajanja != null)
-                {
-                    foreach (izvajanje i in izvajanja.ToList())
-                    {
-                        SelectListItem p = new SelectListItem();
-                        p.Value = i.predmetId.ToString();
-                        p.Text = Convert.ToInt32(p.Value).ToString("000") + " - " + i.predmet.ime + " (" + i.predmet.koda + ")";
-                        predmeti.Add(p);
-                    }
-                }
-                List<SelectListItem> ltemp = new List<SelectListItem>();
-                ltemp.Add(new SelectListItem() { Value = "", Text = "Iščem.." });
-                ViewBag.Prazen = new SelectList(ltemp, "Value", "Text");
-                ViewBag.Predmets = new SelectList(predmeti, "Value", "Text");
-
-                ViewBag.id = student.vpisnaStevilka;
-
-                StudentHelper sh = new StudentHelper();
-                vpi trenutni = sh.trenutniVpis(student.vpisnaStevilka);
-                if (trenutni == null) ViewBag.imavpis = false;
-                else {
-                    //poglej ce ima trenutni vpis tole izvajanje
-                    if (trenutni.izvajanjes.Where(a => a.izvajalec1Id == profid || a.izvajalec2Id == profid || a.izvajalec3Id == profid).Count() > 0)
-                    {
-                        ViewBag.imavpis = true;
-                        ViewBag.trenutnivpis = trenutni;
-                    }
-                    else
-                    {
-                        //poglej ce je trenutni vpis ponavljanje al pa nadaljevanje, 2,3
-                        if (trenutni.vrstaVpisa == 2 || trenutni.vrstaVpisa == 3)
-                        {
-                            //poglej ce je imel v prejšnjem vpisu ta predmet
-                            int letnik = trenutni.letnikStudija;
-                            vpi prejsnji = db.vpis.Where(a => a.vrstaVpisa == 1).Where(b => b.letnikStudija == letnik).FirstOrDefault();
-                            if (prejsnji == null) System.Diagnostics.Debug.WriteLine("Napaka prj logiki vpisov!!! Poprvi");
-                            
-                            if (prejsnji.izvajanjes.Where(a => a.izvajalec1Id == profid || a.izvajalec2Id == profid || a.izvajalec3Id == profid).Count() > 0)
-                            {
-                                ViewBag.imavpis = true;
-                                ViewBag.trenutnivpis = prejsnji;
-                            }
-                        }
-                    }
-                }
             }
-            
-            return View();
+
+            return View(student);
         }
 
         // GET: /Student/Create

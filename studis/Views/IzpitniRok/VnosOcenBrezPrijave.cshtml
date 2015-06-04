@@ -1,0 +1,170 @@
+﻿@model studis.Models.KoncnaOcenaModel
+
+@{
+    ViewBag.Title = "Vpis ocene brez prijave";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+
+<h2>Vpis ocene brez prijave</h2>
+
+@if (ViewBag.imavpis) 
+{
+    using (Html.BeginForm())
+    {
+    <div>
+        <fieldset>
+            <p>Ocena se vpiše za vpis:</p>
+            <table>
+                <tr>
+                    <th>Letnik</th>
+                    <th>Študijsko leto</th>
+                    <th>Program</th>
+                    <th>Vrsta vpisa</th>
+                </tr>
+                <tr>
+                    <td>@ViewBag.trenutnivpis.letnikStudija</td>
+                    <td>@ViewBag.trenutnivpis.studijskoLeto</td>
+                    <td>@ViewBag.trenutnivpis.sifrant_studijskiprogram.naziv</td>
+                    <td>@ViewBag.trenutnivpis.sifrant_vrstavpisa.naziv</td>
+                </tr>
+            </table>
+            <br />
+            <br />
+            <!--Izbira Predmeta-->
+            <div class="editor-label">
+                @Html.LabelFor(m => m.predmet)
+            </div>
+            <div class="editor-field">
+                @Html.DropDownListFor(m => m.predmet, (SelectList)ViewBag.Predmets)
+                @Html.ValidationMessageFor(m => m.predmet)
+            </div>
+
+            <!--Izbira izvajanja -->
+            <div class="editor-label">
+                @Html.LabelFor(m => m.izvajanje)
+            </div>
+            <div class="editor-field">
+                @Html.DropDownListFor(m => m.izvajanje, (SelectList)ViewBag.Prazen)
+                @Html.ValidationMessageFor(m => m.izvajanje)
+            </div>
+
+            <!--Izbira IzpitnegaRoka-->
+            <div class="editor-label">
+                @Html.LabelFor(m => m.izpitnirok)
+            </div>
+            <div class="editor-field">
+                @Html.DropDownListFor(m => m.izpitnirok, (SelectList)ViewBag.Prazen)
+                @Html.ValidationMessageFor(m => m.izpitnirok)
+            </div>
+
+            <!--ocena-->
+            <div class="editor-label">
+                @Html.LabelFor(m => m.ocena)
+            </div>
+            <div class="editor-field">
+                @Html.TextBoxFor(m => m.izpitnirok)
+                @Html.ValidationMessageFor(m => m.ocena)
+            </div>
+
+            <p id="warning" style="color:orange;">
+
+            </p>
+
+            <p>
+                <input id="submit" type="submit" value="Vpiši">
+            </p>
+        </fieldset>
+    </div>
+    }
+    
+    <script language="javascript" type="text/javascript">
+        $(document).ready(function () {
+
+            //napolni izvajanja prvič(ko se stran naloži)
+            var url = "/IzpitniRok/GetIzvajanjaOnlyForPredmet/" + $("#predmet").val();
+            $.get(url, function (response) {
+                var izvajanja = $.parseJSON(response);
+                var ddlIzvajanja = $("#izvajanje");
+
+                //pocisti
+                if ($("#izvajanje option:first-child").text() == "Iščem..") {
+                    $("#izvajanje option:first-child").remove();
+                }
+                $("#izvajanje > option").remove();
+
+                for (i = 0; i < izvajanja.length; i++) {
+                    ddlIzvajanja.append('<option value="' + izvajanja[i].Value + '">' + izvajanja[i].Text + '</option>');
+                }
+                napolniRoke();
+            });
+
+            //ob spremembi izbranega predmeta
+            $("#predmet").change(function () {
+                var url = "/IzpitniRok/GetIzvajanjaOnlyForPredmet/" + $(this).val();
+                $.get(url, function (response) {
+                    var izvajanja = $.parseJSON(response);
+                    var ddlIzvajanja = $("#izvajanje");
+
+                    //pocisti
+                    $("#izvajanje > option").remove();
+
+                    for (i = 0; i < izvajanja.length; i++) {
+                        ddlIzvajanja.append('<option value="' + izvajanja[i].Value + '">' + izvajanja[i].Text + '</option>');
+                    }
+                    napolniRoke();
+                });
+            });
+
+            //napolni roke
+            function napolniRoke() {
+                var url = "/IzpitniRok/GetIzpitniRoksOnlyForIzvajanja/" + $("#izvajanje").val();
+                $.get(url, function (response) {
+                    var izpitniRoks = $.parseJSON(response);
+                    var ddlIzpitniRoks = $("#izpitnirok");
+
+                    //pocisti
+                    if ($("#izpitnirok option:first-child").text() == "Iščem..") {
+                        $("#izpitnirok option:first-child").remove();
+                    }
+                    $("#izpitnirok > option").remove();
+
+                    for (i = 0; i < izpitniRoks.length; i++) {
+                        ddlIzpitniRoks.append('<option value="' + izpitniRoks[i].Value + '">' + izpitniRoks[i].Text + '</option>');
+                    }
+                    preveriStPrijav()
+                });
+            };
+
+            //ob spremembi izbranega izvajanja
+            $("#izvajanje").change(function () {
+                napolniRoke();
+                preveriStPrijav()
+            });
+
+            //submit
+            $("#izpitnirok").change(function () {
+                preveriStPrijav()
+            });
+
+            function preveriStPrijav() {
+                if ($("#izpitnirok").val() != "") {
+                    var url = "/IzpitniRok/PreveriPrijave/" + $("#izpitnirok").val();
+                    console.log("URL: " + url);
+                    $.get(url, function (response) {
+                        var st = response;
+                        $("#warning").text("Stevilo prijav: " + st);
+                    });
+                } else {
+                    $("#warning").text("");
+                }
+            }
+        });
+    </script>
+}
+else
+{
+    <p>Študent letos ni vpisan.</p>
+}

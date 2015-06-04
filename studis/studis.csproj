@@ -563,6 +563,7 @@
     <Content Include="Views\IzpitniRok\IndiVpisOcen.cshtml" />
     <Content Include="Views\IzpitniRokPrijava\Uspesno.cshtml" />
     <Content Include="Views\IzpitniRokPrijava\Neuspesno.cshtml" />
+    <Content Include="Views\IzpitniRok\VnosOcenBrezPrijave.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
