@@ -760,7 +760,7 @@ namespace studis.Controllers
             if (s == null) return HttpNotFound();
 
             // dodaj samo tiste, ki imajo vpisni list za 2 ali 3 letnik
-            var vpisi = s.vpis.Where(a => a.letnikStudija == 2 || a.letnikStudija == 3);
+            var vpisi = s.vpis.Where(a => (a.letnikStudija == 2 || a.letnikStudija == 3) && a.vrstaVpisa != 2);
             List<vpi> vplist = new List<vpi>();
             foreach (var v in vpisi)
             {
