@@ -113,7 +113,7 @@
                                     }
                                     else if (@ocena == 0 && @r.datum.Year == DateTime.Now.Year && @r.datum <= DateTime.Now)
                                     {
-                                        <td>@Html.ActionLink("Dodaj", "IndiVpisOcen", "IzpitniRok", new { rokId = @p.izpitnirokId, prijavaID = @p.id }, null)</td>
+                                        <td>@Html.ActionLink("Uredi", "IndiVpisOcen", "IzpitniRok", new { rokId = @p.izpitnirokId, prijavaID = @p.id }, null)</td>
                                     }
                                     else if (@r.datum.Year != DateTime.Now.Year)
                                     {
@@ -148,7 +148,8 @@
                             <td></td>
                             <td></td>
                             <td></td>
-                            <td>@Html.ActionLink("Dodaj", "VnosOcenBrezPrijave", "IzpitniRok", new { vpisnaSt = Model.vpisnaStevilka }, null)</td>
+                            @{ var v = sh.pridobiVpisIzIzvajanja(Convert.ToInt32(@i.id), Convert.ToInt32(@Model.vpisnaStevilka)); }
+                            <td>@Html.ActionLink("Dodaj", "VnosOcenBrezPrijave", "IzpitniRok", new { izvajanjeId = @i.id, vpisId = @v }, null)</td>
                         </tr>
                     }
                 }

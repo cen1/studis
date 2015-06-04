@@ -806,7 +806,6 @@ namespace studis.Controllers
             return View(list);
         }
 
-
         public ActionResult IndiVpisOcen(int rokID, int prijavaID)
         {
             //podatki o izpitnem roku
@@ -1046,6 +1045,7 @@ namespace studis.Controllers
             return View(list);
         }
 
+        [Authorize(Roles = "Referent, Profesor")]
         public ActionResult VnosOcenBrezPrijave(int? vpisnaSt)
         {
             if (User.IsInRole("Profesor"))
@@ -1116,6 +1116,54 @@ namespace studis.Controllers
             {
                 // neki
             }
+
+            return View();
+        }
+
+
+        public ActionResult Izvajanja(int vpisna)
+        {
+            var vpisi = db.vpis.Where(v => v.vpisnaStevilka == vpisna).ToList();
+
+            List<izvajanje> izvajanja = new List<izvajanje>();
+
+            if (User.IsInRole("Referent"))
+            {
+                foreach (var v in vpisi)
+                {
+                    foreach (var i in v.izvajanjes)
+                    {
+                        izvajanja.Add(i);
+                    }
+                }
+            }
+            else if (User.IsInRole("Profesor"))
+            {
+                UserHelper uh = new UserHelper();
+                var profesor = uh.FindByName(User.Identity.Name).profesors.FirstOrDefault();
+
+                foreach(var v in vpisi)
+                {
+                    foreach (var i in v.izvajanjes)
+                    {
+                        if (i.profesor.id == profesor.id)
+                        {
+                            izvajanja.Add(i);
+                        }
+                        else if (i.profesor1 != null && i.profesor1.id == profesor.id)
+                        {
+                            izvajanja.Add(i);
+                        }
+                        else if (i.profesor2 != null && i.profesor2.id == profesor.id)
+                        {
+                            izvajanja.Add(i);
+                        }
+                    }
+                }
+
+            }
+            ViewBag.Izvajanja = izvajanja;
+            ViewBag.Vpis = vpisi.First();
 
             return View();
         }

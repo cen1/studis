@@ -165,5 +165,12 @@ namespace studis.Models
 
             return 0;
         }
+
+        public int pridobiVpisIzIzvajanja(int izvajanjeId, int vpisnaStevilka)
+        {
+            var izvajanje = db.izvajanjes.Where(i => i.id == izvajanjeId);
+            var vpis = izvajanje.FirstOrDefault().vpis.Where(v => v.vpisnaStevilka == vpisnaStevilka).FirstOrDefault();
+            return vpis.id;
+        }
     }
 }

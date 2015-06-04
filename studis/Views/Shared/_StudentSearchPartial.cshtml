@@ -35,13 +35,13 @@
             {
                 <th>Kartotečni list</th>
             }
+            @if (User.IsInRole("Referent") || User.IsInRole("Profesor"))
+            {
+                <th>Dodaj oceno</th>
+            }
             @if (User.IsInRole("Referent"))
             {
                 <th>Izpiti</th>
-            }
-            @if (User.IsInRole("Referent") || User.IsInRole("Profesor"))
-            { 
-                <th>Uredi oceno</th>
             }
         </tr>
 @if (Model != null)
@@ -76,11 +76,15 @@
             }
             @if (User.IsInRole("Referent"))
             {
-                <td>@Html.ActionLink("Prijavi", "PrijaviStudenta", "IzpitniRokPrijava", new { vpisna = item.vpisnaStevilka }, null) / @Html.ActionLink("Odjavi", "OdjaviStudenta", "IzpitniRokPrijava", new { vpisna = item.vpisnaStevilka }, null)</td>
+                <td>@Html.ActionLink("Dodaj", "Izvajanja", "IzpitniRok", new { vpisna = item.vpisnaStevilka }, null)</td>
             }
-            @if (User.IsInRole("Referent") || User.IsInRole("Profesor"))
+            else if (User.IsInRole("Profesor"))
             {
-                <td>@Html.ActionLink("Dodaj", "VnosOcenBrezPrijave", "IzpitniRok", new { vpisnaSt = item.vpisnaStevilka }, null)</td>
+                <td>@Html.ActionLink("Dodaj", "Izvajanja", "IzpitniRok", new { vpisna = item.vpisnaStevilka }, null)</td>
+            }
+            @if (User.IsInRole("Referent"))
+            {
+                <td>@Html.ActionLink("Prijavi", "PrijaviStudenta", "IzpitniRokPrijava", new { vpisna = item.vpisnaStevilka }, null) / @Html.ActionLink("Odjavi", "OdjaviStudenta", "IzpitniRokPrijava", new { vpisna = item.vpisnaStevilka }, null)</td>
             }
     </tr>
     }
