@@ -120,7 +120,7 @@
 
             //napolni roke
             function napolniRoke() {
-                var url = "/IzpitniRok/GetIzpitniRoksOnlyForIzvajanja/" + $("#izvajanje").val();
+                var url = "/IzpitniRok/GetIzpitniRoksOnlyForIzvajanjaPlusFiktivni/" + $("#izvajanje").val();
                 $.get(url, function (response) {
                     var izpitniRoks = $.parseJSON(response);
                     var ddlIzpitniRoks = $("#izpitnirok");
