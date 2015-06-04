@@ -1538,5 +1538,38 @@ namespace studis.Controllers
 
             return new JavaScriptSerializer().Serialize(seznamIzpitniRoki);
         }
+
+        public string GetIzpitniRoksOnlyForIzvajanjaPlusFiktivni(int id)
+        {
+
+            //Debug.WriteLine("ID " + id);
+            int iid = Convert.ToInt32(id);
+            //Debug.WriteLine("ID " + iid);
+            var izvajanje = db.izvajanjes.SingleOrDefault(i => i.id == iid);//db.predmets.SingleOrDefault(p => p.id == iid);
+            var izpitniRoki = izvajanje.izpitniroks;//pPredmet.izpitniroks.ToList(); //Exception 
+            var seznamIzpitniRoki = new List<SelectListItem>();
+            int c = 0;
+            foreach (izpitnirok i in izpitniRoki)
+            {
+                c++;
+                string prostor = "";
+                if (i.sifrant_prostor != null)
+                {
+                    prostor = i.sifrant_prostor.naziv;
+                }
+                string ura = "";
+                if (i.ura != null)
+                {
+                    ura = UserHelper.TimeToString((DateTime)i.ura);
+                }
+                seznamIzpitniRoki.Add(new SelectListItem() { Value = i.id.ToString(), Text = UserHelper.DateToString(i.datum) + " " + ura + " " + prostor });
+            }
+            if (c < 1)
+            {
+                seznamIzpitniRoki.Add(new SelectListItem() { Value = "", Text = "Ta predmet nima razpisanih rokov." });
+            }
+
+            return new JavaScriptSerializer().Serialize(seznamIzpitniRoki);
+        }
     }
 }
