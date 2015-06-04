@@ -17,6 +17,7 @@ namespace studis.Controllers
             var usr = uh.FindByName(User.Identity.Name);
 
             //uh.kreirajProfesorje();
+            //uh.kreirajFiktivneRoke();
 
             if (usr != null)
             {
