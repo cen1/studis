@@ -1112,6 +1112,10 @@ namespace studis.Controllers
                     }
                 }
             }
+            else if (User.IsInRole("Referent"))
+            {
+                // neki
+            }
 
             return View();
         }
