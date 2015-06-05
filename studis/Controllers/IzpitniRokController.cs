@@ -1086,82 +1086,97 @@ namespace studis.Controllers
         [HttpPost]
         public ActionResult VnosOcenBrezPrijave(int? izvajanjeId, int? vpisId, KoncnaOcenaModel model)
         {
+            //že preverjeno z ajaxom če je vse OK glede števila polaganj itd
+            UserHelper uh = new UserHelper();
+            StudentHelper sh = new StudentHelper();
+            vpi v = db.vpis.Find(vpisId);
             if (ModelState.IsValid)
             {
-                //že preverjeno z ajaxom če je vse OK glede števila polaganj itd
-                UserHelper uh = new UserHelper();
-
                 //ce ze obstaja prijava za ta rok jo ne kreiramo
                 var prijava = db.prijavanaizpits.Where(a => a.vpisId == vpisId).Where(b => b.izpitnirokId == model.izpitnirok).FirstOrDefault();
 
-                if (prijava == null)
-                {
-                    //ustvari prijavo
-                    prijavanaizpit pni = new prijavanaizpit();
-                    pni.datumPrijave = DateTime.Now;
-                    pni.izpitnirokId = model.izpitnirok;
-                    pni.prijavilId = uh.FindByName(User.Identity.Name).id;
-                    pni.stanje = 2;
-                    pni.vpisId = (int)vpisId;
-                    db.prijavanaizpits.Add(pni);
-                    db.SaveChanges();
+                //pogledamo ce ze obstaja pozitivna ocena za kak prejšnji rok
+                //dovolimo spremembo ce spreminjamo ravno rok s pozitivno oceno
+                System.Diagnostics.Debug.WriteLine("Rok id je " + model.izpitnirok.ToString());
 
-                    //ustvari oceno
-                    ocena o = new ocena();
-                    o.datum = DateTime.Now;
-                    o.ocena1 = model.ocena;
-                    o.prijavaId = pni.id;
-                    db.ocenas.Add(o);
-                    db.SaveChanges();
+                if (sh.pozitivnaOcena(v.vpisnaStevilka, (int)izvajanjeId) && (model.izpitnirok != sh.pozitivnaOcenaRokId(v.vpisnaStevilka, (int)izvajanjeId)))
+                {
+                    ModelState.AddModelError("", "Študent že ima pozitivno oceno pri tem izvajanju!");
                 }
                 else
                 {
-                    prijava.stanje = 2;
-
-                    //ce ze obstaja ocena za to prijavo jo ne kreiramo
-                    var ocena = db.ocenas.Where(a => a.prijavaId == prijava.id).FirstOrDefault();
-
-                    if (ocena == null)
+                    if (prijava == null)
                     {
+                        //ustvari prijavo
+                        prijavanaizpit pni = new prijavanaizpit();
+                        pni.datumPrijave = DateTime.Now;
+                        pni.izpitnirokId = model.izpitnirok;
+                        pni.prijavilId = uh.FindByName(User.Identity.Name).id;
+                        pni.stanje = 2;
+                        pni.vpisId = (int)vpisId;
+                        db.prijavanaizpits.Add(pni);
+                        db.SaveChanges();
+
                         //ustvari oceno
                         ocena o = new ocena();
                         o.datum = DateTime.Now;
                         o.ocena1 = model.ocena;
-                        o.prijavaId = prijava.id;
+                        o.prijavaId = pni.id;
                         db.ocenas.Add(o);
+                        db.SaveChanges();
                     }
                     else
                     {
-                        ocena.datum = DateTime.Now;
-                        ocena.ocena1 = model.ocena;
+                        prijava.stanje = 2;
+
+                        //ce ze obstaja ocena za to prijavo jo ne kreiramo
+                        var ocena = db.ocenas.Where(a => a.prijavaId == prijava.id).FirstOrDefault();
+
+                        if (ocena == null)
+                        {
+                            //ustvari oceno
+                            ocena o = new ocena();
+                            o.datum = DateTime.Now;
+                            o.ocena1 = model.ocena;
+                            o.prijavaId = prijava.id;
+                            db.ocenas.Add(o);
+                        }
+                        else
+                        {
+                            ocena.datum = DateTime.Now;
+                            ocena.ocena1 = model.ocena;
+                        }
+                        db.SaveChanges();
                     }
-                    db.SaveChanges();
-                }  
 
-                vpi v = db.vpis.Find(vpisId);
-
-                return RedirectToAction("Izvajanja", new {vpisna = v.vpisnaStevilka});
-            }
-            else
-            {
-                StudentHelper sh = new StudentHelper();
-                int leto = sh.trenutnoSolskoLeto();
-                var roki = db.izpitniroks.Where(a => a.izvajanjeId == izvajanjeId)
-                                         .Where(b => b.datum <= DateTime.Now || b.fiktiven == true)
-                                         .Where(c => (c.datum.Year == leto && c.datum.Month > 9) || (c.datum.Year == leto + 1 && c.datum.Month <= 9));
-                List<SelectListItem> seznam = new List<SelectListItem>();
-                foreach (var i in roki)
-                {
-                    string text = "";
-                    if (i.fiktiven) text = "Brez prijave";
-                    else text = i.datum.ToString() + " (razpisan)";
-
-                    seznam.Add(new SelectListItem() { Value = i.id.ToString(), Text = (text) });
+                    return RedirectToAction("Izvajanja", new { vpisna = v.vpisnaStevilka });
                 }
-                ViewBag.roki = new SelectList(seznam, "Value", "text");
-
-                return View(model);
             }
+
+            int leto = sh.trenutnoSolskoLeto();
+            var roki = db.izpitniroks.Where(a => a.izvajanjeId == izvajanjeId)
+                                     .Where(b => b.datum <= DateTime.Now || b.fiktiven == true)
+                                     .Where(c => (c.datum.Year == leto && c.datum.Month > 9) || (c.datum.Year == leto + 1 && c.datum.Month <= 9));
+            List<SelectListItem> seznam = new List<SelectListItem>();
+            foreach (var i in roki)
+            {
+                string text = "";
+                int ocena = sh.ocenaRoka(v.id, i.id);
+                string ocena_s = "";
+                if (ocena == -1) ocena_s = "/";
+                else ocena_s = ocena.ToString();
+
+                if (i.fiktiven) text = "Brez prijave (ocena: " + ocena_s + ")";
+                else text = i.datum.ToString() + " (razpisan, ocena: " + ocena_s + ")";
+
+                seznam.Add(new SelectListItem() { Value = i.id.ToString(), Text = (text) });
+            }
+
+
+            ViewBag.roki = new SelectList(seznam, "Value", "text");
+            ViewBag.vpisnast = v.vpisnaStevilka;
+
+            return View(model);
 
         }
 

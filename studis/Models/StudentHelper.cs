@@ -76,22 +76,105 @@ namespace studis.Models
 
             foreach (var v in s.vpis)
             {
-                prijavanaizpit pni = db.prijavanaizpits.Where(a => a.vpisId == v.id).Where(b => b.izpitnirok.izvajanjeId == izvajanjeId).ToList().LastOrDefault();
-                if (pni != null)
+                try
                 {
-                    if (pni.izpitnirok.datum >= dmax)
+                    var pnis = db.prijavanaizpits.Where(a => a.vpisId == v.id)
+                                                           .Where(b => b.izpitnirok.izvajanjeId == izvajanjeId)
+                                                           .Where(c => c.stanje == 2)
+                                                           .ToList();
+                    foreach (var pni in pnis)
                     {
-                        dmax = pni.izpitnirok.datum;
-
-                        var oc = pni.ocenas.LastOrDefault();
-                        if (oc != null)
+                        if (pni != null)
                         {
-                            o = oc.ocena1;
+                            if (pni.izpitnirok.datum >= dmax)
+                            {
+                                dmax = pni.izpitnirok.datum;
+
+                                var oc = pni.ocenas.LastOrDefault();
+                                if (oc != null)
+                                {
+                                    o = oc.ocena1;
+                                }
+                            }
                         }
                     }
                 }
+                catch (Exception e) { }
             }
             return o;
+        }
+
+        //vrne true ce obstaja pozitivna coena
+        public bool pozitivnaOcena(int vpisna, int izvajanjeId)
+        {
+            student s = db.students.Find(vpisna);
+
+            foreach (var v in s.vpis)
+            {
+                System.Diagnostics.Debug.WriteLine("Pozitivna: pregledujem vpis "+v.id.ToString());
+                try
+                {
+                    var pnis = db.prijavanaizpits.Where(a => a.vpisId == v.id)
+                                                           .Where(b => b.izpitnirok.izvajanjeId == izvajanjeId)
+                                                           .Where(c => c.stanje == 2)
+                                                           .ToList();
+                    foreach (var pni in pnis)
+                    {
+                        if (pni != null)
+                        {
+                            System.Diagnostics.Debug.WriteLine("Prijava not null " + pni.id.ToString());
+                            var oc = pni.ocenas.ToList().LastOrDefault();
+                            if (oc != null)
+                            {
+                                System.Diagnostics.Debug.WriteLine("Ocena not null " + oc.id.ToString());
+                                if (oc.ocena1 > 5)
+                                {
+                                    System.Diagnostics.Debug.WriteLine("Obstaja pozitivna ocena");
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (Exception e) { }
+            }
+            return false;
+        }
+
+        //vrne true ce obstaja pozitivna coena
+        public int pozitivnaOcenaRokId(int vpisna, int izvajanjeId)
+        {
+            student s = db.students.Find(vpisna);
+
+            foreach (var v in s.vpis)
+            {
+                try
+                {
+                    var pnis = db.prijavanaizpits.Where(a => a.vpisId == v.id)
+                                                           .Where(b => b.izpitnirok.izvajanjeId == izvajanjeId)
+                                                           .Where(c => c.stanje == 2)
+                                                           .ToList();
+                    foreach (var pni in pnis)
+                    {
+                        if (pni != null)
+                        {
+                            System.Diagnostics.Debug.WriteLine("Prijava not null " + pni.id.ToString());
+                            var oc = pni.ocenas.ToList().LastOrDefault();
+                            if (oc != null)
+                            {
+                                System.Diagnostics.Debug.WriteLine("Ocena not null " + oc.id.ToString());
+                                if (oc.ocena1 > 5)
+                                {
+                                    System.Diagnostics.Debug.WriteLine("Obstaja pozitivna ocena");
+                                    return pni.izpitnirokId;
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (Exception e) { }
+            }
+            return -1;
         }
 
         public int ocenaRoka(int vpisId, int rokId)
