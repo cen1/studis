@@ -60,7 +60,8 @@
                     <th>Predmet</th>
                     <th>Izvajalec</th>
                     <th>Letnik</th>
-                    <th>Datum</th>
+                    <th>Datum roka</th>
+                    <th>Datum ocene</th>
                     <th>KT</th>
                     <th>Točke</th>
                     <th>Ocena</th>
@@ -93,6 +94,7 @@
                                         }
                                     </td>
                                     <td>@i.predmet.letnik</td>
+                                    <td>@r.datum.ToString("dd.MM.yyyy")</td>
                                     @{ var datum = sh.pridobiDatum(Convert.ToInt32(@p.id)); }
                                     <td>@datum</td>
                                     <td>@i.predmet.kreditne</td>
@@ -144,6 +146,7 @@
                                 }
                             </td>
                             <td>@i.predmet.letnik</td>
+                            <td></td>
                             <td></td>
                             <td></td>
                             <td></td>
