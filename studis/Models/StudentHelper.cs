@@ -67,6 +67,58 @@ namespace studis.Models
             return sum;
         }
 
+        //vrne oceno zadnjega izpita po datumu
+        public int zadnjaOcena(int vpisna, int izvajanjeId)
+        {
+            student s = db.students.Find(vpisna);
+            int o = -1;
+            DateTime dmax = DateTime.MinValue;
+
+            foreach (var v in s.vpis)
+            {
+                prijavanaizpit pni = db.prijavanaizpits.Where(a => a.vpisId == v.id).Where(b => b.izpitnirok.izvajanjeId == izvajanjeId).ToList().LastOrDefault();
+                if (pni != null)
+                {
+                    if (pni.izpitnirok.datum >= dmax)
+                    {
+                        dmax = pni.izpitnirok.datum;
+
+                        var oc = pni.ocenas.LastOrDefault();
+                        if (oc != null)
+                        {
+                            o = oc.ocena1;
+                        }
+                    }
+                }
+            }
+            return o;
+        }
+
+        public int ocenaRoka(int vpisId, int rokId)
+        {
+            System.Diagnostics.Debug.WriteLine("Vpis "+vpisId.ToString()+" "+rokId.ToString());
+            var prijava = db.prijavanaizpits.Where(a => a.vpisId == vpisId).Where(b => b.izpitnirokId == rokId).Where(c => c.stanje == 2).ToList().LastOrDefault();
+            if (prijava != null)
+            {
+                var ocena = prijava.ocenas.ToList().LastOrDefault();
+                if (ocena == null)
+                {
+                    System.Diagnostics.Debug.WriteLine("Ocena null");
+                    return -1;
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine("Ocena obstaja");
+                    return ocena.ocena1;
+                }
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("Prijava null");
+                return -1;                
+            }
+        }
+
         // vrne zaporedno stevilko izpita
         public int zaporednoPolaganje(int vpisna, int izvajanjeId, int studijskiprogram, DateTime datum)
         {
@@ -171,6 +223,12 @@ namespace studis.Models
             var izvajanje = db.izvajanjes.Where(i => i.id == izvajanjeId);
             var vpis = izvajanje.FirstOrDefault().vpis.Where(v => v.vpisnaStevilka == vpisnaStevilka).FirstOrDefault();
             return vpis.id;
+        }
+        public vpi pridobiVpisIzIzvajanjaObj(int izvajanjeId, int vpisnaStevilka)
+        {
+            var izvajanje = db.izvajanjes.Where(i => i.id == izvajanjeId);
+            var vpis = izvajanje.FirstOrDefault().vpis.Where(v => v.vpisnaStevilka == vpisnaStevilka).FirstOrDefault();
+            return vpis;
         }
     }
 }

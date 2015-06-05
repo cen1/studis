@@ -4,6 +4,10 @@
     ViewBag.Title = "Izbira izvajanja za vpis ocene";
     Layout = "~/Views/Shared/_Layout.cshtml";
     StudentHelper sh = new StudentHelper();
+    int v = 0;
+    vpi v2 = null;
+    int polaganja = 0;
+    int zocena = -1;
 }
 
 <h2>Izbira izvajanja za vpis ocene</h2>
@@ -20,6 +24,8 @@
             <th>Letnik</th>
             <th>Študijski program</th>
             <th>Izvajalci</th>
+            <th>Polaganja</th>
+            <th>Zadnja ocena</th>
             <th>Dodaj oceno</th>
         </tr>
     </thead>
@@ -27,6 +33,12 @@
     <tbody>
         @foreach (var i in @ViewBag.Izvajanja)
         {
+            { 
+             v = sh.pridobiVpisIzIzvajanja(Convert.ToInt32(i.id), Convert.ToInt32(ViewBag.Vpis.vpisnaStevilka));
+             v2 = sh.pridobiVpisIzIzvajanjaObj(Convert.ToInt32(i.id), Convert.ToInt32(ViewBag.Vpis.vpisnaStevilka));
+             polaganja = sh.polaganjaVsa(Convert.ToInt32(ViewBag.Vpis.vpisnaStevilka), Convert.ToInt32(i.id), Convert.ToInt32(v2.studijskiProgram));
+             zocena = sh.zadnjaOcena(Convert.ToInt32(ViewBag.Vpis.vpisnaStevilka), Convert.ToInt32(i.id)); 
+            }
             <tr>
                 <td>@i.predmet.koda</td>
                 <td>@i.predmet.ime</td>
@@ -43,7 +55,19 @@
                         <span>, <br />@i.profesor2.ime @i.profesor2.priimek</span>
                     }
                 </td>
-                @{ var v = sh.pridobiVpisIzIzvajanja(Convert.ToInt32(@i.id), Convert.ToInt32(@ViewBag.Vpis.vpisnaStevilka)); }
+                <td>
+                    @polaganja
+                </td>
+                <td>
+                    @if (zocena == -1)
+                    {
+                        <span>/</span>
+                    }
+                    else
+                    {
+                        @zocena
+                    }
+                </td>
                 <td>@Html.ActionLink("Dodaj", "VnosOcenBrezPrijave", "IzpitniRok", new { izvajanjeId = @i.id, vpisId = @v }, null)</td>
             </tr>
         }

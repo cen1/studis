@@ -12,12 +12,6 @@ namespace studis.Models
         [Display(Name = "Ocena")]
         public int ocena { get; set; }
 
-        [Display(Name = "Predmet")]
-        public int predmet { get; set; }
-
-        [Display(Name = "Izvajanje")]
-        public int izvajanje { get; set; }
-
         [Display(Name = "Izpitni rok")]
         public int izpitnirok { get; set; }
 

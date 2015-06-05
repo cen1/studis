@@ -1046,78 +1046,123 @@ namespace studis.Controllers
         }
 
         [Authorize(Roles = "Referent, Profesor")]
-        public ActionResult VnosOcenBrezPrijave(int? vpisnaSt)
+        public ActionResult VnosOcenBrezPrijave(int? izvajanjeId, int? vpisId)
         {
-            if (User.IsInRole("Profesor"))
+            StudentHelper sh = new StudentHelper();
+            vpi v = db.vpis.Find(vpisId);
+
+            int leto = sh.trenutnoSolskoLeto();
+            var roki = db.izpitniroks.Where(a => a.izvajanjeId == izvajanjeId)
+                                     .Where(b => b.datum <= DateTime.Now || b.fiktiven == true)
+                                     .Where(c => (c.datum.Year == leto && c.datum.Month > 9) || (c.datum.Year == leto+1 && c.datum.Month <= 9));
+            List<SelectListItem> seznam = new List<SelectListItem>();
+            foreach (var i in roki)
             {
+                string text = "";
+                int ocena = sh.ocenaRoka(v.id, i.id);
+                string ocena_s = "";
+                if (ocena == -1) ocena_s = "/";
+                else ocena_s = ocena.ToString();
+
+                if (i.fiktiven) text="Brez prijave (ocena: "+ocena_s+")";
+                else text=i.datum.ToString()+" (razpisan, ocena: "+ocena_s+")";
+
+                seznam.Add(new SelectListItem() { Value = i.id.ToString(), Text = (text) });
+            }
+            
+
+            ViewBag.roki = new SelectList(seznam, "Value", "text");
+            ViewBag.vpisnast = v.vpisnaStevilka;
+
+            return View();
+        }
+
+        //Stanje 0: študent je prijavljen na izpit
+        //Stanje 1: študent se je odjavil od izpita
+        //Stanje 2: študent je pisal izpit
+        //Stanje 3: študent ni pisal izpita
+        //Stanje 4: vrnjena prijava
+        [Authorize(Roles = "Referent, Profesor")]
+        [HttpPost]
+        public ActionResult VnosOcenBrezPrijave(int? izvajanjeId, int? vpisId, KoncnaOcenaModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                //že preverjeno z ajaxom če je vse OK glede števila polaganj itd
                 UserHelper uh = new UserHelper();
 
-                student student = db.students.Find(vpisnaSt);
-                if (student == null)
+                //ce ze obstaja prijava za ta rok jo ne kreiramo
+                var prijava = db.prijavanaizpits.Where(a => a.vpisId == vpisId).Where(b => b.izpitnirokId == model.izpitnirok).FirstOrDefault();
+
+                if (prijava == null)
                 {
-                    return HttpNotFound();
+                    //ustvari prijavo
+                    prijavanaizpit pni = new prijavanaizpit();
+                    pni.datumPrijave = DateTime.Now;
+                    pni.izpitnirokId = model.izpitnirok;
+                    pni.prijavilId = uh.FindByName(User.Identity.Name).id;
+                    pni.stanje = 2;
+                    pni.vpisId = (int)vpisId;
+                    db.prijavanaizpits.Add(pni);
+                    db.SaveChanges();
+
+                    //ustvari oceno
+                    ocena o = new ocena();
+                    o.datum = DateTime.Now;
+                    o.ocena1 = model.ocena;
+                    o.prijavaId = pni.id;
+                    db.ocenas.Add(o);
+                    db.SaveChanges();
                 }
-
-                var profesor = uh.FindByName(User.Identity.Name).profesors.FirstOrDefault();
-                var vpisi = db.vpis.Where(v => v.vpisnaStevilka == vpisnaSt).ToList();
-
-                //form za vpis ocene
-                List<SelectListItem> predmeti = new List<SelectListItem>();
-                int profid = Convert.ToInt32(profesor.id);
-                var izvajanja = db.izvajanjes.Where(a => a.izvajalec1Id == profid || a.izvajalec2Id == profid || a.izvajalec3Id == profid);
-                if (izvajanja != null)
-                {
-                    foreach (izvajanje i in izvajanja.ToList())
-                    {
-                        SelectListItem p = new SelectListItem();
-                        p.Value = i.predmetId.ToString();
-                        p.Text = Convert.ToInt32(p.Value).ToString("000") + " - " + i.predmet.ime + " (" + i.predmet.koda + ")";
-                        predmeti.Add(p);
-                    }
-                }
-                List<SelectListItem> ltemp = new List<SelectListItem>();
-                ltemp.Add(new SelectListItem() { Value = "", Text = "Iščem.." });
-                ViewBag.Prazen = new SelectList(ltemp, "Value", "Text");
-                ViewBag.Predmets = new SelectList(predmeti, "Value", "Text");
-
-                ViewBag.id = student.vpisnaStevilka;
-
-                StudentHelper sh = new StudentHelper();
-                vpi trenutni = sh.trenutniVpis(student.vpisnaStevilka);
-                if (trenutni == null) ViewBag.imavpis = false;
                 else
                 {
-                    //poglej ce ima trenutni vpis tole izvajanje
-                    if (trenutni.izvajanjes.Where(a => a.izvajalec1Id == profid || a.izvajalec2Id == profid || a.izvajalec3Id == profid).Count() > 0)
+                    prijava.stanje = 2;
+
+                    //ce ze obstaja ocena za to prijavo jo ne kreiramo
+                    var ocena = db.ocenas.Where(a => a.prijavaId == prijava.id).FirstOrDefault();
+
+                    if (ocena == null)
                     {
-                        ViewBag.imavpis = true;
-                        ViewBag.trenutnivpis = trenutni;
+                        //ustvari oceno
+                        ocena o = new ocena();
+                        o.datum = DateTime.Now;
+                        o.ocena1 = model.ocena;
+                        o.prijavaId = prijava.id;
+                        db.ocenas.Add(o);
                     }
                     else
                     {
-                        //poglej ce je trenutni vpis ponavljanje al pa nadaljevanje, 2,3
-                        if (trenutni.vrstaVpisa == 2 || trenutni.vrstaVpisa == 3)
-                        {
-                            //poglej ce je imel v prejšnjem vpisu ta predmet
-                            int letnik = trenutni.letnikStudija;
-                            vpi prejsnji = db.vpis.Where(a => a.vrstaVpisa == 1).Where(b => b.letnikStudija == letnik).FirstOrDefault();
-                            if (prejsnji == null) System.Diagnostics.Debug.WriteLine("Napaka prj logiki vpisov!!! Poprvi");
-
-                            if (prejsnji.izvajanjes.Where(a => a.izvajalec1Id == profid || a.izvajalec2Id == profid || a.izvajalec3Id == profid).Count() > 0)
-                            {
-                                ViewBag.imavpis = true;
-                                ViewBag.trenutnivpis = prejsnji;
-                            }
-                        }
+                        ocena.datum = DateTime.Now;
+                        ocena.ocena1 = model.ocena;
                     }
-                }
+                    db.SaveChanges();
+                }  
+
+                vpi v = db.vpis.Find(vpisId);
+
+                return RedirectToAction("Izvajanja", new {vpisna = v.vpisnaStevilka});
             }
-            else if (User.IsInRole("Referent"))
+            else
             {
-                // neki
+                StudentHelper sh = new StudentHelper();
+                int leto = sh.trenutnoSolskoLeto();
+                var roki = db.izpitniroks.Where(a => a.izvajanjeId == izvajanjeId)
+                                         .Where(b => b.datum <= DateTime.Now || b.fiktiven == true)
+                                         .Where(c => (c.datum.Year == leto && c.datum.Month > 9) || (c.datum.Year == leto + 1 && c.datum.Month <= 9));
+                List<SelectListItem> seznam = new List<SelectListItem>();
+                foreach (var i in roki)
+                {
+                    string text = "";
+                    if (i.fiktiven) text = "Brez prijave";
+                    else text = i.datum.ToString() + " (razpisan)";
+
+                    seznam.Add(new SelectListItem() { Value = i.id.ToString(), Text = (text) });
+                }
+                ViewBag.roki = new SelectList(seznam, "Value", "text");
+
+                return View(model);
             }
 
-            return View();
         }
 
 
@@ -1126,6 +1171,7 @@ namespace studis.Controllers
             var vpisi = db.vpis.Where(v => v.vpisnaStevilka == vpisna).ToList();
 
             List<izvajanje> izvajanja = new List<izvajanje>();
+
 
             if (User.IsInRole("Referent"))
             {
@@ -1162,6 +1208,7 @@ namespace studis.Controllers
                 }
 
             }
+            
             ViewBag.Izvajanja = izvajanja;
             ViewBag.Vpis = vpisi.First();
 
