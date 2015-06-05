@@ -16,101 +16,117 @@
 
 <h3>@ViewBag.Vpis.vpisnaStevilka - @ViewBag.Vpis.student.ime @ViewBag.Vpis.student.priimek</h3>
 
-<table>
-    <thead>
-        <tr>
-            <th>Šifra</th>
-            <th>Predmet</th>
-            <th>Letnik</th>
-            <th>Študijski program</th>
-            <th>Izvajalci</th>
-            <th>Polaganja</th>
-            <th>Zadnja ocena</th>
-            <th>Dodaj oceno</th>
-        </tr>
-    </thead>
+@if (@ViewBag.Izvajanja.Count == 0)
+{
+    <br />
+    if (User.IsInRole("Referent"))
+    {
+        <h4 style="color: red;">Študent nima izvajanj za tekoče šolsko leto.</h4>
+    }
+    else if (User.IsInRole("Profesor"))
+    {
+        <h4 style="color: red;">Študent pri vas nima izvajanj za tekoče šolsko leto.</h4>
+    }
 
-    <tbody>
-        @foreach (var i in @ViewBag.Izvajanja)
-        {
-            if (@ViewBag.Ponavljanje == null)
+}
+else
+{
+    <table>
+        <thead>
+            <tr>
+                <th>Šifra</th>
+                <th>Predmet</th>
+                <th>Letnik</th>
+                <th>Študijski program</th>
+                <th>Izvajalci</th>
+                <th>Polaganja</th>
+                <th>Zadnja ocena</th>
+                <th>Dodaj oceno</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var i in @ViewBag.Izvajanja)
             {
-                { 
-                 v = sh.pridobiVpisIzIzvajanja(Convert.ToInt32(i.id), Convert.ToInt32(ViewBag.Vpis.vpisnaStevilka));
-                 v2 = sh.pridobiVpisIzIzvajanjaObj(Convert.ToInt32(i.id), Convert.ToInt32(ViewBag.Vpis.vpisnaStevilka));
-                 polaganja = sh.polaganjaVsa(Convert.ToInt32(ViewBag.Vpis.vpisnaStevilka), Convert.ToInt32(i.id), Convert.ToInt32(v2.studijskiProgram));
-                 zocena = sh.zadnjaOcena(Convert.ToInt32(ViewBag.Vpis.vpisnaStevilka), Convert.ToInt32(i.id)); 
-                }
-                <tr>
-                    <td>@i.predmet.koda</td>
-                    <td>@i.predmet.ime</td>
-                    <td>@i.predmet.letnik</td>
-                    <td>@i.predmet.sifrant_studijskiprogram.naziv</td>
-                    <td>
-                        @i.profesor.ime @i.profesor.priimek
-                        @if (@i.izvajalec2Id != null)
-                        {
-                            <span>, <br />@i.profesor1.ime @i.profesor1.priimek</span>
-                        }
-                        @if (@i.izvajalec3Id != null)
-                        {
-                            <span>, <br />@i.profesor2.ime @i.profesor2.priimek</span>
-                        }
-                    </td>
-                    <td>
-                        @polaganja
-                    </td>
-                    <td>
-                        @if (zocena == -1)
-                        {
-                            <span>/</span>
-                        }
-                        else
-                        {
-                            @zocena
-                        }
-                    </td>
-                    <td>@Html.ActionLink("Dodaj", "VnosOcenBrezPrijave", "IzpitniRok", new { izvajanjeId = @i.id, vpisId = @v }, null)</td>
-                </tr>
-            }
-            else
-            {
+                if (@ViewBag.Ponavljanje == null)
                 {
-                    polaganja = sh.polaganjaLetos(Convert.ToInt32(ViewBag.Ponavljanje.id), Convert.ToInt32(i.id)); ;
-                    zocena = sh.zadnjaOcena(Convert.ToInt32(ViewBag.Vpis.vpisnaStevilka), Convert.ToInt32(i.id));
+                    { 
+                     v = sh.pridobiVpisIzIzvajanja(Convert.ToInt32(i.id), Convert.ToInt32(ViewBag.Vpis.vpisnaStevilka));
+                     v2 = sh.pridobiVpisIzIzvajanjaObj(Convert.ToInt32(i.id), Convert.ToInt32(ViewBag.Vpis.vpisnaStevilka));
+                     polaganja = sh.polaganjaVsa(Convert.ToInt32(ViewBag.Vpis.vpisnaStevilka), Convert.ToInt32(i.id), Convert.ToInt32(v2.studijskiProgram));
+                     zocena = sh.zadnjaOcena(Convert.ToInt32(ViewBag.Vpis.vpisnaStevilka), Convert.ToInt32(i.id)); 
+                    }
+                    <tr>
+                        <td>@i.predmet.koda</td>
+                        <td>@i.predmet.ime</td>
+                        <td>@i.predmet.letnik</td>
+                        <td>@i.predmet.sifrant_studijskiprogram.naziv</td>
+                        <td>
+                            @i.profesor.ime @i.profesor.priimek
+                            @if (@i.izvajalec2Id != null)
+                            {
+                                <span>, <br />@i.profesor1.ime @i.profesor1.priimek</span>
+                            }
+                            @if (@i.izvajalec3Id != null)
+                            {
+                                <span>, <br />@i.profesor2.ime @i.profesor2.priimek</span>
+                            }
+                        </td>
+                        <td>
+                            @polaganja
+                        </td>
+                        <td>
+                            @if (zocena == -1)
+                            {
+                                <span>/</span>
+                            }
+                            else
+                            {
+                                @zocena
+                            }
+                        </td>
+                        <td>@Html.ActionLink("Dodaj", "VnosOcenBrezPrijave", "IzpitniRok", new { izvajanjeId = @i.id, vpisId = @v }, null)</td>
+                    </tr>
                 }
-                <tr>
-                    <td>@i.predmet.koda</td>
-                    <td>@i.predmet.ime</td>
-                    <td>@i.predmet.letnik</td>
-                    <td>@i.predmet.sifrant_studijskiprogram.naziv</td>
-                    <td>
-                        @i.profesor.ime @i.profesor.priimek
-                        @if (@i.izvajalec2Id != null)
-                        {
-                            <span>, <br />@i.profesor1.ime @i.profesor1.priimek</span>
-                        }
-                        @if (@i.izvajalec3Id != null)
-                        {
-                            <span>, <br />@i.profesor2.ime @i.profesor2.priimek</span>
-                        }
-                    </td>
-                    <td>
-                        @polaganja
-                    </td>
-                    <td>
-                        @if (zocena == -1)
-                        {
-                            <span>/</span>
-                        }
-                        else
-                        {
-                            @zocena
-                        }
-                    </td>
-                    <td>@Html.ActionLink("Dodaj", "VnosOcenBrezPrijave", "IzpitniRok", new { izvajanjeId = @i.id, vpisId = @ViewBag.Ponavljanje.id }, null)</td>
-                </tr>
+                else
+                {
+                    {
+                        polaganja = sh.polaganjaLetos(Convert.ToInt32(ViewBag.Ponavljanje.id), Convert.ToInt32(i.id)); ;
+                        zocena = sh.zadnjaOcena(Convert.ToInt32(ViewBag.Vpis.vpisnaStevilka), Convert.ToInt32(i.id));
+                    }
+                    <tr>
+                        <td>@i.predmet.koda</td>
+                        <td>@i.predmet.ime</td>
+                        <td>@i.predmet.letnik</td>
+                        <td>@i.predmet.sifrant_studijskiprogram.naziv</td>
+                        <td>
+                            @i.profesor.ime @i.profesor.priimek
+                            @if (@i.izvajalec2Id != null)
+                            {
+                                <span>, <br />@i.profesor1.ime @i.profesor1.priimek</span>
+                            }
+                            @if (@i.izvajalec3Id != null)
+                            {
+                                <span>, <br />@i.profesor2.ime @i.profesor2.priimek</span>
+                            }
+                        </td>
+                        <td>
+                            @polaganja
+                        </td>
+                        <td>
+                            @if (zocena == -1)
+                            {
+                                <span>/</span>
+                            }
+                            else
+                            {
+                                @zocena
+                            }
+                        </td>
+                        <td>@Html.ActionLink("Dodaj", "VnosOcenBrezPrijave", "IzpitniRok", new { izvajanjeId = @i.id, vpisId = @ViewBag.Ponavljanje.id }, null)</td>
+                    </tr>
+                }
             }
-        }
-    </tbody>
-</table>
+        </tbody>
+    </table>
+}
