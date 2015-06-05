@@ -1187,15 +1187,43 @@ namespace studis.Controllers
 
             List<izvajanje> izvajanja = new List<izvajanje>();
 
+            // preveri če je ponavljanje
+            var ponavljanje = vpisi.Where(v => v.vrstaVpisa == 2);
+            var tempVpis = new vpi();
+
+            List<int> vpisnaId = new List<int>();
+            if (ponavljanje.Count() == 1)
+            {
+                var letnikPon = Convert.ToInt32(ponavljanje.Select(p => p.letnikStudija).FirstOrDefault());
+
+                foreach (var v in vpisi.Where(v => v.letnikStudija == letnikPon))
+                {
+                    vpisnaId.Add(v.id);
+                }
+                var tn = vpisnaId.First();
+                var tn2 = vpisnaId.Last();
+                tempVpis = db.vpis.Where(v => v.id == tn).FirstOrDefault();
+                ViewBag.Ponavljanje = db.vpis.Where(v => v.id == tn2).FirstOrDefault();
+            }
 
             if (User.IsInRole("Referent"))
             {
-                foreach (var v in vpisi)
+                foreach (var v in vpisi.Where(v => v.studijskoLeto == 2014))
                 {
-                    foreach (var i in v.izvajanjes)
+                    if (v.vrstaVpisa == 2)
                     {
-                        izvajanja.Add(i);
+                        foreach (var i in tempVpis.izvajanjes)
+                        {
+                            izvajanja.Add(i);
+                        }
                     }
+                    else
+                    {
+                        foreach (var i in v.izvajanjes)
+                        {
+                            izvajanja.Add(i);
+                        }
+                    }           
                 }
             }
             else if (User.IsInRole("Profesor"))
@@ -1203,21 +1231,42 @@ namespace studis.Controllers
                 UserHelper uh = new UserHelper();
                 var profesor = uh.FindByName(User.Identity.Name).profesors.FirstOrDefault();
 
-                foreach(var v in vpisi)
+                foreach (var v in vpisi.Where(v => v.studijskoLeto == 2014))
                 {
-                    foreach (var i in v.izvajanjes)
+                    if (v.vrstaVpisa == 2)
                     {
-                        if (i.profesor.id == profesor.id)
+                        foreach (var i in tempVpis.izvajanjes)
                         {
-                            izvajanja.Add(i);
+                            if (i.profesor.id == profesor.id)
+                            {
+                                izvajanja.Add(i);
+                            }
+                            else if (i.profesor1 != null && i.profesor1.id == profesor.id)
+                            {
+                                izvajanja.Add(i);
+                            }
+                            else if (i.profesor2 != null && i.profesor2.id == profesor.id)
+                            {
+                                izvajanja.Add(i);
+                            }
                         }
-                        else if (i.profesor1 != null && i.profesor1.id == profesor.id)
+                    }
+                    else
+                    {
+                        foreach (var i in v.izvajanjes)
                         {
-                            izvajanja.Add(i);
-                        }
-                        else if (i.profesor2 != null && i.profesor2.id == profesor.id)
-                        {
-                            izvajanja.Add(i);
+                            if (i.profesor.id == profesor.id)
+                            {
+                                izvajanja.Add(i);
+                            }
+                            else if (i.profesor1 != null && i.profesor1.id == profesor.id)
+                            {
+                                izvajanja.Add(i);
+                            }
+                            else if (i.profesor2 != null && i.profesor2.id == profesor.id)
+                            {
+                                izvajanja.Add(i);
+                            }
                         }
                     }
                 }
