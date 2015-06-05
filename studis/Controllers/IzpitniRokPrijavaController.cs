@@ -336,12 +336,16 @@ namespace studis.Controllers
 
         public string GetIzpitniRoksForIzvajanja(int id)
         {
+            StudentHelper sh = new StudentHelper();
+            int leto = sh.trenutnoSolskoLeto();
 
             Debug.WriteLine("ID " + id);
             int iid = Convert.ToInt32(id);
             Debug.WriteLine("ID " + iid);
             var izvajanje = db.izvajanjes.SingleOrDefault(i => i.id == iid);//db.predmets.SingleOrDefault(p => p.id == iid);
-            var izpitniRoki = izvajanje.izpitniroks;//pPredmet.izpitniroks.ToList(); //Exception 
+            var izpitniRoki = izvajanje.izpitniroks.Where(a => a.fiktiven == false)
+                                                   .Where(a => (a.datum.Year == leto && a.datum.Month > 9) || (a.datum.Year == leto + 1 && a.datum.Month < 10));
+                  
             var seznamIzpitniRoki = new List<SelectListItem>();
             int c = 0;
             foreach (izpitnirok i in izpitniRoki)

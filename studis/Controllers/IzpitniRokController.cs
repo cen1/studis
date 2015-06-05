@@ -1065,7 +1065,7 @@ namespace studis.Controllers
                 else ocena_s = ocena.ToString();
 
                 if (i.fiktiven) text="Brez prijave (ocena: "+ocena_s+")";
-                else text=i.datum.ToString()+" (razpisan, ocena: "+ocena_s+")";
+                else text = i.datum.ToString("dd.MM.yyyy") + " (razpisan, ocena: " + ocena_s + ")";
 
                 seznam.Add(new SelectListItem() { Value = i.id.ToString(), Text = (text) });
             }
@@ -1167,7 +1167,7 @@ namespace studis.Controllers
                 else ocena_s = ocena.ToString();
 
                 if (i.fiktiven) text = "Brez prijave (ocena: " + ocena_s + ")";
-                else text = i.datum.ToString() + " (razpisan, ocena: " + ocena_s + ")";
+                else text = i.datum.ToString("dd.MM.yyyy") + " (razpisan, ocena: " + ocena_s + ")";
 
                 seznam.Add(new SelectListItem() { Value = i.id.ToString(), Text = (text) });
             }
