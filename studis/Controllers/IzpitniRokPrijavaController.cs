@@ -468,18 +468,18 @@ namespace studis.Controllers
                 TimeSpan razlika = DateTime.Now - zadnjaPrijava.datumPrijave;
                 if (razlika.Days < 7)
                 {
-                    opozorila.Add("Od zadnje prijave pri temu predmetu še ni minilo 7 dni." + "Datum zadnje prijave: " + UserHelper.DateToString(zadnjaPrijava.datumPrijave));
+                    opozorila.Add("Od zadnje prijave pri temu predmetu še ni minilo 7 dni. " + "Datum zadnje prijave: " + UserHelper.DateToString(zadnjaPrijava.datumPrijave));
                 }
             }
             //-max 3 polaganja letos
             int letos = sh.polaganjaLetos(trenutniVpis.id, (int) iRok.izvajanjeId);
-            if (letos > 3)
+            if (letos >= 3)
             {
                 opozorila.Add("Preseženo število dovoljenih prijav za letos (3).");
             }
             //-max 6 polaganj vse skupaj (ponavljanje resetira)
             int skupaj = sh.polaganjaVsa(trenutniVpis.vpisnaStevilka, (int) iRok.izvajanjeId, trenutniVpis.studijskiProgram);
-            if (skupaj > 6)
+            if (skupaj >= 6)
             {
                 opozorila.Add("Preseženo število dovoljenih prijav (6).");
             }
