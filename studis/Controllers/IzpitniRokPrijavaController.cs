@@ -462,7 +462,7 @@ namespace studis.Controllers
                 opozorila.Add("Rok za prijavo je potekel.");
             }
             //-preveri da je od zadnje prijave minilo 7 dni
-            var zadnjaPrijava = db.prijavanaizpits.Where(a => a.izpitnirokId == iRok.id).Where(a => a.vpisId == trenutniVpis.id).FirstOrDefault();
+            var zadnjaPrijava = db.prijavanaizpits.Where(a => a.izpitnirokId == iRok.id).Where(a => a.vpisId == trenutniVpis.id).Last();
             if (zadnjaPrijava != null)
             {
                 TimeSpan razlika = DateTime.Now - zadnjaPrijava.datumPrijave;
