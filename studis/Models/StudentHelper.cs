@@ -45,25 +45,50 @@ namespace studis.Models
         {
             int sum = 0;
             bool reset = false;
+            bool soprijave = false;
             student s = db.students.Find(vpisna);
 
-            var vpisi = s.vpis.Where(a => a.studijskiProgram == studijskiprogram);
+            var vpisi = s.vpis.Where(a => a.studijskiProgram == studijskiprogram).OrderBy(a => a.id);
             
-            if(vpisi != null)foreach (var v in vpisi)
+            if(vpisi != null) 
             {
-                foreach (var p in v.prijavanaizpits.Where(p => p.stanje == 2))
+                foreach (var v in vpisi)
                 {
-                    if (p.izpitnirok.izvajanje.id == izvajanjeId)
+                    foreach (var p in v.prijavanaizpits.Where(p => p.stanje == 2))
                     {
-                        if (v.vrstaVpisa == 2 && reset==false) //ponavljanje
+                        soprijave = true;
+                        System.Diagnostics.Debug.WriteLine("So prijave za vpis id " + v.id.ToString());
+                        if (p.izpitnirok.izvajanje.id == izvajanjeId)
                         {
-                            sum = 0;
-                            reset = true;
+                            if (v.vrstaVpisa == 2 && reset==false) //ponavljanje
+                            {
+                                sum = 0;
+                                reset = true;
+                                System.Diagnostics.Debug.WriteLine("reset");
+                            }
+                            sum++;
                         }
-                        sum++;
                     }
+                    //ni se bilo prijav za ponavljanje, vseeno moramo resetirat
+                    //ampak.. ne smemo resetirat ce je predmet iz letnika ki ga ne ponavljamo!
+                    if (!soprijave)
+                    {
+                        System.Diagnostics.Debug.WriteLine("Ni bilo prijav za vpis id "+v.id.ToString());
+                        if (v.vrstaVpisa == 2)
+                        {
+                            vpi prejsnji = this.prviVpisVLetnik(v.id);
+                            if (prejsnji.izvajanjes.Where(a => a.id == izvajanjeId).Count() > 0) //prvi vpis od ponavljanja ima to izvajanje
+                            {
+                                sum = 0;
+                                soprijave = true;
+                                System.Diagnostics.Debug.WriteLine("reset 2");
+                            }
+                        }
+                    }
+                    soprijave = false;
                 }
             }
+            System.Diagnostics.Debug.WriteLine("Stevilo polaganj je " + sum.ToString());
             return sum;
         }
 
@@ -111,7 +136,7 @@ namespace studis.Models
 
             foreach (var v in s.vpis)
             {
-                System.Diagnostics.Debug.WriteLine("Pozitivna: pregledujem vpis "+v.id.ToString());
+                //System.Diagnostics.Debug.WriteLine("Pozitivna: pregledujem vpis "+v.id.ToString());
                 try
                 {
                     var pnis = db.prijavanaizpits.Where(a => a.vpisId == v.id)
@@ -122,14 +147,14 @@ namespace studis.Models
                     {
                         if (pni != null)
                         {
-                            System.Diagnostics.Debug.WriteLine("Prijava not null " + pni.id.ToString());
+                            //System.Diagnostics.Debug.WriteLine("Prijava not null " + pni.id.ToString());
                             var oc = pni.ocenas.ToList().LastOrDefault();
                             if (oc != null)
                             {
-                                System.Diagnostics.Debug.WriteLine("Ocena not null " + oc.id.ToString());
+                                //System.Diagnostics.Debug.WriteLine("Ocena not null " + oc.id.ToString());
                                 if (oc.ocena1 > 5)
                                 {
-                                    System.Diagnostics.Debug.WriteLine("Obstaja pozitivna ocena");
+                                    //System.Diagnostics.Debug.WriteLine("Obstaja pozitivna ocena");
                                     return true;
                                 }
                             }
@@ -231,6 +256,23 @@ namespace studis.Models
         {
             int tr = this.trenutnoSolskoLeto();
             return db.vpis.Where(a => a.vpisnaStevilka == vpisna).Where(b => b.studijskoLeto == tr).FirstOrDefault();
+        }
+
+        public vpi prviVpisVLetnik(int vpisId)
+        {
+            vpi v = db.vpis.Find(vpisId);
+            return db.vpis.Where(a => a.letnikStudija == v.letnikStudija)
+                          .Where(b => b.studijskoLetoPrvegaVpisa == v.studijskoLetoPrvegaVpisa)
+                          .Where(c => c.vpisnaStevilka == v.vpisnaStevilka)
+                          .FirstOrDefault();
+        }
+
+        public vpi prviVpisVLetnikN(int vpisna, int letnik)
+        {
+            return db.vpis.Where(a => a.letnikStudija == letnik)
+                          .Where(b => b.vrstaVpisa == 1)
+                          .Where(c => c.vpisnaStevilka == vpisna)
+                          .FirstOrDefault();
         }
 
         public int trenutnoSolskoLeto()

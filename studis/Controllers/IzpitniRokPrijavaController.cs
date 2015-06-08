@@ -20,6 +20,8 @@ namespace studis.Controllers
         }
 
 
+
+
         // GET: IzpitniRokPrijava/Prijavi
        public ActionResult Prijavi()
         {
@@ -35,7 +37,7 @@ namespace studis.Controllers
             if (User.IsInRole("Študent"))
             {
                 student stud = UserHelper.GetStudentByUserName(User.Identity.Name);
-                ViewBag.Izvajanja = new SelectList(GetIzvajanaForStudent(), "Value", "Text");
+                ViewBag.Izvajanja = new SelectList(GetIzvajanaForStudentPrijava(), "Value", "Text");
                 ViewBag.StudentIme = stud.ime + " " + stud.priimek;
                 ViewBag.StudentVpisna = stud.vpisnaStevilka.ToString();
             }
@@ -73,7 +75,7 @@ namespace studis.Controllers
             ViewBag.Prazen = new SelectList(ltemp, "Value", "Text");
             if (User.IsInRole("Študent"))
             {
-                ViewBag.Izvajanja = GetIzvajanaForStudent();
+                ViewBag.Izvajanja = GetIzvajanaForStudentPrijava();
                 ViewBag.StudentIme = stud.ime + " " + stud.priimek;
                 ViewBag.StudentVpisna = stud.vpisnaStevilka.ToString();
             }
@@ -81,7 +83,7 @@ namespace studis.Controllers
             {
                 ViewBag.StudentIme = stud.ime + " " + stud.priimek;
                 ViewBag.StudentVpisna = stud.vpisnaStevilka.ToString();
-                ViewBag.IzvajanjaZaVpisna = new SelectList(GetIzvajanaForStudentVpisna(vpisna), "Value", "Text");
+                ViewBag.IzvajanjaZaVpisna = new SelectList(GetIzvajanaForStudentVpisnaPrijava(vpisna), "Value", "Text");
             }
             return View("Prijavi");
         }
@@ -110,10 +112,56 @@ namespace studis.Controllers
             {
                 db.prijavanaizpits.Add(prijava);
                 db.SaveChanges();
-                if(User.IsInRole("Referent"))
-                    return RedirectToAction("Students", "Student");
+                if (User.IsInRole("Referent"))
+                {
+                    TempData["success"] = "Uspešno prijavljen";
+                    return RedirectToAction("PrijaviStudenta", new { vpisna = model.student });
+                }
                 else
-                    return Odjavi();
+                {
+                    TempData["success"] = "Uspešno prijavljen";
+                    return RedirectToAction("Prijavi");
+                }
+            }
+            catch
+            {
+                return View("Neuspesno");
+            }
+        }
+
+        [HttpPost]
+        public ActionResult PrijaviStudenta(int vpisna, PrijavaNaIzpitModel model)
+        {
+            StudentHelper sh = new StudentHelper();
+            prijavanaizpit prijava = new prijavanaizpit();
+            prijava.datumPrijave = DateTime.Now;
+            prijava.izpitnirok = db.izpitniroks.FirstOrDefault(a => a.id == model.izpitniRok);
+            prijava.stanje = 0;
+            if (User.IsInRole("Študent"))
+            {
+                prijava.vpisId = sh.trenutniVpis(UserHelper.GetStudentByUserName(User.Identity.Name).vpisnaStevilka).id;
+            }
+            else //referent
+            {
+
+                prijava.vpisId = sh.trenutniVpis(model.student).id;
+            }
+            UserHelper uh = new UserHelper();
+            prijava.prijavilId = uh.FindByName(User.Identity.Name).id;
+            try
+            {
+                db.prijavanaizpits.Add(prijava);
+                db.SaveChanges();
+                if (User.IsInRole("Referent"))
+                {
+                    TempData["success"] = "Uspešno prijavljen";
+                    return RedirectToAction("PrijaviStudenta", new { vpisna = model.student });
+                }
+                else
+                {
+                    TempData["success"] = "Uspešno prijavljen";
+                    return RedirectToAction("Prijavi");
+                }
             }
             catch
             {
@@ -138,7 +186,7 @@ namespace studis.Controllers
             if (User.IsInRole("Študent"))
             {
                 student stud = UserHelper.GetStudentByUserName(User.Identity.Name);
-                ViewBag.Izvajanja = new SelectList(GetIzvajanaForStudent(), "Value", "Text");
+                ViewBag.Izvajanja = new SelectList(GetIzvajanaForStudentOdjava(), "Value", "Text");
                 ViewBag.StudentIme = stud.ime + " " + stud.priimek;
                 ViewBag.StudentVpisna = stud.vpisnaStevilka.ToString();
             }
@@ -162,6 +210,19 @@ namespace studis.Controllers
 
         [Authorize(Roles = "Referent")]
         // GET: IzpitniRokPrijava/Odjavi/
+        public ActionResult OdjaviDnevnik(int vpisna)
+        {
+            StudentHelper sh = new StudentHelper();
+            vpi v = sh.trenutniVpis(vpisna);
+
+            ViewBag.odjave = v.prijavanaizpits.Where(a => a.stanje == 1).OrderBy(a => a.datumOdjave);
+            ViewBag.vpisna = vpisna;
+            return View();
+
+        }
+
+        [Authorize(Roles = "Referent")]
+        // GET: IzpitniRokPrijava/Odjavi/
         public ActionResult OdjaviStudenta(int vpisna)
         {
             ViewBag.Izvajanja = null;
@@ -175,15 +236,59 @@ namespace studis.Controllers
             ViewBag.Prazen = new SelectList(ltemp, "Value", "Text");
             if (User.IsInRole("Študent"))
             {
-                ViewBag.Izvajanja = GetIzvajanaForStudent();
+                ViewBag.Izvajanja = GetIzvajanaForStudentOdjava();
             }
             else if (User.IsInRole("Referent"))
             {
                 ViewBag.StudentIme = stud.ime + " " + stud.priimek;
                 ViewBag.StudentVpisna = stud.vpisnaStevilka.ToString();
-                ViewBag.IzvajanjaZaVpisna = new SelectList(GetIzvajanaForStudentVpisna(vpisna), "Value", "Text");
+                ViewBag.IzvajanjaZaVpisna = new SelectList(GetIzvajanaForStudentVpisnaOdjava(vpisna), "Value", "Text");
             }
             return View("Odjavi");
+        }
+
+        [HttpPost]
+        // GET: IzpitniRokPrijava/Odjavi/
+        public ActionResult OdjaviStudenta(int vpisna, PrijavaNaIzpitModel model)
+        {
+            //model.izpitniRok;
+            // model.izvajanje;
+            student stud;
+            if (User.IsInRole("Študent"))
+            {
+                stud = UserHelper.GetStudentByUserName(User.Identity.Name);
+            }
+            else //refernt
+            {
+                stud = UserHelper.GetStudentByVpisna(model.student);
+            }
+            UserHelper uh = new UserHelper();
+            StudentHelper sh = new StudentHelper();
+
+            try
+            {
+                vpi trenutniVpis = sh.trenutniVpis(stud.vpisnaStevilka);
+                prijavanaizpit prijava = db.prijavanaizpits.SingleOrDefault(a => a.id == model.izpitniRok);
+                prijava.stanje = 1;
+                prijava.odjavilId = uh.FindByName(User.Identity.Name).id;
+                prijava.datumOdjave = DateTime.Now;
+
+                db.SaveChanges();
+                if (User.IsInRole("Referent"))
+                {
+                    TempData["success"] = "Uspešno odjavljen";
+                    return RedirectToAction("OdjaviStudenta", new { vpisna = model.student });
+                }
+                else
+                {
+                    TempData["success"] = "Uspešno odjavljen";
+                    return RedirectToAction("Odjavi");
+                }
+            }
+            catch
+            {
+                return View("Neuspesno");
+            }
         }
 
         // POST: IzpitniRokPrijava/Odjavi
@@ -191,7 +296,7 @@ namespace studis.Controllers
         public ActionResult Odjavi(PrijavaNaIzpitModel model)
         {
             //model.izpitniRok;
-           // model.izvajanje;
+            // model.izvajanje;
             int vpisna;
             student stud;
             if (User.IsInRole("Študent"))
@@ -211,12 +316,19 @@ namespace studis.Controllers
                 prijavanaizpit prijava = db.prijavanaizpits.SingleOrDefault(a => a.id == model.izpitniRok);
                 prijava.stanje = 1;
                 prijava.odjavilId = uh.FindByName(User.Identity.Name).id;
+                prijava.datumOdjave = DateTime.Now;
 
                 db.SaveChanges();
                 if (User.IsInRole("Referent"))
-                    return RedirectToAction("Students", "Student");
+                {
+                    TempData["success"] = "Uspešno odjavljen";
+                    return RedirectToAction("OdjaviStudenta", new { vpisna = model.student });
+                }
                 else
-                    return Odjavi();
+                {
+                    TempData["success"] = "Uspešno odjavljen";
+                    return RedirectToAction("Odjavi");
+                }
             }
             catch
             {
@@ -226,45 +338,257 @@ namespace studis.Controllers
 
 
         [Authorize(Roles = "Študent")]
-        private List<SelectListItem> GetIzvajanaForStudent()
+        private List<SelectListItem> GetIzvajanaForStudentPrijava()
         {
             var student = UserHelper.GetStudentByUserName(User.Identity.Name);
             //var izvajanja = student.vpis.LastOrDefault().izvajanjes.ToList();
             StudentHelper sh = new StudentHelper();
             var trenutniVpis = sh.trenutniVpis(student.vpisnaStevilka);
-            List<izvajanje> izvajanja = null;
-            if (trenutniVpis != null)
+            var prvivpis = trenutniVpis;
+            if (trenutniVpis.vrstaVpisa != 1)
             {
-                izvajanja = trenutniVpis.izvajanjes.ToList();
+                prvivpis = sh.prviVpisVLetnik(trenutniVpis.id); //ce je ponavljanje ali pavziranje damo na prvi vpis v ta letnik
+            }
+            List<izvajanje> izvajanja = null;
+            if (prvivpis != null)
+            {
+                Debug.WriteLine("Prvi Vpis id je " + prvivpis.id.ToString());
+                izvajanja = prvivpis.izvajanjes.ToList();
             }
             else
             {
                 Debug.WriteLine("Trenutni vpis je null.");
                 izvajanja = new List<izvajanje>();
             }
-            Debug.WriteLine("Stevilo izvajanj: " + izvajanja.Count);    
-            return IzvajanaToSeznam(izvajanja);
+            //ce je ze prijavljen na kak izpit odstrani
+            //prav tako ce ze ima pozitivno/zakljuceno oceno
+            //uporabimo trenutni vpis ekr se na tega veze prijava
+            List<izvajanje> izvajanjafinal = new List<izvajanje>();
+            foreach (var i in izvajanja)
+            {
+                var prijave0 = db.prijavanaizpits.Where(a => a.vpisId == trenutniVpis.id)
+                                                .Where(a => a.izpitnirok.izvajanjeId == i.id)
+                                                .Where(a => a.stanje == 0)
+                                                .Where(a => a.izpitnirok.fiktiven == false)
+                                                .ToList();
+                bool ocena = sh.pozitivnaOcena(trenutniVpis.vpisnaStevilka, Convert.ToInt32(i.id));
+                if (prijave0.Count() == 0  && !ocena)
+                {
+                    izvajanjafinal.Add(i);
+                }
+            }
+            //dodamo se izvajanja iz prejsnjega letnika, kjer ni nardil
+            //kao vpis brez par predmetov
+            if (trenutniVpis.letnikStudija > 1) {
+                vpi prvivletnik = sh.prviVpisVLetnikN(trenutniVpis.vpisnaStevilka, trenutniVpis.letnikStudija - 1);
+                List<izvajanje> izvajanjaodprej = prvivletnik.izvajanjes.ToList();
+                foreach (var i in izvajanjaodprej)
+                {
+                    var prijave0 = db.prijavanaizpits.Where(a => a.vpisId == trenutniVpis.id)
+                                                .Where(a => a.izpitnirok.izvajanjeId == i.id)
+                                                .Where(a => a.stanje == 0)
+                                                .Where(a => a.izpitnirok.fiktiven == false)
+                                                .ToList();
+                    bool ocena = sh.pozitivnaOcena(trenutniVpis.vpisnaStevilka, Convert.ToInt32(i.id));
+                    if (prijave0.Count() == 0 && !ocena)
+                    {
+                        izvajanjafinal.Add(i);
+                    }
+                }
+            }
+
+
+            Debug.WriteLine("Stevilo izvajanj: " + izvajanjafinal.Count);    
+            return IzvajanaToSeznam(izvajanjafinal);
+        }
+
+        [Authorize(Roles = "Študent")]
+        private List<SelectListItem> GetIzvajanaForStudentOdjava()
+        {
+            var student = UserHelper.GetStudentByUserName(User.Identity.Name);
+            //var izvajanja = student.vpis.LastOrDefault().izvajanjes.ToList();
+            StudentHelper sh = new StudentHelper();
+            var trenutniVpis = sh.trenutniVpis(student.vpisnaStevilka);
+            var prvivpis = trenutniVpis;
+            if (trenutniVpis.vrstaVpisa != 1)
+            {
+                prvivpis = sh.prviVpisVLetnik(trenutniVpis.id); //ce je ponavljanje ali pavziranje damo na prvi vpis v ta letnik
+            }
+            List<izvajanje> izvajanja = null;
+            if (trenutniVpis != null)
+            {
+                Debug.WriteLine("Vpis id je " + prvivpis.id.ToString());
+                izvajanja = prvivpis.izvajanjes.ToList();
+            }
+            else
+            {
+                Debug.WriteLine("Trenutni vpis je null.");
+                izvajanja = new List<izvajanje>();
+            }
+            //pustimo na seznamu le ce ima prijavo z stanjem 0
+            List<izvajanje> izvajanjafinal = new List<izvajanje>();
+            foreach (var i in izvajanja)
+            {
+                var prijave0 = db.prijavanaizpits.Where(a => a.vpisId == trenutniVpis.id)
+                                                .Where(a => a.izpitnirok.izvajanjeId == i.id)
+                                                .Where(a => a.izpitnirok.fiktiven == false)
+                                                .Where(a => a.stanje == 0);
+                bool ocena = sh.pozitivnaOcena(trenutniVpis.vpisnaStevilka, Convert.ToInt32(i.id));
+                if (prijave0.Count() > 0 && !ocena)
+                {
+                    izvajanjafinal.Add(i);
+                }
+            }
+            //dodamo se izvajanja iz prejsnjega letnika, kjer ni nardil
+            //kao vpis brez par predmetov
+            if (trenutniVpis.letnikStudija > 1)
+            {
+                vpi prvivletnik = sh.prviVpisVLetnikN(trenutniVpis.vpisnaStevilka, trenutniVpis.letnikStudija - 1);
+                List<izvajanje> izvajanjaodprej = prvivletnik.izvajanjes.ToList();
+                foreach (var i in izvajanjaodprej)
+                {
+                    var prijave0 = db.prijavanaizpits.Where(a => a.vpisId == trenutniVpis.id)
+                                                .Where(a => a.izpitnirok.izvajanjeId == i.id)
+                                                .Where(a => a.stanje == 0)
+                                                .Where(a => a.izpitnirok.fiktiven == false)
+                                                .ToList();
+                    bool ocena = sh.pozitivnaOcena(trenutniVpis.vpisnaStevilka, Convert.ToInt32(i.id));
+                    if (prijave0.Count() > 0 && !ocena)
+                    {
+                        izvajanjafinal.Add(i);
+                    }
+                }
+            }
+
+            Debug.WriteLine("Stevilo izvajanj: " + izvajanjafinal.Count);
+            return IzvajanaToSeznam(izvajanjafinal);
         }
 
         [Authorize(Roles = "Referent")]
-        private List<SelectListItem> GetIzvajanaForStudentVpisna(int vpisna)
+        private List<SelectListItem> GetIzvajanaForStudentVpisnaPrijava(int vpisna)
         {
             var student = UserHelper.GetStudentByVpisna(vpisna);
             //var izvajanja = student.vpis.LastOrDefault().izvajanjes.ToList();
             StudentHelper sh = new StudentHelper();
             var trenutniVpis = sh.trenutniVpis(student.vpisnaStevilka);
-            List<izvajanje> izvajanja = null;
-            if (trenutniVpis != null)
+            var prvivpis = trenutniVpis;
+            if (trenutniVpis.vrstaVpisa != 1)
             {
-                izvajanja = trenutniVpis.izvajanjes.ToList();
+                prvivpis = sh.prviVpisVLetnik(trenutniVpis.id); //ce je ponavljanje ali pavziranje damo na prvi vpis v ta letnik
+            }
+            List<izvajanje> izvajanja = null;
+            if (prvivpis != null)
+            {
+                Debug.WriteLine("Prvi Vpis id je " + prvivpis.id.ToString());
+                izvajanja = prvivpis.izvajanjes.ToList();
             }
             else
             {
                 Debug.WriteLine("Trenutni vpis je null.");
                 izvajanja = new List<izvajanje>();
             }
-            Debug.WriteLine("Stevilo izvajanj: " + izvajanja.Count);
-            return IzvajanaToSeznam(izvajanja);
+            //ce je ze prijavljen na kak izpit odstrani
+            //prav tako ce ze ima pozitivno/zakljuceno oceno
+            //uporabimo trenutni vpis ekr se na tega veze prijava
+            List<izvajanje> izvajanjafinal = new List<izvajanje>();
+            foreach (var i in izvajanja)
+            {
+                var prijave0 = db.prijavanaizpits.Where(a => a.vpisId == trenutniVpis.id)
+                                                .Where(a => a.izpitnirok.izvajanjeId == i.id)
+                                                .Where(a => a.stanje == 0)
+                                                .Where(a => a.izpitnirok.fiktiven == false)
+                                                .ToList();
+                bool ocena = sh.pozitivnaOcena(trenutniVpis.vpisnaStevilka, Convert.ToInt32(i.id));
+                if (prijave0.Count() == 0 && !ocena)
+                {
+                    izvajanjafinal.Add(i);
+                }
+            }
+            //dodamo se izvajanja iz prejsnjega letnika, kjer ni nardil
+            //kao vpis brez par predmetov
+            if (trenutniVpis.letnikStudija > 1)
+            {
+                vpi prvivletnik = sh.prviVpisVLetnikN(trenutniVpis.vpisnaStevilka, trenutniVpis.letnikStudija - 1);
+                List<izvajanje> izvajanjaodprej = prvivletnik.izvajanjes.ToList();
+                foreach (var i in izvajanjaodprej)
+                {
+                    var prijave0 = db.prijavanaizpits.Where(a => a.vpisId == trenutniVpis.id)
+                                                .Where(a => a.izpitnirok.izvajanjeId == i.id)
+                                                .Where(a => a.stanje == 0)
+                                                .Where(a => a.izpitnirok.fiktiven == false)
+                                                .ToList();
+                    bool ocena = sh.pozitivnaOcena(trenutniVpis.vpisnaStevilka, Convert.ToInt32(i.id));
+                    if (prijave0.Count() == 0 && !ocena)
+                    {
+                        izvajanjafinal.Add(i);
+                    }
+                }
+            }
+
+
+            Debug.WriteLine("Stevilo izvajanj: " + izvajanjafinal.Count);
+            return IzvajanaToSeznam(izvajanjafinal);
+        }
+
+        private List<SelectListItem> GetIzvajanaForStudentVpisnaOdjava(int vpisna)
+        {
+            var student = UserHelper.GetStudentByVpisna(vpisna);
+            //var izvajanja = student.vpis.LastOrDefault().izvajanjes.ToList();
+            StudentHelper sh = new StudentHelper();
+            var trenutniVpis = sh.trenutniVpis(student.vpisnaStevilka);
+            var prvivpis = trenutniVpis;
+            if (trenutniVpis.vrstaVpisa != 1)
+            {
+                prvivpis = sh.prviVpisVLetnik(trenutniVpis.id); //ce je ponavljanje ali pavziranje damo na prvi vpis v ta letnik
+            }
+            List<izvajanje> izvajanja = null;
+            if (trenutniVpis != null)
+            {
+                Debug.WriteLine("Vpis id je " + prvivpis.id.ToString());
+                izvajanja = prvivpis.izvajanjes.ToList();
+            }
+            else
+            {
+                Debug.WriteLine("Trenutni vpis je null.");
+                izvajanja = new List<izvajanje>();
+            }
+            //pustimo na seznamu le ce ima prijavo z stanjem 0
+            List<izvajanje> izvajanjafinal = new List<izvajanje>();
+            foreach (var i in izvajanja)
+            {
+                var prijave0 = db.prijavanaizpits.Where(a => a.vpisId == trenutniVpis.id)
+                                                .Where(a => a.izpitnirok.izvajanjeId == i.id)
+                                                .Where(a => a.izpitnirok.fiktiven == false)
+                                                .Where(a => a.stanje == 0);
+                bool ocena = sh.pozitivnaOcena(trenutniVpis.vpisnaStevilka, Convert.ToInt32(i.id));
+                if (prijave0.Count() > 0 && !ocena)
+                {
+                    izvajanjafinal.Add(i);
+                }
+            }
+            //dodamo se izvajanja iz prejsnjega letnika, kjer ni nardil
+            //kao vpis brez par predmetov
+            if (trenutniVpis.letnikStudija > 1)
+            {
+                vpi prvivletnik = sh.prviVpisVLetnikN(trenutniVpis.vpisnaStevilka, trenutniVpis.letnikStudija - 1);
+                List<izvajanje> izvajanjaodprej = prvivletnik.izvajanjes.ToList();
+                foreach (var i in izvajanjaodprej)
+                {
+                    var prijave0 = db.prijavanaizpits.Where(a => a.vpisId == trenutniVpis.id)
+                                                .Where(a => a.izpitnirok.izvajanjeId == i.id)
+                                                .Where(a => a.stanje == 0)
+                                                .Where(a => a.izpitnirok.fiktiven == false)
+                                                .ToList();
+                    bool ocena = sh.pozitivnaOcena(trenutniVpis.vpisnaStevilka, Convert.ToInt32(i.id));
+                    if (prijave0.Count() > 0 && !ocena)
+                    {
+                        izvajanjafinal.Add(i);
+                    }
+                }
+            }
+
+            Debug.WriteLine("Stevilo izvajanj: " + izvajanjafinal.Count);
+            return IzvajanaToSeznam(izvajanjafinal);
         }
 
         private List<SelectListItem> IzvajanaToSeznam(List<izvajanje> izvajanja)
@@ -295,7 +619,7 @@ namespace studis.Controllers
             }
             if (c < 1)
             {
-                seznamIzvajanja.Add(new SelectListItem() { Value = "", Text = "Ni predemtov." });
+                seznamIzvajanja.Add(new SelectListItem() { Value = "", Text = "Ni predmetov." });
             }
             else
             {
@@ -344,7 +668,8 @@ namespace studis.Controllers
             Debug.WriteLine("ID " + iid);
             var izvajanje = db.izvajanjes.SingleOrDefault(i => i.id == iid);//db.predmets.SingleOrDefault(p => p.id == iid);
             var izpitniRoki = izvajanje.izpitniroks.Where(a => a.fiktiven == false)
-                                                   .Where(a => (a.datum.Year == leto && a.datum.Month > 9) || (a.datum.Year == leto + 1 && a.datum.Month < 10));
+                                                   .Where(a => (a.datum.Year == leto && a.datum.Month > 9) || (a.datum.Year == leto + 1 && a.datum.Month < 10))
+                                                   .Where( a => a.datum > DateTime.Now);
                   
             var seznamIzpitniRoki = new List<SelectListItem>();
             int c = 0;
@@ -395,7 +720,11 @@ namespace studis.Controllers
             }
             else
             {
-                prijave = db.prijavanaizpits.Where(a => a.vpisId == vpisID).Where(a => a.stanje == 0).Where(a => a.izpitnirok.izvajanjeId == izvajanjeId).ToList();
+                prijave = db.prijavanaizpits.Where(a => a.vpisId == vpisID)
+                                            .Where(a => a.stanje == 0)
+                                            .Where(a => a.izpitnirok.izvajanjeId == izvajanjeId)
+                                            .Where(a => a.izpitnirok.fiktiven == false)
+                                            .ToList();
             }
 
             var seznamIzpitniRoki = new List<SelectListItem>();
@@ -462,24 +791,39 @@ namespace studis.Controllers
                 opozorila.Add("Rok za prijavo je potekel.");
             }
             //-preveri da je od zadnje prijave minilo 7 dni
-            var zadnjaPrijava = db.prijavanaizpits.Where(a => a.izpitnirokId == iRok.id).Where(a => a.vpisId == trenutniVpis.id).FirstOrDefault();
+            var zadnjaPrijava = db.prijavanaizpits.Where(a => a.vpisId == trenutniVpis.id)
+                                                  .Where(a => a.izpitnirok.izvajanjeId == iRok.izvajanjeId)
+                                                  .Where(a => a.stanje != 1)
+                                                  .Where(a => a.stanje != 4)
+                                                  .ToList()
+                                                  .LastOrDefault();
             if (zadnjaPrijava != null)
             {
-                TimeSpan razlika = DateTime.Now - zadnjaPrijava.datumPrijave;
+                Debug.WriteLine("Zadnja prijava id " + zadnjaPrijava.id.ToString());
+                Debug.WriteLine("Zadnja prijava datum polaganja " + zadnjaPrijava.izpitnirok.datum.ToString());
+                
+                TimeSpan razlika = DateTime.Now - zadnjaPrijava.izpitnirok.datum;
+                
+                Debug.WriteLine(razlika.ToString());
                 if (razlika.Days < 7)
                 {
-                    opozorila.Add("Od zadnje prijave pri temu predmetu še ni minilo 7 dni." + "Datum zadnje prijave: " + UserHelper.DateToString(zadnjaPrijava.datumPrijave));
+                    opozorila.Add("Od zadnjega polaganja pri temu predmetu še ni minilo 7 dni." + "Datum zadnjega polaganja: " + UserHelper.DateToString(zadnjaPrijava.izpitnirok.datum));
                 }
             }
+            else
+            {
+                Debug.WriteLine("Zadnja prijava null");
+            }
+
             //-max 3 polaganja letos
             int letos = sh.polaganjaLetos(trenutniVpis.id, (int) iRok.izvajanjeId);
-            if (letos > 3)
+            if (letos >= 3)
             {
                 opozorila.Add("Preseženo število dovoljenih prijav za letos (3).");
             }
             //-max 6 polaganj vse skupaj (ponavljanje resetira)
             int skupaj = sh.polaganjaVsa(trenutniVpis.vpisnaStevilka, (int) iRok.izvajanjeId, trenutniVpis.studijskiProgram);
-            if (skupaj > 6)
+            if (skupaj >= 6)
             {
                 opozorila.Add("Preseženo število dovoljenih prijav (6).");
             }
@@ -498,9 +842,17 @@ namespace studis.Controllers
             //SAMO OBVSETILO
             //-preveri ce mora student placati izpit (4+ redni, 1+ izredni)
             string obvestilo = "";
-            if (skupaj > 3)
+            if (trenutniVpis.vrstaVpisa == 3 && opozorila.Count() == 0)
             {
-                obvestilo = "Za ta izpit bo potrbeno placati 140€.";
+                obvestilo = "Za ta izpit bo potrbeno plačati 140€.";
+            }
+
+            //preveri ce je ze 3 polaganj v prejsnjem letniku in nisi naredil
+            int stpolaganj = sh.polaganjaVsa(trenutniVpis.vpisnaStevilka, Convert.ToInt32(iRok.izvajanjeId), trenutniVpis.studijskiProgram);
+            
+            if (stpolaganj >= 3 && trenutniVpis.vrstaVpisa != 3 && opozorila.Count() == 0)
+            {
+                obvestilo = "Za ta izpit bo potrbeno plačati 140€.";
             }
 
             return Json(new { Warnings = new JavaScriptSerializer().Serialize(opozorila), Notice = obvestilo });

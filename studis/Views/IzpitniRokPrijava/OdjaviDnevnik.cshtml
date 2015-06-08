@@ -1,0 +1,30 @@
+﻿@{
+    ViewBag.Title = "Dnevnik odjav";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Dnevnik odjav v letošnjem letu za @ViewBag.vpisna</h2>
+
+<table>
+<tr>
+    <th>#</th>
+    <th>Predmet</th>
+    <th>Izpitni rok</th>
+    <th>Datum prijave</th>
+    <th>Prijavil</th>
+    <th>Datum odjave</th>
+    <th>Odjavil</th>
+</tr>
+    @foreach (var p in ViewBag.odjave)
+    {
+        <tr>
+            <td>@p.id</td>
+            <td>@p.izpitnirok.izvajanje.predmet.ime</td>
+            <td>@p.izpitnirok.datum.ToString("dd.MM.yyyy HH:mm:ss")</td>
+            <td>@p.datumPrijave.ToString("dd.MM.yyyy HH:mm:ss")</td>
+            <td>@p.my_aspnet_users.name</td>
+            <td>@p.datumOdjave.ToString("dd.MM.yyyy HH:mm:ss")</td>
+            <td>@p.my_aspnet_users.name</td>
+        </tr>
+    }
+</table>

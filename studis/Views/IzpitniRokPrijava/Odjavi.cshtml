@@ -7,6 +7,10 @@
 @model studis.Models.PrijavaNaIzpitModel
 <h2>Odjavi</h2>
 
+@if (TempData["success"] != null)
+{
+    <p style='color:green'>@TempData["success"]</p>
+}
 
 @using (Html.BeginForm())
 {

@@ -47,7 +47,7 @@ namespace studis
             {
                 if (zeton.studijskiProgram == 1000468) { //UNI
                     //preveri če se vpisuje v višji če ni ponavljanje
-                    if (zeton.letnik <= zadnjivpisUNI.letnikStudija && zeton.vrstaVpisa != 2)
+                    if (zeton.letnik <= zadnjivpisUNI.letnikStudija && zeton.vrstaVpisa != 2 && zeton.vrstaVpisa != 3)
                     {
                         ModelState.AddModelError("", "Premajhen letnik študija");
                     } //preveri če se vpisuje v isti če je ponavljanje

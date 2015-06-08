@@ -84,7 +84,9 @@
             }
             @if (User.IsInRole("Referent"))
             {
-                <td>@Html.ActionLink("Prijavi", "PrijaviStudenta", "IzpitniRokPrijava", new { vpisna = item.vpisnaStevilka }, null) / @Html.ActionLink("Odjavi", "OdjaviStudenta", "IzpitniRokPrijava", new { vpisna = item.vpisnaStevilka }, null)</td>
+                <td>@Html.ActionLink("Prijavi", "PrijaviStudenta", "IzpitniRokPrijava", new { vpisna = item.vpisnaStevilka }, null) 
+            / @Html.ActionLink("Odjavi", "OdjaviStudenta", "IzpitniRokPrijava", new { vpisna = item.vpisnaStevilka }, null)
+            / @Html.ActionLink("Dnevnik odjav", "OdjaviDnevnik", "IzpitniRokPrijava", new { vpisna = item.vpisnaStevilka }, null)</td>
             }
     </tr>
     }

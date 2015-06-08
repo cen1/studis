@@ -10,6 +10,12 @@
 <h2>Prijava na izpit</h2>
 
 
+@if (TempData["success"] != null)
+{
+    <p style='color:green'>@TempData["success"]</p>       
+}
+
+
 @using (Html.BeginForm())
 {
     <div>
@@ -213,7 +219,8 @@
                     for (i = 0; i < opozorila.length; i++) {
                         ulOpozorila.append('<li>' + opozorila[i] + '</li>');
                     }
-                    //ulObvestilo.append('<li>' + obvestilo + '</li>');
+                    if (obvestilo != "")
+                        ulObvestilo.append('<li>' + obvestilo + '</li>');
                 },
                 dataType: "json",
                 traditional: true
