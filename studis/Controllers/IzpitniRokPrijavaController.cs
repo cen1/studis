@@ -797,6 +797,8 @@ namespace studis.Controllers
                                                   .Where(a => a.stanje != 4)
                                                   .ToList()
                                                   .LastOrDefault();
+
+            
             if (zadnjaPrijava != null)
             {
                 Debug.WriteLine("Zadnja prijava id " + zadnjaPrijava.id.ToString());
@@ -869,7 +871,8 @@ namespace studis.Controllers
             int ivpisna = Convert.ToInt32(vpisna);
             int iprijavaId = Convert.ToInt32(prijavaId);
             Debug.WriteLine("Vpisna: " + vpisna + ", IzpitniRokId: " + iprijavaId);
-            izpitnirok iRok = db.prijavanaizpits.SingleOrDefault(a => a.id == iprijavaId).izpitnirok;//db.izpitniroks.SingleOrDefault(a => a.id == iizpitniRok);
+            prijavanaizpit prijava = db.prijavanaizpits.SingleOrDefault(a => a.id == iprijavaId);
+            izpitnirok iRok = prijava.izpitnirok;//db.izpitniroks.SingleOrDefault(a => a.id == iizpitniRok);
             student stud = db.students.SingleOrDefault(a => a.vpisnaStevilka == ivpisna);
 
             List<string> opozorila = new List<string>();
@@ -892,9 +895,14 @@ namespace studis.Controllers
             {
                 opozorila.Add("Rok za odjavo je potekel.");
             }
-            
+
+            List<string> napake = new List<string>();
             //-preveri ce je izpit ze opravljen
             //-preveri ce za prejsnjo prijavo ze obstaja ocena
+            if (prijava.stanje == 2 )
+            {
+                napake.Add("Odjava ni več mogoča.");
+            }
 
             //opozorila.Add("--1test server--");
             //opozorila.Add("--2test server--");
@@ -904,7 +912,7 @@ namespace studis.Controllers
             string obvestilo = "";
 
 
-            return Json(new { Warnings = new JavaScriptSerializer().Serialize(opozorila), Notice = obvestilo });
+            return Json(new { Warnings = new JavaScriptSerializer().Serialize(opozorila), Notice = obvestilo, Errors = napake });
         }
     }
 }
