@@ -67,6 +67,141 @@ namespace studis.Models
             return sum;
         }
 
+        //vrne oceno zadnjega izpita po datumu
+        public int zadnjaOcena(int vpisna, int izvajanjeId)
+        {
+            student s = db.students.Find(vpisna);
+            int o = -1;
+            DateTime dmax = DateTime.MinValue;
+
+            foreach (var v in s.vpis)
+            {
+                try
+                {
+                    var pnis = db.prijavanaizpits.Where(a => a.vpisId == v.id)
+                                                           .Where(b => b.izpitnirok.izvajanjeId == izvajanjeId)
+                                                           .Where(c => c.stanje == 2)
+                                                           .ToList();
+                    foreach (var pni in pnis)
+                    {
+                        if (pni != null)
+                        {
+                            if (pni.izpitnirok.datum >= dmax)
+                            {
+                                dmax = pni.izpitnirok.datum;
+
+                                var oc = pni.ocenas.LastOrDefault();
+                                if (oc != null)
+                                {
+                                    o = oc.ocena1;
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (Exception e) { }
+            }
+            return o;
+        }
+
+        //vrne true ce obstaja pozitivna coena
+        public bool pozitivnaOcena(int vpisna, int izvajanjeId)
+        {
+            student s = db.students.Find(vpisna);
+
+            foreach (var v in s.vpis)
+            {
+                System.Diagnostics.Debug.WriteLine("Pozitivna: pregledujem vpis "+v.id.ToString());
+                try
+                {
+                    var pnis = db.prijavanaizpits.Where(a => a.vpisId == v.id)
+                                                           .Where(b => b.izpitnirok.izvajanjeId == izvajanjeId)
+                                                           .Where(c => c.stanje == 2)
+                                                           .ToList();
+                    foreach (var pni in pnis)
+                    {
+                        if (pni != null)
+                        {
+                            System.Diagnostics.Debug.WriteLine("Prijava not null " + pni.id.ToString());
+                            var oc = pni.ocenas.ToList().LastOrDefault();
+                            if (oc != null)
+                            {
+                                System.Diagnostics.Debug.WriteLine("Ocena not null " + oc.id.ToString());
+                                if (oc.ocena1 > 5)
+                                {
+                                    System.Diagnostics.Debug.WriteLine("Obstaja pozitivna ocena");
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (Exception e) { }
+            }
+            return false;
+        }
+
+        //vrne true ce obstaja pozitivna coena
+        public int pozitivnaOcenaRokId(int vpisna, int izvajanjeId)
+        {
+            student s = db.students.Find(vpisna);
+
+            foreach (var v in s.vpis)
+            {
+                try
+                {
+                    var pnis = db.prijavanaizpits.Where(a => a.vpisId == v.id)
+                                                           .Where(b => b.izpitnirok.izvajanjeId == izvajanjeId)
+                                                           .Where(c => c.stanje == 2)
+                                                           .ToList();
+                    foreach (var pni in pnis)
+                    {
+                        if (pni != null)
+                        {
+                            System.Diagnostics.Debug.WriteLine("Prijava not null " + pni.id.ToString());
+                            var oc = pni.ocenas.ToList().LastOrDefault();
+                            if (oc != null)
+                            {
+                                System.Diagnostics.Debug.WriteLine("Ocena not null " + oc.id.ToString());
+                                if (oc.ocena1 > 5)
+                                {
+                                    System.Diagnostics.Debug.WriteLine("Obstaja pozitivna ocena");
+                                    return pni.izpitnirokId;
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (Exception e) { }
+            }
+            return -1;
+        }
+
+        public int ocenaRoka(int vpisId, int rokId)
+        {
+            System.Diagnostics.Debug.WriteLine("Vpis "+vpisId.ToString()+" "+rokId.ToString());
+            var prijava = db.prijavanaizpits.Where(a => a.vpisId == vpisId).Where(b => b.izpitnirokId == rokId).Where(c => c.stanje == 2).ToList().LastOrDefault();
+            if (prijava != null)
+            {
+                var ocena = prijava.ocenas.ToList().LastOrDefault();
+                if (ocena == null)
+                {
+                    System.Diagnostics.Debug.WriteLine("Ocena null");
+                    return -1;
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine("Ocena obstaja");
+                    return ocena.ocena1;
+                }
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("Prijava null");
+                return -1;                
+            }
+        }
+
         // vrne zaporedno stevilko izpita
         public int zaporednoPolaganje(int vpisna, int izvajanjeId, int studijskiprogram, DateTime datum)
         {
@@ -119,13 +254,27 @@ namespace studis.Models
             }       
         }
 
+        public int pridobiTocke(int prijavaId)
+        {
+            var tocke = db.tockes.Where(o => o.prijavaId == prijavaId).FirstOrDefault();
+
+            if (tocke != null)
+            {
+                return tocke.tocke1;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
         public string pridobiDatum(int prijavaId)
         {
             var datum = db.ocenas.Where(o => o.prijavaId == prijavaId).FirstOrDefault();
 
             if (datum != null)
             {
-                return datum.datum.ToString("dd/MM/yyyy");
+                return datum.datum.ToString("dd.MM.yyyy");
             }
             else
             {
@@ -150,6 +299,19 @@ namespace studis.Models
             }
 
             return 0;
+        }
+
+        public int pridobiVpisIzIzvajanja(int izvajanjeId, int vpisnaStevilka)
+        {
+            var izvajanje = db.izvajanjes.Where(i => i.id == izvajanjeId);
+            var vpis = izvajanje.FirstOrDefault().vpis.Where(v => v.vpisnaStevilka == vpisnaStevilka).FirstOrDefault();
+            return vpis.id;
+        }
+        public vpi pridobiVpisIzIzvajanjaObj(int izvajanjeId, int vpisnaStevilka)
+        {
+            var izvajanje = db.izvajanjes.Where(i => i.id == izvajanjeId);
+            var vpis = izvajanje.FirstOrDefault().vpis.Where(v => v.vpisnaStevilka == vpisnaStevilka).FirstOrDefault();
+            return vpis;
         }
     }
 }

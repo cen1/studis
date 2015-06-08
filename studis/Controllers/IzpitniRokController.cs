@@ -79,6 +79,7 @@ namespace studis.Controllers
                 izpitniRok.prostorId = model.prostor;
             try
             {
+                izpitniRok.fiktiven = false;
                 // TODO: Add insert logic here
                 db.izpitniroks.Add(izpitniRok);
                 db.SaveChanges();
@@ -805,7 +806,6 @@ namespace studis.Controllers
             return View(list);
         }
 
-
         public ActionResult IndiVpisOcen(int rokID, int prijavaID)
         {
             //podatki o izpitnem roku
@@ -1043,6 +1043,240 @@ namespace studis.Controllers
                 }
             }
             return View(list);
+        }
+
+        [Authorize(Roles = "Referent, Profesor")]
+        public ActionResult VnosOcenBrezPrijave(int? izvajanjeId, int? vpisId)
+        {
+            StudentHelper sh = new StudentHelper();
+            vpi v = db.vpis.Find(vpisId);
+
+            int leto = sh.trenutnoSolskoLeto();
+            var roki = db.izpitniroks.Where(a => a.izvajanjeId == izvajanjeId)
+                                     .Where(b => b.datum <= DateTime.Now || b.fiktiven == true)
+                                     .Where(c => (c.datum.Year == leto && c.datum.Month > 9) || (c.datum.Year == leto+1 && c.datum.Month <= 9));
+            List<SelectListItem> seznam = new List<SelectListItem>();
+            foreach (var i in roki)
+            {
+                string text = "";
+                int ocena = sh.ocenaRoka(v.id, i.id);
+                string ocena_s = "";
+                if (ocena == -1) ocena_s = "/";
+                else ocena_s = ocena.ToString();
+
+                if (i.fiktiven) text="Brez prijave (ocena: "+ocena_s+")";
+                else text = i.datum.ToString("dd.MM.yyyy") + " (razpisan, ocena: " + ocena_s + ")";
+
+                seznam.Add(new SelectListItem() { Value = i.id.ToString(), Text = (text) });
+            }
+            
+
+            ViewBag.roki = new SelectList(seznam, "Value", "text");
+            ViewBag.vpisnast = v.vpisnaStevilka;
+
+            return View();
+        }
+
+        //Stanje 0: študent je prijavljen na izpit
+        //Stanje 1: študent se je odjavil od izpita
+        //Stanje 2: študent je pisal izpit
+        //Stanje 3: študent ni pisal izpita
+        //Stanje 4: vrnjena prijava
+        [Authorize(Roles = "Referent, Profesor")]
+        [HttpPost]
+        public ActionResult VnosOcenBrezPrijave(int? izvajanjeId, int? vpisId, KoncnaOcenaModel model)
+        {
+            //že preverjeno z ajaxom če je vse OK glede števila polaganj itd
+            UserHelper uh = new UserHelper();
+            StudentHelper sh = new StudentHelper();
+            vpi v = db.vpis.Find(vpisId);
+            if (ModelState.IsValid)
+            {
+                //ce ze obstaja prijava za ta rok jo ne kreiramo
+                var prijava = db.prijavanaizpits.Where(a => a.vpisId == vpisId).Where(b => b.izpitnirokId == model.izpitnirok).FirstOrDefault();
+
+                //pogledamo ce ze obstaja pozitivna ocena za kak prejšnji rok
+                //dovolimo spremembo ce spreminjamo ravno rok s pozitivno oceno
+                System.Diagnostics.Debug.WriteLine("Rok id je " + model.izpitnirok.ToString());
+
+                if (sh.pozitivnaOcena(v.vpisnaStevilka, (int)izvajanjeId) && (model.izpitnirok != sh.pozitivnaOcenaRokId(v.vpisnaStevilka, (int)izvajanjeId)))
+                {
+                    ModelState.AddModelError("", "Študent že ima pozitivno oceno pri tem izvajanju!");
+                }
+                else
+                {
+                    if (prijava == null)
+                    {
+                        //ustvari prijavo
+                        prijavanaizpit pni = new prijavanaizpit();
+                        pni.datumPrijave = DateTime.Now;
+                        pni.izpitnirokId = model.izpitnirok;
+                        pni.prijavilId = uh.FindByName(User.Identity.Name).id;
+                        pni.stanje = 2;
+                        pni.vpisId = (int)vpisId;
+                        db.prijavanaizpits.Add(pni);
+                        db.SaveChanges();
+
+                        //ustvari oceno
+                        ocena o = new ocena();
+                        o.datum = DateTime.Now;
+                        o.ocena1 = model.ocena;
+                        o.prijavaId = pni.id;
+                        db.ocenas.Add(o);
+                        db.SaveChanges();
+                    }
+                    else
+                    {
+                        prijava.stanje = 2;
+
+                        //ce ze obstaja ocena za to prijavo jo ne kreiramo
+                        var ocena = db.ocenas.Where(a => a.prijavaId == prijava.id).FirstOrDefault();
+
+                        if (ocena == null)
+                        {
+                            //ustvari oceno
+                            ocena o = new ocena();
+                            o.datum = DateTime.Now;
+                            o.ocena1 = model.ocena;
+                            o.prijavaId = prijava.id;
+                            db.ocenas.Add(o);
+                        }
+                        else
+                        {
+                            ocena.datum = DateTime.Now;
+                            ocena.ocena1 = model.ocena;
+                        }
+                        db.SaveChanges();
+                    }
+
+                    return RedirectToAction("Izvajanja", new { vpisna = v.vpisnaStevilka });
+                }
+            }
+
+            int leto = sh.trenutnoSolskoLeto();
+            var roki = db.izpitniroks.Where(a => a.izvajanjeId == izvajanjeId)
+                                     .Where(b => b.datum <= DateTime.Now || b.fiktiven == true)
+                                     .Where(c => (c.datum.Year == leto && c.datum.Month > 9) || (c.datum.Year == leto + 1 && c.datum.Month <= 9));
+            List<SelectListItem> seznam = new List<SelectListItem>();
+            foreach (var i in roki)
+            {
+                string text = "";
+                int ocena = sh.ocenaRoka(v.id, i.id);
+                string ocena_s = "";
+                if (ocena == -1) ocena_s = "/";
+                else ocena_s = ocena.ToString();
+
+                if (i.fiktiven) text = "Brez prijave (ocena: " + ocena_s + ")";
+                else text = i.datum.ToString("dd.MM.yyyy") + " (razpisan, ocena: " + ocena_s + ")";
+
+                seznam.Add(new SelectListItem() { Value = i.id.ToString(), Text = (text) });
+            }
+
+
+            ViewBag.roki = new SelectList(seznam, "Value", "text");
+            ViewBag.vpisnast = v.vpisnaStevilka;
+
+            return View(model);
+
+        }
+
+
+        public ActionResult Izvajanja(int vpisna)
+        {
+            var vpisi = db.vpis.Where(v => v.vpisnaStevilka == vpisna).ToList();
+
+            List<izvajanje> izvajanja = new List<izvajanje>();
+
+            // preveri če je ponavljanje
+            var ponavljanje = vpisi.Where(v => v.vrstaVpisa == 2);
+            var tempVpis = new vpi();
+
+            List<int> vpisnaId = new List<int>();
+            if (ponavljanje.Count() == 1)
+            {
+                var letnikPon = Convert.ToInt32(ponavljanje.Select(p => p.letnikStudija).FirstOrDefault());
+
+                foreach (var v in vpisi.Where(v => v.letnikStudija == letnikPon))
+                {
+                    vpisnaId.Add(v.id);
+                }
+                var tn = vpisnaId.First();
+                var tn2 = vpisnaId.Last();
+                tempVpis = db.vpis.Where(v => v.id == tn).FirstOrDefault();
+                ViewBag.Ponavljanje = db.vpis.Where(v => v.id == tn2).FirstOrDefault();
+            }
+
+            if (User.IsInRole("Referent"))
+            {
+                foreach (var v in vpisi.Where(v => v.studijskoLeto == 2014))
+                {
+                    if (v.vrstaVpisa == 2)
+                    {
+                        foreach (var i in tempVpis.izvajanjes)
+                        {
+                            izvajanja.Add(i);
+                        }
+                    }
+                    else
+                    {
+                        foreach (var i in v.izvajanjes)
+                        {
+                            izvajanja.Add(i);
+                        }
+                    }           
+                }
+            }
+            else if (User.IsInRole("Profesor"))
+            {
+                UserHelper uh = new UserHelper();
+                var profesor = uh.FindByName(User.Identity.Name).profesors.FirstOrDefault();
+
+                foreach (var v in vpisi.Where(v => v.studijskoLeto == 2014))
+                {
+                    if (v.vrstaVpisa == 2)
+                    {
+                        foreach (var i in tempVpis.izvajanjes)
+                        {
+                            if (i.profesor.id == profesor.id)
+                            {
+                                izvajanja.Add(i);
+                            }
+                            else if (i.profesor1 != null && i.profesor1.id == profesor.id)
+                            {
+                                izvajanja.Add(i);
+                            }
+                            else if (i.profesor2 != null && i.profesor2.id == profesor.id)
+                            {
+                                izvajanja.Add(i);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        foreach (var i in v.izvajanjes)
+                        {
+                            if (i.profesor.id == profesor.id)
+                            {
+                                izvajanja.Add(i);
+                            }
+                            else if (i.profesor1 != null && i.profesor1.id == profesor.id)
+                            {
+                                izvajanja.Add(i);
+                            }
+                            else if (i.profesor2 != null && i.profesor2.id == profesor.id)
+                            {
+                                izvajanja.Add(i);
+                            }
+                        }
+                    }
+                }
+
+            }
+            
+            ViewBag.Izvajanja = izvajanja;
+            ViewBag.Vpis = vpisi.First();
+
+            return View();
         }
 
 
@@ -1339,7 +1573,7 @@ namespace studis.Controllers
             int iid = Convert.ToInt32(id);
             Debug.WriteLine("ID " + iid);
             var izvajanje = db.izvajanjes.SingleOrDefault(i => i.id == iid);//db.predmets.SingleOrDefault(p => p.id == iid);
-            var izpitniRoki = izvajanje.izpitniroks;//pPredmet.izpitniroks.ToList(); //Exception 
+            var izpitniRoki = izvajanje.izpitniroks.Where(a => a.fiktiven == false);//pPredmet.izpitniroks.ToList(); //Exception 
             var seznamIzpitniRoki = new List<SelectListItem>();
             int c = 0;
             foreach (izpitnirok i in izpitniRoki)
@@ -1506,6 +1740,39 @@ namespace studis.Controllers
 
         //Izpitni roki brez opcije "Izberi"
         public string GetIzpitniRoksOnlyForIzvajanja(int id)
+        {
+
+            //Debug.WriteLine("ID " + id);
+            int iid = Convert.ToInt32(id);
+            //Debug.WriteLine("ID " + iid);
+            var izvajanje = db.izvajanjes.SingleOrDefault(i => i.id == iid);//db.predmets.SingleOrDefault(p => p.id == iid);
+            var izpitniRoki = izvajanje.izpitniroks.Where(a => a.fiktiven == false);//pPredmet.izpitniroks.ToList(); //Exception 
+            var seznamIzpitniRoki = new List<SelectListItem>();
+            int c = 0;
+            foreach (izpitnirok i in izpitniRoki)
+            {
+                c++;
+                string prostor = "";
+                if (i.sifrant_prostor != null)
+                {
+                    prostor = i.sifrant_prostor.naziv;
+                }
+                string ura = "";
+                if (i.ura != null)
+                {
+                    ura = UserHelper.TimeToString((DateTime)i.ura);
+                }
+                seznamIzpitniRoki.Add(new SelectListItem() { Value = i.id.ToString(), Text = UserHelper.DateToString(i.datum) + " " + ura + " " + prostor });
+            }
+            if (c < 1)
+            {
+                seznamIzpitniRoki.Add(new SelectListItem() { Value = "", Text = "Ta predmet nima razpisanih rokov." });
+            }
+
+            return new JavaScriptSerializer().Serialize(seznamIzpitniRoki);
+        }
+
+        public string GetIzpitniRoksOnlyForIzvajanjaPlusFiktivni(int id)
         {
 
             //Debug.WriteLine("ID " + id);

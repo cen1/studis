@@ -208,6 +208,7 @@
       <DependentUpon>Studis.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\KandidatModel.cs" />
+    <Compile Include="Models\KoncnaOcenaModel.cs" />
     <Compile Include="Models\modul.cs">
       <DependentUpon>Studis.tt</DependentUpon>
     </Compile>
@@ -562,6 +563,8 @@
     <Content Include="Views\IzpitniRok\IndiVpisOcen.cshtml" />
     <Content Include="Views\IzpitniRokPrijava\Uspesno.cshtml" />
     <Content Include="Views\IzpitniRokPrijava\Neuspesno.cshtml" />
+    <Content Include="Views\IzpitniRok\VnosOcenBrezPrijave.cshtml" />
+    <Content Include="Views\IzpitniRok\Izvajanja.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

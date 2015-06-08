@@ -24,6 +24,7 @@
           <Property Name="ura" Type="datetime" Precision="0" />
           <Property Name="izvajanjeId" Type="uint" Nullable="false" />
           <Property Name="prostorId" Type="int" />
+          <Property Name="fiktiven" Type="bool" Nullable="false" />
         </EntityType>
         <EntityType Name="izvajanje">
           <Key>
@@ -2930,6 +2931,7 @@
           <NavigationProperty Name="sifrant_prostor" Relationship="studisModel.izpitnirok_prostor_fk" FromRole="izpitnirok" ToRole="sifrant_prostor" />
           <NavigationProperty Name="prijavanaizpits" Relationship="studisModel.prijava_izpitnirok_fk" FromRole="izpitnirok" ToRole="prijavanaizpit" />
           <NavigationProperty Name="izvajanje" Relationship="studisModel.izpitnirok_izvajanje_fk" FromRole="izpitnirok" ToRole="izvajanje" />
+          <Property Name="fiktiven" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="ocena">
           <Key>
@@ -3633,6 +3635,7 @@
           <EntitySetMapping Name="izpitniroks">
             <EntityTypeMapping TypeName="studisModel.izpitnirok">
               <MappingFragment StoreEntitySet="izpitnirok">
+                <ScalarProperty Name="fiktiven" ColumnName="fiktiven" />
                 <ScalarProperty Name="prostorId" ColumnName="prostorId" />
                 <ScalarProperty Name="ura" ColumnName="ura" />
                 <ScalarProperty Name="izvajanjeId" ColumnName="izvajanjeId" />

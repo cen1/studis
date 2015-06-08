@@ -386,6 +386,20 @@ namespace studis.Models
             }
             db.SaveChanges();
         }
+
+        public void kreirajFiktivneRoke()
+        {
+            foreach (var r in db.izvajanjes.ToList())
+            {
+                izpitnirok ir = new izpitnirok();
+                ir.fiktiven = true;
+                ir.izvajanjeId = r.id;
+                ir.prostorId = 1;
+                ir.datum = Convert.ToDateTime("30.9.2015");
+                db.izpitniroks.Add(ir);
+            }
+            db.SaveChanges();
+        }
     }
 
 }

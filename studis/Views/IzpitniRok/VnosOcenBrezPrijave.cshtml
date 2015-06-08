@@ -1,0 +1,94 @@
+﻿@model studis.Models.KoncnaOcenaModel
+
+@{
+    ViewBag.Title = "Vpis ocene brez prijave";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+
+<h2>Vpis ocene brez prijave</h2>
+
+@Html.ValidationSummary(true, "Vpis ni uspel. Popravite napake in poskusite ponovno.")
+
+
+@using (Html.BeginForm())
+{
+<div>
+    <fieldset>
+
+        <!--Izbira IzpitnegaRoka-->
+        <div class="editor-label">
+            @Html.LabelFor(m => m.izpitnirok)
+        </div>
+        <div class="editor-field">
+            @Html.DropDownListFor(m => m.izpitnirok, (SelectList)ViewBag.roki)
+            @Html.ValidationMessageFor(m => m.izpitnirok)
+        </div>
+
+        <!--ocena-->
+        <div class="editor-label">
+            @Html.LabelFor(m => m.ocena)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(m => m.ocena)
+            @Html.ValidationMessageFor(m => m.ocena)
+        </div>
+        <input type="hidden" id="vpisnast" value="@ViewBag.vpisnast" />
+
+        <p id="warning" style="color:orange;"></p>
+        <p>
+            <input id="submit" type="submit" value="Vpiši">
+        </p>
+        <ul id="error">
+
+        </ul>
+    </fieldset>
+</div>
+}
+<script>
+    $(document).ready(function () {
+        $("#submit").click(function () {
+            var ulOpozorila = $("#error");
+            ulOpozorila.empty();
+            $("#submit").prop("disabled", false);
+            console.log("sending ajax");
+
+            $.ajax({
+                type: "POST", 
+                url: "/IzpitniRokPrijava/PreveriPrijavo/",
+                data: { vpisna: $("#vpisnast").val(), izpitniRok: $("#izpitnirok").val() },
+                
+                success: function (data) {
+                    console.log("V funkciji");
+                    if (data === undefined) {
+                        console.log("data is undefined");
+                    }
+                    console.log(data);
+                    var response = data;//$.parseJSON(data);
+                    var opozorila = $.parseJSON(response.Warnings);
+                    var obvestilo = response.Notice;
+                    if (opozorila === undefined) {
+                        console.log("opozorila is undefined");
+                    }
+                    
+                    if (opozorila.length > 0)
+                        $("#submit").prop("disabled", true);
+                    
+                    if (obvestilo != "") {
+                        potrdi = function () {
+                            confirm(obvestilo);
+                        };
+                    }
+                    //napolni
+                    for (i = 0; i < opozorila.length; i++) {
+                        ulOpozorila.append('<li>' + opozorila[i] + '</li>');
+                    }
+                },
+                dataType: "json",
+                traditional: true
+            });
+        });
+    });
+</script>

@@ -336,12 +336,16 @@ namespace studis.Controllers
 
         public string GetIzpitniRoksForIzvajanja(int id)
         {
+            StudentHelper sh = new StudentHelper();
+            int leto = sh.trenutnoSolskoLeto();
 
             Debug.WriteLine("ID " + id);
             int iid = Convert.ToInt32(id);
             Debug.WriteLine("ID " + iid);
             var izvajanje = db.izvajanjes.SingleOrDefault(i => i.id == iid);//db.predmets.SingleOrDefault(p => p.id == iid);
-            var izpitniRoki = izvajanje.izpitniroks;//pPredmet.izpitniroks.ToList(); //Exception 
+            var izpitniRoki = izvajanje.izpitniroks.Where(a => a.fiktiven == false)
+                                                   .Where(a => (a.datum.Year == leto && a.datum.Month > 9) || (a.datum.Year == leto + 1 && a.datum.Month < 10));
+                  
             var seznamIzpitniRoki = new List<SelectListItem>();
             int c = 0;
             foreach (izpitnirok i in izpitniRoki)
@@ -458,24 +462,24 @@ namespace studis.Controllers
                 opozorila.Add("Rok za prijavo je potekel.");
             }
             //-preveri da je od zadnje prijave minilo 7 dni
-            var zadnjaPrijava = db.prijavanaizpits.Where(a => a.izpitnirokId == iRok.id).Where(a => a.vpisId == trenutniVpis.id).FirstOrDefault();
+            var zadnjaPrijava = db.prijavanaizpits.Where(a => a.izpitnirokId == iRok.id).Where(a => a.vpisId == trenutniVpis.id).Last();
             if (zadnjaPrijava != null)
             {
                 TimeSpan razlika = DateTime.Now - zadnjaPrijava.datumPrijave;
                 if (razlika.Days < 7)
                 {
-                    opozorila.Add("Od zadnje prijave pri temu predmetu še ni minilo 7 dni." + "Datum zadnje prijave: " + UserHelper.DateToString(zadnjaPrijava.datumPrijave));
+                    opozorila.Add("Od zadnje prijave pri temu predmetu še ni minilo 7 dni. " + "Datum zadnje prijave: " + UserHelper.DateToString(zadnjaPrijava.datumPrijave));
                 }
             }
             //-max 3 polaganja letos
             int letos = sh.polaganjaLetos(trenutniVpis.id, (int) iRok.izvajanjeId);
-            if (letos > 3)
+            if (letos >= 3)
             {
                 opozorila.Add("Preseženo število dovoljenih prijav za letos (3).");
             }
             //-max 6 polaganj vse skupaj (ponavljanje resetira)
             int skupaj = sh.polaganjaVsa(trenutniVpis.vpisnaStevilka, (int) iRok.izvajanjeId, trenutniVpis.studijskiProgram);
-            if (skupaj > 6)
+            if (skupaj >= 6)
             {
                 opozorila.Add("Preseženo število dovoljenih prijav (6).");
             }
@@ -513,7 +517,8 @@ namespace studis.Controllers
             int ivpisna = Convert.ToInt32(vpisna);
             int iprijavaId = Convert.ToInt32(prijavaId);
             Debug.WriteLine("Vpisna: " + vpisna + ", IzpitniRokId: " + iprijavaId);
-            izpitnirok iRok = db.prijavanaizpits.SingleOrDefault(a => a.id == iprijavaId).izpitnirok;//db.izpitniroks.SingleOrDefault(a => a.id == iizpitniRok);
+            prijavanaizpit prijava = db.prijavanaizpits.SingleOrDefault(a => a.id == iprijavaId);
+            izpitnirok iRok = prijava.izpitnirok;//db.izpitniroks.SingleOrDefault(a => a.id == iizpitniRok);
             student stud = db.students.SingleOrDefault(a => a.vpisnaStevilka == ivpisna);
 
             List<string> opozorila = new List<string>();
@@ -536,9 +541,14 @@ namespace studis.Controllers
             {
                 opozorila.Add("Rok za odjavo je potekel.");
             }
-            
+
+            List<string> napake = new List<string>();
             //-preveri ce je izpit ze opravljen
             //-preveri ce za prejsnjo prijavo ze obstaja ocena
+            if (prijava.stanje == 2 )
+            {
+                napake.Add("Odjava ni več mogoča.");
+            }
 
             //opozorila.Add("--1test server--");
             //opozorila.Add("--2test server--");
@@ -548,7 +558,7 @@ namespace studis.Controllers
             string obvestilo = "";
 
 
-            return Json(new { Warnings = new JavaScriptSerializer().Serialize(opozorila), Notice = obvestilo });
+            return Json(new { Warnings = new JavaScriptSerializer().Serialize(opozorila), Notice = obvestilo, Errors = napake });
         }
     }
 }

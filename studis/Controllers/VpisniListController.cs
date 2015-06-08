@@ -760,7 +760,7 @@ namespace studis.Controllers
             if (s == null) return HttpNotFound();
 
             // dodaj samo tiste, ki imajo vpisni list za 2 ali 3 letnik
-            var vpisi = s.vpis.Where(a => a.letnikStudija == 2 || a.letnikStudija == 3);
+            var vpisi = s.vpis.Where(a => (a.letnikStudija == 2 || a.letnikStudija == 3) && a.vrstaVpisa != 2);
             List<vpi> vplist = new List<vpi>();
             foreach (var v in vpisi)
             {
@@ -822,6 +822,7 @@ namespace studis.Controllers
             PredmetHelper ph = new PredmetHelper();
             int kreditne = 60 - ph.getKreditObv2();
             List<predmet> dodaj_p = new List<predmet>();
+            StudentHelper sh = new StudentHelper();
 
             int num_prosto = 0;
             int num_strok = 0;
@@ -868,33 +869,81 @@ namespace studis.Controllers
             if (kreditne == 0)
             {
                 // odstrani vse
-                foreach (var i in vl.izvajanjes)
-                    vl.izvajanjes.Remove(i);
-
-                //dodaj izbirne
-                foreach (var p in dodaj_p)
+                try
                 {
-                    //referent mora imet na izbiro katero izvajanje...
+                    vl.izvajanjes.Clear();
+                    db.SaveChanges();
                 }
-                //dodaj obvezne
+                catch
+                {
+                    TempData["error"] = "Prišlo je do napake pri urejanju podatkov v bazi!";
+                    return RedirectToAction("UrediPredmetnik2", new { id = id });
+                }            
+                    
+                // dodaj obvezne
                 foreach (var o in ph.obvezni2())
                 {
-                    //referent mora imet izbiro katero izvajanje
+                    //poiščemo izvajanje pri tem predmetu ki se izvaja v prihodnjem šolskem letu
+                    var izlist = db.izvajanjes.Where(a => a.predmetId == o.id).ToList();
+                    bool breakk = false;
+                    foreach (var i in izlist)
+                    {
+                        if (breakk) break;
+                        foreach (var il in i.izvajanjeletoes)
+                            if (il.studijskoletoId == vl.studijskoLeto)
+                            {
+                                vl.izvajanjes.Add(i);
+                                breakk = true;
+                                break;
+                            }
+                    }
                 }
 
-                db.SaveChanges();
+                // dodaj izbirne
+                foreach (var p in dodaj_p)
+                {
+                    System.Diagnostics.Debug.WriteLine("--" + p.ime + p.id.ToString());
+                    //poiščemo izvajanje pri tem predmetu ki se izvaja v prihodnjem šolskem letu
+                    var izlist = db.izvajanjes.Where(a => a.predmetId == p.id).ToList();
+                    bool breakk = false;
+                    foreach (var i in izlist)
+                    {
+                        if (breakk) break;
+                        foreach (var il in i.izvajanjeletoes)
+                        {
+                            System.Diagnostics.Debug.WriteLine("---izvajanje leto " + il.studijskoletoId);
+                            if (il.studijskoletoId == vl.studijskoLeto)
+                            {
+                                vl.izvajanjes.Add(i);
+                                breakk = true;
+                                System.Diagnostics.Debug.WriteLine("---" + i.predmet.ime);
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                try
+                {
+                    db.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine("napaka " + ex.Message);
+                    return HttpNotFound();
+                }             
 
                 TempData["id"] = id;
                 return RedirectToAction("VpisniListSuccess");
             }
             else
             {
-                // kateri strokovni predmet ima izbran                                                
-                //var sp = db.studentinpredmets.SingleOrDefault(v => v.vpisId == id && (v.predmet.strokovnoizbirni == true));
-                //ViewBag.Strokovni = sp.predmetId;
+                // kateri strokovni predmet ima izbran                                               
+                var sp = vl.izvajanjes.Where(v => v.predmet.strokovnoizbirni == true).First();
+                ViewBag.Strokovni = sp.predmetId;
 
                 // katere prosto izbirne predmete ima izbrane
-                //ViewBag.Prosto = db.studentinpredmets.Where(v => v.vpisId == id && (v.predmet.prostoizbirni == true)).ToList();
+                ViewBag.Prosto = vl.izvajanjes.Where(v => v.predmet.prostoizbirni == true).ToList();
 
                 TempData["error"] = "Nepravilno število izbranih kreditnih točk";
                 return RedirectToAction("UrediPredmetnik2", new { id = id });
@@ -958,7 +1007,8 @@ namespace studis.Controllers
             ViewBag.sumIzb = 60 - sumObv;
 
             // označi tiste ki so že izbrani
-            //ViewBag.Modul = db.studentinpredmets.Where(v => v.vpisId == id && v.predmet.modul != null); 
+            //var sp = vl.izvajanjes.Where(v => v.predmet.modul != null).First();
+            ViewBag.Modul = vl.izvajanjes.Where(v => v.predmet.modul != null); 
 
             return View();
         }
@@ -976,6 +1026,7 @@ namespace studis.Controllers
             if (!uh.preveriPovprecje(vl.student)) return HttpNotFound();
 
             PredmetHelper ph = new PredmetHelper();
+            StudentHelper sh = new StudentHelper();
             int kreditne = 60 - ph.getKreditObv3();
             List<predmet> dodaj_p = new List<predmet>();
 
@@ -996,20 +1047,61 @@ namespace studis.Controllers
             if (kreditne == 0)
             {
                 // odstrani vse
-                //db.studentinpredmets.RemoveRange(db.studentinpredmets.Where(x => x.vpisId == id));
+                try
+                {
+                    vl.izvajanjes.Clear();
+                    db.SaveChanges();
+                }
+                catch
+                {
+                    TempData["error"] = "Prišlo je do napake pri urejanju podatkov v bazi!";
+                    return RedirectToAction("UrediPredmetnik3Prosti", new { id = id });
+                }
+
+                //dodaj obvezne
+                foreach (var o in ph.obvezni3())
+                {
+                    //poiščemo izvajanje pri tem predmetu ki se izvaja v prihodnjem šolskem letu
+                    var izlist = db.izvajanjes.Where(a => a.predmetId == o.id).ToList();
+                    bool breakk = false;
+                    foreach (var i in izlist)
+                    {
+                        if (breakk) break;
+                        foreach (var il in i.izvajanjeletoes)
+                            if (il.studijskoletoId == vl.studijskoLeto)
+                            {
+                                vl.izvajanjes.Add(i);
+                                breakk = true;
+                            }
+                    }
+                }
 
                 //dodaj izbirne
                 foreach (var p in dodaj_p)
                 {
-                    //
-                }
-                //dodaj obvezne
-                foreach (var o in ph.obvezni3())
-                {
-                    //
+                    //poiščemo izvajanje pri tem predmetu ki se izvaja v prihodnjem šolskem letu
+                    var izlist = db.izvajanjes.Where(a => a.predmetId == p.id).ToList();
+                    bool breakk = false;
+                    foreach (var i in izlist)
+                    {
+                        if (breakk) break;
+                        foreach (var il in i.izvajanjeletoes)
+                            if (il.studijskoletoId == vl.studijskoLeto)
+                            {
+                                vl.izvajanjes.Add(i);
+                                breakk = true;
+                            }
+                    }
                 }
 
-                db.SaveChanges();
+                try
+                {
+                    db.SaveChanges();
+                }
+                catch
+                {
+                    return HttpNotFound();
+                }
 
                 TempData["id"] = id;
                 return RedirectToAction("VpisniListSuccess");
@@ -1017,6 +1109,7 @@ namespace studis.Controllers
             else
             {
                 // označi tiste ki so že izbrani
+                ViewBag.Modul = vl.izvajanjes.Where(v => v.predmet.modul != null); 
                 //ViewBag.Modul = db.studentinpredmets.Where(v => v.vpisId == id && v.predmet.modul != null); 
 
                 TempData["error"] = "Nepravilno število izbranih kreditnih točk";
@@ -1050,16 +1143,17 @@ namespace studis.Controllers
 
             // oznaci tiste ki so že izbrani
             //var izbrani = db.studentinpredmets.Where(v => v.vpisId == id && v.predmet.modul != null).ToList();
-            //ViewBag.Oznaci = izbrani;
+            var izbrani = vl.izvajanjes.Where(v => v.predmet.modul != null).ToList();
+            ViewBag.Oznaci = izbrani;
 
             // ne oznaci tistega modula, ki ima izbirni predmet
-            //var prost = izbrani.Select(v => v.predmet.modulId).Distinct().ToList();
-            //var stevilo = Convert.ToInt32(prost.First());
-            //ViewBag.NeOznaci = stevilo;
+            var prost = izbrani.Select(v => v.predmet.modulId).Distinct().ToList();
+            var stevilo = Convert.ToInt32(prost.First());
+            ViewBag.NeOznaci = stevilo;
 
-            //var i = izbrani.Where(v => v.predmet.modulId == stevilo).Select(v => v.predmet.id).ToList().First();
-            //var items = ph.izbirni3();
-            //ViewBag.izbirniPredmeti = new SelectList(items, "id", "ime", items.Where(x => x.id == i).ToList().First().id);
+            var i = izbrani.Where(v => v.predmet.modulId == stevilo).Select(v => v.predmet.id).ToList().First();
+            var items = ph.izbirni3();
+            ViewBag.izbirniPredmeti = new SelectList(items, "id", "ime", items.Where(x => x.id == i).ToList().First().id);
             
             return View();
         }
@@ -1073,6 +1167,7 @@ namespace studis.Controllers
             if (vl == null) return HttpNotFound();
 
             PredmetHelper ph = new PredmetHelper();
+            StudentHelper sh = new StudentHelper();
             int kreditne = 60 - ph.getKreditObv3();
             List<predmet> dodaj_p = new List<predmet>();
             List<modul> moduli = new List<modul>();
@@ -1106,14 +1201,16 @@ namespace studis.Controllers
                 else
                 {
                     // oznaci tiste ki so že izbrani
-                    /*var izbrani = db.studentinpredmets.Where(v => v.vpisId == id && v.predmet.modul != null).ToList();
+                    //var izbrani = db.studentinpredmets.Where(v => v.vpisId == id && v.predmet.modul != null).ToList();
+                    var izbrani = vl.izvajanjes.Where(v => v.predmet.modul != null).ToList();
                     ViewBag.Oznaci = izbrani;
 
                     // ne oznaci tistega modula, ki ima izbirni predmet
                     var prost = izbrani.Select(v => v.predmet.modulId).Distinct().ToList();
                     ViewBag.NeOznaci = Convert.ToInt32(prost.First());
+                    
 
-                    TempData["error"] = "Dodatni predmet ne obstaja";*/
+                    TempData["error"] = "Dodatni predmet ne obstaja";
                     return RedirectToAction("UrediPredmetnik3Moduli", new { id = id });
                 }
 
@@ -1121,37 +1218,79 @@ namespace studis.Controllers
             else
             {
                 // oznaci tiste ki so že izbrani
-                /*var izbrani = db.studentinpredmets.Where(v => v.vpisId == id && v.predmet.modul != null).ToList();
+                //var izbrani = db.studentinpredmets.Where(v => v.vpisId == id && v.predmet.modul != null).ToList();
+                var izbrani = vl.izvajanjes.Where(v => v.predmet.modul != null).ToList();
                 ViewBag.Oznaci = izbrani;
 
                 // ne oznaci tistega modula, ki ima izbirni predmet
                 var prost = izbrani.Select(v => v.predmet.modulId).Distinct().ToList();
                 ViewBag.NeOznaci = Convert.ToInt32(prost.First());
+                
 
-                TempData["error"] = ModelState.Select(x => x.Value.Errors).Where(y => y.Count > 0).ToList().First().First().ErrorMessage;*/
+                TempData["error"] = ModelState.Select(x => x.Value.Errors).Where(y => y.Count > 0).ToList().First().First().ErrorMessage;
                 return RedirectToAction("UrediPredmetnik3Moduli", new { id = id });
             }
 
             if (kreditne == 0)
             {
-                //preveri da dodaten rpedmet ni v modulih
+                //preveri da dodaten predmet ni v modulih
                 if (ph.preveriIzbirne3(moduli, d))
                 {
                     // odstrani vse
-                    //db.studentinpredmets.RemoveRange(db.studentinpredmets.Where(x => x.vpisId == id));
-
-                    //dodaj izbirne
-                    foreach (var p in dodaj_p)
+                    try
                     {
-                        //
+                        vl.izvajanjes.Clear();
+                        db.SaveChanges();
                     }
+                    catch
+                    {
+                        TempData["error"] = "Prišlo je do napake pri urejanju podatkov v bazi!";
+                        return RedirectToAction("UrediPredmetnik3Moduli", new { id = id });
+                    }
+
                     //dodaj obvezne
                     foreach (var o in ph.obvezni3())
                     {
-                        //
+                        //poiščemo izvajanje pri tem predmetu ki se izvaja v prihodnjem šolskem letu
+                        var izlist = db.izvajanjes.Where(a => a.predmetId == o.id).ToList();
+                        bool breakk = false;
+                        foreach (var i in izlist)
+                        {
+                            if (breakk) break;
+                            foreach (var il in i.izvajanjeletoes)
+                                if (il.studijskoletoId == vl.studijskoLeto)
+                                {
+                                    vl.izvajanjes.Add(i);
+                                    breakk = true;
+                                }
+                        }
                     }
 
-                    db.SaveChanges();
+                    foreach (var p in dodaj_p)
+                    {
+                        //poiščemo izvajanje pri tem predmetu ki se izvaja v prihodnjem šolskem letu
+                        var izlist = db.izvajanjes.Where(a => a.predmetId == p.id).ToList();
+                        bool breakk = false;
+                        foreach (var i in izlist)
+                        {
+                            if (breakk) break;
+                            foreach (var il in i.izvajanjeletoes)
+                                if (il.studijskoletoId == vl.studijskoLeto)
+                                {
+                                    vl.izvajanjes.Add(i);
+                                    breakk = true;
+                                }
+                        }
+                    }
+
+                    try
+                    {
+                        db.SaveChanges();
+                    }
+                    catch
+                    {
+                        return HttpNotFound();
+                    }
 
                     TempData["id"] = id;
                     return RedirectToAction("VpisniListSuccess");
@@ -1159,28 +1298,32 @@ namespace studis.Controllers
                 else
                 {
                     // oznaci tiste ki so že izbrani
-                    /*var izbrani = db.studentinpredmets.Where(v => v.vpisId == id && v.predmet.modul != null).ToList();
+                    //var izbrani = db.studentinpredmets.Where(v => v.vpisId == id && v.predmet.modul != null).ToList();
+                    var izbrani = vl.izvajanjes.Where(v => v.predmet.modul != null).ToList();
                     ViewBag.Oznaci = izbrani;
 
                     // ne oznaci tistega modula, ki ima izbirni predmet
                     var prost = izbrani.Select(v => v.predmet.modulId).Distinct().ToList();
                     ViewBag.NeOznaci = Convert.ToInt32(prost.First());
-
-                    TempData["error"] = "Dodatni predmet je že del enega izmed modulov";*/
+                    
+                    
+                    TempData["error"] = "Dodatni predmet je že del enega izmed modulov";
                     return RedirectToAction("UrediPredmetnik3Moduli", new { id = id });
                 }
             }
             else
             {
                 // oznaci tiste ki so že izbrani
-                /*var izbrani = db.studentinpredmets.Where(v => v.vpisId == id && v.predmet.modul != null).ToList();
+                // var izbrani = db.studentinpredmets.Where(v => v.vpisId == id && v.predmet.modul != null).ToList();
+                var izbrani = vl.izvajanjes.Where(v => v.predmet.modul != null).ToList();
                 ViewBag.Oznaci = izbrani;
 
                 // ne oznaci tistega modula, ki ima izbirni predmet
                 var prost = izbrani.Select(v => v.predmet.modulId).Distinct().ToList();
                 ViewBag.NeOznaci = Convert.ToInt32(prost.First());
+                
 
-                TempData["error"] = "Nepravilno število izbranih kreditnih točk";*/
+                TempData["error"] = "Nepravilno število izbranih kreditnih točk";
                 return RedirectToAction("UrediPredmetnik3Moduli", new { id = id });
             }
         }
@@ -1233,7 +1376,7 @@ namespace studis.Controllers
                 {
                     if (breakk) break;
                     foreach (var il in i.izvajanjeletoes)
-                        if (il.studijskoletoId == sh.trenutnoSolskoLeto() + 1)
+                        if (il.studijskoletoId == vl.studijskoLeto)
                         {
                             vl.izvajanjes.Add(i);
                             breakk = true;
@@ -1274,13 +1417,16 @@ namespace studis.Controllers
             }
 
             //preveri ce trenutni user sploh lahko dostopa do tega predmetnika
-            my_aspnet_users usr = uh.FindByName(User.Identity.Name);
-            if (vl.student.userId != usr.id || vl.letnikStudija != 2)
+            if (!User.IsInRole("Referent"))
             {
-                System.Diagnostics.Debug.WriteLine("nimate dostopa");
-                return HttpNotFound();
+                my_aspnet_users usr = uh.FindByName(User.Identity.Name);
+                if (vl.student.userId != usr.id || vl.letnikStudija != 2)
+                {
+                    System.Diagnostics.Debug.WriteLine("nimate dostopa");
+                    return HttpNotFound();
+                }
             }
-
+            
             PredmetHelper ph = new PredmetHelper();
 
             //obvezni plus 1 strokovno izbirni plus 1 prosto izbirni
@@ -1377,7 +1523,7 @@ namespace studis.Controllers
                         {
                             if (breakk) break;
                             foreach (var il in i.izvajanjeletoes)
-                                if (il.studijskoletoId == sh.trenutnoSolskoLeto() + 1)
+                                if (il.studijskoletoId == vl.studijskoLeto)
                                 {
                                     vl.izvajanjes.Add(i);
                                     breakk = true;
@@ -1399,7 +1545,7 @@ namespace studis.Controllers
                         foreach (var il in i.izvajanjeletoes)
                         {
                             System.Diagnostics.Debug.WriteLine("---izvajanje leto " + il.studijskoletoId);
-                            if (il.studijskoletoId == sh.trenutnoSolskoLeto() + 1)
+                            if (il.studijskoletoId == vl.studijskoLeto)
                             {
                                 vl.izvajanjes.Add(i);
                                 breakk = true;
@@ -1457,9 +1603,12 @@ namespace studis.Controllers
             if (uh.jePredmetnikVzpostavljen(vl)) return HttpNotFound();
 
             //preveri ce trenutni user sploh lahko dostopa do tega predmetnika
-            my_aspnet_users usr = uh.FindByName(User.Identity.Name);
-            if (vl.student.userId != usr.id || vl.letnikStudija != 3) return HttpNotFound();
-
+            if (!User.IsInRole("Referent"))
+            {
+                my_aspnet_users usr = uh.FindByName(User.Identity.Name);
+                if (vl.student.userId != usr.id || vl.letnikStudija != 3) return HttpNotFound();
+            }
+            
             //preveri ce ima povprecje
             if (!uh.preveriPovprecje(vl.student)) return HttpNotFound();
 
@@ -1533,7 +1682,7 @@ namespace studis.Controllers
                         {
                             if (breakk) break;
                             foreach (var il in i.izvajanjeletoes)
-                                if (il.studijskoletoId == sh.trenutnoSolskoLeto() + 1)
+                                if (il.studijskoletoId == vl.studijskoLeto)
                                 {
                                     vl.izvajanjes.Add(i);
                                     breakk = true;
@@ -1551,7 +1700,7 @@ namespace studis.Controllers
                     {
                         if (breakk) break;
                         foreach (var il in i.izvajanjeletoes)
-                            if (il.studijskoletoId == sh.trenutnoSolskoLeto() + 1)
+                            if (il.studijskoletoId == vl.studijskoLeto)
                             {
                                 vl.izvajanjes.Add(i);
                                 breakk = true;
@@ -1590,9 +1739,12 @@ namespace studis.Controllers
             if (uh.jePredmetnikVzpostavljen(vl)) return HttpNotFound();
 
             //preveri ce trenutni user sploh lahko dostopa do tega predmetnika
-            my_aspnet_users usr = uh.FindByName(User.Identity.Name);
-            if (vl.student.userId != usr.id) return HttpNotFound();
-
+            if (!User.IsInRole("Referent"))
+            {
+                my_aspnet_users usr = uh.FindByName(User.Identity.Name);
+                if (vl.student.userId != usr.id) return HttpNotFound();
+            }
+            
             //preveri ce ima povprecje
             if (uh.preveriPovprecje(vl.student)) return HttpNotFound();
 
@@ -1694,7 +1846,7 @@ namespace studis.Controllers
                             {
                                 if (breakk) break;
                                 foreach (var il in i.izvajanjeletoes)
-                                    if (il.studijskoletoId == sh.trenutnoSolskoLeto() + 1)
+                                    if (il.studijskoletoId == vl.studijskoLeto)
                                     {
                                         vl.izvajanjes.Add(i);
                                         breakk = true;
@@ -1712,7 +1864,7 @@ namespace studis.Controllers
                         {
                             if (breakk) break;
                             foreach (var il in i.izvajanjeletoes)
-                                if (il.studijskoletoId == sh.trenutnoSolskoLeto() + 1)
+                                if (il.studijskoletoId == vl.studijskoLeto)
                                 {
                                     vl.izvajanjes.Add(i);
                                     breakk = true;

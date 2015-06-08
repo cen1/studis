@@ -35,6 +35,10 @@
             {
                 <th>Kartotečni list</th>
             }
+            @if (User.IsInRole("Referent") || User.IsInRole("Profesor"))
+            {
+                <th>Dodaj oceno</th>
+            }
             @if (User.IsInRole("Referent"))
             {
                 <th>Izpiti</th>
@@ -69,6 +73,14 @@
             @if (User.IsInRole("Referent"))
             {
                 <td>@Html.ActionLink("Izpiši", "Izpis", "KartotecniList", new { id = item.vpisnaStevilka }, null)</td>
+            }
+            @if (User.IsInRole("Referent"))
+            {
+                <td>@Html.ActionLink("Dodaj", "Izvajanja", "IzpitniRok", new { vpisna = item.vpisnaStevilka }, null)</td>
+            }
+            else if (User.IsInRole("Profesor"))
+            {
+                <td>@Html.ActionLink("Dodaj", "Izvajanja", "IzpitniRok", new { vpisna = item.vpisnaStevilka }, null)</td>
             }
             @if (User.IsInRole("Referent"))
             {

@@ -190,9 +190,14 @@
                     console.log(data);
                     var response = data;//$.parseJSON(data);
                     var opozorila = $.parseJSON(response.Warnings);
+                    var napake = $.parseJSON(response.Errors);
                     var obvestilo = response.Notice;
                     if (opozorila === undefined) {
                         console.log("opozorila is undefined");
+                    }
+                    if (napake.length > 0) {
+                        $("#submit").prop("disabled", true);
+                        $("#error").append('<li>' + napake[0] + '</li>')
                     }
                     @if (User.IsInRole("Referent"))
                     {
@@ -202,8 +207,8 @@
                     else if (User.IsInRole("Študent"))
                     {
                         <text>
-                    if (opozorila.length > 0)
-                        $("#submit").prop("disabled", true);
+                        if (opozorila.length > 0)
+                            $("#submit").prop("disabled", true);
                         </text>
                     }
                     if (obvestilo != "") {
