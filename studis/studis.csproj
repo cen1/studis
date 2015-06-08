@@ -566,6 +566,7 @@
     <Content Include="Views\IzpitniRok\VnosOcenBrezPrijave.cshtml" />
     <Content Include="Views\IzpitniRok\Izvajanja.cshtml" />
     <Content Include="Views\IzpitniRokPrijava\OdjaviDnevnik.cshtml" />
+    <Content Include="Views\VpisniList\UrediPredmetnik1.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

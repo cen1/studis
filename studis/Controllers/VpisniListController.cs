@@ -775,6 +775,117 @@ namespace studis.Controllers
         }
 
         [Authorize(Roles = "Referent")]
+        public ActionResult UrediPredmetnik1(int id)
+        {
+            //preveri ce vpisni sploh obstaja
+            var vl = db.vpis.Find(id);
+            if (vl == null) return HttpNotFound();
+
+            //preveri ce je predmetnik ze bil izpolnjen, vseh 60kt
+            UserHelper uh = new UserHelper();
+            if (!uh.jePredmetnikVzpostavljen(vl))
+            {
+                return RedirectToAction("PrviPredmetnik", "VpisniList", new { id = vl.id });
+            }
+            else
+            {
+                PredmetHelper ph = new PredmetHelper();
+                PrviPredmetnikModel m = new PrviPredmetnikModel();
+                m.vlid = id;
+                var predmeti = ph.obvezni1();
+                ViewBag.Predmeti = predmeti;
+
+                List<izvajanje> izvajanja = new List<izvajanje>();
+                foreach (var p in predmeti.ToList())
+                {
+                    foreach (var i in p.izvajanjes)
+                    {
+                        if (p.id == i.predmetId)
+                        {
+                            izvajanja.Add(i);
+                        }
+                    }
+                }
+                ViewBag.Izvajanja = izvajanja;
+
+                List<izvajanje> oznaci = new List<izvajanje>();
+
+                foreach (var p in predmeti.ToList())
+                {
+                    foreach (var i in vl.izvajanjes)
+                    {
+                        if (p.id == i.predmetId)
+                        {
+                            oznaci.Add(i);
+                        }
+                    }
+                }
+                ViewBag.Oznaci = oznaci;
+
+                return View(m);
+            }
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Referent")]
+        public ActionResult UrediPredmetnik1(PrviPredmetnikModel model)
+        {
+            var vl = db.vpis.Find(model.vlid);
+            if (vl == null) return HttpNotFound();
+
+            //preveri ce je predmetnik ze bil izpolnjen, ne le delni ampak vseh 60kt
+            UserHelper uh = new UserHelper();
+            if (uh.jePredmetnikVzpostavljen(vl)) return HttpNotFound();
+
+            List<izvajanje> dodaj_i = new List<izvajanje>();
+
+            // odstrani vse
+            try
+            {
+                vl.izvajanjes.Clear();
+                db.SaveChanges();
+            }
+            catch
+            {
+                TempData["error"] = "Prišlo je do napake pri urejanju podatkov v bazi!";
+                return RedirectToAction("UrediPredmetnik1", new { id = model.vlid });
+            }            
+
+            //shrani predmetnik
+            foreach (string key in Request.Form)
+            {
+                if (key.StartsWith("obvezni_"))
+                {
+                    int k = Convert.ToInt32(Request.Form[key]);
+                    izvajanje i = db.izvajanjes.Where(a => a.id == k).First();
+                    if (k != null)
+                    {
+                        dodaj_i.Add(i);
+                    }
+                }
+            }
+
+            // foreach izvajanje, add it to vpis
+            foreach (var i in dodaj_i)
+            {
+                vl.izvajanjes.Add(i);
+            }
+
+            try
+            {
+                db.SaveChanges();
+            }
+            catch
+            {
+                TempData["error"] = "Prišlo je do napake pri urejanju podatkov v bazi!";
+                return RedirectToAction("UrediPredmetnik1", new { id = model.vlid });
+            }
+
+            TempData["id"] = model.vlid;
+            return RedirectToAction("VpisniListSuccess");
+        }
+
+        [Authorize(Roles = "Referent")]
         public ActionResult UrediPredmetnik2(int id)
         {   
             var vl = db.vpis.Find(id);
@@ -1339,8 +1450,11 @@ namespace studis.Controllers
             if (uh.jePredmetnikVzpostavljen(vl)) return HttpNotFound();
 
             //preveri ce trenutni user sploh lahko dostopa do tega predmetnika
-            my_aspnet_users usr = uh.FindByName(User.Identity.Name);
-            if (vl.student.userId != usr.id) return HttpNotFound();
+            if (!User.IsInRole("Referent"))
+            {
+                my_aspnet_users usr = uh.FindByName(User.Identity.Name);
+                if (vl.student.userId != usr.id) return HttpNotFound();
+            }
 
             PredmetHelper ph = new PredmetHelper();
             PrviPredmetnikModel m = new PrviPredmetnikModel();
@@ -1360,8 +1474,11 @@ namespace studis.Controllers
             if (uh.jePredmetnikVzpostavljen(vl)) return HttpNotFound();
 
             //preveri ce trenutni user sploh lahko dostopa do tega predmetnika
-            my_aspnet_users usr = uh.FindByName(User.Identity.Name);
-            if (vl.student.userId != usr.id) return HttpNotFound();
+            if (!User.IsInRole("Referent"))
+            {
+                my_aspnet_users usr = uh.FindByName(User.Identity.Name);
+                if (vl.student.userId != usr.id) return HttpNotFound();
+            }
 
             PredmetHelper ph = new PredmetHelper();
             StudentHelper sh = new StudentHelper();
