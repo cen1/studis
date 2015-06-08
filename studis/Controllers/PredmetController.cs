@@ -22,10 +22,12 @@ namespace studis.Controllers
 
             var sList = new SelectList(new[] 
             {
+                new { Value = "2010", Text = "2010/2011" },
+                new { Value = "2011", Text = "2011/2012" },
+                new { Value = "2012", Text = "2012/2013" },
                 new { Value = "2013", Text = "2013/2014" },
                 new { Value = "2014", Text = "2014/2015" },
-                new { Value = "2015", Text = "2015/2016" },
-                
+                new { Value = "2015", Text = "2015/2016" }
             },
             "Value", "Text", 1);
             ViewData["sList"] = sList;
