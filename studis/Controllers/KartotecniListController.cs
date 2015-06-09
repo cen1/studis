@@ -70,9 +70,9 @@ namespace studis.Controllers
                 ViewBag.Vpisi = vpisi;
 
                 // preveri če je ponavljanje
-                var ponavljanje = vpisi.Where(v => v.vrstaVpisa == 2);
+                var ponavljanje = vpisi.Where(v => v.vrstaVpisa == 2 || v.vrstaVpisa == 3);
                 List<int> vpisnaId = new List<int>();
-                if (ponavljanje.Count() == 1)
+                if (ponavljanje.Count() > 0)
                 {
                     var letnikPon = Convert.ToInt32(ponavljanje.Select(p => p.letnikStudija).FirstOrDefault());
                     
@@ -171,9 +171,9 @@ namespace studis.Controllers
                 ViewBag.Vpisi = vpisi;
 
                 // preveri če je ponavljanje
-                var ponavljanje = vpisi.Where(v => v.vrstaVpisa == 2);
+                var ponavljanje = vpisi.Where(v => v.vrstaVpisa == 2 || v.vrstaVpisa == 3);
                 List<int> vpisnaId = new List<int>();
-                if (ponavljanje.Count() == 1)
+                if (ponavljanje.Count() > 0)
                 {
                     var letnikPon = Convert.ToInt32(ponavljanje.Select(p => p.letnikStudija).FirstOrDefault());
 
