@@ -16,6 +16,9 @@ namespace studis.Controllers
             UserHelper uh = new UserHelper();
             var usr = uh.FindByName(User.Identity.Name);
 
+            //uh.padiLetnikDelno(58, 181);
+            //uh.poloziLetnikPod8(55, 7);
+            //uh.poloziLetnikDelno(48, 204);
             //uh.kreirajProfesorje();
             //uh.kreirajFiktivneRoke();
 
@@ -54,6 +57,11 @@ namespace studis.Controllers
         }
 
         public ActionResult About()
+        {
+            return View();
+        }
+
+        public ActionResult VPisNiPotrjen()
         {
             return View();
         }

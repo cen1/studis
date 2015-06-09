@@ -107,6 +107,15 @@ namespace studis.Models
             return sumObv;
         }
 
+        public int getKreditObvMag1()
+        {
+            int sumObv = 0;
+            foreach (var pr in this.obvmag1())
+                sumObv += pr.kreditne;
+
+            return sumObv;
+        }
+
         public IQueryable<predmet> obvmag1()
         {
             return db.predmets.Where(a => a.letnik == 1).Where(b => b.obvezen == true).Where(c => c.studijskiProgram == 1000471);

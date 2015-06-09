@@ -1,10 +1,10 @@
-﻿@model studis.Models.TretjiPredmetnikProstiModel
+﻿@model studis.Models.PrviPredmetnikMag
 
 @{
-    ViewBag.Title = "Predmetnik za 3 letnik - prosta izbira";
+    ViewBag.Title = "Predmetnik za 1 letnik - Magisterski študij";
 }
 
-<h2>Predmetnik za 3 letnik</h2>
+<h2>Predmetnik za 1 letnik - Magisterski študij</h2>
 
 @if (TempData["error"] != null)
 {
@@ -35,7 +35,8 @@
         <div style="font-weight: bold">
             @modul.ime
         </div>
-        foreach (var predmet in modul.predmets) { 
+        foreach (var predmet in modul.predmets)
+        {
             <div>
                 <input type="checkbox" name="prosto_@predmet.id" value="@predmet.id"> @predmet.ime
                 .. @predmet.kreditne KT<br />

@@ -262,6 +262,7 @@
     <Compile Include="Models\profesor.cs">
       <DependentUpon>Studis.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\PrviPredmetnikMag.cs" />
     <Compile Include="Models\PrviPredmetnikModel.cs" />
     <Compile Include="Models\Sifrant.cs" />
     <Compile Include="Models\Sifranti.cs" />
@@ -566,6 +567,8 @@
     <Content Include="Views\IzpitniRok\VnosOcenBrezPrijave.cshtml" />
     <Content Include="Views\IzpitniRok\Izvajanja.cshtml" />
     <Content Include="Views\IzpitniRokPrijava\OdjaviDnevnik.cshtml" />
+    <Content Include="Views\VpisniList\PrviPredmetnikMag.cshtml" />
+    <Content Include="Views\Home\VpisNiPotrjen.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
