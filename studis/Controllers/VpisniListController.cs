@@ -421,8 +421,10 @@ namespace studis.Controllers
                 db.SaveChanges();
                 
                 //ce je ponavljanje, absolvent, nadaljevanje, vpis za zaključek se ne vzpostavlja predmetnika
-                if (v.vrstaVpisa != 1)
+                if (v.vrstaVpisa != 1) {
+                    TempData["id"] = v.id;
                     return RedirectToAction("VpisniListSuccess", "VpisniList");
+                }
 
                 //ce je referent vzpostavi obvezni del predmetnika in vrzi na success
                 if (User.IsInRole("Referent"))
