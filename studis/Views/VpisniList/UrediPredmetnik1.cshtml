@@ -1,0 +1,67 @@
+﻿@model studis.Models.PrviPredmetnikModel
+
+@{
+    ViewBag.Title = "Uredi predmetnik";
+}
+
+<h2>Uredi predmetnik 1. letnika</h2>
+
+@if (TempData["error"] != null)
+{
+    <span style="color: red; font-weight: bold">@TempData["error"]</span>
+}
+
+@using (Html.BeginForm())
+{
+    <ul>
+        @foreach (var item in ViewBag.Predmeti)
+        {
+            <li>@item.ime</li>
+            foreach (var i in ViewBag.Izvajanja)
+            {
+                foreach (var o in ViewBag.Oznaci)
+                {
+                    if (i.predmetId == item.id && o.id == i.id)
+                    {
+                        <ul>
+                            <li>
+                                <input type="radio" value="obvezni_@i.id" checked><span>
+                                    @i.profesor.ime @i.profesor.priimek
+
+                                    @if (@i.izvajalec2Id != null)
+                                    {
+                                        <span>, @i.profesor1.ime @i.profesor1.priimek</span>
+                                    }
+                                    @if (@i.izvajalec3Id != null)
+                                    {
+                                        <span>, @i.profesor2.ime @i.profesor2.priimek</span>
+                                    }
+                                </span>
+                            </li>
+                        </ul>
+                    }
+                    else if (i.predmetId == item.id)
+                    {
+                        <ul>
+                            <li><input type="radio" value="obvezni_@i.id"><span>@i.profesor.ime @i.profesor.priimek
+                            
+                                @if (@i.izvajalec2Id != null)
+                                {
+                                    <span>, @i.profesor1.ime @i.profesor1.priimek</span>
+                                }
+                                @if (@i.izvajalec3Id != null)
+                                {
+                                    <span>, @i.profesor2.ime @i.profesor2.priimek</span>
+                                }
+                                </span>
+                            </li>
+                        </ul>
+                    }
+                }
+            }
+        }
+    </ul>
+
+    @Html.HiddenFor(m => m.vlid)
+    <input type="submit" value="Spremeni">
+}

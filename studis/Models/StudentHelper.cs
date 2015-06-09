@@ -92,6 +92,55 @@ namespace studis.Models
             return sum;
         }
 
+        // vrne končni seštevek polaganj za neko izvajanje glede na vpisId
+        public int polaganjaVsaVpis(int vpisId, int izvajanjeId)
+        {
+            int sum = 0;
+            bool reset = false;
+            bool soprijave = false;
+            // student s = db.students.Find(vpisna);
+
+            var vpisi = db.vpis.Where(a => a.id == vpisId).FirstOrDefault();
+
+            if (vpisi != null)
+            {
+                foreach (var p in vpisi.prijavanaizpits.Where(p => p.stanje == 2))
+                {
+                    soprijave = true;
+                    System.Diagnostics.Debug.WriteLine("So prijave za vpis id " + vpisi.id.ToString());
+                    if (p.izpitnirok.izvajanje.id == izvajanjeId)
+                    {
+                        if (vpisi.vrstaVpisa == 2 && reset == false) //ponavljanje
+                        {
+                            sum = 0;
+                            reset = true;
+                            System.Diagnostics.Debug.WriteLine("reset");
+                        }
+                        sum++;
+                    }
+                }
+                //ni se bilo prijav za ponavljanje, vseeno moramo resetirat
+                //ampak.. ne smemo resetirat ce je predmet iz letnika ki ga ne ponavljamo!
+                if (!soprijave)
+                {
+                    System.Diagnostics.Debug.WriteLine("Ni bilo prijav za vpis id " + vpisi.id.ToString());
+                    if (vpisi.vrstaVpisa == 2)
+                    {
+                        vpi prejsnji = this.prviVpisVLetnik(vpisi.id);
+                        if (prejsnji.izvajanjes.Where(a => a.id == izvajanjeId).Count() > 0) //prvi vpis od ponavljanja ima to izvajanje
+                        {
+                            sum = 0;
+                            soprijave = true;
+                            System.Diagnostics.Debug.WriteLine("reset 2");
+                        }
+                    }
+                }
+                soprijave = false;
+            }
+            System.Diagnostics.Debug.WriteLine("Stevilo polaganj je " + sum.ToString());
+            return sum;
+        }
+
         //vrne oceno zadnjega izpita po datumu
         public int zadnjaOcena(int vpisna, int izvajanjeId)
         {

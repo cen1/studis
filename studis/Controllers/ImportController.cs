@@ -69,7 +69,8 @@ namespace studis.Controllers
 
                                     string[] tmp = mail.Split('@');
                                     string uname = tmp[0];
-                                    string pass = Guid.NewGuid().ToString().Substring(0, 8);
+                                    // string pass = Guid.NewGuid().ToString().Substring(0, 8);
+                                    string pass = "testtest";
                                     
                                     try
                                     {

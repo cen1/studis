@@ -283,7 +283,7 @@
                                                 </td>
                                                 @{ var datum = sh.pridobiDatum(Convert.ToInt32(@p.id)); }
                                                 <td>@datum</td>
-                                                @{ temp = sh.polaganjaVsa(Convert.ToInt32(@v.vpisnaStevilka), Convert.ToInt32(@i.id), Convert.ToInt32(@v.studijskiProgram)); }
+                                                @{ temp = sh.polaganjaVsaVpis(Convert.ToInt32(@v.id), Convert.ToInt32(@i.id)); }
                                                 @if (temp != 0)
                                                 {
                                                     <td>@temp</td> 
@@ -328,7 +328,7 @@
                                         <td id="left">@i.predmet.ime</td>
                                         <td>@i.predmet.kreditne</td>
                                         <td>@i.predmet.letnik</td>
-                                        @{ temp = sh.polaganjaVsa(Convert.ToInt32(@v.vpisnaStevilka), Convert.ToInt32(@i.id), Convert.ToInt32(@v.studijskiProgram)); }
+                                        @{ temp = sh.polaganjaVsaVpis(Convert.ToInt32(@v.id), Convert.ToInt32(@i.id)); }
                                         @if (temp != 0)
                                         {
                                             <td></td>
