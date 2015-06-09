@@ -40,6 +40,63 @@ namespace studis.Models
             return sum;
         }
 
+        // vrne zaporedna polaganje v celoti
+        public int zaporednoPolaganjaVsa(int vpisna, int izvajanjeId, int studijskiprogram, int rokId)
+        {
+            int sum = 0;
+            bool reset = false;
+            bool soprijave = false;
+            student s = db.students.Find(vpisna);
+
+            var vpisi = s.vpis.Where(a => a.studijskiProgram == studijskiprogram).OrderBy(a => a.id);
+
+            if (vpisi != null)
+            {
+                foreach (var v in vpisi)
+                {
+                    foreach (var p in v.prijavanaizpits.Where(p => p.stanje == 2))
+                    {
+                        soprijave = true;
+                        System.Diagnostics.Debug.WriteLine("So prijave za vpis id " + v.id.ToString());
+                        if (p.izpitnirok.izvajanje.id == izvajanjeId)
+                        {
+                            if (v.vrstaVpisa == 2 && reset == false) //ponavljanje
+                            {
+                                sum = 0;
+                                reset = true;
+                                System.Diagnostics.Debug.WriteLine("reset");
+                            }
+                            sum++;
+
+                            if (p.izpitnirok.id == rokId)
+                            {
+                                return sum;
+                            }
+                        }
+                    }
+                    //ni se bilo prijav za ponavljanje, vseeno moramo resetirat
+                    //ampak.. ne smemo resetirat ce je predmet iz letnika ki ga ne ponavljamo!
+                    if (!soprijave)
+                    {
+                        System.Diagnostics.Debug.WriteLine("Ni bilo prijav za vpis id " + v.id.ToString());
+                        if (v.vrstaVpisa == 2)
+                        {
+                            vpi prejsnji = this.prviVpisVLetnik(v.id);
+                            if (prejsnji.izvajanjes.Where(a => a.id == izvajanjeId).Count() > 0) //prvi vpis od ponavljanja ima to izvajanje
+                            {
+                                sum = 0;
+                                soprijave = true;
+                                System.Diagnostics.Debug.WriteLine("reset 2");
+                            }
+                        }
+                    }
+                    soprijave = false;
+                }
+            }
+            System.Diagnostics.Debug.WriteLine("Stevilo polaganj je " + sum.ToString());
+            return sum;
+        }
+
         // vrne končni seštevek polaganj za neko izvajanje
         public int polaganjaVsa(int vpisna, int izvajanjeId, int studijskiprogram)
         {
