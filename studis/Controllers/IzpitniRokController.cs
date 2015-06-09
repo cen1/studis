@@ -1693,7 +1693,7 @@ namespace studis.Controllers
             int st = 0;
             try
             {
-                st = db.izpitniroks.SingleOrDefault(r => r.id == id).prijavanaizpits.Count();
+                st = db.izpitniroks.SingleOrDefault(r => r.id == id).prijavanaizpits.Where(a => a.stanje != 1).Where(a => a.stanje != 4).Count();
             }
             catch (Exception e) { st = -1; }
             return st.ToString();
