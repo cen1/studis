@@ -32,9 +32,11 @@ namespace studis.Controllers
                 }
                 else
                 {
-                    ViewBag.vpisnast = usr.students.First().vpisnaStevilka;
+                    var vpisna = usr.students.First().vpisnaStevilka;
+                    ViewBag.vpisnast = vpisna;
                     ViewBag.zetoni = usr.students.First().zetons.Where(a => a.porabljen == false);
-                    ViewBag.vpisi = usr.students.First().vpis;
+                    var vpisi = usr.students.First().vpis;
+                    ViewBag.vpisi = vpisi;
 
                     List<bool> vzp_predmetnik = new List<bool>();
    
@@ -50,6 +52,8 @@ namespace studis.Controllers
                         }
                     }
                     ViewBag.vzpostavljen = vzp_predmetnik;
+                    StudentHelper sh = new StudentHelper();
+                    ViewBag.Ponavljanje = sh.trenutniVpis(vpisna).vrstaVpisa == 2;
                 }
             }
             
