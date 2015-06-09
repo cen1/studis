@@ -58,7 +58,7 @@ namespace studis.Controllers
                         //System.Diagnostics.Debug.WriteLine(letoizvajanja.sifrant_studijskoleto.id+"="+leto);
                         foreach (vpi vpis in izvajanje.vpis)
                         {
-                            if (vpis.studijskoLeto == leto)
+                            if (vpis.studijskoLeto == leto && vpis.potrjen==true)
                             {
                                 student st = db.students.Where(s => s.vpisnaStevilka == vpis.vpisnaStevilka).SingleOrDefault();
                                 if (st != null)

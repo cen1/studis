@@ -18,7 +18,8 @@ namespace studis.Controllers
 
             //uh.padiLetnikDelno(58, 181);
             //uh.poloziLetnikPod8(55, 7);
-            //uh.poloziLetnikDelno(48, 204);
+            //uh.poloziLetnik(50, 213);
+            //uh.poloziLetnikPod8(68, 213);
             //uh.kreirajProfesorje();
             //uh.kreirajFiktivneRoke();
 

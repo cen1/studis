@@ -774,8 +774,11 @@ namespace studis.Controllers
             var s = db.students.Find(id);
             if (s == null) return HttpNotFound();
 
+            StudentHelper sh = new StudentHelper();
+            int leto = sh.trenutnoSolskoLeto()+1;
             // dodaj samo tiste, ki imajo vpisni list za 2 ali 3 letnik
-            var vpisi = s.vpis.Where(a => (a.letnikStudija == 2 || a.letnikStudija == 3) && a.vrstaVpisa != 2);
+            var vpisi = s.vpis.Where(a => (a.letnikStudija == 2 || a.letnikStudija == 3) && a.vrstaVpisa != 2 && a.vrstaVpisa != 3)
+                              .Where(a => a.studijskoLeto == leto);
             List<vpi> vplist = new List<vpi>();
             foreach (var v in vpisi)
             {

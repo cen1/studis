@@ -289,7 +289,7 @@ namespace studis.Controllers
 
 
             //pridobi prijavljene študente
-            var prijave = db.prijavanaizpits.Where( p => p.izpitnirokId == rok.id).ToList();
+            var prijave = db.prijavanaizpits.Where( p => p.izpitnirokId == rok.id && p.stanje!=1).ToList();
 
             List<VnosTockModel> listVnosov = new List<VnosTockModel>();
             StudentHelper sh = new StudentHelper();
@@ -367,7 +367,7 @@ namespace studis.Controllers
             List<VnosTockModel> listVnosov = new List<VnosTockModel>();
             StudentHelper sh = new StudentHelper();
 
-            var prijave = db.prijavanaizpits.Where(p => p.izpitnirokId == rok.id).ToList();
+            var prijave = db.prijavanaizpits.Where(p => p.izpitnirokId == rok.id && p.stanje != 1).ToList();
             
             foreach (prijavanaizpit prijava in prijave)
             {
@@ -594,7 +594,7 @@ namespace studis.Controllers
             List<VnosTockModel> listVnosov = new List<VnosTockModel>();
             StudentHelper sh = new StudentHelper();
 
-            var prijave = db.prijavanaizpits.Where(p => p.izpitnirokId == rok.id).ToList();
+            var prijave = db.prijavanaizpits.Where(p => p.izpitnirokId == rok.id && p.stanje != 1).ToList();
 
             foreach (prijavanaizpit prijava in prijave)
             {
@@ -833,7 +833,7 @@ namespace studis.Controllers
             List<VnosTockModel> listVnosov = new List<VnosTockModel>();
             StudentHelper sh = new StudentHelper();
 
-            var prijave = db.prijavanaizpits.Where(p => p.id == prijavaID).ToList();
+            var prijave = db.prijavanaizpits.Where(p => p.id == prijavaID && p.stanje != 1).ToList();
 
             foreach (prijavanaizpit prijava in prijave)
             {
@@ -1693,7 +1693,7 @@ namespace studis.Controllers
             int st = 0;
             try
             {
-                st = db.izpitniroks.SingleOrDefault(r => r.id == id).prijavanaizpits.Count();
+                st = db.izpitniroks.SingleOrDefault(r => r.id == id).prijavanaizpits.Where(a => a.stanje != 1).Count();
             }
             catch (Exception e) { st = -1; }
             return st.ToString();
