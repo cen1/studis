@@ -289,7 +289,7 @@ namespace studis.Controllers
 
 
             //pridobi prijavljene študente
-            var prijave = db.prijavanaizpits.Where( p => p.izpitnirokId == rok.id).ToList();
+            var prijave = db.prijavanaizpits.Where( p => p.izpitnirokId == rok.id && p.stanje!=1 && p.stanje!=4).ToList();
 
             List<VnosTockModel> listVnosov = new List<VnosTockModel>();
             StudentHelper sh = new StudentHelper();
@@ -367,7 +367,7 @@ namespace studis.Controllers
             List<VnosTockModel> listVnosov = new List<VnosTockModel>();
             StudentHelper sh = new StudentHelper();
 
-            var prijave = db.prijavanaizpits.Where(p => p.izpitnirokId == rok.id).ToList();
+            var prijave = db.prijavanaizpits.Where(p => p.izpitnirokId == rok.id && p.stanje != 1 && p.stanje != 4).ToList();
             
             foreach (prijavanaizpit prijava in prijave)
             {
@@ -594,7 +594,7 @@ namespace studis.Controllers
             List<VnosTockModel> listVnosov = new List<VnosTockModel>();
             StudentHelper sh = new StudentHelper();
 
-            var prijave = db.prijavanaizpits.Where(p => p.izpitnirokId == rok.id).ToList();
+            var prijave = db.prijavanaizpits.Where(p => p.izpitnirokId == rok.id && p.stanje != 1 && p.stanje != 4).ToList();
 
             foreach (prijavanaizpit prijava in prijave)
             {
@@ -833,7 +833,7 @@ namespace studis.Controllers
             List<VnosTockModel> listVnosov = new List<VnosTockModel>();
             StudentHelper sh = new StudentHelper();
 
-            var prijave = db.prijavanaizpits.Where(p => p.id == prijavaID).ToList();
+            var prijave = db.prijavanaizpits.Where(p => p.id == prijavaID && p.stanje != 1 && p.stanje != 4).ToList();
 
             foreach (prijavanaizpit prijava in prijave)
             {
