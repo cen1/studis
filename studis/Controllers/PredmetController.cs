@@ -17,7 +17,7 @@ namespace studis.Controllers
         // GET: /Predmet/
         public ActionResult Predmeti()
         {
-            var predmets = db.predmets;
+            var predmets = db.predmets.OrderBy(a => a.ime);
             ViewBag.Seznam = new SelectList((from s in predmets.ToList() select new { id = s.id, nameCode = s.koda + " - " + s.ime }), "id", "nameCode", null);
 
             var sList = new SelectList(new[] 
