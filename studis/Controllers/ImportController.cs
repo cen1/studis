@@ -10,7 +10,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace studis.Controllers
 {
-    [Authorize(Roles = "Referent")]
+    [Authorize(Roles = "Referent, Skrbnik")]
     public class ImportController : Controller
     {
         public studisEntities db = new studisEntities();

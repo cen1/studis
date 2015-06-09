@@ -16,6 +16,18 @@ namespace studis.Controllers
         // GET: IzpitniRokPrijava
         public ActionResult Index()
         {
+            StudentHelper sh = new StudentHelper();
+            UserHelper uh = new UserHelper();
+            my_aspnet_users u = uh.FindByName(User.Identity.Name);
+            student s = db.students.Where(a => a.userId == u.id).FirstOrDefault();
+            if (s != null)
+            {
+                var vpis = sh.trenutniVpis(s.vpisnaStevilka);
+                /*if (vpis == null)
+                    return RedirectToAction("VpisNiPotrjen", "Home");
+                else if (vpis.potrjen == false)
+                    return RedirectToAction("VpisNiPotrjen", "Home");*/
+            }
             return View();
         }
 
@@ -668,7 +680,7 @@ namespace studis.Controllers
             Debug.WriteLine("ID " + iid);
             var izvajanje = db.izvajanjes.SingleOrDefault(i => i.id == iid);//db.predmets.SingleOrDefault(p => p.id == iid);
             var izpitniRoki = izvajanje.izpitniroks.Where(a => a.fiktiven == false)
-                                                   .Where(a => (a.datum.Year == leto && a.datum.Month > 9) || (a.datum.Year == leto + 1 && a.datum.Month < 10))
+                                                   //.Where(a => (a.datum.Year == leto && a.datum.Month > 9) || (a.datum.Year == leto + 1 && a.datum.Month < 10))
                                                    .Where( a => a.datum > DateTime.Now);
                   
             var seznamIzpitniRoki = new List<SelectListItem>();

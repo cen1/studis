@@ -96,17 +96,25 @@ namespace studis.Models
 
         public bool preveriPovprecje(student s)
         {
-            vpi vp = s.vpis.Where(a => a.letnikStudija == 2).Last();
+            vpi vp = s.vpis.Where(a => a.letnikStudija == 2).Where(a => a.vrstaVpisa == 1).FirstOrDefault();
             if (vp == null) return false;
 
             double sum = 0;
             int cnt = 0;
-            /*foreach (var o in vp.ocenas)
+            foreach (var pr in vp.prijavanaizpits)
             {
-                sum += o.ocena1;
-                cnt++;
-            }*/
+                if (pr.stanje == 2)
+                {
+                    int ocena = pr.ocenas.FirstOrDefault().ocena1;
+                    if (ocena > 5)
+                    {
+                        sum += ocena;
+                        cnt++;
+                    }
+                }
+            }
             double avg = sum / cnt;
+            System.Diagnostics.Debug.WriteLine("Povprecna ocena " + avg.ToString());
             if (avg >= 8) return true;
             else return false;
 
@@ -399,6 +407,365 @@ namespace studis.Models
                 db.izpitniroks.Add(ir);
             }
             db.SaveChanges();
+        }
+
+        public void poloziLetnik(int vpisId, int uid)
+        {
+            vpi v = db.vpis.Find(vpisId);
+            int dan1 = 15;
+            int dan2 = 15;
+
+            foreach (var izvajanje in v.izvajanjes)
+            {
+                System.Diagnostics.Debug.WriteLine("Polagam " + izvajanje.predmet.ime);
+                var rok = izvajanje.izpitniroks.Where(a => a.datum.Year == v.studijskoLeto + 1).FirstOrDefault();
+                int leto = v.studijskoLeto + 1;
+                if (rok == null)
+                {
+                    //kreiraj rok ce ne obstaja
+                    izpitnirok ir = new izpitnirok();
+                    var da = DateTime.Now;
+                    if (izvajanje.predmet.semester == 1)
+                    {
+                        DateTime.TryParse(leto.ToString() + "-01-"+dan1.ToString()+" 00:00:00", out da);
+                        dan1+=2;
+                    }
+                    else
+                    {
+                        DateTime.TryParse(leto.ToString() + "-05-" + dan2.ToString() + " 00:00:00", out da);
+                        dan2 += 2;
+                    }
+                    ir.datum = da;
+                    ir.fiktiven = false;
+                    ir.izvajanjeId = izvajanje.id;
+                    ir.prostorId = 1;
+                    var dt = DateTime.Now;
+                    DateTime.TryParse("0001-01-01 08:15:00",  out dt);
+                    ir.ura = dt;
+                    db.izpitniroks.Add(ir);
+                    db.SaveChanges();
+                    rok = ir;
+                }
+                //kreiraj prijavo
+                prijavanaizpit pr = new prijavanaizpit();
+                pr.izpitnirokId = rok.id;
+                pr.stanje = 2;
+                pr.vpisId = v.id;
+                var dd = DateTime.Now;
+                if (izvajanje.predmet.semester == 1)
+                {
+                    int tdan1 = dan1 - 4;
+                    DateTime.TryParse(leto.ToString() + "-01-" + tdan1.ToString() + " 00:00:00", out dd);
+                }
+                else
+                {
+                    int tdan2 = dan2 - 4;
+                    DateTime.TryParse(leto.ToString() + "-05-" + tdan2.ToString() + " 00:00:00", out dd);
+                }
+                pr.datumPrijave = dd;
+                pr.prijavilId = uid;
+                db.prijavanaizpits.Add(pr);
+                db.SaveChanges();
+
+                var du = DateTime.Now;
+                if (izvajanje.predmet.semester == 1)
+                {
+                    int tdan1 = dan1 + 4;
+                    DateTime.TryParse(leto.ToString() + "-01-" + tdan1.ToString() + " 00:00:00", out du);
+                }
+                else
+                {
+                    int tdan2 = dan2 + 4;
+                    DateTime.TryParse(leto.ToString() + "-05-" + tdan2.ToString() + " 00:00:00", out du);
+                }
+                //kreiraj tocke
+                tocke t = new tocke();
+                t.datum = du;
+                t.prijavaId = pr.id;
+                t.tocke1 = 85;
+
+                ocena o = new ocena();
+                o.datum = du;
+                o.ocena1 = 9;
+                o.prijavaId = pr.id;
+
+                db.tockes.Add(t);
+                db.ocenas.Add(o);
+                db.SaveChanges();
+            }
+        }
+
+        public void poloziLetnikDelno(int vpisId, int uid)
+        {
+            vpi v = db.vpis.Find(vpisId);
+            int dan1 = 15;
+            int dan2 = 15;
+            int counter = 0;
+
+            foreach (var izvajanje in v.izvajanjes)
+            {
+                counter++;
+                if (counter > 5)
+                {
+                    break;
+                }
+                System.Diagnostics.Debug.WriteLine("Polagam " + izvajanje.predmet.ime);
+                var rok = izvajanje.izpitniroks.Where(a => a.datum.Year == v.studijskoLeto + 1).FirstOrDefault();
+                int leto = v.studijskoLeto + 1;
+                if (rok == null)
+                {
+                    //kreiraj rok ce ne obstaja
+                    izpitnirok ir = new izpitnirok();
+                    var da = DateTime.Now;
+                    if (izvajanje.predmet.semester == 1)
+                    {
+                        DateTime.TryParse(leto.ToString() + "-01-" + dan1.ToString() + " 00:00:00", out da);
+                        dan1 += 2;
+                    }
+                    else
+                    {
+                        DateTime.TryParse(leto.ToString() + "-05-" + dan2.ToString() + " 00:00:00", out da);
+                        dan2 += 2;
+                    }
+                    ir.datum = da;
+                    ir.fiktiven = false;
+                    ir.izvajanjeId = izvajanje.id;
+                    ir.prostorId = 1;
+                    var dt = DateTime.Now;
+                    DateTime.TryParse("0001-01-01 08:15:00", out dt);
+                    ir.ura = dt;
+                    db.izpitniroks.Add(ir);
+                    db.SaveChanges();
+                    rok = ir;
+                }
+                //kreiraj prijavo
+                prijavanaizpit pr = new prijavanaizpit();
+                pr.izpitnirokId = rok.id;
+                pr.stanje = 2;
+                pr.vpisId = v.id;
+                var dd = DateTime.Now;
+                if (izvajanje.predmet.semester == 1)
+                {
+                    int tdan1 = dan1 - 4;
+                    DateTime.TryParse(leto.ToString() + "-01-" + tdan1.ToString() + " 00:00:00", out dd);
+                }
+                else
+                {
+                    int tdan2 = dan2 - 4;
+                    DateTime.TryParse(leto.ToString() + "-05-" + tdan2.ToString() + " 00:00:00", out dd);
+                }
+                pr.datumPrijave = dd;
+                pr.prijavilId = uid;
+                db.prijavanaizpits.Add(pr);
+                db.SaveChanges();
+
+                var du = DateTime.Now;
+                if (izvajanje.predmet.semester == 1)
+                {
+                    int tdan1 = dan1 + 4;
+                    DateTime.TryParse(leto.ToString() + "-01-" + tdan1.ToString() + " 00:00:00", out du);
+                }
+                else
+                {
+                    int tdan2 = dan2 + 4;
+                    DateTime.TryParse(leto.ToString() + "-05-" + tdan2.ToString() + " 00:00:00", out du);
+                }
+                //kreiraj tocke
+                tocke t = new tocke();
+                t.datum = du;
+                t.prijavaId = pr.id;
+                t.tocke1 = 85;
+
+                ocena o = new ocena();
+                o.datum = du;
+                o.ocena1 = 9;
+                o.prijavaId = pr.id;
+
+                db.tockes.Add(t);
+                db.ocenas.Add(o);
+                db.SaveChanges();
+            }
+        }
+
+        public void poloziLetnikPod8(int vpisId, int uid)
+        {
+            vpi v = db.vpis.Find(vpisId);
+            int dan1 = 15;
+            int dan2 = 15;
+
+            foreach (var izvajanje in v.izvajanjes)
+            {
+                System.Diagnostics.Debug.WriteLine("Polagam " + izvajanje.predmet.ime);
+                var rok = izvajanje.izpitniroks.Where(a => a.datum.Year == v.studijskoLeto + 1).FirstOrDefault();
+                int leto = v.studijskoLeto + 1;
+                if (rok == null)
+                {
+                    //kreiraj rok ce ne obstaja
+                    izpitnirok ir = new izpitnirok();
+                    var da = DateTime.Now;
+                    if (izvajanje.predmet.semester == 1)
+                    {
+                        DateTime.TryParse(leto.ToString() + "-01-" + dan1.ToString() + " 00:00:00", out da);
+                        dan1 += 2;
+                    }
+                    else
+                    {
+                        DateTime.TryParse(leto.ToString() + "-05-" + dan2.ToString() + " 00:00:00", out da);
+                        dan2 += 2;
+                    }
+                    ir.datum = da;
+                    ir.fiktiven = false;
+                    ir.izvajanjeId = izvajanje.id;
+                    ir.prostorId = 1;
+                    var dt = DateTime.Now;
+                    DateTime.TryParse("0001-01-01 08:15:00", out dt);
+                    ir.ura = dt;
+                    db.izpitniroks.Add(ir);
+                    db.SaveChanges();
+                    rok = ir;
+                }
+                //kreiraj prijavo
+                prijavanaizpit pr = new prijavanaizpit();
+                pr.izpitnirokId = rok.id;
+                pr.stanje = 2;
+                pr.vpisId = v.id;
+                var dd = DateTime.Now;
+                if (izvajanje.predmet.semester == 1)
+                {
+                    int tdan1 = dan1 - 4;
+                    DateTime.TryParse(leto.ToString() + "-01-" + tdan1.ToString() + " 00:00:00", out dd);
+                }
+                else
+                {
+                    int tdan2 = dan2 - 4;
+                    DateTime.TryParse(leto.ToString() + "-05-" + tdan2.ToString() + " 00:00:00", out dd);
+                }
+                pr.datumPrijave = dd;
+                pr.prijavilId = uid;
+                db.prijavanaizpits.Add(pr);
+                db.SaveChanges();
+
+                var du = DateTime.Now;
+                if (izvajanje.predmet.semester == 1)
+                {
+                    int tdan1 = dan1 + 4;
+                    DateTime.TryParse(leto.ToString() + "-01-" + tdan1.ToString() + " 00:00:00", out du);
+                }
+                else
+                {
+                    int tdan2 = dan2 + 4;
+                    DateTime.TryParse(leto.ToString() + "-05-" + tdan2.ToString() + " 00:00:00", out du);
+                }
+                //kreiraj tocke
+                tocke t = new tocke();
+                t.datum = du;
+                t.prijavaId = pr.id;
+                t.tocke1 = 75;
+
+                ocena o = new ocena();
+                o.datum = du;
+                o.ocena1 = 7;
+                o.prijavaId = pr.id;
+
+                db.tockes.Add(t);
+                db.ocenas.Add(o);
+                db.SaveChanges();
+            }
+        }
+
+        public void padiLetnikDelno(int vpisId, int uid)
+        {
+            vpi v = db.vpis.Find(vpisId);
+            int dan1 = 15;
+            int dan2 = 15;
+            int counter = 0;
+
+            foreach (var izvajanje in v.izvajanjes)
+            {
+                counter++;
+                /*if (counter > 5)
+                {
+                    break;
+                }*/
+                System.Diagnostics.Debug.WriteLine("Polagam " + izvajanje.predmet.ime);
+                var rok = izvajanje.izpitniroks.Where(a => a.datum.Year == v.studijskoLeto + 1).FirstOrDefault();
+                int leto = v.studijskoLeto + 1;
+                if (rok == null)
+                {
+                    //kreiraj rok ce ne obstaja
+                    izpitnirok ir = new izpitnirok();
+                    var da = DateTime.Now;
+                    if (izvajanje.predmet.semester == 1)
+                    {
+                        DateTime.TryParse(leto.ToString() + "-01-" + dan1.ToString() + " 00:00:00", out da);
+                        dan1 += 2;
+                    }
+                    else
+                    {
+                        DateTime.TryParse(leto.ToString() + "-05-" + dan2.ToString() + " 00:00:00", out da);
+                        dan2 += 2;
+                    }
+                    ir.datum = da;
+                    ir.fiktiven = false;
+                    ir.izvajanjeId = izvajanje.id;
+                    ir.prostorId = 1;
+                    var dt = DateTime.Now;
+                    DateTime.TryParse("0001-01-01 08:15:00", out dt);
+                    ir.ura = dt;
+                    db.izpitniroks.Add(ir);
+                    db.SaveChanges();
+                    rok = ir;
+                }
+                //kreiraj prijavo
+                prijavanaizpit pr = new prijavanaizpit();
+                pr.izpitnirokId = rok.id;
+                pr.stanje = 2;
+                pr.vpisId = v.id;
+                var dd = DateTime.Now;
+                if (izvajanje.predmet.semester == 1)
+                {
+                    int tdan1 = dan1 - 4;
+                    DateTime.TryParse(leto.ToString() + "-01-" + tdan1.ToString() + " 00:00:00", out dd);
+                }
+                else
+                {
+                    int tdan2 = dan2 - 4;
+                    DateTime.TryParse(leto.ToString() + "-05-" + tdan2.ToString() + " 00:00:00", out dd);
+                }
+                pr.datumPrijave = dd;
+                pr.prijavilId = uid;
+                db.prijavanaizpits.Add(pr);
+                db.SaveChanges();
+
+                var du = DateTime.Now;
+                if (izvajanje.predmet.semester == 1)
+                {
+                    int tdan1 = dan1 + 4;
+                    DateTime.TryParse(leto.ToString() + "-01-" + tdan1.ToString() + " 00:00:00", out du);
+                }
+                else
+                {
+                    int tdan2 = dan2 + 4;
+                    DateTime.TryParse(leto.ToString() + "-05-" + tdan2.ToString() + " 00:00:00", out du);
+                }
+                //kreiraj tocke
+                tocke t = new tocke();
+                t.datum = du;
+                t.prijavaId = pr.id;
+                t.tocke1 = 85;
+
+                ocena o = new ocena();
+                o.datum = du;
+                if (counter%2 == 0)
+                    o.ocena1 = 9;
+                else
+                    o.ocena1 = 5;
+                o.prijavaId = pr.id;
+
+                db.tockes.Add(t);
+                db.ocenas.Add(o);
+                db.SaveChanges();
+            }
         }
     }
 

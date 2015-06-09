@@ -360,8 +360,12 @@ namespace studis.Models
 
         public vpi trenutniVpis(int vpisna)
         {
-            int tr = this.trenutnoSolskoLeto();
-            return db.vpis.Where(a => a.vpisnaStevilka == vpisna).Where(b => b.studijskoLeto == tr).FirstOrDefault();
+            /*int tr = this.trenutnoSolskoLeto();
+            
+            var vpis = db.vpis.Where(a => a.vpisnaStevilka == vpisna).Where(b => b.studijskoLeto == tr).FirstOrDefault();
+            if (vpis == null) return null;
+            else return vpis;*/
+            return db.vpis.Where(a => a.vpisnaStevilka == vpisna).ToList().LastOrDefault();
         }
 
         public vpi prviVpisVLetnik(int vpisId)

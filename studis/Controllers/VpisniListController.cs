@@ -13,7 +13,7 @@ namespace studis.Controllers
     {
         public studisEntities db = new studisEntities();
 
-        // GET: VpisniList
+        //GET: VpisniList
         //GET: VPisniList/id od userja!
         public ActionResult VpisniList(int? x)
         {
@@ -151,6 +151,17 @@ namespace studis.Controllers
 
                 if (model.naslovZacasni != null) ViewBag.zacasnipodatkiVB = true;
                 else ViewBag.zacasnipodatkiVB = false;
+                //nafilaj s prvim zetonom, ce obstaja
+                //letnik, studijskiprogram, vrstavpisa, vrstastudija, oblikastudija
+                zeton z = db.zetons.Where(a => a.vpisnaStevilka == sid.vpisnaStevilka)
+                                   .Where(a => a.porabljen == false)
+                                   .FirstOrDefault();
+                if (z != null) {
+                    model.studijskiProgram = z.studijskiProgram;
+                    model.vrstaVpisa = z.vrstaVpisa;
+                    model.vrstaStudija = z.vrstaStudija;
+                    model.oblikaStudija = z.oblikaStudija;
+                }
                
                 return View(model);
             }
@@ -743,12 +754,14 @@ namespace studis.Controllers
             var vl = db.vpis.Find(id);
             if (vl == null) return HttpNotFound();
 
-            if (vl.letnikStudija==1)
+            if (vl.letnikStudija == 1 && vl.studijskiProgram == 1000468)
                 return RedirectToAction("PrviPredmetnik", "VpisniList", new { id = vl.id });
             else if (vl.letnikStudija==2)
                 return RedirectToAction("DrugiPredmetnik", "VpisniList", new { id = vl.id });
             else if (vl.letnikStudija==3)
                 return RedirectToAction("TretjiPredmetnik", "VpisniList", new { id = vl.id });
+            else if (vl.letnikStudija == 1 && vl.studijskiProgram == 1000471)
+                return RedirectToAction("PrviPredmetnikMag", "VpisniList", new { id = vl.id });
             else
                 return RedirectToAction("NeznanPredmetnik", "VpisniList");
         }
@@ -1119,7 +1132,7 @@ namespace studis.Controllers
 
             // označi tiste ki so že izbrani
             //var sp = vl.izvajanjes.Where(v => v.predmet.modul != null).First();
-            ViewBag.Modul = vl.izvajanjes.Where(v => v.predmet.modul != null); 
+            ViewBag.Modul = vl.izvajanjes.Where(v => v.predmet.modul != null);
 
             return View();
         }
@@ -1513,6 +1526,149 @@ namespace studis.Controllers
 
             TempData["id"] = model.vlid;
             return RedirectToAction("VpisniListSuccess");
+        }
+
+        public ActionResult PrviPredmetnikMag(int id)
+        {
+            //stiri obvezni plus dva splosna ki jih mamo kar kot obvezne
+            //plus stiri iz tretjega letnika od modulov
+            //preveri ce vpisni sploh obstaja
+            var vl = db.vpis.Find(id);
+            if (vl == null)
+            {
+                System.Diagnostics.Debug.WriteLine("vpisni list ne obstaja");
+                return HttpNotFound();
+            }
+
+            //preveri ce je predmetnik ze bil izpolnjen, vseh 60kt
+            UserHelper uh = new UserHelper();
+            if (uh.jePredmetnikVzpostavljen(vl))
+            {
+                System.Diagnostics.Debug.WriteLine("predmetnik je ze vzpostavljen");
+                return HttpNotFound();
+            }
+
+            //preveri ce trenutni user sploh lahko dostopa do tega predmetnika
+            if (!User.IsInRole("Referent"))
+            {
+                my_aspnet_users usr = uh.FindByName(User.Identity.Name);
+                if (vl.student.userId != usr.id || vl.letnikStudija != 2)
+                {
+                    System.Diagnostics.Debug.WriteLine("nimate dostopa");
+                    return HttpNotFound();
+                }
+            }
+
+            PredmetHelper ph = new PredmetHelper();
+
+            //obvezni plus 1 strokovno izbirni plus 1 prosto izbirni
+            ViewBag.obvezniPredmeti = ph.obvmag1();
+            ViewBag.izbirniPredmeti = db.moduls.ToList();
+
+            int sumObv = ph.getKreditObvMag1();
+
+            ViewBag.sumObv = sumObv;
+            ViewBag.sumIzb = 60 - sumObv;
+
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult PrviPredmetnikMag(PrviPredmetnikMag model, int id)
+        {
+            //preveri ce vpisni sploh obstaja
+            var vl = db.vpis.Find(id);
+            if (vl == null) return HttpNotFound();
+
+            //preveri ce je predmetnik ze bil izpolnjen
+            UserHelper uh = new UserHelper();
+            if (uh.jePredmetnikVzpostavljen(vl)) return HttpNotFound();
+
+            //preveri ce je trenutni user referent
+            my_aspnet_users usr = uh.FindByName(User.Identity.Name);
+            if (usr.name != "referent")
+            {
+                //preveri ce trenutni user sploh lahko dostopa do tega predmetnika
+                if (vl.student.userId != usr.id || vl.letnikStudija != 1) return HttpNotFound();
+            }
+
+            PredmetHelper ph = new PredmetHelper();
+            StudentHelper sh = new StudentHelper();
+            int kreditne = 60 - ph.getKreditObvMag1();
+            List<predmet> dodaj_p = new List<predmet>();
+
+            foreach (string key in Request.Form)
+            {
+                if (key.StartsWith("prosto_"))
+                {
+                    int k = Convert.ToInt32(Request.Form[key]);
+                    predmet p = db.predmets.Where(a => a.id == k).First();
+                    if (p != null)
+                    {
+                        dodaj_p.Add(p);
+                        kreditne -= p.kreditne;
+                    }
+                }
+            }
+
+            if (kreditne == 0)
+            {
+                //dodaj obvezne
+                //ce je delni potem so ze noter
+                if (!uh.jeDelniPredmetnikVzpostavljen(vl))
+                {
+                    foreach (var o in ph.obvmag1())
+                    {
+                        //poiščemo izvajanje pri tem predmetu ki se izvaja v prihodnjem šolskem letu
+                        var izlist = db.izvajanjes.Where(a => a.predmetId == o.id).ToList();
+                        bool breakk = false;
+                        foreach (var i in izlist)
+                        {
+                            if (breakk) break;
+                            foreach (var il in i.izvajanjeletoes)
+                                if (il.studijskoletoId == vl.studijskoLeto)
+                                {
+                                    vl.izvajanjes.Add(i);
+                                    breakk = true;
+                                }
+                        }
+                    }
+                }
+                //dodaj izbirne
+                foreach (var p in dodaj_p)
+                {
+                    //poiščemo izvajanje pri tem predmetu ki se izvaja v prihodnjem šolskem letu
+                    var izlist = db.izvajanjes.Where(a => a.predmetId == p.id).ToList();
+                    bool breakk = false;
+                    foreach (var i in izlist)
+                    {
+                        if (breakk) break;
+                        foreach (var il in i.izvajanjeletoes)
+                            if (il.studijskoletoId == vl.studijskoLeto)
+                            {
+                                vl.izvajanjes.Add(i);
+                                breakk = true;
+                            }
+                    }
+                }
+
+                try
+                {
+                    db.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    return HttpNotFound();
+                }
+
+                TempData["id"] = id;
+                return RedirectToAction("VpisniListSuccess");
+            }
+            else
+            {
+                TempData["error"] = "Nepravilno število izbranih kreditnih točk";
+                return RedirectToAction("PrviPredmetnikMag", new { id = id });
+            }
         }
 
         public ActionResult DrugiPredmetnik(int id)
