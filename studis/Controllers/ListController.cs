@@ -171,7 +171,16 @@ namespace studis.Controllers
                     ViewBag.VrocanjeZacasni = "NE";
                 }
 
-                ViewBag.Izvajanja = list.izvajanjes;
+                if (list.vrstaVpisa == 2 || list.vrstaVpisa == 3)
+                {
+                    var vpisTemp = db.vpis.Where(v => v.vpisnaStevilka == list.vpisnaStevilka && v.letnikStudija == list.letnikStudija && v.vrstaVpisa == 1).FirstOrDefault();
+                    ViewBag.Izvajanja = vpisTemp.izvajanjes;
+
+                }
+                else
+                {
+                    ViewBag.Izvajanja = list.izvajanjes;
+                }          
             
                 return new PdfActionResult(model);
             }
