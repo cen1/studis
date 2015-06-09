@@ -1573,7 +1573,7 @@ namespace studis.Controllers
             int iid = Convert.ToInt32(id);
             Debug.WriteLine("ID " + iid);
             var izvajanje = db.izvajanjes.SingleOrDefault(i => i.id == iid);//db.predmets.SingleOrDefault(p => p.id == iid);
-            var izpitniRoki = izvajanje.izpitniroks.Where(a => a.fiktiven == false);//pPredmet.izpitniroks.ToList(); //Exception 
+            var izpitniRoki = izvajanje.izpitniroks.Where(a => a.fiktiven == false).Where(a => a.datum >= DateTime.Today); 
             var seznamIzpitniRoki = new List<SelectListItem>();
             int c = 0;
             foreach (izpitnirok i in izpitniRoki)
