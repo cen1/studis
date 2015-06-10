@@ -1231,7 +1231,7 @@ namespace studis.Controllers
                 UserHelper uh = new UserHelper();
                 var profesor = uh.FindByName(User.Identity.Name).profesors.FirstOrDefault();
 
-                foreach (var v in vpisi.Where(v => v.studijskoLeto == 2014))
+                foreach (var v in vpisi.Where(v => v.studijskoLeto == 2015))
                 {
                     if (v.vrstaVpisa == 2)
                     {

@@ -357,9 +357,12 @@ namespace studis.Controllers
             StudentHelper sh = new StudentHelper();
             var trenutniVpis = sh.trenutniVpis(student.vpisnaStevilka);
             var prvivpis = trenutniVpis;
-            if (trenutniVpis.vrstaVpisa != 1)
+            Debug.WriteLine("Trenutni "+trenutniVpis.id.ToString());
+            if (trenutniVpis.vrstaVpisa > 1)
             {
+                Debug.WriteLine("Inside");
                 prvivpis = sh.prviVpisVLetnik(trenutniVpis.id); //ce je ponavljanje ali pavziranje damo na prvi vpis v ta letnik
+                Debug.WriteLine(prvivpis.id.ToString());
             }
             List<izvajanje> izvajanja = null;
             if (prvivpis != null)
@@ -484,9 +487,12 @@ namespace studis.Controllers
             StudentHelper sh = new StudentHelper();
             var trenutniVpis = sh.trenutniVpis(student.vpisnaStevilka);
             var prvivpis = trenutniVpis;
+            Debug.WriteLine("Trenutni vpis id je "+trenutniVpis.id.ToString());
             if (trenutniVpis.vrstaVpisa != 1)
             {
+                Debug.WriteLine("Inside");
                 prvivpis = sh.prviVpisVLetnik(trenutniVpis.id); //ce je ponavljanje ali pavziranje damo na prvi vpis v ta letnik
+                //Debug.WriteLine("Trenutni vpis id je " + trenutniVpis.id.ToString());
             }
             List<izvajanje> izvajanja = null;
             if (prvivpis != null)

@@ -372,8 +372,8 @@ namespace studis.Models
         {
             vpi v = db.vpis.Find(vpisId);
             return db.vpis.Where(a => a.letnikStudija == v.letnikStudija)
-                          .Where(b => b.studijskoLetoPrvegaVpisa == v.studijskoLetoPrvegaVpisa)
-                          .Where(c => c.vpisnaStevilka == v.vpisnaStevilka)
+                          .Where(a => a.vpisnaStevilka == v.vpisnaStevilka)
+                          .Where(a => a.vrstaVpisa == 1)
                           .FirstOrDefault();
         }
 
